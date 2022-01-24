@@ -3,15 +3,31 @@ package api
 import (
 	"context"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+
+	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func CreateApp(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
-	return nil, nil
+	resp, err := appcrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app: %v", err)
+		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func UpdateApp(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
-	return nil, nil
+	resp, err := appcrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app: %v", err)
+		return &npool.UpdateAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func CreateAppControl(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.CreateAppControlResponse, error) {
