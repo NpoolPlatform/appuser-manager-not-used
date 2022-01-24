@@ -52,6 +52,14 @@ func (s *Server) CreateAppUserSecret(ctx context.Context, in *npool.CreateAppUse
 	return nil, nil
 }
 
+func (s *Server) GetAppUserSecret(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppUserSecretResponse, error) {
+	return nil, nil
+}
+
+func (s *Server) GetAppUserSecretByApp(ctx context.Context, in *npool.GetAppUserSecretByAppRequest) (*npool.GetAppUserSecretByAppResponse, error) {
+	return nil, nil
+}
+
 func (s *Server) UpdateAppUserSecret(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
 	return nil, nil
 }
