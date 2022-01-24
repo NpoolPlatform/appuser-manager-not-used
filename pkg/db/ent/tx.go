@@ -18,6 +18,8 @@ type Tx struct {
 	AppControl *AppControlClient
 	// AppRole is the client for interacting with the AppRole builders.
 	AppRole *AppRoleClient
+	// AppRoleUser is the client for interacting with the AppRoleUser builders.
+	AppRoleUser *AppRoleUserClient
 	// AppUser is the client for interacting with the AppUser builders.
 	AppUser *AppUserClient
 	// AppUserExtra is the client for interacting with the AppUserExtra builders.
@@ -28,6 +30,8 @@ type Tx struct {
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
 	BanAppUser *BanAppUserClient
+	// GenesisUser is the client for interacting with the GenesisUser builders.
+	GenesisUser *GenesisUserClient
 
 	// lazily loaded.
 	client     *Client
@@ -166,11 +170,13 @@ func (tx *Tx) init() {
 	tx.App = NewAppClient(tx.config)
 	tx.AppControl = NewAppControlClient(tx.config)
 	tx.AppRole = NewAppRoleClient(tx.config)
+	tx.AppRoleUser = NewAppRoleUserClient(tx.config)
 	tx.AppUser = NewAppUserClient(tx.config)
 	tx.AppUserExtra = NewAppUserExtraClient(tx.config)
 	tx.AppUserSecret = NewAppUserSecretClient(tx.config)
 	tx.BanApp = NewBanAppClient(tx.config)
 	tx.BanAppUser = NewBanAppUserClient(tx.config)
+	tx.GenesisUser = NewGenesisUserClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

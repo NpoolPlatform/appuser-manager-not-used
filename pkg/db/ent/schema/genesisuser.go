@@ -9,18 +9,18 @@ import (
 	"github.com/google/uuid"
 )
 
-// BanApp holds the schema definition for the BanApp entity.
-type BanApp struct {
+// GenesisUser holds the schema definition for the GenesisUser entity.
+type GenesisUser struct {
 	ent.Schema
 }
 
-// Fields of the BanApp.
-func (BanApp) Fields() []ent.Field {
+// Fields of the GenesisUser.
+func (GenesisUser) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
+		field.UUID("user_id", uuid.UUID{}),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())
@@ -39,7 +39,7 @@ func (BanApp) Fields() []ent.Field {
 	}
 }
 
-// Edges of the BanApp.
-func (BanApp) Edges() []ent.Edge {
+// Edges of the GenesisUser.
+func (GenesisUser) Edges() []ent.Edge {
 	return nil
 }

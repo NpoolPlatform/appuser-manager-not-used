@@ -27,11 +27,13 @@ type hooks struct {
 	App           []ent.Hook
 	AppControl    []ent.Hook
 	AppRole       []ent.Hook
+	AppRoleUser   []ent.Hook
 	AppUser       []ent.Hook
 	AppUserExtra  []ent.Hook
 	AppUserSecret []ent.Hook
 	BanApp        []ent.Hook
 	BanAppUser    []ent.Hook
+	GenesisUser   []ent.Hook
 }
 
 // Options applies the options on the config object.

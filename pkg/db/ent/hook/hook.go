@@ -48,6 +48,19 @@ func (f AppRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The AppRoleUserFunc type is an adapter to allow the use of ordinary
+// function as AppRoleUser mutator.
+type AppRoleUserFunc func(context.Context, *ent.AppRoleUserMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppRoleUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppRoleUserMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppRoleUserMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppUserFunc type is an adapter to allow the use of ordinary
 // function as AppUser mutator.
 type AppUserFunc func(context.Context, *ent.AppUserMutation) (ent.Value, error)
@@ -109,6 +122,19 @@ func (f BanAppUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	mv, ok := m.(*ent.BanAppUserMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BanAppUserMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GenesisUserFunc type is an adapter to allow the use of ordinary
+// function as GenesisUser mutator.
+type GenesisUserFunc func(context.Context, *ent.GenesisUserMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GenesisUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GenesisUserMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GenesisUserMutation", m)
 	}
 	return f(ctx, mv)
 }

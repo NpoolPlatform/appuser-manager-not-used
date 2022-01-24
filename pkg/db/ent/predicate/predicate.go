@@ -15,6 +15,9 @@ type AppControl func(*sql.Selector)
 // AppRole is the predicate function for approle builders.
 type AppRole func(*sql.Selector)
 
+// AppRoleUser is the predicate function for approleuser builders.
+type AppRoleUser func(*sql.Selector)
+
 // AppUser is the predicate function for appuser builders.
 type AppUser func(*sql.Selector)
 
@@ -29,3 +32,6 @@ type BanApp func(*sql.Selector)
 
 // BanAppUser is the predicate function for banappuser builders.
 type BanAppUser func(*sql.Selector)
+
+// GenesisUser is the predicate function for genesisuser builders.
+type GenesisUser func(*sql.Selector)

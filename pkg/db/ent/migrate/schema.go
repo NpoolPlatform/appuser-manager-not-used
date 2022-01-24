@@ -62,6 +62,22 @@ var (
 		Columns:    AppRolesColumns,
 		PrimaryKey: []*schema.Column{AppRolesColumns[0]},
 	}
+	// AppRoleUsersColumns holds the columns for the "app_role_users" table.
+	AppRoleUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "role_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppRoleUsersTable holds the schema information for the "app_role_users" table.
+	AppRoleUsersTable = &schema.Table{
+		Name:       "app_role_users",
+		Columns:    AppRoleUsersColumns,
+		PrimaryKey: []*schema.Column{AppRoleUsersColumns[0]},
+	}
 	// AppUsersColumns holds the columns for the "app_users" table.
 	AppUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -149,16 +165,32 @@ var (
 		Columns:    BanAppUsersColumns,
 		PrimaryKey: []*schema.Column{BanAppUsersColumns[0]},
 	}
+	// GenesisUsersColumns holds the columns for the "genesis_users" table.
+	GenesisUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// GenesisUsersTable holds the schema information for the "genesis_users" table.
+	GenesisUsersTable = &schema.Table{
+		Name:       "genesis_users",
+		Columns:    GenesisUsersColumns,
+		PrimaryKey: []*schema.Column{GenesisUsersColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
 		AppControlsTable,
 		AppRolesTable,
+		AppRoleUsersTable,
 		AppUsersTable,
 		AppUserExtrasTable,
 		AppUserSecretsTable,
 		BanAppsTable,
 		BanAppUsersTable,
+		GenesisUsersTable,
 	}
 )
 

@@ -6,11 +6,13 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/genesisuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
 )
@@ -79,6 +81,26 @@ func init() {
 	approleDescID := approleFields[0].Descriptor()
 	// approle.DefaultID holds the default value on creation for the id field.
 	approle.DefaultID = approleDescID.Default.(func() uuid.UUID)
+	approleuserFields := schema.AppRoleUser{}.Fields()
+	_ = approleuserFields
+	// approleuserDescCreateAt is the schema descriptor for create_at field.
+	approleuserDescCreateAt := approleuserFields[4].Descriptor()
+	// approleuser.DefaultCreateAt holds the default value on creation for the create_at field.
+	approleuser.DefaultCreateAt = approleuserDescCreateAt.Default.(func() uint32)
+	// approleuserDescUpdateAt is the schema descriptor for update_at field.
+	approleuserDescUpdateAt := approleuserFields[5].Descriptor()
+	// approleuser.DefaultUpdateAt holds the default value on creation for the update_at field.
+	approleuser.DefaultUpdateAt = approleuserDescUpdateAt.Default.(func() uint32)
+	// approleuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	approleuser.UpdateDefaultUpdateAt = approleuserDescUpdateAt.UpdateDefault.(func() uint32)
+	// approleuserDescDeleteAt is the schema descriptor for delete_at field.
+	approleuserDescDeleteAt := approleuserFields[6].Descriptor()
+	// approleuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	approleuser.DefaultDeleteAt = approleuserDescDeleteAt.Default.(func() uint32)
+	// approleuserDescID is the schema descriptor for id field.
+	approleuserDescID := approleuserFields[0].Descriptor()
+	// approleuser.DefaultID holds the default value on creation for the id field.
+	approleuser.DefaultID = approleuserDescID.Default.(func() uuid.UUID)
 	appuserFields := schema.AppUser{}.Fields()
 	_ = appuserFields
 	// appuserDescCreateAt is the schema descriptor for create_at field.
@@ -156,7 +178,7 @@ func init() {
 	// banapp.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	banapp.DefaultDeleteAt = banappDescDeleteAt.Default.(func() uint32)
 	// banappDescID is the schema descriptor for id field.
-	banappDescID := banappFields[0].Descriptor()
+	banappDescID := banappFields[1].Descriptor()
 	// banapp.DefaultID holds the default value on creation for the id field.
 	banapp.DefaultID = banappDescID.Default.(func() uuid.UUID)
 	banappuserFields := schema.BanAppUser{}.Fields()
@@ -179,4 +201,24 @@ func init() {
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.
 	banappuser.DefaultID = banappuserDescID.Default.(func() uuid.UUID)
+	genesisuserFields := schema.GenesisUser{}.Fields()
+	_ = genesisuserFields
+	// genesisuserDescCreateAt is the schema descriptor for create_at field.
+	genesisuserDescCreateAt := genesisuserFields[2].Descriptor()
+	// genesisuser.DefaultCreateAt holds the default value on creation for the create_at field.
+	genesisuser.DefaultCreateAt = genesisuserDescCreateAt.Default.(func() uint32)
+	// genesisuserDescUpdateAt is the schema descriptor for update_at field.
+	genesisuserDescUpdateAt := genesisuserFields[3].Descriptor()
+	// genesisuser.DefaultUpdateAt holds the default value on creation for the update_at field.
+	genesisuser.DefaultUpdateAt = genesisuserDescUpdateAt.Default.(func() uint32)
+	// genesisuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	genesisuser.UpdateDefaultUpdateAt = genesisuserDescUpdateAt.UpdateDefault.(func() uint32)
+	// genesisuserDescDeleteAt is the schema descriptor for delete_at field.
+	genesisuserDescDeleteAt := genesisuserFields[4].Descriptor()
+	// genesisuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	genesisuser.DefaultDeleteAt = genesisuserDescDeleteAt.Default.(func() uint32)
+	// genesisuserDescID is the schema descriptor for id field.
+	genesisuserDescID := genesisuserFields[0].Descriptor()
+	// genesisuser.DefaultID holds the default value on creation for the id field.
+	genesisuser.DefaultID = genesisuserDescID.Default.(func() uuid.UUID)
 }

@@ -11,11 +11,13 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/genesisuser"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -39,11 +41,13 @@ func columnChecker(table string) func(string) error {
 		app.Table:           app.ValidColumn,
 		appcontrol.Table:    appcontrol.ValidColumn,
 		approle.Table:       approle.ValidColumn,
+		approleuser.Table:   approleuser.ValidColumn,
 		appuser.Table:       appuser.ValidColumn,
 		appuserextra.Table:  appuserextra.ValidColumn,
 		appusersecret.Table: appusersecret.ValidColumn,
 		banapp.Table:        banapp.ValidColumn,
 		banappuser.Table:    banappuser.ValidColumn,
+		genesisuser.Table:   genesisuser.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {
