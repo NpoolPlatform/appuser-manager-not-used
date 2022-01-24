@@ -7,6 +7,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
+	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
 
 	"google.golang.org/grpc/codes"
@@ -86,11 +87,39 @@ func (s *Server) UpdateAppUserSecret(ctx context.Context, in *npool.UpdateAppUse
 }
 
 func (s *Server) CreateAppUserExtra(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.CreateAppUserExtraResponse, error) {
-	return nil, nil
+	resp, err := appuserextracrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user extra: %v", err)
+		return &npool.CreateAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppUserExtra(ctx context.Context, in *npool.GetAppUserExtraRequest) (*npool.GetAppUserExtraResponse, error) {
+	resp, err := appuserextracrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user extra: %v", err)
+		return &npool.GetAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppUserExtraByAppUser(ctx context.Context, in *npool.GetAppUserExtraByAppUserRequest) (*npool.GetAppUserExtraByAppUserResponse, error) {
+	resp, err := appuserextracrud.GetByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user extra by app user: %v", err)
+		return &npool.GetAppUserExtraByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppUserExtra(ctx context.Context, in *npool.UpdateAppUserExtraRequest) (*npool.UpdateAppUserExtraResponse, error) {
-	return nil, nil
+	resp, err := appuserextracrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app user extra: %v", err)
+		return &npool.UpdateAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateBanAppUser(ctx context.Context, in *npool.CreateBanAppUserRequest) (*npool.CreateBanAppUserResponse, error) {

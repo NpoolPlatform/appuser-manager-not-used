@@ -152,6 +152,11 @@ func GetByAppUser(ctx context.Context, in *npool.GetAppUserSecretByAppUserReques
 		return nil, xerrors.Errorf("invalid app id: %v", err)
 	}
 
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
 	defer cancel()
 
@@ -164,7 +169,10 @@ func GetByAppUser(ctx context.Context, in *npool.GetAppUserSecretByAppUserReques
 		AppUserSecret.
 		Query().
 		Where(
-			appusersecret.AppID(appID),
+			appusersecret.And(
+				appusersecret.AppID(appID),
+				appusersecret.UserID(userID),
+			),
 		).
 		All(ctx)
 	if err != nil {
