@@ -2,8 +2,55 @@
 
 package ent
 
+import (
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
+	"github.com/google/uuid"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	appFields := schema.App{}.Fields()
+	_ = appFields
+	// appDescCreateAt is the schema descriptor for create_at field.
+	appDescCreateAt := appFields[5].Descriptor()
+	// app.DefaultCreateAt holds the default value on creation for the create_at field.
+	app.DefaultCreateAt = appDescCreateAt.Default.(func() uint32)
+	// appDescUpdateAt is the schema descriptor for update_at field.
+	appDescUpdateAt := appFields[6].Descriptor()
+	// app.DefaultUpdateAt holds the default value on creation for the update_at field.
+	app.DefaultUpdateAt = appDescUpdateAt.Default.(func() uint32)
+	// app.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	app.UpdateDefaultUpdateAt = appDescUpdateAt.UpdateDefault.(func() uint32)
+	// appDescDeleteAt is the schema descriptor for delete_at field.
+	appDescDeleteAt := appFields[7].Descriptor()
+	// app.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	app.DefaultDeleteAt = appDescDeleteAt.Default.(func() uint32)
+	// appDescID is the schema descriptor for id field.
+	appDescID := appFields[0].Descriptor()
+	// app.DefaultID holds the default value on creation for the id field.
+	app.DefaultID = appDescID.Default.(func() uuid.UUID)
+	appcontrolFields := schema.AppControl{}.Fields()
+	_ = appcontrolFields
+	// appcontrolDescCreateAt is the schema descriptor for create_at field.
+	appcontrolDescCreateAt := appcontrolFields[7].Descriptor()
+	// appcontrol.DefaultCreateAt holds the default value on creation for the create_at field.
+	appcontrol.DefaultCreateAt = appcontrolDescCreateAt.Default.(func() uint32)
+	// appcontrolDescUpdateAt is the schema descriptor for update_at field.
+	appcontrolDescUpdateAt := appcontrolFields[8].Descriptor()
+	// appcontrol.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appcontrol.DefaultUpdateAt = appcontrolDescUpdateAt.Default.(func() uint32)
+	// appcontrol.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appcontrol.UpdateDefaultUpdateAt = appcontrolDescUpdateAt.UpdateDefault.(func() uint32)
+	// appcontrolDescDeleteAt is the schema descriptor for delete_at field.
+	appcontrolDescDeleteAt := appcontrolFields[9].Descriptor()
+	// appcontrol.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	appcontrol.DefaultDeleteAt = appcontrolDescDeleteAt.Default.(func() uint32)
+	// appcontrolDescID is the schema descriptor for id field.
+	appcontrolDescID := appcontrolFields[0].Descriptor()
+	// appcontrol.DefaultID holds the default value on creation for the id field.
+	appcontrol.DefaultID = appcontrolDescID.Default.(func() uuid.UUID)
 }

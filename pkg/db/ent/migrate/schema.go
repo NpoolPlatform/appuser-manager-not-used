@@ -8,19 +8,46 @@ import (
 )
 
 var (
-	// EmptiesColumns holds the columns for the "empties" table.
-	EmptiesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+	// AppsColumns holds the columns for the "apps" table.
+	AppsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_by", Type: field.TypeUUID},
+		{Name: "name", Type: field.TypeString},
+		{Name: "logo", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
 	}
-	// EmptiesTable holds the schema information for the "empties" table.
-	EmptiesTable = &schema.Table{
-		Name:       "empties",
-		Columns:    EmptiesColumns,
-		PrimaryKey: []*schema.Column{EmptiesColumns[0]},
+	// AppsTable holds the schema information for the "apps" table.
+	AppsTable = &schema.Table{
+		Name:       "apps",
+		Columns:    AppsColumns,
+		PrimaryKey: []*schema.Column{AppsColumns[0]},
+	}
+	// AppControlsColumns holds the columns for the "app_controls" table.
+	AppControlsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Unique: true},
+		{Name: "signup_methods", Type: field.TypeJSON},
+		{Name: "extern_signin_methods", Type: field.TypeJSON},
+		{Name: "recaptcha_method", Type: field.TypeString},
+		{Name: "kyc_enable", Type: field.TypeBool},
+		{Name: "signin_verify_enable", Type: field.TypeBool},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppControlsTable holds the schema information for the "app_controls" table.
+	AppControlsTable = &schema.Table{
+		Name:       "app_controls",
+		Columns:    AppControlsColumns,
+		PrimaryKey: []*schema.Column{AppControlsColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		EmptiesTable,
+		AppsTable,
+		AppControlsTable,
 	}
 )
 

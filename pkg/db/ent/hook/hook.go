@@ -9,15 +9,28 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 )
 
-// The EmptyFunc type is an adapter to allow the use of ordinary
-// function as Empty mutator.
-type EmptyFunc func(context.Context, *ent.EmptyMutation) (ent.Value, error)
+// The AppFunc type is an adapter to allow the use of ordinary
+// function as App mutator.
+type AppFunc func(context.Context, *ent.AppMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f EmptyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.EmptyMutation)
+func (f AppFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EmptyMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppControlFunc type is an adapter to allow the use of ordinary
+// function as AppControl mutator.
+type AppControlFunc func(context.Context, *ent.AppControlMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppControlFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppControlMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppControlMutation", m)
 	}
 	return f(ctx, mv)
 }

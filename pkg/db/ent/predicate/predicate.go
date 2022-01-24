@@ -6,5 +6,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Empty is the predicate function for empty builders.
-type Empty func(*sql.Selector)
+// App is the predicate function for app builders.
+type App func(*sql.Selector)
+
+// AppControl is the predicate function for appcontrol builders.
+type AppControl func(*sql.Selector)
