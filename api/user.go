@@ -22,15 +22,30 @@ func (s *Server) CreateAppUser(ctx context.Context, in *npool.CreateAppUserReque
 }
 
 func (s *Server) GetAppUser(ctx context.Context, in *npool.GetAppUserRequest) (*npool.GetAppUserResponse, error) {
-	return nil, nil
+	resp, err := appusercrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user: %v", err)
+		return &npool.GetAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUsersByApp(ctx context.Context, in *npool.GetAppUsersByAppRequest) (*npool.GetAppUsersByAppResponse, error) {
-	return nil, nil
+	resp, err := appusercrud.GetByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user by app: %v", err)
+		return &npool.GetAppUsersByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppUser(ctx context.Context, in *npool.UpdateAppUserRequest) (*npool.UpdateAppUserResponse, error) {
-	return nil, nil
+	resp, err := appusercrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app user: %v", err)
+		return &npool.UpdateAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateAppUserSecret(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
