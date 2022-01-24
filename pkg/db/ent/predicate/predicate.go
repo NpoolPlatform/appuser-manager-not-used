@@ -35,6 +35,3 @@ type BanApp func(*sql.Selector)
 
 // BanAppUser is the predicate function for banappuser builders.
 type BanAppUser func(*sql.Selector)
-
-// GenesisUser is the predicate function for genesisuser builders.
-type GenesisUser func(*sql.Selector)

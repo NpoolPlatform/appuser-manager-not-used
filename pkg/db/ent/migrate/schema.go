@@ -182,20 +182,6 @@ var (
 		Columns:    BanAppUsersColumns,
 		PrimaryKey: []*schema.Column{BanAppUsersColumns[0]},
 	}
-	// GenesisUsersColumns holds the columns for the "genesis_users" table.
-	GenesisUsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
-	}
-	// GenesisUsersTable holds the schema information for the "genesis_users" table.
-	GenesisUsersTable = &schema.Table{
-		Name:       "genesis_users",
-		Columns:    GenesisUsersColumns,
-		PrimaryKey: []*schema.Column{GenesisUsersColumns[0]},
-	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
@@ -208,7 +194,6 @@ var (
 		AppUserSecretsTable,
 		BanAppsTable,
 		BanAppUsersTable,
-		GenesisUsersTable,
 	}
 )
 

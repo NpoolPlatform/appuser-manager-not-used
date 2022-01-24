@@ -20,7 +20,6 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/genesisuser"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -51,8 +50,6 @@ type Client struct {
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
 	BanAppUser *BanAppUserClient
-	// GenesisUser is the client for interacting with the GenesisUser builders.
-	GenesisUser *GenesisUserClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -76,7 +73,6 @@ func (c *Client) init() {
 	c.AppUserSecret = NewAppUserSecretClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 	c.BanAppUser = NewBanAppUserClient(c.config)
-	c.GenesisUser = NewGenesisUserClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -120,7 +116,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AppUserSecret:  NewAppUserSecretClient(cfg),
 		BanApp:         NewBanAppClient(cfg),
 		BanAppUser:     NewBanAppUserClient(cfg),
-		GenesisUser:    NewGenesisUserClient(cfg),
 	}, nil
 }
 
@@ -150,7 +145,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AppUserSecret:  NewAppUserSecretClient(cfg),
 		BanApp:         NewBanAppClient(cfg),
 		BanAppUser:     NewBanAppUserClient(cfg),
-		GenesisUser:    NewGenesisUserClient(cfg),
 	}, nil
 }
 
@@ -190,7 +184,6 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppUserSecret.Use(hooks...)
 	c.BanApp.Use(hooks...)
 	c.BanAppUser.Use(hooks...)
-	c.GenesisUser.Use(hooks...)
 }
 
 // AppClient is a client for the App schema.
@@ -1091,94 +1084,4 @@ func (c *BanAppUserClient) GetX(ctx context.Context, id uuid.UUID) *BanAppUser {
 // Hooks returns the client hooks.
 func (c *BanAppUserClient) Hooks() []Hook {
 	return c.hooks.BanAppUser
-}
-
-// GenesisUserClient is a client for the GenesisUser schema.
-type GenesisUserClient struct {
-	config
-}
-
-// NewGenesisUserClient returns a client for the GenesisUser from the given config.
-func NewGenesisUserClient(c config) *GenesisUserClient {
-	return &GenesisUserClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `genesisuser.Hooks(f(g(h())))`.
-func (c *GenesisUserClient) Use(hooks ...Hook) {
-	c.hooks.GenesisUser = append(c.hooks.GenesisUser, hooks...)
-}
-
-// Create returns a create builder for GenesisUser.
-func (c *GenesisUserClient) Create() *GenesisUserCreate {
-	mutation := newGenesisUserMutation(c.config, OpCreate)
-	return &GenesisUserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of GenesisUser entities.
-func (c *GenesisUserClient) CreateBulk(builders ...*GenesisUserCreate) *GenesisUserCreateBulk {
-	return &GenesisUserCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for GenesisUser.
-func (c *GenesisUserClient) Update() *GenesisUserUpdate {
-	mutation := newGenesisUserMutation(c.config, OpUpdate)
-	return &GenesisUserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *GenesisUserClient) UpdateOne(gu *GenesisUser) *GenesisUserUpdateOne {
-	mutation := newGenesisUserMutation(c.config, OpUpdateOne, withGenesisUser(gu))
-	return &GenesisUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *GenesisUserClient) UpdateOneID(id uuid.UUID) *GenesisUserUpdateOne {
-	mutation := newGenesisUserMutation(c.config, OpUpdateOne, withGenesisUserID(id))
-	return &GenesisUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for GenesisUser.
-func (c *GenesisUserClient) Delete() *GenesisUserDelete {
-	mutation := newGenesisUserMutation(c.config, OpDelete)
-	return &GenesisUserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *GenesisUserClient) DeleteOne(gu *GenesisUser) *GenesisUserDeleteOne {
-	return c.DeleteOneID(gu.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *GenesisUserClient) DeleteOneID(id uuid.UUID) *GenesisUserDeleteOne {
-	builder := c.Delete().Where(genesisuser.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &GenesisUserDeleteOne{builder}
-}
-
-// Query returns a query builder for GenesisUser.
-func (c *GenesisUserClient) Query() *GenesisUserQuery {
-	return &GenesisUserQuery{
-		config: c.config,
-	}
-}
-
-// Get returns a GenesisUser entity by its id.
-func (c *GenesisUserClient) Get(ctx context.Context, id uuid.UUID) (*GenesisUser, error) {
-	return c.Query().Where(genesisuser.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *GenesisUserClient) GetX(ctx context.Context, id uuid.UUID) *GenesisUser {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *GenesisUserClient) Hooks() []Hook {
-	return c.hooks.GenesisUser
 }

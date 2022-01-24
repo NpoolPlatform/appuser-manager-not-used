@@ -13,7 +13,6 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/genesisuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
 )
@@ -222,24 +221,4 @@ func init() {
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.
 	banappuser.DefaultID = banappuserDescID.Default.(func() uuid.UUID)
-	genesisuserFields := schema.GenesisUser{}.Fields()
-	_ = genesisuserFields
-	// genesisuserDescCreateAt is the schema descriptor for create_at field.
-	genesisuserDescCreateAt := genesisuserFields[2].Descriptor()
-	// genesisuser.DefaultCreateAt holds the default value on creation for the create_at field.
-	genesisuser.DefaultCreateAt = genesisuserDescCreateAt.Default.(func() uint32)
-	// genesisuserDescUpdateAt is the schema descriptor for update_at field.
-	genesisuserDescUpdateAt := genesisuserFields[3].Descriptor()
-	// genesisuser.DefaultUpdateAt holds the default value on creation for the update_at field.
-	genesisuser.DefaultUpdateAt = genesisuserDescUpdateAt.Default.(func() uint32)
-	// genesisuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	genesisuser.UpdateDefaultUpdateAt = genesisuserDescUpdateAt.UpdateDefault.(func() uint32)
-	// genesisuserDescDeleteAt is the schema descriptor for delete_at field.
-	genesisuserDescDeleteAt := genesisuserFields[4].Descriptor()
-	// genesisuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	genesisuser.DefaultDeleteAt = genesisuserDescDeleteAt.Default.(func() uint32)
-	// genesisuserDescID is the schema descriptor for id field.
-	genesisuserDescID := genesisuserFields[0].Descriptor()
-	// genesisuser.DefaultID holds the default value on creation for the id field.
-	genesisuser.DefaultID = genesisuserDescID.Default.(func() uuid.UUID)
 }
