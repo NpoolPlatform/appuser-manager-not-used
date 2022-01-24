@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
@@ -76,6 +77,26 @@ func init() {
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.
 	appuser.DefaultID = appuserDescID.Default.(func() uuid.UUID)
+	appuserextraFields := schema.AppUserExtra{}.Fields()
+	_ = appuserextraFields
+	// appuserextraDescCreateAt is the schema descriptor for create_at field.
+	appuserextraDescCreateAt := appuserextraFields[11].Descriptor()
+	// appuserextra.DefaultCreateAt holds the default value on creation for the create_at field.
+	appuserextra.DefaultCreateAt = appuserextraDescCreateAt.Default.(func() uint32)
+	// appuserextraDescUpdateAt is the schema descriptor for update_at field.
+	appuserextraDescUpdateAt := appuserextraFields[12].Descriptor()
+	// appuserextra.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appuserextra.DefaultUpdateAt = appuserextraDescUpdateAt.Default.(func() uint32)
+	// appuserextra.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appuserextra.UpdateDefaultUpdateAt = appuserextraDescUpdateAt.UpdateDefault.(func() uint32)
+	// appuserextraDescDeleteAt is the schema descriptor for delete_at field.
+	appuserextraDescDeleteAt := appuserextraFields[13].Descriptor()
+	// appuserextra.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	appuserextra.DefaultDeleteAt = appuserextraDescDeleteAt.Default.(func() uint32)
+	// appuserextraDescID is the schema descriptor for id field.
+	appuserextraDescID := appuserextraFields[0].Descriptor()
+	// appuserextra.DefaultID holds the default value on creation for the id field.
+	appuserextra.DefaultID = appuserextraDescID.Default.(func() uuid.UUID)
 	appusersecretFields := schema.AppUserSecret{}.Fields()
 	_ = appusersecretFields
 	// appusersecretDescCreateAt is the schema descriptor for create_at field.

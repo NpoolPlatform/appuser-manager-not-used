@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 
@@ -31,6 +32,8 @@ type Client struct {
 	AppControl *AppControlClient
 	// AppUser is the client for interacting with the AppUser builders.
 	AppUser *AppUserClient
+	// AppUserExtra is the client for interacting with the AppUserExtra builders.
+	AppUserExtra *AppUserExtraClient
 	// AppUserSecret is the client for interacting with the AppUserSecret builders.
 	AppUserSecret *AppUserSecretClient
 	// BanApp is the client for interacting with the BanApp builders.
@@ -51,6 +54,7 @@ func (c *Client) init() {
 	c.App = NewAppClient(c.config)
 	c.AppControl = NewAppControlClient(c.config)
 	c.AppUser = NewAppUserClient(c.config)
+	c.AppUserExtra = NewAppUserExtraClient(c.config)
 	c.AppUserSecret = NewAppUserSecretClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 }
@@ -89,6 +93,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		App:           NewAppClient(cfg),
 		AppControl:    NewAppControlClient(cfg),
 		AppUser:       NewAppUserClient(cfg),
+		AppUserExtra:  NewAppUserExtraClient(cfg),
 		AppUserSecret: NewAppUserSecretClient(cfg),
 		BanApp:        NewBanAppClient(cfg),
 	}, nil
@@ -113,6 +118,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		App:           NewAppClient(cfg),
 		AppControl:    NewAppControlClient(cfg),
 		AppUser:       NewAppUserClient(cfg),
+		AppUserExtra:  NewAppUserExtraClient(cfg),
 		AppUserSecret: NewAppUserSecretClient(cfg),
 		BanApp:        NewBanAppClient(cfg),
 	}, nil
@@ -147,6 +153,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.App.Use(hooks...)
 	c.AppControl.Use(hooks...)
 	c.AppUser.Use(hooks...)
+	c.AppUserExtra.Use(hooks...)
 	c.AppUserSecret.Use(hooks...)
 	c.BanApp.Use(hooks...)
 }
@@ -419,6 +426,96 @@ func (c *AppUserClient) GetX(ctx context.Context, id uuid.UUID) *AppUser {
 // Hooks returns the client hooks.
 func (c *AppUserClient) Hooks() []Hook {
 	return c.hooks.AppUser
+}
+
+// AppUserExtraClient is a client for the AppUserExtra schema.
+type AppUserExtraClient struct {
+	config
+}
+
+// NewAppUserExtraClient returns a client for the AppUserExtra from the given config.
+func NewAppUserExtraClient(c config) *AppUserExtraClient {
+	return &AppUserExtraClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appuserextra.Hooks(f(g(h())))`.
+func (c *AppUserExtraClient) Use(hooks ...Hook) {
+	c.hooks.AppUserExtra = append(c.hooks.AppUserExtra, hooks...)
+}
+
+// Create returns a create builder for AppUserExtra.
+func (c *AppUserExtraClient) Create() *AppUserExtraCreate {
+	mutation := newAppUserExtraMutation(c.config, OpCreate)
+	return &AppUserExtraCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppUserExtra entities.
+func (c *AppUserExtraClient) CreateBulk(builders ...*AppUserExtraCreate) *AppUserExtraCreateBulk {
+	return &AppUserExtraCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppUserExtra.
+func (c *AppUserExtraClient) Update() *AppUserExtraUpdate {
+	mutation := newAppUserExtraMutation(c.config, OpUpdate)
+	return &AppUserExtraUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppUserExtraClient) UpdateOne(aue *AppUserExtra) *AppUserExtraUpdateOne {
+	mutation := newAppUserExtraMutation(c.config, OpUpdateOne, withAppUserExtra(aue))
+	return &AppUserExtraUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppUserExtraClient) UpdateOneID(id uuid.UUID) *AppUserExtraUpdateOne {
+	mutation := newAppUserExtraMutation(c.config, OpUpdateOne, withAppUserExtraID(id))
+	return &AppUserExtraUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppUserExtra.
+func (c *AppUserExtraClient) Delete() *AppUserExtraDelete {
+	mutation := newAppUserExtraMutation(c.config, OpDelete)
+	return &AppUserExtraDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppUserExtraClient) DeleteOne(aue *AppUserExtra) *AppUserExtraDeleteOne {
+	return c.DeleteOneID(aue.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppUserExtraClient) DeleteOneID(id uuid.UUID) *AppUserExtraDeleteOne {
+	builder := c.Delete().Where(appuserextra.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppUserExtraDeleteOne{builder}
+}
+
+// Query returns a query builder for AppUserExtra.
+func (c *AppUserExtraClient) Query() *AppUserExtraQuery {
+	return &AppUserExtraQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppUserExtra entity by its id.
+func (c *AppUserExtraClient) Get(ctx context.Context, id uuid.UUID) (*AppUserExtra, error) {
+	return c.Query().Where(appuserextra.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppUserExtraClient) GetX(ctx context.Context, id uuid.UUID) *AppUserExtra {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppUserExtraClient) Hooks() []Hook {
+	return c.hooks.AppUserExtra
 }
 
 // AppUserSecretClient is a client for the AppUserSecret schema.

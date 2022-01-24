@@ -48,6 +48,19 @@ func (f AppUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The AppUserExtraFunc type is an adapter to allow the use of ordinary
+// function as AppUserExtra mutator.
+type AppUserExtraFunc func(context.Context, *ent.AppUserExtraMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppUserExtraFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppUserExtraMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserExtraMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppUserSecretFunc type is an adapter to allow the use of ordinary
 // function as AppUserSecret mutator.
 type AppUserSecretFunc func(context.Context, *ent.AppUserSecretMutation) (ent.Value, error)

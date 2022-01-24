@@ -27,6 +27,7 @@ type hooks struct {
 	App           []ent.Hook
 	AppControl    []ent.Hook
 	AppUser       []ent.Hook
+	AppUserExtra  []ent.Hook
 	AppUserSecret []ent.Hook
 	BanApp        []ent.Hook
 }

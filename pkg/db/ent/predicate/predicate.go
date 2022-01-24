@@ -15,6 +15,9 @@ type AppControl func(*sql.Selector)
 // AppUser is the predicate function for appuser builders.
 type AppUser func(*sql.Selector)
 
+// AppUserExtra is the predicate function for appuserextra builders.
+type AppUserExtra func(*sql.Selector)
+
 // AppUserSecret is the predicate function for appusersecret builders.
 type AppUserSecret func(*sql.Selector)
 

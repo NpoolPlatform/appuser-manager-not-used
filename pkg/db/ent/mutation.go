@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
@@ -31,6 +32,7 @@ const (
 	TypeApp           = "App"
 	TypeAppControl    = "AppControl"
 	TypeAppUser       = "AppUser"
+	TypeAppUserExtra  = "AppUserExtra"
 	TypeAppUserSecret = "AppUserSecret"
 	TypeBanApp        = "BanApp"
 )
@@ -2370,6 +2372,1139 @@ func (m *AppUserMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AppUserMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppUser edge %s", name)
+}
+
+// AppUserExtraMutation represents an operation that mutates the AppUserExtra nodes in the graph.
+type AppUserExtraMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *uuid.UUID
+	app_id         *uuid.UUID
+	user_id        *uuid.UUID
+	username       *string
+	address_fields *[]string
+	gender         *string
+	postal_code    *string
+	age            *uint32
+	addage         *int32
+	birthday       *uint32
+	addbirthday    *int32
+	avatar         *string
+	_Organization  *string
+	create_at      *uint32
+	addcreate_at   *int32
+	update_at      *uint32
+	addupdate_at   *int32
+	delete_at      *uint32
+	adddelete_at   *int32
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*AppUserExtra, error)
+	predicates     []predicate.AppUserExtra
+}
+
+var _ ent.Mutation = (*AppUserExtraMutation)(nil)
+
+// appuserextraOption allows management of the mutation configuration using functional options.
+type appuserextraOption func(*AppUserExtraMutation)
+
+// newAppUserExtraMutation creates new mutation for the AppUserExtra entity.
+func newAppUserExtraMutation(c config, op Op, opts ...appuserextraOption) *AppUserExtraMutation {
+	m := &AppUserExtraMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppUserExtra,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppUserExtraID sets the ID field of the mutation.
+func withAppUserExtraID(id uuid.UUID) appuserextraOption {
+	return func(m *AppUserExtraMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppUserExtra
+		)
+		m.oldValue = func(ctx context.Context) (*AppUserExtra, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppUserExtra.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppUserExtra sets the old AppUserExtra of the mutation.
+func withAppUserExtra(node *AppUserExtra) appuserextraOption {
+	return func(m *AppUserExtraMutation) {
+		m.oldValue = func(context.Context) (*AppUserExtra, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppUserExtraMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppUserExtraMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppUserExtra entities.
+func (m *AppUserExtraMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppUserExtraMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppUserExtraMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppUserExtra.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetAppID sets the "app_id" field.
+func (m *AppUserExtraMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *AppUserExtraMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *AppUserExtraMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *AppUserExtraMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *AppUserExtraMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *AppUserExtraMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetUsername sets the "username" field.
+func (m *AppUserExtraMutation) SetUsername(s string) {
+	m.username = &s
+}
+
+// Username returns the value of the "username" field in the mutation.
+func (m *AppUserExtraMutation) Username() (r string, exists bool) {
+	v := m.username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsername returns the old "username" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsername: %w", err)
+	}
+	return oldValue.Username, nil
+}
+
+// ResetUsername resets all changes to the "username" field.
+func (m *AppUserExtraMutation) ResetUsername() {
+	m.username = nil
+}
+
+// SetAddressFields sets the "address_fields" field.
+func (m *AppUserExtraMutation) SetAddressFields(s []string) {
+	m.address_fields = &s
+}
+
+// AddressFields returns the value of the "address_fields" field in the mutation.
+func (m *AppUserExtraMutation) AddressFields() (r []string, exists bool) {
+	v := m.address_fields
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddressFields returns the old "address_fields" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldAddressFields(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAddressFields is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAddressFields requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddressFields: %w", err)
+	}
+	return oldValue.AddressFields, nil
+}
+
+// ResetAddressFields resets all changes to the "address_fields" field.
+func (m *AppUserExtraMutation) ResetAddressFields() {
+	m.address_fields = nil
+}
+
+// SetGender sets the "gender" field.
+func (m *AppUserExtraMutation) SetGender(s string) {
+	m.gender = &s
+}
+
+// Gender returns the value of the "gender" field in the mutation.
+func (m *AppUserExtraMutation) Gender() (r string, exists bool) {
+	v := m.gender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGender returns the old "gender" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldGender(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGender is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGender: %w", err)
+	}
+	return oldValue.Gender, nil
+}
+
+// ResetGender resets all changes to the "gender" field.
+func (m *AppUserExtraMutation) ResetGender() {
+	m.gender = nil
+}
+
+// SetPostalCode sets the "postal_code" field.
+func (m *AppUserExtraMutation) SetPostalCode(s string) {
+	m.postal_code = &s
+}
+
+// PostalCode returns the value of the "postal_code" field in the mutation.
+func (m *AppUserExtraMutation) PostalCode() (r string, exists bool) {
+	v := m.postal_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPostalCode returns the old "postal_code" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldPostalCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPostalCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPostalCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPostalCode: %w", err)
+	}
+	return oldValue.PostalCode, nil
+}
+
+// ResetPostalCode resets all changes to the "postal_code" field.
+func (m *AppUserExtraMutation) ResetPostalCode() {
+	m.postal_code = nil
+}
+
+// SetAge sets the "age" field.
+func (m *AppUserExtraMutation) SetAge(u uint32) {
+	m.age = &u
+	m.addage = nil
+}
+
+// Age returns the value of the "age" field in the mutation.
+func (m *AppUserExtraMutation) Age() (r uint32, exists bool) {
+	v := m.age
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAge returns the old "age" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldAge(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAge is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAge requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAge: %w", err)
+	}
+	return oldValue.Age, nil
+}
+
+// AddAge adds u to the "age" field.
+func (m *AppUserExtraMutation) AddAge(u int32) {
+	if m.addage != nil {
+		*m.addage += u
+	} else {
+		m.addage = &u
+	}
+}
+
+// AddedAge returns the value that was added to the "age" field in this mutation.
+func (m *AppUserExtraMutation) AddedAge() (r int32, exists bool) {
+	v := m.addage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAge resets all changes to the "age" field.
+func (m *AppUserExtraMutation) ResetAge() {
+	m.age = nil
+	m.addage = nil
+}
+
+// SetBirthday sets the "birthday" field.
+func (m *AppUserExtraMutation) SetBirthday(u uint32) {
+	m.birthday = &u
+	m.addbirthday = nil
+}
+
+// Birthday returns the value of the "birthday" field in the mutation.
+func (m *AppUserExtraMutation) Birthday() (r uint32, exists bool) {
+	v := m.birthday
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBirthday returns the old "birthday" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldBirthday(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBirthday is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBirthday requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBirthday: %w", err)
+	}
+	return oldValue.Birthday, nil
+}
+
+// AddBirthday adds u to the "birthday" field.
+func (m *AppUserExtraMutation) AddBirthday(u int32) {
+	if m.addbirthday != nil {
+		*m.addbirthday += u
+	} else {
+		m.addbirthday = &u
+	}
+}
+
+// AddedBirthday returns the value that was added to the "birthday" field in this mutation.
+func (m *AppUserExtraMutation) AddedBirthday() (r int32, exists bool) {
+	v := m.addbirthday
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetBirthday resets all changes to the "birthday" field.
+func (m *AppUserExtraMutation) ResetBirthday() {
+	m.birthday = nil
+	m.addbirthday = nil
+}
+
+// SetAvatar sets the "avatar" field.
+func (m *AppUserExtraMutation) SetAvatar(s string) {
+	m.avatar = &s
+}
+
+// Avatar returns the value of the "avatar" field in the mutation.
+func (m *AppUserExtraMutation) Avatar() (r string, exists bool) {
+	v := m.avatar
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAvatar returns the old "avatar" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldAvatar(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAvatar is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAvatar requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAvatar: %w", err)
+	}
+	return oldValue.Avatar, nil
+}
+
+// ResetAvatar resets all changes to the "avatar" field.
+func (m *AppUserExtraMutation) ResetAvatar() {
+	m.avatar = nil
+}
+
+// SetOrganization sets the "Organization" field.
+func (m *AppUserExtraMutation) SetOrganization(s string) {
+	m._Organization = &s
+}
+
+// Organization returns the value of the "Organization" field in the mutation.
+func (m *AppUserExtraMutation) Organization() (r string, exists bool) {
+	v := m._Organization
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrganization returns the old "Organization" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldOrganization(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrganization is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrganization requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrganization: %w", err)
+	}
+	return oldValue.Organization, nil
+}
+
+// ResetOrganization resets all changes to the "Organization" field.
+func (m *AppUserExtraMutation) ResetOrganization() {
+	m._Organization = nil
+}
+
+// SetCreateAt sets the "create_at" field.
+func (m *AppUserExtraMutation) SetCreateAt(u uint32) {
+	m.create_at = &u
+	m.addcreate_at = nil
+}
+
+// CreateAt returns the value of the "create_at" field in the mutation.
+func (m *AppUserExtraMutation) CreateAt() (r uint32, exists bool) {
+	v := m.create_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateAt returns the old "create_at" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
+	}
+	return oldValue.CreateAt, nil
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (m *AppUserExtraMutation) AddCreateAt(u int32) {
+	if m.addcreate_at != nil {
+		*m.addcreate_at += u
+	} else {
+		m.addcreate_at = &u
+	}
+}
+
+// AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
+func (m *AppUserExtraMutation) AddedCreateAt() (r int32, exists bool) {
+	v := m.addcreate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreateAt resets all changes to the "create_at" field.
+func (m *AppUserExtraMutation) ResetCreateAt() {
+	m.create_at = nil
+	m.addcreate_at = nil
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (m *AppUserExtraMutation) SetUpdateAt(u uint32) {
+	m.update_at = &u
+	m.addupdate_at = nil
+}
+
+// UpdateAt returns the value of the "update_at" field in the mutation.
+func (m *AppUserExtraMutation) UpdateAt() (r uint32, exists bool) {
+	v := m.update_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateAt returns the old "update_at" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateAt: %w", err)
+	}
+	return oldValue.UpdateAt, nil
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (m *AppUserExtraMutation) AddUpdateAt(u int32) {
+	if m.addupdate_at != nil {
+		*m.addupdate_at += u
+	} else {
+		m.addupdate_at = &u
+	}
+}
+
+// AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
+func (m *AppUserExtraMutation) AddedUpdateAt() (r int32, exists bool) {
+	v := m.addupdate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdateAt resets all changes to the "update_at" field.
+func (m *AppUserExtraMutation) ResetUpdateAt() {
+	m.update_at = nil
+	m.addupdate_at = nil
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (m *AppUserExtraMutation) SetDeleteAt(u uint32) {
+	m.delete_at = &u
+	m.adddelete_at = nil
+}
+
+// DeleteAt returns the value of the "delete_at" field in the mutation.
+func (m *AppUserExtraMutation) DeleteAt() (r uint32, exists bool) {
+	v := m.delete_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeleteAt returns the old "delete_at" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldDeleteAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeleteAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeleteAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeleteAt: %w", err)
+	}
+	return oldValue.DeleteAt, nil
+}
+
+// AddDeleteAt adds u to the "delete_at" field.
+func (m *AppUserExtraMutation) AddDeleteAt(u int32) {
+	if m.adddelete_at != nil {
+		*m.adddelete_at += u
+	} else {
+		m.adddelete_at = &u
+	}
+}
+
+// AddedDeleteAt returns the value that was added to the "delete_at" field in this mutation.
+func (m *AppUserExtraMutation) AddedDeleteAt() (r int32, exists bool) {
+	v := m.adddelete_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeleteAt resets all changes to the "delete_at" field.
+func (m *AppUserExtraMutation) ResetDeleteAt() {
+	m.delete_at = nil
+	m.adddelete_at = nil
+}
+
+// Where appends a list predicates to the AppUserExtraMutation builder.
+func (m *AppUserExtraMutation) Where(ps ...predicate.AppUserExtra) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppUserExtraMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppUserExtra).
+func (m *AppUserExtraMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppUserExtraMutation) Fields() []string {
+	fields := make([]string, 0, 13)
+	if m.app_id != nil {
+		fields = append(fields, appuserextra.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, appuserextra.FieldUserID)
+	}
+	if m.username != nil {
+		fields = append(fields, appuserextra.FieldUsername)
+	}
+	if m.address_fields != nil {
+		fields = append(fields, appuserextra.FieldAddressFields)
+	}
+	if m.gender != nil {
+		fields = append(fields, appuserextra.FieldGender)
+	}
+	if m.postal_code != nil {
+		fields = append(fields, appuserextra.FieldPostalCode)
+	}
+	if m.age != nil {
+		fields = append(fields, appuserextra.FieldAge)
+	}
+	if m.birthday != nil {
+		fields = append(fields, appuserextra.FieldBirthday)
+	}
+	if m.avatar != nil {
+		fields = append(fields, appuserextra.FieldAvatar)
+	}
+	if m._Organization != nil {
+		fields = append(fields, appuserextra.FieldOrganization)
+	}
+	if m.create_at != nil {
+		fields = append(fields, appuserextra.FieldCreateAt)
+	}
+	if m.update_at != nil {
+		fields = append(fields, appuserextra.FieldUpdateAt)
+	}
+	if m.delete_at != nil {
+		fields = append(fields, appuserextra.FieldDeleteAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppUserExtraMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case appuserextra.FieldAppID:
+		return m.AppID()
+	case appuserextra.FieldUserID:
+		return m.UserID()
+	case appuserextra.FieldUsername:
+		return m.Username()
+	case appuserextra.FieldAddressFields:
+		return m.AddressFields()
+	case appuserextra.FieldGender:
+		return m.Gender()
+	case appuserextra.FieldPostalCode:
+		return m.PostalCode()
+	case appuserextra.FieldAge:
+		return m.Age()
+	case appuserextra.FieldBirthday:
+		return m.Birthday()
+	case appuserextra.FieldAvatar:
+		return m.Avatar()
+	case appuserextra.FieldOrganization:
+		return m.Organization()
+	case appuserextra.FieldCreateAt:
+		return m.CreateAt()
+	case appuserextra.FieldUpdateAt:
+		return m.UpdateAt()
+	case appuserextra.FieldDeleteAt:
+		return m.DeleteAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppUserExtraMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case appuserextra.FieldAppID:
+		return m.OldAppID(ctx)
+	case appuserextra.FieldUserID:
+		return m.OldUserID(ctx)
+	case appuserextra.FieldUsername:
+		return m.OldUsername(ctx)
+	case appuserextra.FieldAddressFields:
+		return m.OldAddressFields(ctx)
+	case appuserextra.FieldGender:
+		return m.OldGender(ctx)
+	case appuserextra.FieldPostalCode:
+		return m.OldPostalCode(ctx)
+	case appuserextra.FieldAge:
+		return m.OldAge(ctx)
+	case appuserextra.FieldBirthday:
+		return m.OldBirthday(ctx)
+	case appuserextra.FieldAvatar:
+		return m.OldAvatar(ctx)
+	case appuserextra.FieldOrganization:
+		return m.OldOrganization(ctx)
+	case appuserextra.FieldCreateAt:
+		return m.OldCreateAt(ctx)
+	case appuserextra.FieldUpdateAt:
+		return m.OldUpdateAt(ctx)
+	case appuserextra.FieldDeleteAt:
+		return m.OldDeleteAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppUserExtra field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppUserExtraMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case appuserextra.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case appuserextra.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case appuserextra.FieldUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsername(v)
+		return nil
+	case appuserextra.FieldAddressFields:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddressFields(v)
+		return nil
+	case appuserextra.FieldGender:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGender(v)
+		return nil
+	case appuserextra.FieldPostalCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPostalCode(v)
+		return nil
+	case appuserextra.FieldAge:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAge(v)
+		return nil
+	case appuserextra.FieldBirthday:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBirthday(v)
+		return nil
+	case appuserextra.FieldAvatar:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAvatar(v)
+		return nil
+	case appuserextra.FieldOrganization:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrganization(v)
+		return nil
+	case appuserextra.FieldCreateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateAt(v)
+		return nil
+	case appuserextra.FieldUpdateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateAt(v)
+		return nil
+	case appuserextra.FieldDeleteAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeleteAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppUserExtra field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppUserExtraMutation) AddedFields() []string {
+	var fields []string
+	if m.addage != nil {
+		fields = append(fields, appuserextra.FieldAge)
+	}
+	if m.addbirthday != nil {
+		fields = append(fields, appuserextra.FieldBirthday)
+	}
+	if m.addcreate_at != nil {
+		fields = append(fields, appuserextra.FieldCreateAt)
+	}
+	if m.addupdate_at != nil {
+		fields = append(fields, appuserextra.FieldUpdateAt)
+	}
+	if m.adddelete_at != nil {
+		fields = append(fields, appuserextra.FieldDeleteAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppUserExtraMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case appuserextra.FieldAge:
+		return m.AddedAge()
+	case appuserextra.FieldBirthday:
+		return m.AddedBirthday()
+	case appuserextra.FieldCreateAt:
+		return m.AddedCreateAt()
+	case appuserextra.FieldUpdateAt:
+		return m.AddedUpdateAt()
+	case appuserextra.FieldDeleteAt:
+		return m.AddedDeleteAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppUserExtraMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case appuserextra.FieldAge:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAge(v)
+		return nil
+	case appuserextra.FieldBirthday:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddBirthday(v)
+		return nil
+	case appuserextra.FieldCreateAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreateAt(v)
+		return nil
+	case appuserextra.FieldUpdateAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdateAt(v)
+		return nil
+	case appuserextra.FieldDeleteAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeleteAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppUserExtra numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppUserExtraMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppUserExtraMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppUserExtraMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown AppUserExtra nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppUserExtraMutation) ResetField(name string) error {
+	switch name {
+	case appuserextra.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case appuserextra.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case appuserextra.FieldUsername:
+		m.ResetUsername()
+		return nil
+	case appuserextra.FieldAddressFields:
+		m.ResetAddressFields()
+		return nil
+	case appuserextra.FieldGender:
+		m.ResetGender()
+		return nil
+	case appuserextra.FieldPostalCode:
+		m.ResetPostalCode()
+		return nil
+	case appuserextra.FieldAge:
+		m.ResetAge()
+		return nil
+	case appuserextra.FieldBirthday:
+		m.ResetBirthday()
+		return nil
+	case appuserextra.FieldAvatar:
+		m.ResetAvatar()
+		return nil
+	case appuserextra.FieldOrganization:
+		m.ResetOrganization()
+		return nil
+	case appuserextra.FieldCreateAt:
+		m.ResetCreateAt()
+		return nil
+	case appuserextra.FieldUpdateAt:
+		m.ResetUpdateAt()
+		return nil
+	case appuserextra.FieldDeleteAt:
+		m.ResetDeleteAt()
+		return nil
+	}
+	return fmt.Errorf("unknown AppUserExtra field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppUserExtraMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppUserExtraMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppUserExtraMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppUserExtraMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppUserExtraMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppUserExtraMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppUserExtraMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppUserExtra unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppUserExtraMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppUserExtra edge %s", name)
 }
 
 // AppUserSecretMutation represents an operation that mutates the AppUserSecret nodes in the graph.

@@ -61,6 +61,29 @@ var (
 		Columns:    AppUsersColumns,
 		PrimaryKey: []*schema.Column{AppUsersColumns[0]},
 	}
+	// AppUserExtrasColumns holds the columns for the "app_user_extras" table.
+	AppUserExtrasColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "username", Type: field.TypeString},
+		{Name: "address_fields", Type: field.TypeJSON},
+		{Name: "gender", Type: field.TypeString},
+		{Name: "postal_code", Type: field.TypeString},
+		{Name: "age", Type: field.TypeUint32},
+		{Name: "birthday", Type: field.TypeUint32},
+		{Name: "avatar", Type: field.TypeString},
+		{Name: "organization", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppUserExtrasTable holds the schema information for the "app_user_extras" table.
+	AppUserExtrasTable = &schema.Table{
+		Name:       "app_user_extras",
+		Columns:    AppUserExtrasColumns,
+		PrimaryKey: []*schema.Column{AppUserExtrasColumns[0]},
+	}
 	// AppUserSecretsColumns holds the columns for the "app_user_secrets" table.
 	AppUserSecretsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -98,6 +121,7 @@ var (
 		AppsTable,
 		AppControlsTable,
 		AppUsersTable,
+		AppUserExtrasTable,
 		AppUserSecretsTable,
 		BanAppsTable,
 	}
