@@ -7,6 +7,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
+	appctrlcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -58,11 +59,39 @@ func (s *Server) GetAppsByCreator(ctx context.Context, in *npool.GetAppsByCreato
 }
 
 func (s *Server) CreateAppControl(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.CreateAppControlResponse, error) {
-	return nil, nil
+	resp, err := appctrlcrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app control: %v", err)
+		return &npool.CreateAppControlResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppControl(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.UpdateAppControlResponse, error) {
-	return nil, nil
+	resp, err := appctrlcrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app control: %v", err)
+		return &npool.UpdateAppControlResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppControl(ctx context.Context, in *npool.GetAppControlRequest) (*npool.GetAppControlResponse, error) {
+	resp, err := appctrlcrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app control: %v", err)
+		return &npool.GetAppControlResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppControlByApp(ctx context.Context, in *npool.GetAppControlByAppRequest) (*npool.GetAppControlByAppResponse, error) {
+	resp, err := appctrlcrud.GetByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app control by app: %v", err)
+		return &npool.GetAppControlByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateBanApp(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
