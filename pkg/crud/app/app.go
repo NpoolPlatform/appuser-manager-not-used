@@ -72,7 +72,37 @@ func Create(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppRe
 }
 
 func Update(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
-	return nil, nil
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	if err := validateApp(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
+		App.
+		UpdateOneID(id).
+		SetName(in.GetInfo().GetName()).
+		SetLogo(in.GetInfo().GetLogo()).
+		SetDescription(in.GetInfo().GetDescription()).
+		Save(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail update app: %v", err)
+	}
+
+	return &npool.UpdateAppResponse{
+		Info: dbRowToApp(info),
+	}, nil
 }
 
 func Get(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {

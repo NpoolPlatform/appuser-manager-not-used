@@ -59,4 +59,14 @@ func TestCRUD(t *testing.T) {
 		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
 		assertApp(t, resp1.Info, &app)
 	}
+
+	app.ID = resp.Info.ID
+	app.Name = fmt.Sprintf("App-%v", uuid.New().String())
+	resp2, err := Update(context.Background(), &npool.UpdateAppRequest{
+		Info: &app,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
+		assertApp(t, resp2.Info, &app)
+	}
 }
