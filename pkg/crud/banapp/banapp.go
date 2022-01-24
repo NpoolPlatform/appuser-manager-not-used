@@ -137,6 +137,38 @@ func GetByApp(ctx context.Context, in *npool.GetBanAppByAppRequest) (*npool.GetB
 	}, nil
 }
 
+func Update(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBanAppResponse, error) {
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid id: %v", err)
+	}
+
+	if err := validateBanApp(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	info, err := cli.
+		BanApp.
+		UpdateOneID(id).
+		SetMessage(in.GetInfo().GetMessage()).
+		Save(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail update ban app: %v", err)
+	}
+
+	return &npool.UpdateBanAppResponse{
+		Info: dbRowToBanApp(info),
+	}, nil
+}
+
 func Delete(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {

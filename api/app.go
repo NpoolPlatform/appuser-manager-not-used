@@ -122,6 +122,15 @@ func (s *Server) GetBanAppByApp(ctx context.Context, in *npool.GetBanAppByAppReq
 	return resp, nil
 }
 
+func (s *Server) UpdateBanApp(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBanAppResponse, error) {
+	resp, err := banappcrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update ban app: %v", err)
+		return &npool.UpdateBanAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) DeleteBanApp(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
 	resp, err := banappcrud.Delete(ctx, in)
 	if err != nil {
