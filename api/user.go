@@ -126,11 +126,27 @@ func (s *Server) CreateBanAppUser(ctx context.Context, in *npool.CreateBanAppUse
 	return nil, nil
 }
 
+func (s *Server) GetBanAppUser(ctx context.Context, in *npool.GetBanAppUserRequest) (*npool.GetBanAppUserResponse, error) {
+	return nil, nil
+}
+
+func (s *Server) GetBanAppUserByAppUser(ctx context.Context, in *npool.GetBanAppUserByAppUserRequest) (*npool.GetBanAppUserByAppUserResponse, error) {
+	return nil, nil
+}
+
 func (s *Server) DeleteBanAppUser(ctx context.Context, in *npool.DeleteBanAppUserRequest) (*npool.DeleteBanAppUserResponse, error) {
 	return nil, nil
 }
 
 func (s *Server) CreateAppUserControl(ctx context.Context, in *npool.CreateAppUserControlRequest) (*npool.CreateAppUserControlResponse, error) {
+	return nil, nil
+}
+
+func (s *Server) GetAppUserControl(ctx context.Context, in *npool.GetAppUserControlRequest) (*npool.GetAppUserControlResponse, error) {
+	return nil, nil
+}
+
+func (s *Server) GetAppUserControlByAppUser(ctx context.Context, in *npool.GetAppUserControlByAppUserRequest) (*npool.GetAppUserControlByAppUserResponse, error) {
 	return nil, nil
 }
 
