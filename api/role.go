@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
+	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	"google.golang.org/grpc/codes"
@@ -49,15 +50,30 @@ func (s *Server) UpdateAppRole(ctx context.Context, in *npool.UpdateAppRoleReque
 }
 
 func (s *Server) CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npool.CreateAppRoleUserResponse, error) {
-	return nil, nil
+	resp, err := approleusercrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app role user: %v", err)
+		return &npool.CreateAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppRoleUser(ctx context.Context, in *npool.GetAppRoleUserRequest) (*npool.GetAppRoleUserResponse, error) {
-	return nil, nil
+	resp, err := approleusercrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app role user: %v", err)
+		return &npool.GetAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppRoleUsersByAppRole(ctx context.Context, in *npool.GetAppRoleUsersByAppRoleRequest) (*npool.GetAppRoleUsersByAppRoleResponse, error) {
-	return nil, nil
+	resp, err := approleusercrud.GetUsersByAppRole(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get users by app role: %v", err)
+		return &npool.GetAppRoleUsersByAppRoleResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetUserRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserRequest) (*npool.GetUserRolesByAppUserResponse, error) {
@@ -65,5 +81,10 @@ func (s *Server) GetUserRolesByAppUser(ctx context.Context, in *npool.GetUserRol
 }
 
 func (s *Server) DeleteAppRoleUser(ctx context.Context, in *npool.DeleteAppRoleUserRequest) (*npool.DeleteAppRoleUserResponse, error) {
-	return nil, nil
+	resp, err := approleusercrud.Delete(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail delete app role user: %v", err)
+		return &npool.DeleteAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
