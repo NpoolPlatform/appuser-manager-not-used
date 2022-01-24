@@ -35,6 +35,12 @@ func (bauc *BanAppUserCreate) SetUserID(u uuid.UUID) *BanAppUserCreate {
 	return bauc
 }
 
+// SetMessage sets the "message" field.
+func (bauc *BanAppUserCreate) SetMessage(s string) *BanAppUserCreate {
+	bauc.mutation.SetMessage(s)
+	return bauc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (bauc *BanAppUserCreate) SetCreateAt(u uint32) *BanAppUserCreate {
 	bauc.mutation.SetCreateAt(u)
@@ -188,6 +194,9 @@ func (bauc *BanAppUserCreate) check() error {
 	if _, ok := bauc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "BanAppUser.user_id"`)}
 	}
+	if _, ok := bauc.mutation.Message(); !ok {
+		return &ValidationError{Name: "message", err: errors.New(`ent: missing required field "BanAppUser.message"`)}
+	}
 	if _, ok := bauc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "BanAppUser.create_at"`)}
 	}
@@ -249,6 +258,14 @@ func (bauc *BanAppUserCreate) createSpec() (*BanAppUser, *sqlgraph.CreateSpec) {
 			Column: banappuser.FieldUserID,
 		})
 		_node.UserID = value
+	}
+	if value, ok := bauc.mutation.Message(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: banappuser.FieldMessage,
+		})
+		_node.Message = value
 	}
 	if value, ok := bauc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -349,6 +366,18 @@ func (u *BanAppUserUpsert) SetUserID(v uuid.UUID) *BanAppUserUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *BanAppUserUpsert) UpdateUserID() *BanAppUserUpsert {
 	u.SetExcluded(banappuser.FieldUserID)
+	return u
+}
+
+// SetMessage sets the "message" field.
+func (u *BanAppUserUpsert) SetMessage(v string) *BanAppUserUpsert {
+	u.Set(banappuser.FieldMessage, v)
+	return u
+}
+
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *BanAppUserUpsert) UpdateMessage() *BanAppUserUpsert {
+	u.SetExcluded(banappuser.FieldMessage)
 	return u
 }
 
@@ -481,6 +510,20 @@ func (u *BanAppUserUpsertOne) SetUserID(v uuid.UUID) *BanAppUserUpsertOne {
 func (u *BanAppUserUpsertOne) UpdateUserID() *BanAppUserUpsertOne {
 	return u.Update(func(s *BanAppUserUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetMessage sets the "message" field.
+func (u *BanAppUserUpsertOne) SetMessage(v string) *BanAppUserUpsertOne {
+	return u.Update(func(s *BanAppUserUpsert) {
+		s.SetMessage(v)
+	})
+}
+
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *BanAppUserUpsertOne) UpdateMessage() *BanAppUserUpsertOne {
+	return u.Update(func(s *BanAppUserUpsert) {
+		s.UpdateMessage()
 	})
 }
 
@@ -788,6 +831,20 @@ func (u *BanAppUserUpsertBulk) SetUserID(v uuid.UUID) *BanAppUserUpsertBulk {
 func (u *BanAppUserUpsertBulk) UpdateUserID() *BanAppUserUpsertBulk {
 	return u.Update(func(s *BanAppUserUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetMessage sets the "message" field.
+func (u *BanAppUserUpsertBulk) SetMessage(v string) *BanAppUserUpsertBulk {
+	return u.Update(func(s *BanAppUserUpsert) {
+		s.SetMessage(v)
+	})
+}
+
+// UpdateMessage sets the "message" field to the value that was provided on create.
+func (u *BanAppUserUpsertBulk) UpdateMessage() *BanAppUserUpsertBulk {
+	return u.Update(func(s *BanAppUserUpsert) {
+		s.UpdateMessage()
 	})
 }
 

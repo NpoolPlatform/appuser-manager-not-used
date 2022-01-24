@@ -9,20 +9,19 @@ import (
 	"github.com/google/uuid"
 )
 
-// BanAppUser holds the schema definition for the BanAppUser entity.
-type BanAppUser struct {
+// AppUserControl holds the schema definition for the AppUserControl entity.
+type AppUserControl struct {
 	ent.Schema
 }
 
-// Fields of the BanAppUser.
-func (BanAppUser) Fields() []ent.Field {
+// Fields of the AppUserControl.
+func (AppUserControl) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
-		field.String("message"),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())
@@ -41,7 +40,7 @@ func (BanAppUser) Fields() []ent.Field {
 	}
 }
 
-// Edges of the BanAppUser.
-func (BanAppUser) Edges() []ent.Edge {
+// Edges of the AppUserControl.
+func (AppUserControl) Edges() []ent.Edge {
 	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
@@ -121,6 +122,26 @@ func init() {
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.
 	appuser.DefaultID = appuserDescID.Default.(func() uuid.UUID)
+	appusercontrolFields := schema.AppUserControl{}.Fields()
+	_ = appusercontrolFields
+	// appusercontrolDescCreateAt is the schema descriptor for create_at field.
+	appusercontrolDescCreateAt := appusercontrolFields[3].Descriptor()
+	// appusercontrol.DefaultCreateAt holds the default value on creation for the create_at field.
+	appusercontrol.DefaultCreateAt = appusercontrolDescCreateAt.Default.(func() uint32)
+	// appusercontrolDescUpdateAt is the schema descriptor for update_at field.
+	appusercontrolDescUpdateAt := appusercontrolFields[4].Descriptor()
+	// appusercontrol.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appusercontrol.DefaultUpdateAt = appusercontrolDescUpdateAt.Default.(func() uint32)
+	// appusercontrol.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appusercontrol.UpdateDefaultUpdateAt = appusercontrolDescUpdateAt.UpdateDefault.(func() uint32)
+	// appusercontrolDescDeleteAt is the schema descriptor for delete_at field.
+	appusercontrolDescDeleteAt := appusercontrolFields[5].Descriptor()
+	// appusercontrol.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	appusercontrol.DefaultDeleteAt = appusercontrolDescDeleteAt.Default.(func() uint32)
+	// appusercontrolDescID is the schema descriptor for id field.
+	appusercontrolDescID := appusercontrolFields[0].Descriptor()
+	// appusercontrol.DefaultID holds the default value on creation for the id field.
+	appusercontrol.DefaultID = appusercontrolDescID.Default.(func() uuid.UUID)
 	appuserextraFields := schema.AppUserExtra{}.Fields()
 	_ = appuserextraFields
 	// appuserextraDescCreateAt is the schema descriptor for create_at field.
@@ -184,17 +205,17 @@ func init() {
 	banappuserFields := schema.BanAppUser{}.Fields()
 	_ = banappuserFields
 	// banappuserDescCreateAt is the schema descriptor for create_at field.
-	banappuserDescCreateAt := banappuserFields[3].Descriptor()
+	banappuserDescCreateAt := banappuserFields[4].Descriptor()
 	// banappuser.DefaultCreateAt holds the default value on creation for the create_at field.
 	banappuser.DefaultCreateAt = banappuserDescCreateAt.Default.(func() uint32)
 	// banappuserDescUpdateAt is the schema descriptor for update_at field.
-	banappuserDescUpdateAt := banappuserFields[4].Descriptor()
+	banappuserDescUpdateAt := banappuserFields[5].Descriptor()
 	// banappuser.DefaultUpdateAt holds the default value on creation for the update_at field.
 	banappuser.DefaultUpdateAt = banappuserDescUpdateAt.Default.(func() uint32)
 	// banappuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	banappuser.UpdateDefaultUpdateAt = banappuserDescUpdateAt.UpdateDefault.(func() uint32)
 	// banappuserDescDeleteAt is the schema descriptor for delete_at field.
-	banappuserDescDeleteAt := banappuserFields[5].Descriptor()
+	banappuserDescDeleteAt := banappuserFields[6].Descriptor()
 	// banappuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	banappuser.DefaultDeleteAt = banappuserDescDeleteAt.Default.(func() uint32)
 	// banappuserDescID is the schema descriptor for id field.

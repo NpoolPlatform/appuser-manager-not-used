@@ -95,6 +95,21 @@ var (
 		Columns:    AppUsersColumns,
 		PrimaryKey: []*schema.Column{AppUsersColumns[0]},
 	}
+	// AppUserControlsColumns holds the columns for the "app_user_controls" table.
+	AppUserControlsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
+	AppUserControlsTable = &schema.Table{
+		Name:       "app_user_controls",
+		Columns:    AppUserControlsColumns,
+		PrimaryKey: []*schema.Column{AppUserControlsColumns[0]},
+	}
 	// AppUserExtrasColumns holds the columns for the "app_user_extras" table.
 	AppUserExtrasColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -156,6 +171,7 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "message", Type: field.TypeString},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
@@ -187,6 +203,7 @@ var (
 		AppRolesTable,
 		AppRoleUsersTable,
 		AppUsersTable,
+		AppUserControlsTable,
 		AppUserExtrasTable,
 		AppUserSecretsTable,
 		BanAppsTable,

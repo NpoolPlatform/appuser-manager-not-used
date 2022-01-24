@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/google/uuid"
 )
 
-// BanAppUser is the model entity for the BanAppUser schema.
-type BanAppUser struct {
+// AppUserControl is the model entity for the AppUserControl schema.
+type AppUserControl struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
@@ -20,8 +20,6 @@ type BanAppUser struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// Message holds the value of the "message" field.
-	Message string `json:"message,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -31,122 +29,112 @@ type BanAppUser struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*BanAppUser) scanValues(columns []string) ([]interface{}, error) {
+func (*AppUserControl) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case banappuser.FieldCreateAt, banappuser.FieldUpdateAt, banappuser.FieldDeleteAt:
+		case appusercontrol.FieldCreateAt, appusercontrol.FieldUpdateAt, appusercontrol.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case banappuser.FieldMessage:
-			values[i] = new(sql.NullString)
-		case banappuser.FieldID, banappuser.FieldAppID, banappuser.FieldUserID:
+		case appusercontrol.FieldID, appusercontrol.FieldAppID, appusercontrol.FieldUserID:
 			values[i] = new(uuid.UUID)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type BanAppUser", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type AppUserControl", columns[i])
 		}
 	}
 	return values, nil
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the BanAppUser fields.
-func (bau *BanAppUser) assignValues(columns []string, values []interface{}) error {
+// to the AppUserControl fields.
+func (auc *AppUserControl) assignValues(columns []string, values []interface{}) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case banappuser.FieldID:
+		case appusercontrol.FieldID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
-				bau.ID = *value
+				auc.ID = *value
 			}
-		case banappuser.FieldAppID:
+		case appusercontrol.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
 			} else if value != nil {
-				bau.AppID = *value
+				auc.AppID = *value
 			}
-		case banappuser.FieldUserID:
+		case appusercontrol.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
-				bau.UserID = *value
+				auc.UserID = *value
 			}
-		case banappuser.FieldMessage:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field message", values[i])
-			} else if value.Valid {
-				bau.Message = value.String
-			}
-		case banappuser.FieldCreateAt:
+		case appusercontrol.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_at", values[i])
 			} else if value.Valid {
-				bau.CreateAt = uint32(value.Int64)
+				auc.CreateAt = uint32(value.Int64)
 			}
-		case banappuser.FieldUpdateAt:
+		case appusercontrol.FieldUpdateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field update_at", values[i])
 			} else if value.Valid {
-				bau.UpdateAt = uint32(value.Int64)
+				auc.UpdateAt = uint32(value.Int64)
 			}
-		case banappuser.FieldDeleteAt:
+		case appusercontrol.FieldDeleteAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
 			} else if value.Valid {
-				bau.DeleteAt = uint32(value.Int64)
+				auc.DeleteAt = uint32(value.Int64)
 			}
 		}
 	}
 	return nil
 }
 
-// Update returns a builder for updating this BanAppUser.
-// Note that you need to call BanAppUser.Unwrap() before calling this method if this BanAppUser
+// Update returns a builder for updating this AppUserControl.
+// Note that you need to call AppUserControl.Unwrap() before calling this method if this AppUserControl
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (bau *BanAppUser) Update() *BanAppUserUpdateOne {
-	return (&BanAppUserClient{config: bau.config}).UpdateOne(bau)
+func (auc *AppUserControl) Update() *AppUserControlUpdateOne {
+	return (&AppUserControlClient{config: auc.config}).UpdateOne(auc)
 }
 
-// Unwrap unwraps the BanAppUser entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the AppUserControl entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (bau *BanAppUser) Unwrap() *BanAppUser {
-	tx, ok := bau.config.driver.(*txDriver)
+func (auc *AppUserControl) Unwrap() *AppUserControl {
+	tx, ok := auc.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: BanAppUser is not a transactional entity")
+		panic("ent: AppUserControl is not a transactional entity")
 	}
-	bau.config.driver = tx.drv
-	return bau
+	auc.config.driver = tx.drv
+	return auc
 }
 
 // String implements the fmt.Stringer.
-func (bau *BanAppUser) String() string {
+func (auc *AppUserControl) String() string {
 	var builder strings.Builder
-	builder.WriteString("BanAppUser(")
-	builder.WriteString(fmt.Sprintf("id=%v", bau.ID))
+	builder.WriteString("AppUserControl(")
+	builder.WriteString(fmt.Sprintf("id=%v", auc.ID))
 	builder.WriteString(", app_id=")
-	builder.WriteString(fmt.Sprintf("%v", bau.AppID))
+	builder.WriteString(fmt.Sprintf("%v", auc.AppID))
 	builder.WriteString(", user_id=")
-	builder.WriteString(fmt.Sprintf("%v", bau.UserID))
-	builder.WriteString(", message=")
-	builder.WriteString(bau.Message)
+	builder.WriteString(fmt.Sprintf("%v", auc.UserID))
 	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", bau.CreateAt))
+	builder.WriteString(fmt.Sprintf("%v", auc.CreateAt))
 	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", bau.UpdateAt))
+	builder.WriteString(fmt.Sprintf("%v", auc.UpdateAt))
 	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", bau.DeleteAt))
+	builder.WriteString(fmt.Sprintf("%v", auc.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// BanAppUsers is a parsable slice of BanAppUser.
-type BanAppUsers []*BanAppUser
+// AppUserControls is a parsable slice of AppUserControl.
+type AppUserControls []*AppUserControl
 
-func (bau BanAppUsers) config(cfg config) {
-	for _i := range bau {
-		bau[_i].config = cfg
+func (auc AppUserControls) config(cfg config) {
+	for _i := range auc {
+		auc[_i].config = cfg
 	}
 }
