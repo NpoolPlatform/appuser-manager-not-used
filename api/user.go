@@ -7,8 +7,10 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
+	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
+	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -123,35 +125,75 @@ func (s *Server) UpdateAppUserExtra(ctx context.Context, in *npool.UpdateAppUser
 }
 
 func (s *Server) CreateBanAppUser(ctx context.Context, in *npool.CreateBanAppUserRequest) (*npool.CreateBanAppUserResponse, error) {
-	return nil, nil
+	resp, err := banappusercrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create ban app user: %v", err)
+		return &npool.CreateBanAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetBanAppUser(ctx context.Context, in *npool.GetBanAppUserRequest) (*npool.GetBanAppUserResponse, error) {
-	return nil, nil
+	resp, err := banappusercrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get ban app user: %v", err)
+		return &npool.GetBanAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetBanAppUserByAppUser(ctx context.Context, in *npool.GetBanAppUserByAppUserRequest) (*npool.GetBanAppUserByAppUserResponse, error) {
-	return nil, nil
+	resp, err := banappusercrud.GetByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get ban app user by app user: %v", err)
+		return &npool.GetBanAppUserByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) DeleteBanAppUser(ctx context.Context, in *npool.DeleteBanAppUserRequest) (*npool.DeleteBanAppUserResponse, error) {
-	return nil, nil
+	resp, err := banappusercrud.Delete(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail delete ban app user: %v", err)
+		return &npool.DeleteBanAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateAppUserControl(ctx context.Context, in *npool.CreateAppUserControlRequest) (*npool.CreateAppUserControlResponse, error) {
-	return nil, nil
+	resp, err := appusercontrolcrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user control: %v", err)
+		return &npool.CreateAppUserControlResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUserControl(ctx context.Context, in *npool.GetAppUserControlRequest) (*npool.GetAppUserControlResponse, error) {
-	return nil, nil
+	resp, err := appusercontrolcrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user control: %v", err)
+		return &npool.GetAppUserControlResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUserControlByAppUser(ctx context.Context, in *npool.GetAppUserControlByAppUserRequest) (*npool.GetAppUserControlByAppUserResponse, error) {
-	return nil, nil
+	resp, err := appusercontrolcrud.GetByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user control by app user: %v", err)
+		return &npool.GetAppUserControlByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppUserControl(ctx context.Context, in *npool.UpdateAppUserControlRequest) (*npool.UpdateAppUserControlResponse, error) {
-	return nil, nil
+	resp, err := appusercontrolcrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app user control: %v", err)
+		return &npool.UpdateAppUserControlResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUserInfo(ctx context.Context, in *npool.GetAppUserInfoRequest) (*npool.GetAppUserInfoResponse, error) {
