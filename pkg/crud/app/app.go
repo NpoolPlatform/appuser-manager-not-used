@@ -8,6 +8,7 @@ import (
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	db "github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 
 	"github.com/google/uuid"
 
@@ -71,5 +72,49 @@ func Create(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppRe
 }
 
 func Update(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
+	return nil, nil
+}
+
+func Get(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
+	id, err := uuid.Parse(in.GetID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		App.
+		Query().
+		Where(
+			app.ID(id),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app: %v", err)
+	}
+
+	var myApp *npool.App
+	for _, info := range infos {
+		myApp = dbRowToApp(info)
+		break
+	}
+
+	return &npool.GetAppResponse{
+		Info: myApp,
+	}, nil
+}
+
+func GetAll(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
+	return nil, nil
+}
+
+func GetByCreator(ctx context.Context, in *npool.GetAppsByCreatorRequest) (*npool.GetAppsByCreatorResponse, error) {
 	return nil, nil
 }

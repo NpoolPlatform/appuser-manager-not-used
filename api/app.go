@@ -30,6 +30,33 @@ func UpdateApp(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAp
 	return resp, nil
 }
 
+func GetApp(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
+	resp, err := appcrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app: %v", err)
+		return &npool.GetAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func GetApps(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
+	resp, err := appcrud.GetAll(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get all apps: %v", err)
+		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func GetAppsByCreator(ctx context.Context, in *npool.GetAppsByCreatorRequest) (*npool.GetAppsByCreatorResponse, error) {
+	resp, err := appcrud.GetByCreator(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get apps by creator: %v", err)
+		return &npool.GetAppsByCreatorResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func CreateAppControl(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.CreateAppControlResponse, error) {
 	return nil, nil
 }
@@ -46,10 +73,14 @@ func DeleteBanApp(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.De
 	return nil, nil
 }
 
-func GetApp(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
+func GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetAppInfoResponse, error) {
 	return nil, nil
 }
 
-func GetApps(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
+func GetAppInfos(ctx context.Context, in *npool.GetAppInfosRequest) (*npool.GetAppInfosResponse, error) {
+	return nil, nil
+}
+
+func GetAppInfosByCreator(ctx context.Context, in *npool.GetAppInfosByCreatorRequest) (*npool.GetAppInfosByCreatorResponse, error) {
 	return nil, nil
 }
