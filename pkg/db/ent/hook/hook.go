@@ -35,6 +35,19 @@ func (f AppControlFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
+// The AppRoleFunc type is an adapter to allow the use of ordinary
+// function as AppRole mutator.
+type AppRoleFunc func(context.Context, *ent.AppRoleMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppRoleMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppRoleMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AppUserFunc type is an adapter to allow the use of ordinary
 // function as AppUser mutator.
 type AppUserFunc func(context.Context, *ent.AppUserMutation) (ent.Value, error)

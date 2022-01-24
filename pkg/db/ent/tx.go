@@ -16,6 +16,8 @@ type Tx struct {
 	App *AppClient
 	// AppControl is the client for interacting with the AppControl builders.
 	AppControl *AppControlClient
+	// AppRole is the client for interacting with the AppRole builders.
+	AppRole *AppRoleClient
 	// AppUser is the client for interacting with the AppUser builders.
 	AppUser *AppUserClient
 	// AppUserExtra is the client for interacting with the AppUserExtra builders.
@@ -163,6 +165,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.App = NewAppClient(tx.config)
 	tx.AppControl = NewAppControlClient(tx.config)
+	tx.AppRole = NewAppRoleClient(tx.config)
 	tx.AppUser = NewAppUserClient(tx.config)
 	tx.AppUserExtra = NewAppUserExtraClient(tx.config)
 	tx.AppUserSecret = NewAppUserSecretClient(tx.config)

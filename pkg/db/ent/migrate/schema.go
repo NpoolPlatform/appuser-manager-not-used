@@ -44,6 +44,24 @@ var (
 		Columns:    AppControlsColumns,
 		PrimaryKey: []*schema.Column{AppControlsColumns[0]},
 	}
+	// AppRolesColumns holds the columns for the "app_roles" table.
+	AppRolesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_by", Type: field.TypeUUID},
+		{Name: "role", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "default", Type: field.TypeBool},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppRolesTable holds the schema information for the "app_roles" table.
+	AppRolesTable = &schema.Table{
+		Name:       "app_roles",
+		Columns:    AppRolesColumns,
+		PrimaryKey: []*schema.Column{AppRolesColumns[0]},
+	}
 	// AppUsersColumns holds the columns for the "app_users" table.
 	AppUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -135,6 +153,7 @@ var (
 	Tables = []*schema.Table{
 		AppsTable,
 		AppControlsTable,
+		AppRolesTable,
 		AppUsersTable,
 		AppUserExtrasTable,
 		AppUserSecretsTable,

@@ -12,6 +12,7 @@ import (
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
@@ -31,6 +32,8 @@ type Client struct {
 	App *AppClient
 	// AppControl is the client for interacting with the AppControl builders.
 	AppControl *AppControlClient
+	// AppRole is the client for interacting with the AppRole builders.
+	AppRole *AppRoleClient
 	// AppUser is the client for interacting with the AppUser builders.
 	AppUser *AppUserClient
 	// AppUserExtra is the client for interacting with the AppUserExtra builders.
@@ -56,6 +59,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.App = NewAppClient(c.config)
 	c.AppControl = NewAppControlClient(c.config)
+	c.AppRole = NewAppRoleClient(c.config)
 	c.AppUser = NewAppUserClient(c.config)
 	c.AppUserExtra = NewAppUserExtraClient(c.config)
 	c.AppUserSecret = NewAppUserSecretClient(c.config)
@@ -96,6 +100,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:        cfg,
 		App:           NewAppClient(cfg),
 		AppControl:    NewAppControlClient(cfg),
+		AppRole:       NewAppRoleClient(cfg),
 		AppUser:       NewAppUserClient(cfg),
 		AppUserExtra:  NewAppUserExtraClient(cfg),
 		AppUserSecret: NewAppUserSecretClient(cfg),
@@ -122,6 +127,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:        cfg,
 		App:           NewAppClient(cfg),
 		AppControl:    NewAppControlClient(cfg),
+		AppRole:       NewAppRoleClient(cfg),
 		AppUser:       NewAppUserClient(cfg),
 		AppUserExtra:  NewAppUserExtraClient(cfg),
 		AppUserSecret: NewAppUserSecretClient(cfg),
@@ -158,6 +164,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.App.Use(hooks...)
 	c.AppControl.Use(hooks...)
+	c.AppRole.Use(hooks...)
 	c.AppUser.Use(hooks...)
 	c.AppUserExtra.Use(hooks...)
 	c.AppUserSecret.Use(hooks...)
@@ -343,6 +350,96 @@ func (c *AppControlClient) GetX(ctx context.Context, id uuid.UUID) *AppControl {
 // Hooks returns the client hooks.
 func (c *AppControlClient) Hooks() []Hook {
 	return c.hooks.AppControl
+}
+
+// AppRoleClient is a client for the AppRole schema.
+type AppRoleClient struct {
+	config
+}
+
+// NewAppRoleClient returns a client for the AppRole from the given config.
+func NewAppRoleClient(c config) *AppRoleClient {
+	return &AppRoleClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `approle.Hooks(f(g(h())))`.
+func (c *AppRoleClient) Use(hooks ...Hook) {
+	c.hooks.AppRole = append(c.hooks.AppRole, hooks...)
+}
+
+// Create returns a create builder for AppRole.
+func (c *AppRoleClient) Create() *AppRoleCreate {
+	mutation := newAppRoleMutation(c.config, OpCreate)
+	return &AppRoleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppRole entities.
+func (c *AppRoleClient) CreateBulk(builders ...*AppRoleCreate) *AppRoleCreateBulk {
+	return &AppRoleCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppRole.
+func (c *AppRoleClient) Update() *AppRoleUpdate {
+	mutation := newAppRoleMutation(c.config, OpUpdate)
+	return &AppRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppRoleClient) UpdateOne(ar *AppRole) *AppRoleUpdateOne {
+	mutation := newAppRoleMutation(c.config, OpUpdateOne, withAppRole(ar))
+	return &AppRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppRoleClient) UpdateOneID(id uuid.UUID) *AppRoleUpdateOne {
+	mutation := newAppRoleMutation(c.config, OpUpdateOne, withAppRoleID(id))
+	return &AppRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppRole.
+func (c *AppRoleClient) Delete() *AppRoleDelete {
+	mutation := newAppRoleMutation(c.config, OpDelete)
+	return &AppRoleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppRoleClient) DeleteOne(ar *AppRole) *AppRoleDeleteOne {
+	return c.DeleteOneID(ar.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppRoleClient) DeleteOneID(id uuid.UUID) *AppRoleDeleteOne {
+	builder := c.Delete().Where(approle.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppRoleDeleteOne{builder}
+}
+
+// Query returns a query builder for AppRole.
+func (c *AppRoleClient) Query() *AppRoleQuery {
+	return &AppRoleQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppRole entity by its id.
+func (c *AppRoleClient) Get(ctx context.Context, id uuid.UUID) (*AppRole, error) {
+	return c.Query().Where(approle.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppRoleClient) GetX(ctx context.Context, id uuid.UUID) *AppRole {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppRoleClient) Hooks() []Hook {
+	return c.hooks.AppRole
 }
 
 // AppUserClient is a client for the AppUser schema.

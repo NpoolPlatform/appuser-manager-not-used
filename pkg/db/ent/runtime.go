@@ -5,6 +5,7 @@ package ent
 import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
@@ -58,6 +59,26 @@ func init() {
 	appcontrolDescID := appcontrolFields[0].Descriptor()
 	// appcontrol.DefaultID holds the default value on creation for the id field.
 	appcontrol.DefaultID = appcontrolDescID.Default.(func() uuid.UUID)
+	approleFields := schema.AppRole{}.Fields()
+	_ = approleFields
+	// approleDescCreateAt is the schema descriptor for create_at field.
+	approleDescCreateAt := approleFields[6].Descriptor()
+	// approle.DefaultCreateAt holds the default value on creation for the create_at field.
+	approle.DefaultCreateAt = approleDescCreateAt.Default.(func() uint32)
+	// approleDescUpdateAt is the schema descriptor for update_at field.
+	approleDescUpdateAt := approleFields[7].Descriptor()
+	// approle.DefaultUpdateAt holds the default value on creation for the update_at field.
+	approle.DefaultUpdateAt = approleDescUpdateAt.Default.(func() uint32)
+	// approle.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	approle.UpdateDefaultUpdateAt = approleDescUpdateAt.UpdateDefault.(func() uint32)
+	// approleDescDeleteAt is the schema descriptor for delete_at field.
+	approleDescDeleteAt := approleFields[8].Descriptor()
+	// approle.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	approle.DefaultDeleteAt = approleDescDeleteAt.Default.(func() uint32)
+	// approleDescID is the schema descriptor for id field.
+	approleDescID := approleFields[0].Descriptor()
+	// approle.DefaultID holds the default value on creation for the id field.
+	approle.DefaultID = approleDescID.Default.(func() uuid.UUID)
 	appuserFields := schema.AppUser{}.Fields()
 	_ = appuserFields
 	// appuserDescCreateAt is the schema descriptor for create_at field.

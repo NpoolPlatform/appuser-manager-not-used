@@ -26,6 +26,7 @@ type config struct {
 type hooks struct {
 	App           []ent.Hook
 	AppControl    []ent.Hook
+	AppRole       []ent.Hook
 	AppUser       []ent.Hook
 	AppUserExtra  []ent.Hook
 	AppUserSecret []ent.Hook
