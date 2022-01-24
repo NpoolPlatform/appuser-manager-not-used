@@ -9,6 +9,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
 )
@@ -137,4 +138,24 @@ func init() {
 	banappDescID := banappFields[0].Descriptor()
 	// banapp.DefaultID holds the default value on creation for the id field.
 	banapp.DefaultID = banappDescID.Default.(func() uuid.UUID)
+	banappuserFields := schema.BanAppUser{}.Fields()
+	_ = banappuserFields
+	// banappuserDescCreateAt is the schema descriptor for create_at field.
+	banappuserDescCreateAt := banappuserFields[3].Descriptor()
+	// banappuser.DefaultCreateAt holds the default value on creation for the create_at field.
+	banappuser.DefaultCreateAt = banappuserDescCreateAt.Default.(func() uint32)
+	// banappuserDescUpdateAt is the schema descriptor for update_at field.
+	banappuserDescUpdateAt := banappuserFields[4].Descriptor()
+	// banappuser.DefaultUpdateAt holds the default value on creation for the update_at field.
+	banappuser.DefaultUpdateAt = banappuserDescUpdateAt.Default.(func() uint32)
+	// banappuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	banappuser.UpdateDefaultUpdateAt = banappuserDescUpdateAt.UpdateDefault.(func() uint32)
+	// banappuserDescDeleteAt is the schema descriptor for delete_at field.
+	banappuserDescDeleteAt := banappuserFields[5].Descriptor()
+	// banappuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	banappuser.DefaultDeleteAt = banappuserDescDeleteAt.Default.(func() uint32)
+	// banappuserDescID is the schema descriptor for id field.
+	banappuserDescID := banappuserFields[0].Descriptor()
+	// banappuser.DefaultID holds the default value on creation for the id field.
+	banappuser.DefaultID = banappuserDescID.Default.(func() uuid.UUID)
 }

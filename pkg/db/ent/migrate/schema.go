@@ -116,6 +116,21 @@ var (
 		Columns:    BanAppsColumns,
 		PrimaryKey: []*schema.Column{BanAppsColumns[0]},
 	}
+	// BanAppUsersColumns holds the columns for the "ban_app_users" table.
+	BanAppUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// BanAppUsersTable holds the schema information for the "ban_app_users" table.
+	BanAppUsersTable = &schema.Table{
+		Name:       "ban_app_users",
+		Columns:    BanAppUsersColumns,
+		PrimaryKey: []*schema.Column{BanAppUsersColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
@@ -124,6 +139,7 @@ var (
 		AppUserExtrasTable,
 		AppUserSecretsTable,
 		BanAppsTable,
+		BanAppUsersTable,
 	}
 )
 

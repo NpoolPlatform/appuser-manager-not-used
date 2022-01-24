@@ -30,6 +30,7 @@ type hooks struct {
 	AppUserExtra  []ent.Hook
 	AppUserSecret []ent.Hook
 	BanApp        []ent.Hook
+	BanAppUser    []ent.Hook
 }
 
 // Options applies the options on the config object.

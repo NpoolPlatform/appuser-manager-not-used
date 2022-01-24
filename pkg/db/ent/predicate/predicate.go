@@ -23,3 +23,6 @@ type AppUserSecret func(*sql.Selector)
 
 // BanApp is the predicate function for banapp builders.
 type BanApp func(*sql.Selector)
+
+// BanAppUser is the predicate function for banappuser builders.
+type BanAppUser func(*sql.Selector)

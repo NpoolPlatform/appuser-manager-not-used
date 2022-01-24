@@ -24,6 +24,8 @@ type Tx struct {
 	AppUserSecret *AppUserSecretClient
 	// BanApp is the client for interacting with the BanApp builders.
 	BanApp *BanAppClient
+	// BanAppUser is the client for interacting with the BanAppUser builders.
+	BanAppUser *BanAppUserClient
 
 	// lazily loaded.
 	client     *Client
@@ -165,6 +167,7 @@ func (tx *Tx) init() {
 	tx.AppUserExtra = NewAppUserExtraClient(tx.config)
 	tx.AppUserSecret = NewAppUserSecretClient(tx.config)
 	tx.BanApp = NewBanAppClient(tx.config)
+	tx.BanAppUser = NewBanAppUserClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
