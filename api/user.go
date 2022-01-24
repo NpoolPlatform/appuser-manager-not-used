@@ -7,6 +7,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
+	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -49,19 +50,39 @@ func (s *Server) UpdateAppUser(ctx context.Context, in *npool.UpdateAppUserReque
 }
 
 func (s *Server) CreateAppUserSecret(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
-	return nil, nil
+	resp, err := appusersecretcrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user secret: %v", err)
+		return &npool.CreateAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUserSecret(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppUserSecretResponse, error) {
-	return nil, nil
+	resp, err := appusersecretcrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user secret: %v", err)
+		return &npool.GetAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUserSecretByAppUser(ctx context.Context, in *npool.GetAppUserSecretByAppUserRequest) (*npool.GetAppUserSecretByAppUserResponse, error) {
-	return nil, nil
+	resp, err := appusersecretcrud.GetByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user secret by app user: %v", err)
+		return &npool.GetAppUserSecretByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppUserSecret(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
-	return nil, nil
+	resp, err := appusersecretcrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app user secret: %v", err)
+		return &npool.UpdateAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateAppUserExtra(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.CreateAppUserExtraResponse, error) {
