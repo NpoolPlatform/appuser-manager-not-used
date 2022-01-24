@@ -34,6 +34,12 @@ func (bau *BanAppUpdate) SetAppID(u uuid.UUID) *BanAppUpdate {
 	return bau
 }
 
+// SetMessage sets the "message" field.
+func (bau *BanAppUpdate) SetMessage(s string) *BanAppUpdate {
+	bau.mutation.SetMessage(s)
+	return bau
+}
+
 // SetCreateAt sets the "create_at" field.
 func (bau *BanAppUpdate) SetCreateAt(u uint32) *BanAppUpdate {
 	bau.mutation.ResetCreateAt()
@@ -182,6 +188,13 @@ func (bau *BanAppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: banapp.FieldAppID,
 		})
 	}
+	if value, ok := bau.mutation.Message(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: banapp.FieldMessage,
+		})
+	}
 	if value, ok := bau.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -246,6 +259,12 @@ type BanAppUpdateOne struct {
 // SetAppID sets the "app_id" field.
 func (bauo *BanAppUpdateOne) SetAppID(u uuid.UUID) *BanAppUpdateOne {
 	bauo.mutation.SetAppID(u)
+	return bauo
+}
+
+// SetMessage sets the "message" field.
+func (bauo *BanAppUpdateOne) SetMessage(s string) *BanAppUpdateOne {
+	bauo.mutation.SetMessage(s)
 	return bauo
 }
 
@@ -419,6 +438,13 @@ func (bauo *BanAppUpdateOne) sqlSave(ctx context.Context) (_node *BanApp, err er
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: banapp.FieldAppID,
+		})
+	}
+	if value, ok := bauo.mutation.Message(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: banapp.FieldMessage,
 		})
 	}
 	if value, ok := bauo.mutation.CreateAt(); ok {

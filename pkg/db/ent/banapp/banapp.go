@@ -13,6 +13,8 @@ const (
 	FieldID = "id"
 	// FieldAppID holds the string denoting the app_id field in the database.
 	FieldAppID = "app_id"
+	// FieldMessage holds the string denoting the message field in the database.
+	FieldMessage = "message"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -27,6 +29,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldAppID,
+	FieldMessage,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,

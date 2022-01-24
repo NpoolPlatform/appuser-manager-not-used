@@ -5805,6 +5805,7 @@ type BanAppMutation struct {
 	typ           string
 	id            *uuid.UUID
 	app_id        *uuid.UUID
+	message       *string
 	create_at     *uint32
 	addcreate_at  *int32
 	update_at     *uint32
@@ -5955,6 +5956,42 @@ func (m *BanAppMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) 
 // ResetAppID resets all changes to the "app_id" field.
 func (m *BanAppMutation) ResetAppID() {
 	m.app_id = nil
+}
+
+// SetMessage sets the "message" field.
+func (m *BanAppMutation) SetMessage(s string) {
+	m.message = &s
+}
+
+// Message returns the value of the "message" field in the mutation.
+func (m *BanAppMutation) Message() (r string, exists bool) {
+	v := m.message
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMessage returns the old "message" field's value of the BanApp entity.
+// If the BanApp object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BanAppMutation) OldMessage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMessage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMessage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMessage: %w", err)
+	}
+	return oldValue.Message, nil
+}
+
+// ResetMessage resets all changes to the "message" field.
+func (m *BanAppMutation) ResetMessage() {
+	m.message = nil
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -6144,9 +6181,12 @@ func (m *BanAppMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *BanAppMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.app_id != nil {
 		fields = append(fields, banapp.FieldAppID)
+	}
+	if m.message != nil {
+		fields = append(fields, banapp.FieldMessage)
 	}
 	if m.create_at != nil {
 		fields = append(fields, banapp.FieldCreateAt)
@@ -6167,6 +6207,8 @@ func (m *BanAppMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case banapp.FieldAppID:
 		return m.AppID()
+	case banapp.FieldMessage:
+		return m.Message()
 	case banapp.FieldCreateAt:
 		return m.CreateAt()
 	case banapp.FieldUpdateAt:
@@ -6184,6 +6226,8 @@ func (m *BanAppMutation) OldField(ctx context.Context, name string) (ent.Value, 
 	switch name {
 	case banapp.FieldAppID:
 		return m.OldAppID(ctx)
+	case banapp.FieldMessage:
+		return m.OldMessage(ctx)
 	case banapp.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case banapp.FieldUpdateAt:
@@ -6205,6 +6249,13 @@ func (m *BanAppMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppID(v)
+		return nil
+	case banapp.FieldMessage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMessage(v)
 		return nil
 	case banapp.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -6317,6 +6368,9 @@ func (m *BanAppMutation) ResetField(name string) error {
 	switch name {
 	case banapp.FieldAppID:
 		m.ResetAppID()
+		return nil
+	case banapp.FieldMessage:
+		m.ResetMessage()
 		return nil
 	case banapp.FieldCreateAt:
 		m.ResetCreateAt()

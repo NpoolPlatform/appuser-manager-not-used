@@ -164,21 +164,21 @@ func init() {
 	banappFields := schema.BanApp{}.Fields()
 	_ = banappFields
 	// banappDescCreateAt is the schema descriptor for create_at field.
-	banappDescCreateAt := banappFields[2].Descriptor()
+	banappDescCreateAt := banappFields[3].Descriptor()
 	// banapp.DefaultCreateAt holds the default value on creation for the create_at field.
 	banapp.DefaultCreateAt = banappDescCreateAt.Default.(func() uint32)
 	// banappDescUpdateAt is the schema descriptor for update_at field.
-	banappDescUpdateAt := banappFields[3].Descriptor()
+	banappDescUpdateAt := banappFields[4].Descriptor()
 	// banapp.DefaultUpdateAt holds the default value on creation for the update_at field.
 	banapp.DefaultUpdateAt = banappDescUpdateAt.Default.(func() uint32)
 	// banapp.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	banapp.UpdateDefaultUpdateAt = banappDescUpdateAt.UpdateDefault.(func() uint32)
 	// banappDescDeleteAt is the schema descriptor for delete_at field.
-	banappDescDeleteAt := banappFields[4].Descriptor()
+	banappDescDeleteAt := banappFields[5].Descriptor()
 	// banapp.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	banapp.DefaultDeleteAt = banappDescDeleteAt.Default.(func() uint32)
 	// banappDescID is the schema descriptor for id field.
-	banappDescID := banappFields[1].Descriptor()
+	banappDescID := banappFields[0].Descriptor()
 	// banapp.DefaultID holds the default value on creation for the id field.
 	banapp.DefaultID = banappDescID.Default.(func() uuid.UUID)
 	banappuserFields := schema.BanAppUser{}.Fields()

@@ -18,6 +18,8 @@ type BanApp struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
+	// Message holds the value of the "message" field.
+	Message string `json:"message,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -33,6 +35,8 @@ func (*BanApp) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case banapp.FieldCreateAt, banapp.FieldUpdateAt, banapp.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
+		case banapp.FieldMessage:
+			values[i] = new(sql.NullString)
 		case banapp.FieldID, banapp.FieldAppID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -61,6 +65,12 @@ func (ba *BanApp) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
 			} else if value != nil {
 				ba.AppID = *value
+			}
+		case banapp.FieldMessage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field message", values[i])
+			} else if value.Valid {
+				ba.Message = value.String
 			}
 		case banapp.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -110,6 +120,8 @@ func (ba *BanApp) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", ba.ID))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", ba.AppID))
+	builder.WriteString(", message=")
+	builder.WriteString(ba.Message)
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", ba.CreateAt))
 	builder.WriteString(", update_at=")

@@ -8,6 +8,7 @@ import (
 
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
 	appctrlcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
+	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -95,11 +96,39 @@ func (s *Server) GetAppControlByApp(ctx context.Context, in *npool.GetAppControl
 }
 
 func (s *Server) CreateBanApp(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
-	return nil, nil
+	resp, err := banappcrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create ban app: %v", err)
+		return &npool.CreateBanAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetBanApp(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppResponse, error) {
+	resp, err := banappcrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get ban app: %v", err)
+		return &npool.GetBanAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetBanAppByApp(ctx context.Context, in *npool.GetBanAppByAppRequest) (*npool.GetBanAppByAppResponse, error) {
+	resp, err := banappcrud.GetByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get ban app by app: %v", err)
+		return &npool.GetBanAppByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) DeleteBanApp(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
-	return nil, nil
+	resp, err := banappcrud.Delete(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail delete ban app: %v", err)
+		return &npool.DeleteBanAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetAppInfoResponse, error) {
