@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
@@ -27,10 +28,11 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeApp        = "App"
-	TypeAppControl = "AppControl"
-	TypeAppUser    = "AppUser"
-	TypeBanApp     = "BanApp"
+	TypeApp           = "App"
+	TypeAppControl    = "AppControl"
+	TypeAppUser       = "AppUser"
+	TypeAppUserSecret = "AppUserSecret"
+	TypeBanApp        = "BanApp"
 )
 
 // AppMutation represents an operation that mutates the App nodes in the graph.
@@ -2368,6 +2370,803 @@ func (m *AppUserMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AppUserMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppUser edge %s", name)
+}
+
+// AppUserSecretMutation represents an operation that mutates the AppUserSecret nodes in the graph.
+type AppUserSecretMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	app_id        *uuid.UUID
+	user_id       *uuid.UUID
+	password_hash *string
+	salt          *string
+	google_secret *string
+	create_at     *uint32
+	addcreate_at  *int32
+	update_at     *uint32
+	addupdate_at  *int32
+	delete_at     *uint32
+	adddelete_at  *int32
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*AppUserSecret, error)
+	predicates    []predicate.AppUserSecret
+}
+
+var _ ent.Mutation = (*AppUserSecretMutation)(nil)
+
+// appusersecretOption allows management of the mutation configuration using functional options.
+type appusersecretOption func(*AppUserSecretMutation)
+
+// newAppUserSecretMutation creates new mutation for the AppUserSecret entity.
+func newAppUserSecretMutation(c config, op Op, opts ...appusersecretOption) *AppUserSecretMutation {
+	m := &AppUserSecretMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppUserSecret,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppUserSecretID sets the ID field of the mutation.
+func withAppUserSecretID(id uuid.UUID) appusersecretOption {
+	return func(m *AppUserSecretMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppUserSecret
+		)
+		m.oldValue = func(ctx context.Context) (*AppUserSecret, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppUserSecret.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppUserSecret sets the old AppUserSecret of the mutation.
+func withAppUserSecret(node *AppUserSecret) appusersecretOption {
+	return func(m *AppUserSecretMutation) {
+		m.oldValue = func(context.Context) (*AppUserSecret, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppUserSecretMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppUserSecretMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppUserSecret entities.
+func (m *AppUserSecretMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppUserSecretMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppUserSecretMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppUserSecret.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetAppID sets the "app_id" field.
+func (m *AppUserSecretMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *AppUserSecretMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *AppUserSecretMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *AppUserSecretMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *AppUserSecretMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *AppUserSecretMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetPasswordHash sets the "password_hash" field.
+func (m *AppUserSecretMutation) SetPasswordHash(s string) {
+	m.password_hash = &s
+}
+
+// PasswordHash returns the value of the "password_hash" field in the mutation.
+func (m *AppUserSecretMutation) PasswordHash() (r string, exists bool) {
+	v := m.password_hash
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPasswordHash returns the old "password_hash" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldPasswordHash(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPasswordHash is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPasswordHash requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPasswordHash: %w", err)
+	}
+	return oldValue.PasswordHash, nil
+}
+
+// ResetPasswordHash resets all changes to the "password_hash" field.
+func (m *AppUserSecretMutation) ResetPasswordHash() {
+	m.password_hash = nil
+}
+
+// SetSalt sets the "salt" field.
+func (m *AppUserSecretMutation) SetSalt(s string) {
+	m.salt = &s
+}
+
+// Salt returns the value of the "salt" field in the mutation.
+func (m *AppUserSecretMutation) Salt() (r string, exists bool) {
+	v := m.salt
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSalt returns the old "salt" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldSalt(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSalt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSalt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSalt: %w", err)
+	}
+	return oldValue.Salt, nil
+}
+
+// ResetSalt resets all changes to the "salt" field.
+func (m *AppUserSecretMutation) ResetSalt() {
+	m.salt = nil
+}
+
+// SetGoogleSecret sets the "google_secret" field.
+func (m *AppUserSecretMutation) SetGoogleSecret(s string) {
+	m.google_secret = &s
+}
+
+// GoogleSecret returns the value of the "google_secret" field in the mutation.
+func (m *AppUserSecretMutation) GoogleSecret() (r string, exists bool) {
+	v := m.google_secret
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoogleSecret returns the old "google_secret" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldGoogleSecret(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoogleSecret is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoogleSecret requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoogleSecret: %w", err)
+	}
+	return oldValue.GoogleSecret, nil
+}
+
+// ResetGoogleSecret resets all changes to the "google_secret" field.
+func (m *AppUserSecretMutation) ResetGoogleSecret() {
+	m.google_secret = nil
+}
+
+// SetCreateAt sets the "create_at" field.
+func (m *AppUserSecretMutation) SetCreateAt(u uint32) {
+	m.create_at = &u
+	m.addcreate_at = nil
+}
+
+// CreateAt returns the value of the "create_at" field in the mutation.
+func (m *AppUserSecretMutation) CreateAt() (r uint32, exists bool) {
+	v := m.create_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateAt returns the old "create_at" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
+	}
+	return oldValue.CreateAt, nil
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (m *AppUserSecretMutation) AddCreateAt(u int32) {
+	if m.addcreate_at != nil {
+		*m.addcreate_at += u
+	} else {
+		m.addcreate_at = &u
+	}
+}
+
+// AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
+func (m *AppUserSecretMutation) AddedCreateAt() (r int32, exists bool) {
+	v := m.addcreate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreateAt resets all changes to the "create_at" field.
+func (m *AppUserSecretMutation) ResetCreateAt() {
+	m.create_at = nil
+	m.addcreate_at = nil
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (m *AppUserSecretMutation) SetUpdateAt(u uint32) {
+	m.update_at = &u
+	m.addupdate_at = nil
+}
+
+// UpdateAt returns the value of the "update_at" field in the mutation.
+func (m *AppUserSecretMutation) UpdateAt() (r uint32, exists bool) {
+	v := m.update_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateAt returns the old "update_at" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateAt: %w", err)
+	}
+	return oldValue.UpdateAt, nil
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (m *AppUserSecretMutation) AddUpdateAt(u int32) {
+	if m.addupdate_at != nil {
+		*m.addupdate_at += u
+	} else {
+		m.addupdate_at = &u
+	}
+}
+
+// AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
+func (m *AppUserSecretMutation) AddedUpdateAt() (r int32, exists bool) {
+	v := m.addupdate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdateAt resets all changes to the "update_at" field.
+func (m *AppUserSecretMutation) ResetUpdateAt() {
+	m.update_at = nil
+	m.addupdate_at = nil
+}
+
+// SetDeleteAt sets the "delete_at" field.
+func (m *AppUserSecretMutation) SetDeleteAt(u uint32) {
+	m.delete_at = &u
+	m.adddelete_at = nil
+}
+
+// DeleteAt returns the value of the "delete_at" field in the mutation.
+func (m *AppUserSecretMutation) DeleteAt() (r uint32, exists bool) {
+	v := m.delete_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeleteAt returns the old "delete_at" field's value of the AppUserSecret entity.
+// If the AppUserSecret object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserSecretMutation) OldDeleteAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeleteAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeleteAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeleteAt: %w", err)
+	}
+	return oldValue.DeleteAt, nil
+}
+
+// AddDeleteAt adds u to the "delete_at" field.
+func (m *AppUserSecretMutation) AddDeleteAt(u int32) {
+	if m.adddelete_at != nil {
+		*m.adddelete_at += u
+	} else {
+		m.adddelete_at = &u
+	}
+}
+
+// AddedDeleteAt returns the value that was added to the "delete_at" field in this mutation.
+func (m *AppUserSecretMutation) AddedDeleteAt() (r int32, exists bool) {
+	v := m.adddelete_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeleteAt resets all changes to the "delete_at" field.
+func (m *AppUserSecretMutation) ResetDeleteAt() {
+	m.delete_at = nil
+	m.adddelete_at = nil
+}
+
+// Where appends a list predicates to the AppUserSecretMutation builder.
+func (m *AppUserSecretMutation) Where(ps ...predicate.AppUserSecret) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppUserSecretMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppUserSecret).
+func (m *AppUserSecretMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppUserSecretMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.app_id != nil {
+		fields = append(fields, appusersecret.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, appusersecret.FieldUserID)
+	}
+	if m.password_hash != nil {
+		fields = append(fields, appusersecret.FieldPasswordHash)
+	}
+	if m.salt != nil {
+		fields = append(fields, appusersecret.FieldSalt)
+	}
+	if m.google_secret != nil {
+		fields = append(fields, appusersecret.FieldGoogleSecret)
+	}
+	if m.create_at != nil {
+		fields = append(fields, appusersecret.FieldCreateAt)
+	}
+	if m.update_at != nil {
+		fields = append(fields, appusersecret.FieldUpdateAt)
+	}
+	if m.delete_at != nil {
+		fields = append(fields, appusersecret.FieldDeleteAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppUserSecretMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case appusersecret.FieldAppID:
+		return m.AppID()
+	case appusersecret.FieldUserID:
+		return m.UserID()
+	case appusersecret.FieldPasswordHash:
+		return m.PasswordHash()
+	case appusersecret.FieldSalt:
+		return m.Salt()
+	case appusersecret.FieldGoogleSecret:
+		return m.GoogleSecret()
+	case appusersecret.FieldCreateAt:
+		return m.CreateAt()
+	case appusersecret.FieldUpdateAt:
+		return m.UpdateAt()
+	case appusersecret.FieldDeleteAt:
+		return m.DeleteAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppUserSecretMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case appusersecret.FieldAppID:
+		return m.OldAppID(ctx)
+	case appusersecret.FieldUserID:
+		return m.OldUserID(ctx)
+	case appusersecret.FieldPasswordHash:
+		return m.OldPasswordHash(ctx)
+	case appusersecret.FieldSalt:
+		return m.OldSalt(ctx)
+	case appusersecret.FieldGoogleSecret:
+		return m.OldGoogleSecret(ctx)
+	case appusersecret.FieldCreateAt:
+		return m.OldCreateAt(ctx)
+	case appusersecret.FieldUpdateAt:
+		return m.OldUpdateAt(ctx)
+	case appusersecret.FieldDeleteAt:
+		return m.OldDeleteAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppUserSecret field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppUserSecretMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case appusersecret.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case appusersecret.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case appusersecret.FieldPasswordHash:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPasswordHash(v)
+		return nil
+	case appusersecret.FieldSalt:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSalt(v)
+		return nil
+	case appusersecret.FieldGoogleSecret:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoogleSecret(v)
+		return nil
+	case appusersecret.FieldCreateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateAt(v)
+		return nil
+	case appusersecret.FieldUpdateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateAt(v)
+		return nil
+	case appusersecret.FieldDeleteAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeleteAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppUserSecret field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppUserSecretMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreate_at != nil {
+		fields = append(fields, appusersecret.FieldCreateAt)
+	}
+	if m.addupdate_at != nil {
+		fields = append(fields, appusersecret.FieldUpdateAt)
+	}
+	if m.adddelete_at != nil {
+		fields = append(fields, appusersecret.FieldDeleteAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppUserSecretMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case appusersecret.FieldCreateAt:
+		return m.AddedCreateAt()
+	case appusersecret.FieldUpdateAt:
+		return m.AddedUpdateAt()
+	case appusersecret.FieldDeleteAt:
+		return m.AddedDeleteAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppUserSecretMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case appusersecret.FieldCreateAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreateAt(v)
+		return nil
+	case appusersecret.FieldUpdateAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdateAt(v)
+		return nil
+	case appusersecret.FieldDeleteAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeleteAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppUserSecret numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppUserSecretMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppUserSecretMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppUserSecretMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown AppUserSecret nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppUserSecretMutation) ResetField(name string) error {
+	switch name {
+	case appusersecret.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case appusersecret.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case appusersecret.FieldPasswordHash:
+		m.ResetPasswordHash()
+		return nil
+	case appusersecret.FieldSalt:
+		m.ResetSalt()
+		return nil
+	case appusersecret.FieldGoogleSecret:
+		m.ResetGoogleSecret()
+		return nil
+	case appusersecret.FieldCreateAt:
+		m.ResetCreateAt()
+		return nil
+	case appusersecret.FieldUpdateAt:
+		m.ResetUpdateAt()
+		return nil
+	case appusersecret.FieldDeleteAt:
+		m.ResetDeleteAt()
+		return nil
+	}
+	return fmt.Errorf("unknown AppUserSecret field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppUserSecretMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppUserSecretMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppUserSecretMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppUserSecretMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppUserSecretMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppUserSecretMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppUserSecretMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppUserSecret unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppUserSecretMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppUserSecret edge %s", name)
 }
 
 // BanAppMutation represents an operation that mutates the BanApp nodes in the graph.

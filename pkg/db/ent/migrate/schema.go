@@ -61,6 +61,24 @@ var (
 		Columns:    AppUsersColumns,
 		PrimaryKey: []*schema.Column{AppUsersColumns[0]},
 	}
+	// AppUserSecretsColumns holds the columns for the "app_user_secrets" table.
+	AppUserSecretsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "password_hash", Type: field.TypeString},
+		{Name: "salt", Type: field.TypeString},
+		{Name: "google_secret", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppUserSecretsTable holds the schema information for the "app_user_secrets" table.
+	AppUserSecretsTable = &schema.Table{
+		Name:       "app_user_secrets",
+		Columns:    AppUserSecretsColumns,
+		PrimaryKey: []*schema.Column{AppUserSecretsColumns[0]},
+	}
 	// BanAppsColumns holds the columns for the "ban_apps" table.
 	BanAppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -80,6 +98,7 @@ var (
 		AppsTable,
 		AppControlsTable,
 		AppUsersTable,
+		AppUserSecretsTable,
 		BanAppsTable,
 	}
 )

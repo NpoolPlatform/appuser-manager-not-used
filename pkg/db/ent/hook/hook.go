@@ -48,6 +48,19 @@ func (f AppUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The AppUserSecretFunc type is an adapter to allow the use of ordinary
+// function as AppUserSecret mutator.
+type AppUserSecretFunc func(context.Context, *ent.AppUserSecretMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppUserSecretFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppUserSecretMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserSecretMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The BanAppFunc type is an adapter to allow the use of ordinary
 // function as BanApp mutator.
 type BanAppFunc func(context.Context, *ent.BanAppMutation) (ent.Value, error)

@@ -11,6 +11,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 )
 
@@ -32,10 +33,11 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		app.Table:        app.ValidColumn,
-		appcontrol.Table: appcontrol.ValidColumn,
-		appuser.Table:    appuser.ValidColumn,
-		banapp.Table:     banapp.ValidColumn,
+		app.Table:           app.ValidColumn,
+		appcontrol.Table:    appcontrol.ValidColumn,
+		appuser.Table:       appuser.ValidColumn,
+		appusersecret.Table: appusersecret.ValidColumn,
+		banapp.Table:        banapp.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

@@ -6,6 +6,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
@@ -75,6 +76,26 @@ func init() {
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.
 	appuser.DefaultID = appuserDescID.Default.(func() uuid.UUID)
+	appusersecretFields := schema.AppUserSecret{}.Fields()
+	_ = appusersecretFields
+	// appusersecretDescCreateAt is the schema descriptor for create_at field.
+	appusersecretDescCreateAt := appusersecretFields[6].Descriptor()
+	// appusersecret.DefaultCreateAt holds the default value on creation for the create_at field.
+	appusersecret.DefaultCreateAt = appusersecretDescCreateAt.Default.(func() uint32)
+	// appusersecretDescUpdateAt is the schema descriptor for update_at field.
+	appusersecretDescUpdateAt := appusersecretFields[7].Descriptor()
+	// appusersecret.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appusersecret.DefaultUpdateAt = appusersecretDescUpdateAt.Default.(func() uint32)
+	// appusersecret.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appusersecret.UpdateDefaultUpdateAt = appusersecretDescUpdateAt.UpdateDefault.(func() uint32)
+	// appusersecretDescDeleteAt is the schema descriptor for delete_at field.
+	appusersecretDescDeleteAt := appusersecretFields[8].Descriptor()
+	// appusersecret.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	appusersecret.DefaultDeleteAt = appusersecretDescDeleteAt.Default.(func() uint32)
+	// appusersecretDescID is the schema descriptor for id field.
+	appusersecretDescID := appusersecretFields[0].Descriptor()
+	// appusersecret.DefaultID holds the default value on creation for the id field.
+	appusersecret.DefaultID = appusersecretDescID.Default.(func() uuid.UUID)
 	banappFields := schema.BanApp{}.Fields()
 	_ = banappFields
 	// banappDescCreateAt is the schema descriptor for create_at field.

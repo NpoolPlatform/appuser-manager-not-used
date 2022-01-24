@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 
 	"entgo.io/ent/dialect"
@@ -30,6 +31,8 @@ type Client struct {
 	AppControl *AppControlClient
 	// AppUser is the client for interacting with the AppUser builders.
 	AppUser *AppUserClient
+	// AppUserSecret is the client for interacting with the AppUserSecret builders.
+	AppUserSecret *AppUserSecretClient
 	// BanApp is the client for interacting with the BanApp builders.
 	BanApp *BanAppClient
 }
@@ -48,6 +51,7 @@ func (c *Client) init() {
 	c.App = NewAppClient(c.config)
 	c.AppControl = NewAppControlClient(c.config)
 	c.AppUser = NewAppUserClient(c.config)
+	c.AppUserSecret = NewAppUserSecretClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 }
 
@@ -80,12 +84,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:        ctx,
-		config:     cfg,
-		App:        NewAppClient(cfg),
-		AppControl: NewAppControlClient(cfg),
-		AppUser:    NewAppUserClient(cfg),
-		BanApp:     NewBanAppClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		App:           NewAppClient(cfg),
+		AppControl:    NewAppControlClient(cfg),
+		AppUser:       NewAppUserClient(cfg),
+		AppUserSecret: NewAppUserSecretClient(cfg),
+		BanApp:        NewBanAppClient(cfg),
 	}, nil
 }
 
@@ -103,12 +108,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:        ctx,
-		config:     cfg,
-		App:        NewAppClient(cfg),
-		AppControl: NewAppControlClient(cfg),
-		AppUser:    NewAppUserClient(cfg),
-		BanApp:     NewBanAppClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		App:           NewAppClient(cfg),
+		AppControl:    NewAppControlClient(cfg),
+		AppUser:       NewAppUserClient(cfg),
+		AppUserSecret: NewAppUserSecretClient(cfg),
+		BanApp:        NewBanAppClient(cfg),
 	}, nil
 }
 
@@ -141,6 +147,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.App.Use(hooks...)
 	c.AppControl.Use(hooks...)
 	c.AppUser.Use(hooks...)
+	c.AppUserSecret.Use(hooks...)
 	c.BanApp.Use(hooks...)
 }
 
@@ -412,6 +419,96 @@ func (c *AppUserClient) GetX(ctx context.Context, id uuid.UUID) *AppUser {
 // Hooks returns the client hooks.
 func (c *AppUserClient) Hooks() []Hook {
 	return c.hooks.AppUser
+}
+
+// AppUserSecretClient is a client for the AppUserSecret schema.
+type AppUserSecretClient struct {
+	config
+}
+
+// NewAppUserSecretClient returns a client for the AppUserSecret from the given config.
+func NewAppUserSecretClient(c config) *AppUserSecretClient {
+	return &AppUserSecretClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appusersecret.Hooks(f(g(h())))`.
+func (c *AppUserSecretClient) Use(hooks ...Hook) {
+	c.hooks.AppUserSecret = append(c.hooks.AppUserSecret, hooks...)
+}
+
+// Create returns a create builder for AppUserSecret.
+func (c *AppUserSecretClient) Create() *AppUserSecretCreate {
+	mutation := newAppUserSecretMutation(c.config, OpCreate)
+	return &AppUserSecretCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppUserSecret entities.
+func (c *AppUserSecretClient) CreateBulk(builders ...*AppUserSecretCreate) *AppUserSecretCreateBulk {
+	return &AppUserSecretCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppUserSecret.
+func (c *AppUserSecretClient) Update() *AppUserSecretUpdate {
+	mutation := newAppUserSecretMutation(c.config, OpUpdate)
+	return &AppUserSecretUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppUserSecretClient) UpdateOne(aus *AppUserSecret) *AppUserSecretUpdateOne {
+	mutation := newAppUserSecretMutation(c.config, OpUpdateOne, withAppUserSecret(aus))
+	return &AppUserSecretUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppUserSecretClient) UpdateOneID(id uuid.UUID) *AppUserSecretUpdateOne {
+	mutation := newAppUserSecretMutation(c.config, OpUpdateOne, withAppUserSecretID(id))
+	return &AppUserSecretUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppUserSecret.
+func (c *AppUserSecretClient) Delete() *AppUserSecretDelete {
+	mutation := newAppUserSecretMutation(c.config, OpDelete)
+	return &AppUserSecretDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppUserSecretClient) DeleteOne(aus *AppUserSecret) *AppUserSecretDeleteOne {
+	return c.DeleteOneID(aus.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppUserSecretClient) DeleteOneID(id uuid.UUID) *AppUserSecretDeleteOne {
+	builder := c.Delete().Where(appusersecret.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppUserSecretDeleteOne{builder}
+}
+
+// Query returns a query builder for AppUserSecret.
+func (c *AppUserSecretClient) Query() *AppUserSecretQuery {
+	return &AppUserSecretQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppUserSecret entity by its id.
+func (c *AppUserSecretClient) Get(ctx context.Context, id uuid.UUID) (*AppUserSecret, error) {
+	return c.Query().Where(appusersecret.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppUserSecretClient) GetX(ctx context.Context, id uuid.UUID) *AppUserSecret {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppUserSecretClient) Hooks() []Hook {
+	return c.hooks.AppUserSecret
 }
 
 // BanAppClient is a client for the BanApp schema.
