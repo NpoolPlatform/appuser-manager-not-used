@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.10.0
 	github.com/BurntSushi/toml v0.4.1 // indirect
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20211222114515-4928e6cf3f1f
-	github.com/NpoolPlatform/message v0.0.0-20220124130424-d5b195efd7d7
+	github.com/NpoolPlatform/message v0.0.0-20220124132103-1180ee589922
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
