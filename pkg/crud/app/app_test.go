@@ -69,4 +69,16 @@ func TestCRUD(t *testing.T) {
 		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
 		assertApp(t, resp2.Info, &app)
 	}
+
+	resp3, err := GetAll(context.Background(), &npool.GetAppsRequest{})
+	if assert.Nil(t, err) {
+		assert.NotEqual(t, len(resp3.Infos), 0)
+	}
+
+	resp4, err := GetByCreator(context.Background(), &npool.GetAppsByCreatorRequest{
+		UserID: app.CreatedBy,
+	})
+	if assert.Nil(t, err) {
+		assert.NotEqual(t, len(resp4.Infos), 0)
+	}
 }

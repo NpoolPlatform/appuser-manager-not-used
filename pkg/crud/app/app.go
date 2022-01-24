@@ -142,9 +142,63 @@ func Get(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, e
 }
 
 func GetAll(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
-	return nil, nil
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		App.
+		Query().
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app: %v", err)
+	}
+
+	apps := []*npool.App{}
+	for _, info := range infos {
+		apps = append(apps, dbRowToApp(info))
+	}
+
+	return &npool.GetAppsResponse{
+		Infos: apps,
+	}, nil
 }
 
 func GetByCreator(ctx context.Context, in *npool.GetAppsByCreatorRequest) (*npool.GetAppsByCreatorResponse, error) {
-	return nil, nil
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		App.
+		Query().
+		Where(
+			app.CreatedBy(userID),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app: %v", err)
+	}
+
+	apps := []*npool.App{}
+	for _, info := range infos {
+		apps = append(apps, dbRowToApp(info))
+	}
+
+	return &npool.GetAppsByCreatorResponse{
+		Infos: apps,
+	}, nil
 }
