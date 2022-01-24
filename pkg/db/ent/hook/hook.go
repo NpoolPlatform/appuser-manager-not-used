@@ -35,6 +35,32 @@ func (f AppControlFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
+// The AppUserFunc type is an adapter to allow the use of ordinary
+// function as AppUser mutator.
+type AppUserFunc func(context.Context, *ent.AppUserMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppUserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppUserMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The BanAppFunc type is an adapter to allow the use of ordinary
+// function as BanApp mutator.
+type BanAppFunc func(context.Context, *ent.BanAppMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f BanAppFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.BanAppMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BanAppMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

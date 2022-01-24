@@ -12,6 +12,8 @@ import (
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -26,6 +28,10 @@ type Client struct {
 	App *AppClient
 	// AppControl is the client for interacting with the AppControl builders.
 	AppControl *AppControlClient
+	// AppUser is the client for interacting with the AppUser builders.
+	AppUser *AppUserClient
+	// BanApp is the client for interacting with the BanApp builders.
+	BanApp *BanAppClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -41,6 +47,8 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.App = NewAppClient(c.config)
 	c.AppControl = NewAppControlClient(c.config)
+	c.AppUser = NewAppUserClient(c.config)
+	c.BanApp = NewBanAppClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -76,6 +84,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:     cfg,
 		App:        NewAppClient(cfg),
 		AppControl: NewAppControlClient(cfg),
+		AppUser:    NewAppUserClient(cfg),
+		BanApp:     NewBanAppClient(cfg),
 	}, nil
 }
 
@@ -97,6 +107,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:     cfg,
 		App:        NewAppClient(cfg),
 		AppControl: NewAppControlClient(cfg),
+		AppUser:    NewAppUserClient(cfg),
+		BanApp:     NewBanAppClient(cfg),
 	}, nil
 }
 
@@ -128,6 +140,8 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.App.Use(hooks...)
 	c.AppControl.Use(hooks...)
+	c.AppUser.Use(hooks...)
+	c.BanApp.Use(hooks...)
 }
 
 // AppClient is a client for the App schema.
@@ -308,4 +322,184 @@ func (c *AppControlClient) GetX(ctx context.Context, id uuid.UUID) *AppControl {
 // Hooks returns the client hooks.
 func (c *AppControlClient) Hooks() []Hook {
 	return c.hooks.AppControl
+}
+
+// AppUserClient is a client for the AppUser schema.
+type AppUserClient struct {
+	config
+}
+
+// NewAppUserClient returns a client for the AppUser from the given config.
+func NewAppUserClient(c config) *AppUserClient {
+	return &AppUserClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appuser.Hooks(f(g(h())))`.
+func (c *AppUserClient) Use(hooks ...Hook) {
+	c.hooks.AppUser = append(c.hooks.AppUser, hooks...)
+}
+
+// Create returns a create builder for AppUser.
+func (c *AppUserClient) Create() *AppUserCreate {
+	mutation := newAppUserMutation(c.config, OpCreate)
+	return &AppUserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppUser entities.
+func (c *AppUserClient) CreateBulk(builders ...*AppUserCreate) *AppUserCreateBulk {
+	return &AppUserCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppUser.
+func (c *AppUserClient) Update() *AppUserUpdate {
+	mutation := newAppUserMutation(c.config, OpUpdate)
+	return &AppUserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppUserClient) UpdateOne(au *AppUser) *AppUserUpdateOne {
+	mutation := newAppUserMutation(c.config, OpUpdateOne, withAppUser(au))
+	return &AppUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppUserClient) UpdateOneID(id uuid.UUID) *AppUserUpdateOne {
+	mutation := newAppUserMutation(c.config, OpUpdateOne, withAppUserID(id))
+	return &AppUserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppUser.
+func (c *AppUserClient) Delete() *AppUserDelete {
+	mutation := newAppUserMutation(c.config, OpDelete)
+	return &AppUserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppUserClient) DeleteOne(au *AppUser) *AppUserDeleteOne {
+	return c.DeleteOneID(au.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppUserClient) DeleteOneID(id uuid.UUID) *AppUserDeleteOne {
+	builder := c.Delete().Where(appuser.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppUserDeleteOne{builder}
+}
+
+// Query returns a query builder for AppUser.
+func (c *AppUserClient) Query() *AppUserQuery {
+	return &AppUserQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppUser entity by its id.
+func (c *AppUserClient) Get(ctx context.Context, id uuid.UUID) (*AppUser, error) {
+	return c.Query().Where(appuser.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppUserClient) GetX(ctx context.Context, id uuid.UUID) *AppUser {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppUserClient) Hooks() []Hook {
+	return c.hooks.AppUser
+}
+
+// BanAppClient is a client for the BanApp schema.
+type BanAppClient struct {
+	config
+}
+
+// NewBanAppClient returns a client for the BanApp from the given config.
+func NewBanAppClient(c config) *BanAppClient {
+	return &BanAppClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `banapp.Hooks(f(g(h())))`.
+func (c *BanAppClient) Use(hooks ...Hook) {
+	c.hooks.BanApp = append(c.hooks.BanApp, hooks...)
+}
+
+// Create returns a create builder for BanApp.
+func (c *BanAppClient) Create() *BanAppCreate {
+	mutation := newBanAppMutation(c.config, OpCreate)
+	return &BanAppCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of BanApp entities.
+func (c *BanAppClient) CreateBulk(builders ...*BanAppCreate) *BanAppCreateBulk {
+	return &BanAppCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for BanApp.
+func (c *BanAppClient) Update() *BanAppUpdate {
+	mutation := newBanAppMutation(c.config, OpUpdate)
+	return &BanAppUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *BanAppClient) UpdateOne(ba *BanApp) *BanAppUpdateOne {
+	mutation := newBanAppMutation(c.config, OpUpdateOne, withBanApp(ba))
+	return &BanAppUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *BanAppClient) UpdateOneID(id uuid.UUID) *BanAppUpdateOne {
+	mutation := newBanAppMutation(c.config, OpUpdateOne, withBanAppID(id))
+	return &BanAppUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for BanApp.
+func (c *BanAppClient) Delete() *BanAppDelete {
+	mutation := newBanAppMutation(c.config, OpDelete)
+	return &BanAppDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *BanAppClient) DeleteOne(ba *BanApp) *BanAppDeleteOne {
+	return c.DeleteOneID(ba.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *BanAppClient) DeleteOneID(id uuid.UUID) *BanAppDeleteOne {
+	builder := c.Delete().Where(banapp.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &BanAppDeleteOne{builder}
+}
+
+// Query returns a query builder for BanApp.
+func (c *BanAppClient) Query() *BanAppQuery {
+	return &BanAppQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a BanApp entity by its id.
+func (c *BanAppClient) Get(ctx context.Context, id uuid.UUID) (*BanApp, error) {
+	return c.Query().Where(banapp.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *BanAppClient) GetX(ctx context.Context, id uuid.UUID) *BanApp {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *BanAppClient) Hooks() []Hook {
+	return c.hooks.BanApp
 }

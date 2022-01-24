@@ -10,6 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -32,6 +34,8 @@ func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		app.Table:        app.ValidColumn,
 		appcontrol.Table: appcontrol.ValidColumn,
+		appuser.Table:    appuser.ValidColumn,
+		banapp.Table:     banapp.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

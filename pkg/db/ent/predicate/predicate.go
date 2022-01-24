@@ -11,3 +11,9 @@ type App func(*sql.Selector)
 
 // AppControl is the predicate function for appcontrol builders.
 type AppControl func(*sql.Selector)
+
+// AppUser is the predicate function for appuser builders.
+type AppUser func(*sql.Selector)
+
+// BanApp is the predicate function for banapp builders.
+type BanApp func(*sql.Selector)

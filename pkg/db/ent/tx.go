@@ -16,6 +16,10 @@ type Tx struct {
 	App *AppClient
 	// AppControl is the client for interacting with the AppControl builders.
 	AppControl *AppControlClient
+	// AppUser is the client for interacting with the AppUser builders.
+	AppUser *AppUserClient
+	// BanApp is the client for interacting with the BanApp builders.
+	BanApp *BanAppClient
 
 	// lazily loaded.
 	client     *Client
@@ -153,6 +157,8 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.App = NewAppClient(tx.config)
 	tx.AppControl = NewAppControlClient(tx.config)
+	tx.AppUser = NewAppUserClient(tx.config)
+	tx.BanApp = NewBanAppClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

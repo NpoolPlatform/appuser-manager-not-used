@@ -5,6 +5,8 @@ package ent
 import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
 )
@@ -53,4 +55,44 @@ func init() {
 	appcontrolDescID := appcontrolFields[0].Descriptor()
 	// appcontrol.DefaultID holds the default value on creation for the id field.
 	appcontrol.DefaultID = appcontrolDescID.Default.(func() uuid.UUID)
+	appuserFields := schema.AppUser{}.Fields()
+	_ = appuserFields
+	// appuserDescCreateAt is the schema descriptor for create_at field.
+	appuserDescCreateAt := appuserFields[5].Descriptor()
+	// appuser.DefaultCreateAt holds the default value on creation for the create_at field.
+	appuser.DefaultCreateAt = appuserDescCreateAt.Default.(func() uint32)
+	// appuserDescUpdateAt is the schema descriptor for update_at field.
+	appuserDescUpdateAt := appuserFields[6].Descriptor()
+	// appuser.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appuser.DefaultUpdateAt = appuserDescUpdateAt.Default.(func() uint32)
+	// appuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appuser.UpdateDefaultUpdateAt = appuserDescUpdateAt.UpdateDefault.(func() uint32)
+	// appuserDescDeleteAt is the schema descriptor for delete_at field.
+	appuserDescDeleteAt := appuserFields[7].Descriptor()
+	// appuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	appuser.DefaultDeleteAt = appuserDescDeleteAt.Default.(func() uint32)
+	// appuserDescID is the schema descriptor for id field.
+	appuserDescID := appuserFields[0].Descriptor()
+	// appuser.DefaultID holds the default value on creation for the id field.
+	appuser.DefaultID = appuserDescID.Default.(func() uuid.UUID)
+	banappFields := schema.BanApp{}.Fields()
+	_ = banappFields
+	// banappDescCreateAt is the schema descriptor for create_at field.
+	banappDescCreateAt := banappFields[2].Descriptor()
+	// banapp.DefaultCreateAt holds the default value on creation for the create_at field.
+	banapp.DefaultCreateAt = banappDescCreateAt.Default.(func() uint32)
+	// banappDescUpdateAt is the schema descriptor for update_at field.
+	banappDescUpdateAt := banappFields[3].Descriptor()
+	// banapp.DefaultUpdateAt holds the default value on creation for the update_at field.
+	banapp.DefaultUpdateAt = banappDescUpdateAt.Default.(func() uint32)
+	// banapp.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	banapp.UpdateDefaultUpdateAt = banappDescUpdateAt.UpdateDefault.(func() uint32)
+	// banappDescDeleteAt is the schema descriptor for delete_at field.
+	banappDescDeleteAt := banappFields[4].Descriptor()
+	// banapp.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	banapp.DefaultDeleteAt = banappDescDeleteAt.Default.(func() uint32)
+	// banappDescID is the schema descriptor for id field.
+	banappDescID := banappFields[0].Descriptor()
+	// banapp.DefaultID holds the default value on creation for the id field.
+	banapp.DefaultID = banappDescID.Default.(func() uuid.UUID)
 }

@@ -44,10 +44,43 @@ var (
 		Columns:    AppControlsColumns,
 		PrimaryKey: []*schema.Column{AppControlsColumns[0]},
 	}
+	// AppUsersColumns holds the columns for the "app_users" table.
+	AppUsersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "email_address", Type: field.TypeString},
+		{Name: "phone_no", Type: field.TypeString},
+		{Name: "import_from_app", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// AppUsersTable holds the schema information for the "app_users" table.
+	AppUsersTable = &schema.Table{
+		Name:       "app_users",
+		Columns:    AppUsersColumns,
+		PrimaryKey: []*schema.Column{AppUsersColumns[0]},
+	}
+	// BanAppsColumns holds the columns for the "ban_apps" table.
+	BanAppsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+	}
+	// BanAppsTable holds the schema information for the "ban_apps" table.
+	BanAppsTable = &schema.Table{
+		Name:       "ban_apps",
+		Columns:    BanAppsColumns,
+		PrimaryKey: []*schema.Column{BanAppsColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
 		AppControlsTable,
+		AppUsersTable,
+		BanAppsTable,
 	}
 )
 
