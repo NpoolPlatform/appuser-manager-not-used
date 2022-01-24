@@ -1,0 +1,6 @@
+commonLabels:
+  # app: appuser-manager
+
+resources:
+- 01-appuser-manager.yaml
+- 02-ingress.yaml
