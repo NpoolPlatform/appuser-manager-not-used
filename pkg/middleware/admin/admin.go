@@ -37,6 +37,7 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 
 	adminApp = npool.App{
 		ID:          constant.ChurchAppID,
+		CreatedBy:   "00000000-0000-0000-0000-000000000000",
 		Name:        constant.ChurchAppName,
 		Logo:        "NOT SET",
 		Description: "NOT SET",
