@@ -31,6 +31,15 @@ func (s *Server) GetAppRole(ctx context.Context, in *npool.GetAppRoleRequest) (*
 	return resp, nil
 }
 
+func (s *Server) GetAppRoleByAppRole(ctx context.Context, in *npool.GetAppRoleByAppRoleRequest) (*npool.GetAppRoleByAppRoleResponse, error) {
+	resp, err := approlecrud.GetByAppRole(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app role by app role: %v", err)
+		return &npool.GetAppRoleByAppRoleResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetAppRolesByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.GetAppRolesByAppResponse, error) {
 	resp, err := approlecrud.GetByApp(ctx, in)
 	if err != nil {

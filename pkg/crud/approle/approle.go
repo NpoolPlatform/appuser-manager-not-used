@@ -139,6 +139,45 @@ func Get(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleRes
 	}, nil
 }
 
+func GetByAppRole(ctx context.Context, in *npool.GetAppRoleByAppRoleRequest) (*npool.GetAppRoleByAppRoleResponse, error) {
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		AppRole.
+		Query().
+		Where(
+			approle.And(
+				approle.AppID(appID),
+				approle.Role(in.GetRole()),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app role: %v", err)
+	}
+
+	var appRole *npool.AppRole
+	for _, info := range infos {
+		appRole = dbRowToAppRole(info)
+		break
+	}
+
+	return &npool.GetAppRoleByAppRoleResponse{
+		Info: appRole,
+	}, nil
+}
+
 func GetByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.GetAppRolesByAppResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
