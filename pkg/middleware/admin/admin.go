@@ -42,6 +42,8 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 		}
 
 		apps = append(apps, resp.Info)
+	} else {
+		apps = append(apps, genesis.Info)
 	}
 
 	church, err := appcrud.Get(ctx, &npool.GetAppRequest{
@@ -68,6 +70,8 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 		}
 
 		apps = append(apps, resp.Info)
+	} else {
+		apps = append(apps, church.Info)
 	}
 
 	return &npool.CreateAdminAppsResponse{
