@@ -5,7 +5,10 @@ import (
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
+	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+
+	"github.com/google/uuid"
 
 	"golang.org/x/xerrors"
 )
@@ -81,7 +84,24 @@ func GetAdminApps(ctx context.Context, in *npool.GetAdminAppsRequest) (*npool.Ge
 }
 
 func CreateGenesisRole(ctx context.Context, in *npool.CreateGenesisRoleRequest) (*npool.CreateGenesisRoleResponse, error) {
-	return nil, nil
+	genesisRole := npool.AppRole{
+		AppID:       uuid.UUID{}.String(),
+		CreatedBy:   uuid.UUID{}.String(),
+		Role:        constant.GenesisRole,
+		Description: "NOT SET",
+		Default:     false,
+	}
+
+	resp, err := approlecrud.Create(ctx, &npool.CreateAppRoleRequest{
+		Info: &genesisRole,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail create genesis role: %v", err)
+	}
+
+	return &npool.CreateGenesisRoleResponse{
+		Info: resp.Info,
+	}, nil
 }
 
 func GetGenesisRole(ctx context.Context, in *npool.GetGenesisRoleRequest) (*npool.GetGenesisRoleResponse, error) {

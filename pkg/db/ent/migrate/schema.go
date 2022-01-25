@@ -61,6 +61,13 @@ var (
 		Name:       "app_roles",
 		Columns:    AppRolesColumns,
 		PrimaryKey: []*schema.Column{AppRolesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "approle_app_id_role",
+				Unique:  true,
+				Columns: []*schema.Column{AppRolesColumns[4], AppRolesColumns[2]},
+			},
+		},
 	}
 	// AppRoleUsersColumns holds the columns for the "app_role_users" table.
 	AppRoleUsersColumns = []*schema.Column{
