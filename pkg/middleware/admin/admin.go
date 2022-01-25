@@ -51,7 +51,33 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 }
 
 func GetAdminApps(ctx context.Context, in *npool.GetAdminAppsRequest) (*npool.GetAdminAppsResponse, error) {
-	return nil, nil
+	apps := []*npool.App{}
+
+	resp, err := appcrud.Get(ctx, &npool.GetAppRequest{
+		ID: constant.GenesisAppID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get genesis app: %v", err)
+	}
+
+	if resp.Info != nil {
+		apps = append(apps, resp.Info)
+	}
+
+	resp, err = appcrud.Get(ctx, &npool.GetAppRequest{
+		ID: constant.ChurchAppID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get church app: %v", err)
+	}
+
+	if resp.Info != nil {
+		apps = append(apps, resp.Info)
+	}
+
+	return &npool.GetAdminAppsResponse{
+		Infos: apps,
+	}, nil
 }
 
 func CreateGenesisRole(ctx context.Context, in *npool.CreateGenesisRoleRequest) (*npool.CreateGenesisRoleResponse, error) {
