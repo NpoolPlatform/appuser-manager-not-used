@@ -41,9 +41,15 @@ func dbRowToApp(row *ent.App) *npool.App {
 	}
 }
 
-func Create(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
+func Create(ctx context.Context, in *npool.CreateAppRequest, withID bool) (*npool.CreateAppResponse, error) {
 	if err := validateApp(in.GetInfo()); err != nil {
 		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	if withID {
+		if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
+			return nil, xerrors.Errorf("need id but invalid id: %v", err)
+		}
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -54,14 +60,18 @@ func Create(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppRe
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 
-	info, err := cli.
+	rc := cli.
 		App.
 		Create().
 		SetCreatedBy(uuid.MustParse(in.GetInfo().GetCreatedBy())).
 		SetName(in.GetInfo().GetName()).
 		SetLogo(in.GetInfo().GetLogo()).
-		SetDescription(in.GetInfo().GetDescription()).
-		Save(ctx)
+		SetDescription(in.GetInfo().GetDescription())
+	if withID {
+		rc = rc.SetID(uuid.MustParse(in.GetInfo().GetID()))
+	}
+
+	info, err := rc.Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create app: %v", err)
 	}

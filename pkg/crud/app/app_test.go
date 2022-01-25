@@ -45,7 +45,7 @@ func TestCRUD(t *testing.T) {
 
 	resp, err := Create(context.Background(), &npool.CreateAppRequest{
 		Info: &app,
-	})
+	}, false)
 
 	if assert.Nil(t, err) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{})

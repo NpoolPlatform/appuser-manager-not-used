@@ -15,7 +15,7 @@ import (
 )
 
 func (s *Server) CreateApp(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
-	resp, err := appcrud.Create(ctx, in)
+	resp, err := appcrud.Create(ctx, in, false)
 	if err != nil {
 		logger.Sugar().Errorw("fail create app: %v", err)
 		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
