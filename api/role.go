@@ -5,15 +5,21 @@ import (
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
+	"golang.org/x/xerrors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (s *Server) CreateAppRole(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {
+	if in.GetInfo().GetRole() == constant.GenesisRole {
+		return &npool.CreateAppRoleResponse{}, status.Error(codes.Internal, xerrors.Errorf("permission denied").Error())
+	}
+
 	resp, err := approlecrud.Create(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("fail create app role: %v", err)
@@ -59,6 +65,17 @@ func (s *Server) UpdateAppRole(ctx context.Context, in *npool.UpdateAppRoleReque
 }
 
 func (s *Server) CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npool.CreateAppRoleUserResponse, error) {
+	role, err := approlecrud.Get(ctx, &npool.GetAppRoleRequest{
+		ID: in.GetInfo().GetRoleID(),
+	})
+	if err != nil {
+		return &npool.CreateAppRoleUserResponse{}, status.Error(codes.Internal, xerrors.Errorf("fail get role: %v", err).Error())
+	}
+
+	if role.Info.Role == constant.GenesisRole {
+		return &npool.CreateAppRoleUserResponse{}, status.Error(codes.Internal, xerrors.Errorf("permission denied").Error())
+	}
+
 	resp, err := approleusercrud.Create(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("fail create app role user: %v", err)

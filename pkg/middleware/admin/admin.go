@@ -6,6 +6,8 @@ import (
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
+	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
+	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	"github.com/google/uuid"
@@ -105,9 +107,62 @@ func CreateGenesisRole(ctx context.Context, in *npool.CreateGenesisRoleRequest) 
 }
 
 func GetGenesisRole(ctx context.Context, in *npool.GetGenesisRoleRequest) (*npool.GetGenesisRoleResponse, error) {
-	return nil, nil
+	resp, err := approlecrud.GetByAppRole(ctx, &npool.GetAppRoleByAppRoleRequest{
+		AppID: uuid.UUID{}.String(),
+		Role:  constant.GenesisRole,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app role by app role: %v", err)
+	}
+
+	return &npool.GetGenesisRoleResponse{
+		Info: resp.Info,
+	}, nil
 }
 
 func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserRequest) (*npool.CreateGenesisRoleUserResponse, error) {
-	return nil, nil
+	if in.GetAppID() != constant.GenesisAppID && in.GetAppID() != constant.ChurchAppID {
+		return nil, xerrors.Errorf("invalid app id for genesis role user")
+	}
+
+	resp, err := approlecrud.GetByAppRole(ctx, &npool.GetAppRoleByAppRoleRequest{
+		AppID: uuid.UUID{}.String(),
+		Role:  constant.GenesisRole,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app role by app role: %v", err)
+	}
+
+	resp1, err := approleusercrud.GetUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
+		AppID:  in.GetAppID(),
+		RoleID: resp.Info.ID,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get genesis role user: %v", err)
+	}
+	if len(resp1.Infos) > 0 {
+		return nil, xerrors.Errorf("genesis user already exist")
+	}
+
+	_, err = appusercrud.Get(ctx, &npool.GetAppUserRequest{
+		ID: in.GetUserID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user: %v", err)
+	}
+
+	resp2, err := approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
+		Info: &npool.AppRoleUser{
+			AppID:  in.GetAppID(),
+			RoleID: resp.Info.ID,
+			UserID: in.GetUserID(),
+		},
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail create genesis role user: %v", err)
+	}
+
+	return &npool.CreateGenesisRoleUserResponse{
+		Info: resp2.Info,
+	}, nil
 }
