@@ -12,7 +12,7 @@ var (
 	AppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "created_by", Type: field.TypeUUID},
-		{Name: "name", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "logo", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString},
 		{Name: "create_at", Type: field.TypeUint32},
@@ -94,6 +94,18 @@ var (
 		Name:       "app_users",
 		Columns:    AppUsersColumns,
 		PrimaryKey: []*schema.Column{AppUsersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appuser_app_id_email_address",
+				Unique:  true,
+				Columns: []*schema.Column{AppUsersColumns[1], AppUsersColumns[2]},
+			},
+			{
+				Name:    "appuser_app_id_phone_no",
+				Unique:  true,
+				Columns: []*schema.Column{AppUsersColumns[1], AppUsersColumns[3]},
+			},
+		},
 	}
 	// AppUserControlsColumns holds the columns for the "app_user_controls" table.
 	AppUserControlsColumns = []*schema.Column{

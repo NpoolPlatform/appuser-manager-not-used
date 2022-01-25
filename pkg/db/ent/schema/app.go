@@ -21,7 +21,7 @@ func (App) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.UUID("created_by", uuid.UUID{}),
-		field.String("name"),
+		field.String("name").Unique(),
 		field.String("logo"),
 		field.String("description"),
 		field.Uint32("create_at").

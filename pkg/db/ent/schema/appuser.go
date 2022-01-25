@@ -5,6 +5,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 
 	"github.com/google/uuid"
 )
@@ -45,4 +46,11 @@ func (AppUser) Fields() []ent.Field {
 // Edges of the AppUser.
 func (AppUser) Edges() []ent.Edge {
 	return nil
+}
+
+func (AppUser) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("app_id", "email_address").Unique(),
+		index.Fields("app_id", "phone_no").Unique(),
+	}
 }
