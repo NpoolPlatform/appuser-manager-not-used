@@ -18,39 +18,57 @@ import (
 func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*npool.CreateAdminAppsResponse, error) {
 	apps := []*npool.App{}
 
-	adminApp := npool.App{
-		ID:          constant.GenesisAppID,
-		CreatedBy:   "00000000-0000-0000-0000-000000000000",
-		Name:        constant.GenesisAppName,
-		Logo:        "NOT SET",
-		Description: "NOT SET",
-	}
-
-	resp, err := appcrud.Create(ctx, &npool.CreateAppRequest{
-		Info: &adminApp,
-	}, true)
+	genesis, err := appcrud.Get(ctx, &npool.GetAppRequest{
+		ID: constant.GenesisAppID,
+	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail create genesis app: %v", err)
+		return nil, xerrors.Errorf("fail get genesis app: %v", err)
 	}
 
-	apps = append(apps, resp.Info)
+	if genesis.Info == nil {
+		adminApp := npool.App{
+			ID:          constant.GenesisAppID,
+			CreatedBy:   "00000000-0000-0000-0000-000000000000",
+			Name:        constant.GenesisAppName,
+			Logo:        "NOT SET",
+			Description: "NOT SET",
+		}
 
-	adminApp = npool.App{
-		ID:          constant.ChurchAppID,
-		CreatedBy:   "00000000-0000-0000-0000-000000000000",
-		Name:        constant.ChurchAppName,
-		Logo:        "NOT SET",
-		Description: "NOT SET",
+		resp, err := appcrud.Create(ctx, &npool.CreateAppRequest{
+			Info: &adminApp,
+		}, true)
+		if err != nil {
+			return nil, xerrors.Errorf("fail create genesis app: %v", err)
+		}
+
+		apps = append(apps, resp.Info)
 	}
 
-	resp, err = appcrud.Create(ctx, &npool.CreateAppRequest{
-		Info: &adminApp,
-	}, true)
+	church, err := appcrud.Get(ctx, &npool.GetAppRequest{
+		ID: constant.ChurchAppID,
+	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail create church app: %v", err)
+		return nil, xerrors.Errorf("fail get genesis app: %v", err)
 	}
 
-	apps = append(apps, resp.Info)
+	if church.Info == nil {
+		adminApp := npool.App{
+			ID:          constant.ChurchAppID,
+			CreatedBy:   "00000000-0000-0000-0000-000000000000",
+			Name:        constant.ChurchAppName,
+			Logo:        "NOT SET",
+			Description: "NOT SET",
+		}
+
+		resp, err := appcrud.Create(ctx, &npool.CreateAppRequest{
+			Info: &adminApp,
+		}, true)
+		if err != nil {
+			return nil, xerrors.Errorf("fail create church app: %v", err)
+		}
+
+		apps = append(apps, resp.Info)
+	}
 
 	return &npool.CreateAdminAppsResponse{
 		Infos: apps,
