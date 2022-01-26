@@ -9,6 +9,7 @@ import (
 	db "github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
+	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
 
 	"github.com/google/uuid"
 
@@ -24,9 +25,6 @@ func validateAppUserSecret(info *npool.AppUserSecret) error {
 	}
 	if info.GetPasswordHash() == "" {
 		return xerrors.Errorf("invalid password hash")
-	}
-	if info.GetSalt() == "" {
-		return xerrors.Errorf("invalid password salt")
 	}
 	return nil
 }
@@ -55,13 +53,19 @@ func Create(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.C
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 
+	salt := encrypt.Salt()
+	password, err := encrypt.EncryptWithSalt(in.GetInfo().GetPasswordHash(), salt)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get encrypted password: %v", err)
+	}
+
 	info, err := cli.
 		AppUserSecret.
 		Create().
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
-		SetPasswordHash(in.GetInfo().GetPasswordHash()).
-		SetSalt(in.GetInfo().GetSalt()).
+		SetPasswordHash(password).
+		SetSalt(salt).
 		SetGoogleSecret(in.GetInfo().GetGoogleSecret()).
 		Save(ctx)
 	if err != nil {
@@ -91,11 +95,17 @@ func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.U
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 
+	salt := encrypt.Salt()
+	password, err := encrypt.EncryptWithSalt(in.GetInfo().GetPasswordHash(), salt)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get encrypted password: %v", err)
+	}
+
 	info, err := cli.
 		AppUserSecret.
 		UpdateOneID(id).
-		SetPasswordHash(in.GetInfo().GetPasswordHash()).
-		SetSalt(in.GetInfo().GetSalt()).
+		SetPasswordHash(password).
+		SetSalt(salt).
 		SetGoogleSecret(in.GetInfo().GetGoogleSecret()).
 		Save(ctx)
 	if err != nil {

@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"testing"
 
+	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
 	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
@@ -27,8 +28,8 @@ func init() {
 func assertAppUserSecret(t *testing.T, actual, expected *npool.AppUserSecret) {
 	assert.Equal(t, actual.AppID, expected.AppID)
 	assert.Equal(t, actual.UserID, expected.UserID)
-	assert.Equal(t, actual.PasswordHash, expected.PasswordHash)
-	assert.Equal(t, actual.Salt, expected.Salt)
+	err := encrypt.VerifyWithSalt(expected.PasswordHash, actual.PasswordHash, actual.Salt)
+	assert.Nil(t, err)
 	assert.Equal(t, actual.GoogleSecret, expected.GoogleSecret)
 }
 
@@ -41,7 +42,6 @@ func TestCRUD(t *testing.T) {
 		AppID:        uuid.New().String(),
 		UserID:       uuid.New().String(),
 		PasswordHash: uuid.New().String(),
-		Salt:         uuid.New().String(),
 		GoogleSecret: uuid.New().String(),
 	}
 
