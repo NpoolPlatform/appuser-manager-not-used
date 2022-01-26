@@ -50,7 +50,7 @@ func (AppUser) Edges() []ent.Edge {
 
 func (AppUser) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "email_address").Unique(),
-		index.Fields("app_id", "phone_no").Unique(),
+		index.Fields("app_id", "email_address"),
+		index.Fields("app_id", "phone_no"),
 	}
 }

@@ -104,12 +104,12 @@ var (
 		Indexes: []*schema.Index{
 			{
 				Name:    "appuser_app_id_email_address",
-				Unique:  true,
+				Unique:  false,
 				Columns: []*schema.Column{AppUsersColumns[1], AppUsersColumns[2]},
 			},
 			{
 				Name:    "appuser_app_id_phone_no",
-				Unique:  true,
+				Unique:  false,
 				Columns: []*schema.Column{AppUsersColumns[1], AppUsersColumns[3]},
 			},
 		},
