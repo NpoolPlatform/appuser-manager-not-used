@@ -226,3 +226,21 @@ func (s *Server) GetAppUserByAppAccount(ctx context.Context, in *npool.GetAppUse
 	}
 	return resp, nil
 }
+
+func (s *Server) VerifyAppUserByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAppAccountPasswordRequest) (*npool.VerifyAppUserByAppAccountPasswordResponse, error) {
+	resp, err := appusermw.VerifyByAppAccountPassword(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail verify app user by app account password: %v", err)
+		return &npool.VerifyAppUserByAppAccountPasswordResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetUserRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserRequest) (*npool.GetUserRolesByAppUserResponse, error) {
+	resp, err := appusermw.GetRolesByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get user roles by app user: %v", err)
+		return &npool.GetUserRolesByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}

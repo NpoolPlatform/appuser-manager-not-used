@@ -106,6 +106,50 @@ func Get(ctx context.Context, in *npool.GetAppRoleUserRequest) (*npool.GetAppRol
 	}, nil
 }
 
+func GetByAppUser(ctx context.Context, in *npool.GetAppRoleUserByAppUserRequest) (*npool.GetAppRoleUserByAppUserResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
+	infos, err := cli.
+		AppRoleUser.
+		Query().
+		Where(
+			approleuser.And(
+				approleuser.AppID(appID),
+				approleuser.UserID(userID),
+				approleuser.DeleteAt(0),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app role user: %v", err)
+	}
+
+	appRoleUsers := []*npool.AppRoleUser{}
+	for _, info := range infos {
+		appRoleUsers = append(appRoleUsers, dbRowToAppRoleUser(info))
+	}
+
+	return &npool.GetAppRoleUserByAppUserResponse{
+		Infos: appRoleUsers,
+	}, nil
+}
+
 func GetUsersByAppRole(ctx context.Context, in *npool.GetAppRoleUsersByAppRoleRequest) (*npool.GetAppRoleUsersByAppRoleResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
