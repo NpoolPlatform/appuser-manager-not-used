@@ -217,3 +217,12 @@ func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAp
 	}
 	return resp, nil
 }
+
+func (s *Server) GetAppUserByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountRequest) (*npool.GetAppUserByAppAccountResponse, error) {
+	resp, err := appusercrud.GetByAppAccount(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user by app account: %v", err)
+		return &npool.GetAppUserByAppAccountResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}

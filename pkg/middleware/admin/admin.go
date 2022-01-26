@@ -8,6 +8,7 @@ import (
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
 	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
+	appusermw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/appuser"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	"github.com/google/uuid"
@@ -145,7 +146,7 @@ func GetGenesisRole(ctx context.Context, in *npool.GetGenesisRoleRequest) (*npoo
 }
 
 func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserRequest) (*npool.CreateGenesisRoleUserResponse, error) {
-	if in.GetAppID() != constant.GenesisAppID && in.GetAppID() != constant.ChurchAppID {
+	if in.GetUser().GetAppID() != constant.GenesisAppID && in.GetUser().GetAppID() != constant.ChurchAppID {
 		return nil, xerrors.Errorf("invalid app id for genesis role user")
 	}
 
@@ -158,7 +159,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 	}
 
 	resp1, err := approleusercrud.GetUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
-		AppID:  in.GetAppID(),
+		AppID:  in.GetUser().GetAppID(),
 		RoleID: resp.Info.ID,
 	})
 	if err != nil {
@@ -168,18 +169,32 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 		return nil, xerrors.Errorf("genesis user already exist")
 	}
 
-	_, err = appusercrud.Get(ctx, &npool.GetAppUserRequest{
-		ID: in.GetUserID(),
+	resp2, err := appusercrud.GetByAppAccount(ctx, &npool.GetAppUserByAppAccountRequest{
+		AppID:   in.GetUser().GetAppID(),
+		Account: in.GetUser().GetEmailAddress(),
 	})
 	if err != nil {
 		return nil, xerrors.Errorf("fail get app user: %v", err)
 	}
 
-	resp2, err := approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
+	myUser := resp2.Info
+
+	if myUser == nil {
+		resp, err := appusermw.CreateWithSecret(ctx, &npool.CreateAppUserWithSecretRequest{
+			User:   in.GetUser(),
+			Secret: in.GetSecret(),
+		})
+		if err != nil {
+			return nil, xerrors.Errorf("fail create user with secret: %v", err)
+		}
+		myUser = resp.Info
+	}
+
+	resp3, err := approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
 		Info: &npool.AppRoleUser{
-			AppID:  in.GetAppID(),
+			AppID:  in.GetUser().GetAppID(),
 			RoleID: resp.Info.ID,
-			UserID: in.GetUserID(),
+			UserID: myUser.ID,
 		},
 	})
 	if err != nil {
@@ -187,6 +202,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 	}
 
 	return &npool.CreateGenesisRoleUserResponse{
-		Info: resp2.Info,
+		User:     myUser,
+		RoleUser: resp3.Info,
 	}, nil
 }
