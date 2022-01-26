@@ -11,6 +11,7 @@ import (
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
+	appusermw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/appuser"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -206,4 +207,13 @@ func (s *Server) GetAppUserInfos(ctx context.Context, in *npool.GetAppUserInfosR
 
 func (s *Server) GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppRequest) (*npool.GetAppUserInfosByAppResponse, error) {
 	return nil, nil
+}
+
+func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
+	resp, err := appusermw.CreateWithSecret(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user with secret: %v", err)
+		return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
