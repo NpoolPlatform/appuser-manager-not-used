@@ -4,12 +4,14 @@ import (
 	"context"
 
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
+	appcontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
 	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
 	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
+	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
@@ -187,8 +189,26 @@ func GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppReq
 	}, nil
 }
 
-func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) {
-	return nil, nil
+func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) { //nolint
+	info := npool.AppInfo{
+		App: app,
+	}
+
+	resp, err := appcontrolcrud.GetByApp(ctx, &npool.GetAppControlByAppRequest{
+		AppID: app.ID,
+	})
+	if err == nil {
+		info.Ctrl = resp.Info
+	}
+
+	resp1, err := banappcrud.GetByApp(ctx, &npool.GetBanAppByAppRequest{
+		AppID: app.ID,
+	})
+	if err == nil {
+		info.Ban = resp1.Info
+	}
+
+	return &info, nil
 }
 
 func GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetAppInfoResponse, error) {
