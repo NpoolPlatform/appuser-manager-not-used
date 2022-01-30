@@ -31,4 +31,54 @@ spec:
     - host: api.internal-devops.development.xpool.top
       http: *http_rules
 
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: appuser-manager-traefik-vpn-free-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: appuser-manager-traefik-vpn-free
+    k8s.kuboard.cn/workload: appuser-manager-traefik-vpn-free
+    kubernetes.io/ingress.class: "traefik-internet-vpn"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-appuser-manager-prefix@kubernetescrd,
+                                                      kube-system-common-headers@kubernetescrd,
+                                                      kube-system-headers-appid-to-body@kubernetescrd,
+                                                      kube-system-headers-userid-to-body@kubernetescrd,
+                                                      kube-system-headers-app-login-token-to-body@kubernetescrd
+
+spec:
+  rules:
+    - host: api.npool.top
+      http: &http_rules
+        paths:
+          - path: /api/appuser-manager/v1/create/genesis/role
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/genesis/role
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/create/genesis/role/user
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/admin/apps
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/create/admin/apps
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+    - host: api.procyon.vip
+      http: *http_rules
+    - host: api.xpool.top
+      http: *http_rules
+    - host: api.internal-devops.development.xpool.top
+      http: *http_rules
+
 
