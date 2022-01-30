@@ -198,15 +198,21 @@ func (s *Server) UpdateAppUserControl(ctx context.Context, in *npool.UpdateAppUs
 }
 
 func (s *Server) GetAppUserInfo(ctx context.Context, in *npool.GetAppUserInfoRequest) (*npool.GetAppUserInfoResponse, error) {
-	return nil, nil
-}
-
-func (s *Server) GetAppUserInfos(ctx context.Context, in *npool.GetAppUserInfosRequest) (*npool.GetAppUserInfosResponse, error) {
-	return nil, nil
+	resp, err := appusermw.GetAppUserInfo(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail info app user info: %v", err)
+		return &npool.GetAppUserInfoResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppRequest) (*npool.GetAppUserInfosByAppResponse, error) {
-	return nil, nil
+	resp, err := appusermw.GetAppUserInfosByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail info app user infos by app: %v", err)
+		return &npool.GetAppUserInfosByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
