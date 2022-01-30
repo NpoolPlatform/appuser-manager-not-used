@@ -9,6 +9,7 @@ import (
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
 	appctrlcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
 	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
+	appusermw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/appuser"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -141,13 +142,28 @@ func (s *Server) DeleteBanApp(ctx context.Context, in *npool.DeleteBanAppRequest
 }
 
 func (s *Server) GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetAppInfoResponse, error) {
-	return nil, nil
+	resp, err := appusermw.GetAppInfo(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app info: %v", err)
+		return &npool.GetAppInfoResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppInfos(ctx context.Context, in *npool.GetAppInfosRequest) (*npool.GetAppInfosResponse, error) {
-	return nil, nil
+	resp, err := appusermw.GetAppInfos(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app infos: %v", err)
+		return &npool.GetAppInfosResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppInfosByCreator(ctx context.Context, in *npool.GetAppInfosByCreatorRequest) (*npool.GetAppInfosByCreatorResponse, error) {
-	return nil, nil
+	resp, err := appusermw.GetAppInfosByCreator(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app infos by creator: %v", err)
+		return &npool.GetAppInfosByCreatorResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }

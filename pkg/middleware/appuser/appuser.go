@@ -3,6 +3,7 @@ package appuser
 import (
 	"context"
 
+	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
 	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
@@ -150,6 +151,9 @@ func GetAppUserInfo(ctx context.Context, in *npool.GetAppUserInfoRequest) (*npoo
 	if err != nil {
 		return nil, xerrors.Errorf("fail get app user: %v", err)
 	}
+	if resp.Info == nil {
+		return nil, xerrors.Errorf("fail get app user")
+	}
 
 	info, err := expandAppUserInfo(ctx, resp.Info)
 	if err != nil {
@@ -179,6 +183,73 @@ func GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppReq
 	}
 
 	return &npool.GetAppUserInfosByAppResponse{
+		Infos: infos,
+	}, nil
+}
+
+func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) {
+	return nil, nil
+}
+
+func GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetAppInfoResponse, error) {
+	resp, err := appcrud.Get(ctx, &npool.GetAppRequest{
+		ID: in.GetID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app: %v", err)
+	}
+	if resp.Info == nil {
+		return nil, xerrors.Errorf("fail get app")
+	}
+
+	info, err := expandAppInfo(ctx, resp.Info)
+	if err != nil {
+		return nil, xerrors.Errorf("fail expand app info: %v", err)
+	}
+
+	return &npool.GetAppInfoResponse{
+		Info: info,
+	}, nil
+}
+
+func GetAppInfos(ctx context.Context, in *npool.GetAppInfosRequest) (*npool.GetAppInfosResponse, error) {
+	resp, err := appcrud.GetAll(ctx, &npool.GetAppsRequest{})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get apps: %v", err)
+	}
+
+	infos := []*npool.AppInfo{}
+	for _, info := range resp.Infos {
+		appInfo, err := expandAppInfo(ctx, info)
+		if err != nil {
+			return nil, xerrors.Errorf("fail expand app info: %v", err)
+		}
+		infos = append(infos, appInfo)
+	}
+
+	return &npool.GetAppInfosResponse{
+		Infos: infos,
+	}, nil
+}
+
+func GetAppInfosByCreator(ctx context.Context, in *npool.GetAppInfosByCreatorRequest) (*npool.GetAppInfosByCreatorResponse, error) {
+	resp, err := appcrud.GetByCreator(ctx, &npool.GetAppsByCreatorRequest{
+		UserID: in.GetUserID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get apps by creator: %v", err)
+	}
+
+	infos := []*npool.AppInfo{}
+	for _, info := range resp.Infos {
+		appInfo, err := expandAppInfo(ctx, info)
+		if err != nil {
+			return nil, xerrors.Errorf("fail expand app info: %v", err)
+		}
+		infos = append(infos, appInfo)
+	}
+
+	return &npool.GetAppInfosByCreatorResponse{
 		Infos: infos,
 	}, nil
 }
