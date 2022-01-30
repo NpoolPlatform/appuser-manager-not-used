@@ -65,7 +65,7 @@ func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserReque
 	}, nil
 }
 
-func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUserInfo, error) {
+func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUserInfo, error) { //nolint
 	info := &npool.AppUserInfo{
 		User: user,
 	}
