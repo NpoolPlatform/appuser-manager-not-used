@@ -64,6 +64,12 @@ func (acu *AppControlUpdate) SetSigninVerifyEnable(b bool) *AppControlUpdate {
 	return acu
 }
 
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (acu *AppControlUpdate) SetInvitationCodeMust(b bool) *AppControlUpdate {
+	acu.mutation.SetInvitationCodeMust(b)
+	return acu
+}
+
 // SetCreateAt sets the "create_at" field.
 func (acu *AppControlUpdate) SetCreateAt(u uint32) *AppControlUpdate {
 	acu.mutation.ResetCreateAt()
@@ -247,6 +253,13 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldSigninVerifyEnable,
 		})
 	}
+	if value, ok := acu.mutation.InvitationCodeMust(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldInvitationCodeMust,
+		})
+	}
 	if value, ok := acu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -341,6 +354,12 @@ func (acuo *AppControlUpdateOne) SetKycEnable(b bool) *AppControlUpdateOne {
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
 func (acuo *AppControlUpdateOne) SetSigninVerifyEnable(b bool) *AppControlUpdateOne {
 	acuo.mutation.SetSigninVerifyEnable(b)
+	return acuo
+}
+
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (acuo *AppControlUpdateOne) SetInvitationCodeMust(b bool) *AppControlUpdateOne {
+	acuo.mutation.SetInvitationCodeMust(b)
 	return acuo
 }
 
@@ -549,6 +568,13 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Type:   field.TypeBool,
 			Value:  value,
 			Column: appcontrol.FieldSigninVerifyEnable,
+		})
+	}
+	if value, ok := acuo.mutation.InvitationCodeMust(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}
 	if value, ok := acuo.mutation.CreateAt(); ok {

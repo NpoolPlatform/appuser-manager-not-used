@@ -800,6 +800,7 @@ type AppControlMutation struct {
 	recaptcha_method      *string
 	kyc_enable            *bool
 	signin_verify_enable  *bool
+	invitation_code_must  *bool
 	create_at             *uint32
 	addcreate_at          *int32
 	update_at             *uint32
@@ -1132,6 +1133,42 @@ func (m *AppControlMutation) ResetSigninVerifyEnable() {
 	m.signin_verify_enable = nil
 }
 
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (m *AppControlMutation) SetInvitationCodeMust(b bool) {
+	m.invitation_code_must = &b
+}
+
+// InvitationCodeMust returns the value of the "invitation_code_must" field in the mutation.
+func (m *AppControlMutation) InvitationCodeMust() (r bool, exists bool) {
+	v := m.invitation_code_must
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInvitationCodeMust returns the old "invitation_code_must" field's value of the AppControl entity.
+// If the AppControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppControlMutation) OldInvitationCodeMust(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInvitationCodeMust is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInvitationCodeMust requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInvitationCodeMust: %w", err)
+	}
+	return oldValue.InvitationCodeMust, nil
+}
+
+// ResetInvitationCodeMust resets all changes to the "invitation_code_must" field.
+func (m *AppControlMutation) ResetInvitationCodeMust() {
+	m.invitation_code_must = nil
+}
+
 // SetCreateAt sets the "create_at" field.
 func (m *AppControlMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
@@ -1319,7 +1356,7 @@ func (m *AppControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppControlMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.app_id != nil {
 		fields = append(fields, appcontrol.FieldAppID)
 	}
@@ -1337,6 +1374,9 @@ func (m *AppControlMutation) Fields() []string {
 	}
 	if m.signin_verify_enable != nil {
 		fields = append(fields, appcontrol.FieldSigninVerifyEnable)
+	}
+	if m.invitation_code_must != nil {
+		fields = append(fields, appcontrol.FieldInvitationCodeMust)
 	}
 	if m.create_at != nil {
 		fields = append(fields, appcontrol.FieldCreateAt)
@@ -1367,6 +1407,8 @@ func (m *AppControlMutation) Field(name string) (ent.Value, bool) {
 		return m.KycEnable()
 	case appcontrol.FieldSigninVerifyEnable:
 		return m.SigninVerifyEnable()
+	case appcontrol.FieldInvitationCodeMust:
+		return m.InvitationCodeMust()
 	case appcontrol.FieldCreateAt:
 		return m.CreateAt()
 	case appcontrol.FieldUpdateAt:
@@ -1394,6 +1436,8 @@ func (m *AppControlMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldKycEnable(ctx)
 	case appcontrol.FieldSigninVerifyEnable:
 		return m.OldSigninVerifyEnable(ctx)
+	case appcontrol.FieldInvitationCodeMust:
+		return m.OldInvitationCodeMust(ctx)
 	case appcontrol.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case appcontrol.FieldUpdateAt:
@@ -1450,6 +1494,13 @@ func (m *AppControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSigninVerifyEnable(v)
+		return nil
+	case appcontrol.FieldInvitationCodeMust:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInvitationCodeMust(v)
 		return nil
 	case appcontrol.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -1577,6 +1628,9 @@ func (m *AppControlMutation) ResetField(name string) error {
 		return nil
 	case appcontrol.FieldSigninVerifyEnable:
 		m.ResetSigninVerifyEnable()
+		return nil
+	case appcontrol.FieldInvitationCodeMust:
+		m.ResetInvitationCodeMust()
 		return nil
 	case appcontrol.FieldCreateAt:
 		m.ResetCreateAt()

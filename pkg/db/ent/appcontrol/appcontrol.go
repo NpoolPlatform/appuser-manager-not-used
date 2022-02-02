@@ -23,6 +23,8 @@ const (
 	FieldKycEnable = "kyc_enable"
 	// FieldSigninVerifyEnable holds the string denoting the signin_verify_enable field in the database.
 	FieldSigninVerifyEnable = "signin_verify_enable"
+	// FieldInvitationCodeMust holds the string denoting the invitation_code_must field in the database.
+	FieldInvitationCodeMust = "invitation_code_must"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -42,6 +44,7 @@ var Columns = []string{
 	FieldRecaptchaMethod,
 	FieldKycEnable,
 	FieldSigninVerifyEnable,
+	FieldInvitationCodeMust,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,

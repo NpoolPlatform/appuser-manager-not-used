@@ -29,6 +29,8 @@ type AppControl struct {
 	KycEnable bool `json:"kyc_enable,omitempty"`
 	// SigninVerifyEnable holds the value of the "signin_verify_enable" field.
 	SigninVerifyEnable bool `json:"signin_verify_enable,omitempty"`
+	// InvitationCodeMust holds the value of the "invitation_code_must" field.
+	InvitationCodeMust bool `json:"invitation_code_must,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -44,7 +46,7 @@ func (*AppControl) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appcontrol.FieldSignupMethods, appcontrol.FieldExternSigninMethods:
 			values[i] = new([]byte)
-		case appcontrol.FieldKycEnable, appcontrol.FieldSigninVerifyEnable:
+		case appcontrol.FieldKycEnable, appcontrol.FieldSigninVerifyEnable, appcontrol.FieldInvitationCodeMust:
 			values[i] = new(sql.NullBool)
 		case appcontrol.FieldCreateAt, appcontrol.FieldUpdateAt, appcontrol.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
@@ -113,6 +115,12 @@ func (ac *AppControl) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				ac.SigninVerifyEnable = value.Bool
 			}
+		case appcontrol.FieldInvitationCodeMust:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field invitation_code_must", values[i])
+			} else if value.Valid {
+				ac.InvitationCodeMust = value.Bool
+			}
 		case appcontrol.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_at", values[i])
@@ -171,6 +179,8 @@ func (ac *AppControl) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ac.KycEnable))
 	builder.WriteString(", signin_verify_enable=")
 	builder.WriteString(fmt.Sprintf("%v", ac.SigninVerifyEnable))
+	builder.WriteString(", invitation_code_must=")
+	builder.WriteString(fmt.Sprintf("%v", ac.InvitationCodeMust))
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", ac.CreateAt))
 	builder.WriteString(", update_at=")

@@ -27,6 +27,7 @@ func (AppControl) Fields() []ent.Field {
 		field.String("recaptcha_method"),
 		field.Bool("kyc_enable"),
 		field.Bool("signin_verify_enable"),
+		field.Bool("invitation_code_must"),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

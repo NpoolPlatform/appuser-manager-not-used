@@ -31,6 +31,7 @@ func dbRowToAppControl(row *ent.AppControl) *npool.AppControl {
 		RecaptchaMethod:     row.RecaptchaMethod,
 		KycEnable:           row.KycEnable,
 		SigninVerifyEnable:  row.SigninVerifyEnable,
+		InvitationCodeMust:  row.InvitationCodeMust,
 	}
 }
 
@@ -56,6 +57,7 @@ func Create(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.Crea
 		SetRecaptchaMethod(in.GetInfo().GetRecaptchaMethod()).
 		SetKycEnable(in.GetInfo().GetKycEnable()).
 		SetSigninVerifyEnable(in.GetInfo().GetSigninVerifyEnable()).
+		SetInvitationCodeMust(in.GetInfo().GetInvitationCodeMust()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create app control: %v", err)
@@ -92,6 +94,7 @@ func Update(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.Upda
 		SetRecaptchaMethod(in.GetInfo().GetRecaptchaMethod()).
 		SetKycEnable(in.GetInfo().GetKycEnable()).
 		SetSigninVerifyEnable(in.GetInfo().GetSigninVerifyEnable()).
+		SetInvitationCodeMust(in.GetInfo().GetInvitationCodeMust()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail update app control: %v", err)

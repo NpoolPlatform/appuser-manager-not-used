@@ -34,6 +34,7 @@ var (
 		{Name: "recaptcha_method", Type: field.TypeString},
 		{Name: "kyc_enable", Type: field.TypeBool},
 		{Name: "signin_verify_enable", Type: field.TypeBool},
+		{Name: "invitation_code_must", Type: field.TypeBool},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},

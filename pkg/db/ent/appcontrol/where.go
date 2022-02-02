@@ -119,6 +119,13 @@ func SigninVerifyEnable(v bool) predicate.AppControl {
 	})
 }
 
+// InvitationCodeMust applies equality check predicate on the "invitation_code_must" field. It's identical to InvitationCodeMustEQ.
+func InvitationCodeMust(v bool) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldInvitationCodeMust), v))
+	})
+}
+
 // CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
 func CreateAt(v uint32) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
@@ -352,6 +359,20 @@ func SigninVerifyEnableEQ(v bool) predicate.AppControl {
 func SigninVerifyEnableNEQ(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldSigninVerifyEnable), v))
+	})
+}
+
+// InvitationCodeMustEQ applies the EQ predicate on the "invitation_code_must" field.
+func InvitationCodeMustEQ(v bool) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldInvitationCodeMust), v))
+	})
+}
+
+// InvitationCodeMustNEQ applies the NEQ predicate on the "invitation_code_must" field.
+func InvitationCodeMustNEQ(v bool) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldInvitationCodeMust), v))
 	})
 }
 

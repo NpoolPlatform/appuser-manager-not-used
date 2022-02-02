@@ -59,6 +59,12 @@ func (acc *AppControlCreate) SetSigninVerifyEnable(b bool) *AppControlCreate {
 	return acc
 }
 
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (acc *AppControlCreate) SetInvitationCodeMust(b bool) *AppControlCreate {
+	acc.mutation.SetInvitationCodeMust(b)
+	return acc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (acc *AppControlCreate) SetCreateAt(u uint32) *AppControlCreate {
 	acc.mutation.SetCreateAt(u)
@@ -224,6 +230,9 @@ func (acc *AppControlCreate) check() error {
 	if _, ok := acc.mutation.SigninVerifyEnable(); !ok {
 		return &ValidationError{Name: "signin_verify_enable", err: errors.New(`ent: missing required field "AppControl.signin_verify_enable"`)}
 	}
+	if _, ok := acc.mutation.InvitationCodeMust(); !ok {
+		return &ValidationError{Name: "invitation_code_must", err: errors.New(`ent: missing required field "AppControl.invitation_code_must"`)}
+	}
 	if _, ok := acc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppControl.create_at"`)}
 	}
@@ -317,6 +326,14 @@ func (acc *AppControlCreate) createSpec() (*AppControl, *sqlgraph.CreateSpec) {
 			Column: appcontrol.FieldSigninVerifyEnable,
 		})
 		_node.SigninVerifyEnable = value
+	}
+	if value, ok := acc.mutation.InvitationCodeMust(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldInvitationCodeMust,
+		})
+		_node.InvitationCodeMust = value
 	}
 	if value, ok := acc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -465,6 +482,18 @@ func (u *AppControlUpsert) SetSigninVerifyEnable(v bool) *AppControlUpsert {
 // UpdateSigninVerifyEnable sets the "signin_verify_enable" field to the value that was provided on create.
 func (u *AppControlUpsert) UpdateSigninVerifyEnable() *AppControlUpsert {
 	u.SetExcluded(appcontrol.FieldSigninVerifyEnable)
+	return u
+}
+
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (u *AppControlUpsert) SetInvitationCodeMust(v bool) *AppControlUpsert {
+	u.Set(appcontrol.FieldInvitationCodeMust, v)
+	return u
+}
+
+// UpdateInvitationCodeMust sets the "invitation_code_must" field to the value that was provided on create.
+func (u *AppControlUpsert) UpdateInvitationCodeMust() *AppControlUpsert {
+	u.SetExcluded(appcontrol.FieldInvitationCodeMust)
 	return u
 }
 
@@ -653,6 +682,20 @@ func (u *AppControlUpsertOne) SetSigninVerifyEnable(v bool) *AppControlUpsertOne
 func (u *AppControlUpsertOne) UpdateSigninVerifyEnable() *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateSigninVerifyEnable()
+	})
+}
+
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (u *AppControlUpsertOne) SetInvitationCodeMust(v bool) *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetInvitationCodeMust(v)
+	})
+}
+
+// UpdateInvitationCodeMust sets the "invitation_code_must" field to the value that was provided on create.
+func (u *AppControlUpsertOne) UpdateInvitationCodeMust() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateInvitationCodeMust()
 	})
 }
 
@@ -1016,6 +1059,20 @@ func (u *AppControlUpsertBulk) SetSigninVerifyEnable(v bool) *AppControlUpsertBu
 func (u *AppControlUpsertBulk) UpdateSigninVerifyEnable() *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateSigninVerifyEnable()
+	})
+}
+
+// SetInvitationCodeMust sets the "invitation_code_must" field.
+func (u *AppControlUpsertBulk) SetInvitationCodeMust(v bool) *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetInvitationCodeMust(v)
+	})
+}
+
+// UpdateInvitationCodeMust sets the "invitation_code_must" field to the value that was provided on create.
+func (u *AppControlUpsertBulk) UpdateInvitationCodeMust() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateInvitationCodeMust()
 	})
 }
 

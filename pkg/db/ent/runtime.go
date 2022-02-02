@@ -44,17 +44,17 @@ func init() {
 	appcontrolFields := schema.AppControl{}.Fields()
 	_ = appcontrolFields
 	// appcontrolDescCreateAt is the schema descriptor for create_at field.
-	appcontrolDescCreateAt := appcontrolFields[7].Descriptor()
+	appcontrolDescCreateAt := appcontrolFields[8].Descriptor()
 	// appcontrol.DefaultCreateAt holds the default value on creation for the create_at field.
 	appcontrol.DefaultCreateAt = appcontrolDescCreateAt.Default.(func() uint32)
 	// appcontrolDescUpdateAt is the schema descriptor for update_at field.
-	appcontrolDescUpdateAt := appcontrolFields[8].Descriptor()
+	appcontrolDescUpdateAt := appcontrolFields[9].Descriptor()
 	// appcontrol.DefaultUpdateAt holds the default value on creation for the update_at field.
 	appcontrol.DefaultUpdateAt = appcontrolDescUpdateAt.Default.(func() uint32)
 	// appcontrol.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	appcontrol.UpdateDefaultUpdateAt = appcontrolDescUpdateAt.UpdateDefault.(func() uint32)
 	// appcontrolDescDeleteAt is the schema descriptor for delete_at field.
-	appcontrolDescDeleteAt := appcontrolFields[9].Descriptor()
+	appcontrolDescDeleteAt := appcontrolFields[10].Descriptor()
 	// appcontrol.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	appcontrol.DefaultDeleteAt = appcontrolDescDeleteAt.Default.(func() uint32)
 	// appcontrolDescID is the schema descriptor for id field.
