@@ -35,6 +35,15 @@ func (s *Server) GetAppUser(ctx context.Context, in *npool.GetAppUserRequest) (*
 	return resp, nil
 }
 
+func (s *Server) GetAppUserByAppUser(ctx context.Context, in *npool.GetAppUserByAppUserRequest) (*npool.GetAppUserByAppUserResponse, error) {
+	resp, err := appusercrud.GetByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user by app user: %v", err)
+		return &npool.GetAppUserByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetAppUsersByApp(ctx context.Context, in *npool.GetAppUsersByAppRequest) (*npool.GetAppUsersByAppResponse, error) {
 	resp, err := appusercrud.GetByApp(ctx, in)
 	if err != nil {

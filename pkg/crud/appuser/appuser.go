@@ -215,3 +215,47 @@ func GetByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountReques
 		Info: myAppUser,
 	}, nil
 }
+
+func GetByAppUser(ctx context.Context, in *npool.GetAppUserByAppUserRequest) (*npool.GetAppUserByAppUserResponse, error) {
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	userID, err := uuid.Parse(in.GetUserID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid user id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		AppUser.
+		Query().
+		Where(
+			appuser.And(
+				appuser.AppID(appID),
+				appuser.ID(userID),
+			),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app user: %v", err)
+	}
+
+	var myAppUser *npool.AppUser
+	for _, info := range infos {
+		myAppUser = dbRowToAppUser(info)
+		break
+	}
+
+	return &npool.GetAppUserByAppUserResponse{
+		Info: myAppUser,
+	}, nil
+}
