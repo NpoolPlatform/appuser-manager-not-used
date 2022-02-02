@@ -167,6 +167,28 @@ func GetAppUserInfo(ctx context.Context, in *npool.GetAppUserInfoRequest) (*npoo
 	}, nil
 }
 
+func GetAppUserInfoByAppUser(ctx context.Context, in *npool.GetAppUserInfoByAppUserRequest) (*npool.GetAppUserInfoByAppUserResponse, error) {
+	resp, err := appusercrud.GetByAppUser(ctx, &npool.GetAppUserByAppUserRequest{
+		AppID:  in.GetAppID(),
+		UserID: in.GetUserID(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user: %v", err)
+	}
+	if resp.Info == nil {
+		return nil, xerrors.Errorf("fail get app user")
+	}
+
+	info, err := expandAppUserInfo(ctx, resp.Info)
+	if err != nil {
+		return nil, xerrors.Errorf("fail expand app user: %v", err)
+	}
+
+	return &npool.GetAppUserInfoByAppUserResponse{
+		Info: info,
+	}, nil
+}
+
 func GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppRequest) (*npool.GetAppUserInfosByAppResponse, error) {
 	resp, err := appusercrud.GetByApp(ctx, &npool.GetAppUsersByAppRequest{
 		AppID: in.GetAppID(),

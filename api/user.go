@@ -206,6 +206,15 @@ func (s *Server) UpdateAppUserControl(ctx context.Context, in *npool.UpdateAppUs
 	return resp, nil
 }
 
+func (s *Server) GetAppUserInfoByAppUser(ctx context.Context, in *npool.GetAppUserInfoByAppUserRequest) (*npool.GetAppUserInfoByAppUserResponse, error) {
+	resp, err := appusermw.GetAppUserInfoByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user info by app user: %v", err)
+		return &npool.GetAppUserInfoByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetAppUserInfo(ctx context.Context, in *npool.GetAppUserInfoRequest) (*npool.GetAppUserInfoResponse, error) {
 	resp, err := appusermw.GetAppUserInfo(ctx, in)
 	if err != nil {
