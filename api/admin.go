@@ -65,7 +65,7 @@ func (s *Server) GetGenesisAppRoleUsersByOtherApp(ctx context.Context, in *npool
 	}
 
 	resp, err := s.GetAppRoleUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
-		AppID:  in.GetAppID(),
+		AppID:  in.GetTargetAppID(),
 		RoleID: role.Info.ID,
 	})
 	if err != nil {
@@ -79,7 +79,7 @@ func (s *Server) GetGenesisAppRoleUsersByOtherApp(ctx context.Context, in *npool
 
 func (s *Server) GetAppRoleUsersByOtherAppRole(ctx context.Context, in *npool.GetAppRoleUsersByOtherAppRoleRequest) (*npool.GetAppRoleUsersByOtherAppRoleResponse, error) {
 	resp, err := s.GetAppRoleUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
-		AppID:  in.GetAppID(),
+		AppID:  in.GetTargetAppID(),
 		RoleID: in.GetRoleID(),
 	})
 	if err != nil {
