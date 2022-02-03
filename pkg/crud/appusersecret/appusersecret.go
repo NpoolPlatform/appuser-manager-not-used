@@ -95,10 +95,15 @@ func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.U
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 
-	salt := encrypt.Salt()
-	password, err := encrypt.EncryptWithSalt(in.GetInfo().GetPasswordHash(), salt)
-	if err != nil {
-		return nil, xerrors.Errorf("fail get encrypted password: %v", err)
+	salt := in.GetInfo().GetSalt()
+	password := in.GetInfo().GetPasswordHash()
+
+	if salt == "" {
+		salt = encrypt.Salt()
+		password, err = encrypt.EncryptWithSalt(in.GetInfo().GetPasswordHash(), salt)
+		if err != nil {
+			return nil, xerrors.Errorf("fail get encrypted password: %v", err)
+		}
 	}
 
 	info, err := cli.
