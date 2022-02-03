@@ -105,6 +105,18 @@ func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUser
 		info.Roles = resp4.Infos
 	}
 
+	resp5, err := appusersecretcrud.GetByAppUser(ctx, &npool.GetAppUserSecretByAppUserRequest{
+		AppID:  user.AppID,
+		UserID: user.ID,
+	})
+	if err == nil && resp5.Info != nil {
+		secretMap := &npool.AppUserSecretMap{}
+		if resp5.Info.GoogleSecret != "" {
+			secretMap.HasGoogleSecret = true
+		}
+		info.SecretMap = secretMap
+	}
+
 	return info, nil
 }
 
