@@ -85,6 +85,22 @@ spec:
             backend:
               serviceName: appuser-manager
               servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/userinfos
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/users
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/user
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/userinfo
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
           - path: /api/appuser-manager/v1/get/apps
             backend:
               serviceName: appuser-manager
