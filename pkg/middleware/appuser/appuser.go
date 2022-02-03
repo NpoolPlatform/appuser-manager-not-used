@@ -295,28 +295,3 @@ func GetAppInfosByCreator(ctx context.Context, in *npool.GetAppInfosByCreatorReq
 		Infos: infos,
 	}, nil
 }
-
-func UpdateAppUserSecretByAppUser(ctx context.Context, in *npool.UpdateAppUserSecretByAppUserRequest) (*npool.UpdateAppUserSecretByAppUserResponse, error) {
-	resp, err := appusersecretcrud.GetByAppUser(ctx, &npool.GetAppUserSecretByAppUserRequest{
-		AppID:  in.GetAppID(),
-		UserID: in.GetUserID(),
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("fail get secret by app user: %v", err)
-	}
-	if resp.Info == nil {
-		return nil, xerrors.Errorf("fail get secret by app user")
-	}
-
-	resp.Info.PasswordHash = in.GetPasswordHash()
-	resp1, err := appusersecretcrud.Update(ctx, &npool.UpdateAppUserSecretRequest{
-		Info: resp.Info,
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("fail update secret: %v", err)
-	}
-
-	return &npool.UpdateAppUserSecretByAppUserResponse{
-		Info: resp1.Info,
-	}, nil
-}
