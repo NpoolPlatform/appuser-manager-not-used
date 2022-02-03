@@ -120,10 +120,10 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{

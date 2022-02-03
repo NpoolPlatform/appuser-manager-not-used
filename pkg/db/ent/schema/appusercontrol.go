@@ -22,7 +22,6 @@ func (AppUserControl) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
-		field.Bool("signin_verify_by_google_authentication"),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())
@@ -38,6 +37,7 @@ func (AppUserControl) Fields() []ent.Field {
 			DefaultFunc(func() uint32 {
 				return 0
 			}),
+		field.Bool("signin_verify_by_google_authentication"),
 	}
 }
 

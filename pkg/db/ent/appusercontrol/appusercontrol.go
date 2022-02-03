@@ -15,14 +15,14 @@ const (
 	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// FieldSigninVerifyByGoogleAuthentication holds the string denoting the signin_verify_by_google_authentication field in the database.
-	FieldSigninVerifyByGoogleAuthentication = "signin_verify_by_google_authentication"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
 	FieldUpdateAt = "update_at"
 	// FieldDeleteAt holds the string denoting the delete_at field in the database.
 	FieldDeleteAt = "delete_at"
+	// FieldSigninVerifyByGoogleAuthentication holds the string denoting the signin_verify_by_google_authentication field in the database.
+	FieldSigninVerifyByGoogleAuthentication = "signin_verify_by_google_authentication"
 	// Table holds the table name of the appusercontrol in the database.
 	Table = "app_user_controls"
 )
@@ -32,10 +32,10 @@ var Columns = []string{
 	FieldID,
 	FieldAppID,
 	FieldUserID,
-	FieldSigninVerifyByGoogleAuthentication,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,
+	FieldSigninVerifyByGoogleAuthentication,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
