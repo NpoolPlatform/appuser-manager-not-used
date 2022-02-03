@@ -61,6 +61,10 @@ spec:
             backend:
               serviceName: appuser-manager
               servicePort: 50230
+          - path: /api/appuser-manager/v1/get/genesis/app/role/users/by/other/app
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
           - path: /api/appuser-manager/v1/create/genesis/role/user
             backend:
               serviceName: appuser-manager
