@@ -20,6 +20,8 @@ type AppUserControl struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
+	// SigninVerifyByGoogleAuthentication holds the value of the "signin_verify_by_google_authentication" field.
+	SigninVerifyByGoogleAuthentication bool `json:"signin_verify_by_google_authentication,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -33,6 +35,8 @@ func (*AppUserControl) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+			values[i] = new(sql.NullBool)
 		case appusercontrol.FieldCreateAt, appusercontrol.FieldUpdateAt, appusercontrol.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
 		case appusercontrol.FieldID, appusercontrol.FieldAppID, appusercontrol.FieldUserID:
@@ -69,6 +73,12 @@ func (auc *AppUserControl) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				auc.UserID = *value
+			}
+		case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field signin_verify_by_google_authentication", values[i])
+			} else if value.Valid {
+				auc.SigninVerifyByGoogleAuthentication = value.Bool
 			}
 		case appusercontrol.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -120,6 +130,8 @@ func (auc *AppUserControl) String() string {
 	builder.WriteString(fmt.Sprintf("%v", auc.AppID))
 	builder.WriteString(", user_id=")
 	builder.WriteString(fmt.Sprintf("%v", auc.UserID))
+	builder.WriteString(", signin_verify_by_google_authentication=")
+	builder.WriteString(fmt.Sprintf("%v", auc.SigninVerifyByGoogleAuthentication))
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", auc.CreateAt))
 	builder.WriteString(", update_at=")

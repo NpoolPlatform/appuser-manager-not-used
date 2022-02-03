@@ -15,6 +15,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
+	// FieldSigninVerifyByGoogleAuthentication holds the string denoting the signin_verify_by_google_authentication field in the database.
+	FieldSigninVerifyByGoogleAuthentication = "signin_verify_by_google_authentication"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -30,6 +32,7 @@ var Columns = []string{
 	FieldID,
 	FieldAppID,
 	FieldUserID,
+	FieldSigninVerifyByGoogleAuthentication,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,

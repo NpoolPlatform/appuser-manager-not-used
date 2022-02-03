@@ -3925,21 +3925,22 @@ func (m *AppUserMutation) ResetEdge(name string) error {
 // AppUserControlMutation represents an operation that mutates the AppUserControl nodes in the graph.
 type AppUserControlMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	app_id        *uuid.UUID
-	user_id       *uuid.UUID
-	create_at     *uint32
-	addcreate_at  *int32
-	update_at     *uint32
-	addupdate_at  *int32
-	delete_at     *uint32
-	adddelete_at  *int32
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*AppUserControl, error)
-	predicates    []predicate.AppUserControl
+	op                                     Op
+	typ                                    string
+	id                                     *uuid.UUID
+	app_id                                 *uuid.UUID
+	user_id                                *uuid.UUID
+	signin_verify_by_google_authentication *bool
+	create_at                              *uint32
+	addcreate_at                           *int32
+	update_at                              *uint32
+	addupdate_at                           *int32
+	delete_at                              *uint32
+	adddelete_at                           *int32
+	clearedFields                          map[string]struct{}
+	done                                   bool
+	oldValue                               func(context.Context) (*AppUserControl, error)
+	predicates                             []predicate.AppUserControl
 }
 
 var _ ent.Mutation = (*AppUserControlMutation)(nil)
@@ -4116,6 +4117,42 @@ func (m *AppUserControlMutation) OldUserID(ctx context.Context) (v uuid.UUID, er
 // ResetUserID resets all changes to the "user_id" field.
 func (m *AppUserControlMutation) ResetUserID() {
 	m.user_id = nil
+}
+
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (m *AppUserControlMutation) SetSigninVerifyByGoogleAuthentication(b bool) {
+	m.signin_verify_by_google_authentication = &b
+}
+
+// SigninVerifyByGoogleAuthentication returns the value of the "signin_verify_by_google_authentication" field in the mutation.
+func (m *AppUserControlMutation) SigninVerifyByGoogleAuthentication() (r bool, exists bool) {
+	v := m.signin_verify_by_google_authentication
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSigninVerifyByGoogleAuthentication returns the old "signin_verify_by_google_authentication" field's value of the AppUserControl entity.
+// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserControlMutation) OldSigninVerifyByGoogleAuthentication(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSigninVerifyByGoogleAuthentication is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSigninVerifyByGoogleAuthentication requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSigninVerifyByGoogleAuthentication: %w", err)
+	}
+	return oldValue.SigninVerifyByGoogleAuthentication, nil
+}
+
+// ResetSigninVerifyByGoogleAuthentication resets all changes to the "signin_verify_by_google_authentication" field.
+func (m *AppUserControlMutation) ResetSigninVerifyByGoogleAuthentication() {
+	m.signin_verify_by_google_authentication = nil
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -4305,12 +4342,15 @@ func (m *AppUserControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserControlMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.app_id != nil {
 		fields = append(fields, appusercontrol.FieldAppID)
 	}
 	if m.user_id != nil {
 		fields = append(fields, appusercontrol.FieldUserID)
+	}
+	if m.signin_verify_by_google_authentication != nil {
+		fields = append(fields, appusercontrol.FieldSigninVerifyByGoogleAuthentication)
 	}
 	if m.create_at != nil {
 		fields = append(fields, appusercontrol.FieldCreateAt)
@@ -4333,6 +4373,8 @@ func (m *AppUserControlMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appusercontrol.FieldUserID:
 		return m.UserID()
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		return m.SigninVerifyByGoogleAuthentication()
 	case appusercontrol.FieldCreateAt:
 		return m.CreateAt()
 	case appusercontrol.FieldUpdateAt:
@@ -4352,6 +4394,8 @@ func (m *AppUserControlMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldAppID(ctx)
 	case appusercontrol.FieldUserID:
 		return m.OldUserID(ctx)
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		return m.OldSigninVerifyByGoogleAuthentication(ctx)
 	case appusercontrol.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case appusercontrol.FieldUpdateAt:
@@ -4380,6 +4424,13 @@ func (m *AppUserControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserID(v)
+		return nil
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSigninVerifyByGoogleAuthentication(v)
 		return nil
 	case appusercontrol.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -4495,6 +4546,9 @@ func (m *AppUserControlMutation) ResetField(name string) error {
 		return nil
 	case appusercontrol.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		m.ResetSigninVerifyByGoogleAuthentication()
 		return nil
 	case appusercontrol.FieldCreateAt:
 		m.ResetCreateAt()

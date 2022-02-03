@@ -35,6 +35,12 @@ func (aucc *AppUserControlCreate) SetUserID(u uuid.UUID) *AppUserControlCreate {
 	return aucc
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (aucc *AppUserControlCreate) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlCreate {
+	aucc.mutation.SetSigninVerifyByGoogleAuthentication(b)
+	return aucc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (aucc *AppUserControlCreate) SetCreateAt(u uint32) *AppUserControlCreate {
 	aucc.mutation.SetCreateAt(u)
@@ -188,6 +194,9 @@ func (aucc *AppUserControlCreate) check() error {
 	if _, ok := aucc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppUserControl.user_id"`)}
 	}
+	if _, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); !ok {
+		return &ValidationError{Name: "signin_verify_by_google_authentication", err: errors.New(`ent: missing required field "AppUserControl.signin_verify_by_google_authentication"`)}
+	}
 	if _, ok := aucc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUserControl.create_at"`)}
 	}
@@ -249,6 +258,14 @@ func (aucc *AppUserControlCreate) createSpec() (*AppUserControl, *sqlgraph.Creat
 			Column: appusercontrol.FieldUserID,
 		})
 		_node.UserID = value
+	}
+	if value, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
+		})
+		_node.SigninVerifyByGoogleAuthentication = value
 	}
 	if value, ok := aucc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -349,6 +366,18 @@ func (u *AppUserControlUpsert) SetUserID(v uuid.UUID) *AppUserControlUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *AppUserControlUpsert) UpdateUserID() *AppUserControlUpsert {
 	u.SetExcluded(appusercontrol.FieldUserID)
+	return u
+}
+
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsert) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsert {
+	u.Set(appusercontrol.FieldSigninVerifyByGoogleAuthentication, v)
+	return u
+}
+
+// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
+func (u *AppUserControlUpsert) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsert {
+	u.SetExcluded(appusercontrol.FieldSigninVerifyByGoogleAuthentication)
 	return u
 }
 
@@ -481,6 +510,20 @@ func (u *AppUserControlUpsertOne) SetUserID(v uuid.UUID) *AppUserControlUpsertOn
 func (u *AppUserControlUpsertOne) UpdateUserID() *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsertOne) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetSigninVerifyByGoogleAuthentication(v)
+	})
+}
+
+// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
+func (u *AppUserControlUpsertOne) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateSigninVerifyByGoogleAuthentication()
 	})
 }
 
@@ -788,6 +831,20 @@ func (u *AppUserControlUpsertBulk) SetUserID(v uuid.UUID) *AppUserControlUpsertB
 func (u *AppUserControlUpsertBulk) UpdateUserID() *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsertBulk) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetSigninVerifyByGoogleAuthentication(v)
+	})
+}
+
+// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
+func (u *AppUserControlUpsertBulk) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateSigninVerifyByGoogleAuthentication()
 	})
 }
 

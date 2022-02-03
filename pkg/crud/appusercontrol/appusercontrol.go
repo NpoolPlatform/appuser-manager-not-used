@@ -27,9 +27,10 @@ func validateAppUserControl(info *npool.AppUserControl) error {
 
 func dbRowToAppUserControl(row *ent.AppUserControl) *npool.AppUserControl {
 	return &npool.AppUserControl{
-		ID:     row.ID.String(),
-		AppID:  row.AppID.String(),
-		UserID: row.UserID.String(),
+		ID:                                 row.ID.String(),
+		AppID:                              row.AppID.String(),
+		UserID:                             row.UserID.String(),
+		SigninVerifyByGoogleAuthentication: row.SigninVerifyByGoogleAuthentication,
 	}
 }
 
@@ -51,6 +52,7 @@ func Create(ctx context.Context, in *npool.CreateAppUserControlRequest) (*npool.
 		Create().
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
+		SetSigninVerifyByGoogleAuthentication(in.GetInfo().GetSigninVerifyByGoogleAuthentication()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create app user control: %v", err)
@@ -82,6 +84,7 @@ func Update(ctx context.Context, in *npool.UpdateAppUserControlRequest) (*npool.
 	info, err := cli.
 		AppUserControl.
 		UpdateOneID(id).
+		SetSigninVerifyByGoogleAuthentication(in.GetInfo().GetSigninVerifyByGoogleAuthentication()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail update app user control: %v", err)
