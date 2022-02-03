@@ -28,6 +28,10 @@ spec:
             backend:
               serviceName: appuser-manager
               servicePort: 50230
+          - path: /api/appuser-manager/v1/get/appinfo
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top
