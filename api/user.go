@@ -98,6 +98,15 @@ func (s *Server) UpdateAppUserSecret(ctx context.Context, in *npool.UpdateAppUse
 	return resp, nil
 }
 
+func (s *Server) UpdateAppUserSecretByAppUser(ctx context.Context, in *npool.UpdateAppUserSecretByAppUserRequest) (*npool.UpdateAppUserSecretByAppUserResponse, error) {
+	resp, err := appusermw.UpdateAppUserSecretByAppUser(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail update app user secret by app user: %v", err)
+		return &npool.UpdateAppUserSecretByAppUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) CreateAppUserExtra(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.CreateAppUserExtraResponse, error) {
 	resp, err := appuserextracrud.Create(ctx, in)
 	if err != nil {
