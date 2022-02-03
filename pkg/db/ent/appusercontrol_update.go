@@ -40,6 +40,18 @@ func (aucu *AppUserControlUpdate) SetUserID(u uuid.UUID) *AppUserControlUpdate {
 	return aucu
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (aucu *AppUserControlUpdate) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlUpdate {
+	aucu.mutation.SetSigninVerifyByGoogleAuthentication(b)
+	return aucu
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (aucu *AppUserControlUpdate) SetGoogleAuthenticationVerified(b bool) *AppUserControlUpdate {
+	aucu.mutation.SetGoogleAuthenticationVerified(b)
+	return aucu
+}
+
 // SetCreateAt sets the "create_at" field.
 func (aucu *AppUserControlUpdate) SetCreateAt(u uint32) *AppUserControlUpdate {
 	aucu.mutation.ResetCreateAt()
@@ -92,12 +104,6 @@ func (aucu *AppUserControlUpdate) SetNillableDeleteAt(u *uint32) *AppUserControl
 // AddDeleteAt adds u to the "delete_at" field.
 func (aucu *AppUserControlUpdate) AddDeleteAt(u int32) *AppUserControlUpdate {
 	aucu.mutation.AddDeleteAt(u)
-	return aucu
-}
-
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (aucu *AppUserControlUpdate) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlUpdate {
-	aucu.mutation.SetSigninVerifyByGoogleAuthentication(b)
 	return aucu
 }
 
@@ -201,6 +207,20 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldUserID,
 		})
 	}
+	if value, ok := aucu.mutation.SigninVerifyByGoogleAuthentication(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
+		})
+	}
+	if value, ok := aucu.mutation.GoogleAuthenticationVerified(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldGoogleAuthenticationVerified,
+		})
+	}
 	if value, ok := aucu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -243,13 +263,6 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldDeleteAt,
 		})
 	}
-	if value, ok := aucu.mutation.SigninVerifyByGoogleAuthentication(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, aucu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appusercontrol.Label}
@@ -278,6 +291,18 @@ func (aucuo *AppUserControlUpdateOne) SetAppID(u uuid.UUID) *AppUserControlUpdat
 // SetUserID sets the "user_id" field.
 func (aucuo *AppUserControlUpdateOne) SetUserID(u uuid.UUID) *AppUserControlUpdateOne {
 	aucuo.mutation.SetUserID(u)
+	return aucuo
+}
+
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (aucuo *AppUserControlUpdateOne) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlUpdateOne {
+	aucuo.mutation.SetSigninVerifyByGoogleAuthentication(b)
+	return aucuo
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (aucuo *AppUserControlUpdateOne) SetGoogleAuthenticationVerified(b bool) *AppUserControlUpdateOne {
+	aucuo.mutation.SetGoogleAuthenticationVerified(b)
 	return aucuo
 }
 
@@ -333,12 +358,6 @@ func (aucuo *AppUserControlUpdateOne) SetNillableDeleteAt(u *uint32) *AppUserCon
 // AddDeleteAt adds u to the "delete_at" field.
 func (aucuo *AppUserControlUpdateOne) AddDeleteAt(u int32) *AppUserControlUpdateOne {
 	aucuo.mutation.AddDeleteAt(u)
-	return aucuo
-}
-
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (aucuo *AppUserControlUpdateOne) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlUpdateOne {
-	aucuo.mutation.SetSigninVerifyByGoogleAuthentication(b)
 	return aucuo
 }
 
@@ -466,6 +485,20 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 			Column: appusercontrol.FieldUserID,
 		})
 	}
+	if value, ok := aucuo.mutation.SigninVerifyByGoogleAuthentication(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
+		})
+	}
+	if value, ok := aucuo.mutation.GoogleAuthenticationVerified(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldGoogleAuthenticationVerified,
+		})
+	}
 	if value, ok := aucuo.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -506,13 +539,6 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appusercontrol.FieldDeleteAt,
-		})
-	}
-	if value, ok := aucuo.mutation.SigninVerifyByGoogleAuthentication(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
 		})
 	}
 	_node = &AppUserControl{config: aucuo.config}

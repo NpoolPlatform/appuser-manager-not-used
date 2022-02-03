@@ -20,14 +20,16 @@ type AppUserControl struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
+	// SigninVerifyByGoogleAuthentication holds the value of the "signin_verify_by_google_authentication" field.
+	SigninVerifyByGoogleAuthentication bool `json:"signin_verify_by_google_authentication,omitempty"`
+	// GoogleAuthenticationVerified holds the value of the "google_authentication_verified" field.
+	GoogleAuthenticationVerified bool `json:"google_authentication_verified,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
 	UpdateAt uint32 `json:"update_at,omitempty"`
 	// DeleteAt holds the value of the "delete_at" field.
 	DeleteAt uint32 `json:"delete_at,omitempty"`
-	// SigninVerifyByGoogleAuthentication holds the value of the "signin_verify_by_google_authentication" field.
-	SigninVerifyByGoogleAuthentication bool `json:"signin_verify_by_google_authentication,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -35,7 +37,7 @@ func (*AppUserControl) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		case appusercontrol.FieldSigninVerifyByGoogleAuthentication, appusercontrol.FieldGoogleAuthenticationVerified:
 			values[i] = new(sql.NullBool)
 		case appusercontrol.FieldCreateAt, appusercontrol.FieldUpdateAt, appusercontrol.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
@@ -74,6 +76,18 @@ func (auc *AppUserControl) assignValues(columns []string, values []interface{}) 
 			} else if value != nil {
 				auc.UserID = *value
 			}
+		case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field signin_verify_by_google_authentication", values[i])
+			} else if value.Valid {
+				auc.SigninVerifyByGoogleAuthentication = value.Bool
+			}
+		case appusercontrol.FieldGoogleAuthenticationVerified:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field google_authentication_verified", values[i])
+			} else if value.Valid {
+				auc.GoogleAuthenticationVerified = value.Bool
+			}
 		case appusercontrol.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_at", values[i])
@@ -91,12 +105,6 @@ func (auc *AppUserControl) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
 			} else if value.Valid {
 				auc.DeleteAt = uint32(value.Int64)
-			}
-		case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field signin_verify_by_google_authentication", values[i])
-			} else if value.Valid {
-				auc.SigninVerifyByGoogleAuthentication = value.Bool
 			}
 		}
 	}
@@ -130,14 +138,16 @@ func (auc *AppUserControl) String() string {
 	builder.WriteString(fmt.Sprintf("%v", auc.AppID))
 	builder.WriteString(", user_id=")
 	builder.WriteString(fmt.Sprintf("%v", auc.UserID))
+	builder.WriteString(", signin_verify_by_google_authentication=")
+	builder.WriteString(fmt.Sprintf("%v", auc.SigninVerifyByGoogleAuthentication))
+	builder.WriteString(", google_authentication_verified=")
+	builder.WriteString(fmt.Sprintf("%v", auc.GoogleAuthenticationVerified))
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", auc.CreateAt))
 	builder.WriteString(", update_at=")
 	builder.WriteString(fmt.Sprintf("%v", auc.UpdateAt))
 	builder.WriteString(", delete_at=")
 	builder.WriteString(fmt.Sprintf("%v", auc.DeleteAt))
-	builder.WriteString(", signin_verify_by_google_authentication=")
-	builder.WriteString(fmt.Sprintf("%v", auc.SigninVerifyByGoogleAuthentication))
 	builder.WriteByte(')')
 	return builder.String()
 }

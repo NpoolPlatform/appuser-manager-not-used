@@ -35,6 +35,18 @@ func (aucc *AppUserControlCreate) SetUserID(u uuid.UUID) *AppUserControlCreate {
 	return aucc
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (aucc *AppUserControlCreate) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlCreate {
+	aucc.mutation.SetSigninVerifyByGoogleAuthentication(b)
+	return aucc
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (aucc *AppUserControlCreate) SetGoogleAuthenticationVerified(b bool) *AppUserControlCreate {
+	aucc.mutation.SetGoogleAuthenticationVerified(b)
+	return aucc
+}
+
 // SetCreateAt sets the "create_at" field.
 func (aucc *AppUserControlCreate) SetCreateAt(u uint32) *AppUserControlCreate {
 	aucc.mutation.SetCreateAt(u)
@@ -74,12 +86,6 @@ func (aucc *AppUserControlCreate) SetNillableDeleteAt(u *uint32) *AppUserControl
 	if u != nil {
 		aucc.SetDeleteAt(*u)
 	}
-	return aucc
-}
-
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (aucc *AppUserControlCreate) SetSigninVerifyByGoogleAuthentication(b bool) *AppUserControlCreate {
-	aucc.mutation.SetSigninVerifyByGoogleAuthentication(b)
 	return aucc
 }
 
@@ -194,6 +200,12 @@ func (aucc *AppUserControlCreate) check() error {
 	if _, ok := aucc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppUserControl.user_id"`)}
 	}
+	if _, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); !ok {
+		return &ValidationError{Name: "signin_verify_by_google_authentication", err: errors.New(`ent: missing required field "AppUserControl.signin_verify_by_google_authentication"`)}
+	}
+	if _, ok := aucc.mutation.GoogleAuthenticationVerified(); !ok {
+		return &ValidationError{Name: "google_authentication_verified", err: errors.New(`ent: missing required field "AppUserControl.google_authentication_verified"`)}
+	}
 	if _, ok := aucc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUserControl.create_at"`)}
 	}
@@ -202,9 +214,6 @@ func (aucc *AppUserControlCreate) check() error {
 	}
 	if _, ok := aucc.mutation.DeleteAt(); !ok {
 		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppUserControl.delete_at"`)}
-	}
-	if _, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); !ok {
-		return &ValidationError{Name: "signin_verify_by_google_authentication", err: errors.New(`ent: missing required field "AppUserControl.signin_verify_by_google_authentication"`)}
 	}
 	return nil
 }
@@ -259,6 +268,22 @@ func (aucc *AppUserControlCreate) createSpec() (*AppUserControl, *sqlgraph.Creat
 		})
 		_node.UserID = value
 	}
+	if value, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
+		})
+		_node.SigninVerifyByGoogleAuthentication = value
+	}
+	if value, ok := aucc.mutation.GoogleAuthenticationVerified(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldGoogleAuthenticationVerified,
+		})
+		_node.GoogleAuthenticationVerified = value
+	}
 	if value, ok := aucc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -282,14 +307,6 @@ func (aucc *AppUserControlCreate) createSpec() (*AppUserControl, *sqlgraph.Creat
 			Column: appusercontrol.FieldDeleteAt,
 		})
 		_node.DeleteAt = value
-	}
-	if value, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
-		})
-		_node.SigninVerifyByGoogleAuthentication = value
 	}
 	return _node, _spec
 }
@@ -369,6 +386,30 @@ func (u *AppUserControlUpsert) UpdateUserID() *AppUserControlUpsert {
 	return u
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsert) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsert {
+	u.Set(appusercontrol.FieldSigninVerifyByGoogleAuthentication, v)
+	return u
+}
+
+// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
+func (u *AppUserControlUpsert) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsert {
+	u.SetExcluded(appusercontrol.FieldSigninVerifyByGoogleAuthentication)
+	return u
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (u *AppUserControlUpsert) SetGoogleAuthenticationVerified(v bool) *AppUserControlUpsert {
+	u.Set(appusercontrol.FieldGoogleAuthenticationVerified, v)
+	return u
+}
+
+// UpdateGoogleAuthenticationVerified sets the "google_authentication_verified" field to the value that was provided on create.
+func (u *AppUserControlUpsert) UpdateGoogleAuthenticationVerified() *AppUserControlUpsert {
+	u.SetExcluded(appusercontrol.FieldGoogleAuthenticationVerified)
+	return u
+}
+
 // SetCreateAt sets the "create_at" field.
 func (u *AppUserControlUpsert) SetCreateAt(v uint32) *AppUserControlUpsert {
 	u.Set(appusercontrol.FieldCreateAt, v)
@@ -420,18 +461,6 @@ func (u *AppUserControlUpsert) UpdateDeleteAt() *AppUserControlUpsert {
 // AddDeleteAt adds v to the "delete_at" field.
 func (u *AppUserControlUpsert) AddDeleteAt(v uint32) *AppUserControlUpsert {
 	u.Add(appusercontrol.FieldDeleteAt, v)
-	return u
-}
-
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (u *AppUserControlUpsert) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsert {
-	u.Set(appusercontrol.FieldSigninVerifyByGoogleAuthentication, v)
-	return u
-}
-
-// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
-func (u *AppUserControlUpsert) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsert {
-	u.SetExcluded(appusercontrol.FieldSigninVerifyByGoogleAuthentication)
 	return u
 }
 
@@ -513,6 +542,34 @@ func (u *AppUserControlUpsertOne) UpdateUserID() *AppUserControlUpsertOne {
 	})
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsertOne) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetSigninVerifyByGoogleAuthentication(v)
+	})
+}
+
+// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
+func (u *AppUserControlUpsertOne) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateSigninVerifyByGoogleAuthentication()
+	})
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (u *AppUserControlUpsertOne) SetGoogleAuthenticationVerified(v bool) *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetGoogleAuthenticationVerified(v)
+	})
+}
+
+// UpdateGoogleAuthenticationVerified sets the "google_authentication_verified" field to the value that was provided on create.
+func (u *AppUserControlUpsertOne) UpdateGoogleAuthenticationVerified() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateGoogleAuthenticationVerified()
+	})
+}
+
 // SetCreateAt sets the "create_at" field.
 func (u *AppUserControlUpsertOne) SetCreateAt(v uint32) *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
@@ -573,20 +630,6 @@ func (u *AppUserControlUpsertOne) AddDeleteAt(v uint32) *AppUserControlUpsertOne
 func (u *AppUserControlUpsertOne) UpdateDeleteAt() *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateDeleteAt()
-	})
-}
-
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (u *AppUserControlUpsertOne) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsertOne {
-	return u.Update(func(s *AppUserControlUpsert) {
-		s.SetSigninVerifyByGoogleAuthentication(v)
-	})
-}
-
-// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
-func (u *AppUserControlUpsertOne) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsertOne {
-	return u.Update(func(s *AppUserControlUpsert) {
-		s.UpdateSigninVerifyByGoogleAuthentication()
 	})
 }
 
@@ -834,6 +877,34 @@ func (u *AppUserControlUpsertBulk) UpdateUserID() *AppUserControlUpsertBulk {
 	})
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsertBulk) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetSigninVerifyByGoogleAuthentication(v)
+	})
+}
+
+// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
+func (u *AppUserControlUpsertBulk) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateSigninVerifyByGoogleAuthentication()
+	})
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (u *AppUserControlUpsertBulk) SetGoogleAuthenticationVerified(v bool) *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetGoogleAuthenticationVerified(v)
+	})
+}
+
+// UpdateGoogleAuthenticationVerified sets the "google_authentication_verified" field to the value that was provided on create.
+func (u *AppUserControlUpsertBulk) UpdateGoogleAuthenticationVerified() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateGoogleAuthenticationVerified()
+	})
+}
+
 // SetCreateAt sets the "create_at" field.
 func (u *AppUserControlUpsertBulk) SetCreateAt(v uint32) *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
@@ -894,20 +965,6 @@ func (u *AppUserControlUpsertBulk) AddDeleteAt(v uint32) *AppUserControlUpsertBu
 func (u *AppUserControlUpsertBulk) UpdateDeleteAt() *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateDeleteAt()
-	})
-}
-
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (u *AppUserControlUpsertBulk) SetSigninVerifyByGoogleAuthentication(v bool) *AppUserControlUpsertBulk {
-	return u.Update(func(s *AppUserControlUpsert) {
-		s.SetSigninVerifyByGoogleAuthentication(v)
-	})
-}
-
-// UpdateSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field to the value that was provided on create.
-func (u *AppUserControlUpsertBulk) UpdateSigninVerifyByGoogleAuthentication() *AppUserControlUpsertBulk {
-	return u.Update(func(s *AppUserControlUpsert) {
-		s.UpdateSigninVerifyByGoogleAuthentication()
 	})
 }
 

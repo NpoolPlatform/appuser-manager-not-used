@@ -3930,13 +3930,14 @@ type AppUserControlMutation struct {
 	id                                     *uuid.UUID
 	app_id                                 *uuid.UUID
 	user_id                                *uuid.UUID
+	signin_verify_by_google_authentication *bool
+	google_authentication_verified         *bool
 	create_at                              *uint32
 	addcreate_at                           *int32
 	update_at                              *uint32
 	addupdate_at                           *int32
 	delete_at                              *uint32
 	adddelete_at                           *int32
-	signin_verify_by_google_authentication *bool
 	clearedFields                          map[string]struct{}
 	done                                   bool
 	oldValue                               func(context.Context) (*AppUserControl, error)
@@ -4119,6 +4120,78 @@ func (m *AppUserControlMutation) ResetUserID() {
 	m.user_id = nil
 }
 
+// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
+func (m *AppUserControlMutation) SetSigninVerifyByGoogleAuthentication(b bool) {
+	m.signin_verify_by_google_authentication = &b
+}
+
+// SigninVerifyByGoogleAuthentication returns the value of the "signin_verify_by_google_authentication" field in the mutation.
+func (m *AppUserControlMutation) SigninVerifyByGoogleAuthentication() (r bool, exists bool) {
+	v := m.signin_verify_by_google_authentication
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSigninVerifyByGoogleAuthentication returns the old "signin_verify_by_google_authentication" field's value of the AppUserControl entity.
+// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserControlMutation) OldSigninVerifyByGoogleAuthentication(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSigninVerifyByGoogleAuthentication is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSigninVerifyByGoogleAuthentication requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSigninVerifyByGoogleAuthentication: %w", err)
+	}
+	return oldValue.SigninVerifyByGoogleAuthentication, nil
+}
+
+// ResetSigninVerifyByGoogleAuthentication resets all changes to the "signin_verify_by_google_authentication" field.
+func (m *AppUserControlMutation) ResetSigninVerifyByGoogleAuthentication() {
+	m.signin_verify_by_google_authentication = nil
+}
+
+// SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
+func (m *AppUserControlMutation) SetGoogleAuthenticationVerified(b bool) {
+	m.google_authentication_verified = &b
+}
+
+// GoogleAuthenticationVerified returns the value of the "google_authentication_verified" field in the mutation.
+func (m *AppUserControlMutation) GoogleAuthenticationVerified() (r bool, exists bool) {
+	v := m.google_authentication_verified
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoogleAuthenticationVerified returns the old "google_authentication_verified" field's value of the AppUserControl entity.
+// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserControlMutation) OldGoogleAuthenticationVerified(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGoogleAuthenticationVerified is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGoogleAuthenticationVerified requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoogleAuthenticationVerified: %w", err)
+	}
+	return oldValue.GoogleAuthenticationVerified, nil
+}
+
+// ResetGoogleAuthenticationVerified resets all changes to the "google_authentication_verified" field.
+func (m *AppUserControlMutation) ResetGoogleAuthenticationVerified() {
+	m.google_authentication_verified = nil
+}
+
 // SetCreateAt sets the "create_at" field.
 func (m *AppUserControlMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
@@ -4287,42 +4360,6 @@ func (m *AppUserControlMutation) ResetDeleteAt() {
 	m.adddelete_at = nil
 }
 
-// SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
-func (m *AppUserControlMutation) SetSigninVerifyByGoogleAuthentication(b bool) {
-	m.signin_verify_by_google_authentication = &b
-}
-
-// SigninVerifyByGoogleAuthentication returns the value of the "signin_verify_by_google_authentication" field in the mutation.
-func (m *AppUserControlMutation) SigninVerifyByGoogleAuthentication() (r bool, exists bool) {
-	v := m.signin_verify_by_google_authentication
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSigninVerifyByGoogleAuthentication returns the old "signin_verify_by_google_authentication" field's value of the AppUserControl entity.
-// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserControlMutation) OldSigninVerifyByGoogleAuthentication(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSigninVerifyByGoogleAuthentication is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSigninVerifyByGoogleAuthentication requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSigninVerifyByGoogleAuthentication: %w", err)
-	}
-	return oldValue.SigninVerifyByGoogleAuthentication, nil
-}
-
-// ResetSigninVerifyByGoogleAuthentication resets all changes to the "signin_verify_by_google_authentication" field.
-func (m *AppUserControlMutation) ResetSigninVerifyByGoogleAuthentication() {
-	m.signin_verify_by_google_authentication = nil
-}
-
 // Where appends a list predicates to the AppUserControlMutation builder.
 func (m *AppUserControlMutation) Where(ps ...predicate.AppUserControl) {
 	m.predicates = append(m.predicates, ps...)
@@ -4342,12 +4379,18 @@ func (m *AppUserControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserControlMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.app_id != nil {
 		fields = append(fields, appusercontrol.FieldAppID)
 	}
 	if m.user_id != nil {
 		fields = append(fields, appusercontrol.FieldUserID)
+	}
+	if m.signin_verify_by_google_authentication != nil {
+		fields = append(fields, appusercontrol.FieldSigninVerifyByGoogleAuthentication)
+	}
+	if m.google_authentication_verified != nil {
+		fields = append(fields, appusercontrol.FieldGoogleAuthenticationVerified)
 	}
 	if m.create_at != nil {
 		fields = append(fields, appusercontrol.FieldCreateAt)
@@ -4357,9 +4400,6 @@ func (m *AppUserControlMutation) Fields() []string {
 	}
 	if m.delete_at != nil {
 		fields = append(fields, appusercontrol.FieldDeleteAt)
-	}
-	if m.signin_verify_by_google_authentication != nil {
-		fields = append(fields, appusercontrol.FieldSigninVerifyByGoogleAuthentication)
 	}
 	return fields
 }
@@ -4373,14 +4413,16 @@ func (m *AppUserControlMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appusercontrol.FieldUserID:
 		return m.UserID()
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		return m.SigninVerifyByGoogleAuthentication()
+	case appusercontrol.FieldGoogleAuthenticationVerified:
+		return m.GoogleAuthenticationVerified()
 	case appusercontrol.FieldCreateAt:
 		return m.CreateAt()
 	case appusercontrol.FieldUpdateAt:
 		return m.UpdateAt()
 	case appusercontrol.FieldDeleteAt:
 		return m.DeleteAt()
-	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
-		return m.SigninVerifyByGoogleAuthentication()
 	}
 	return nil, false
 }
@@ -4394,14 +4436,16 @@ func (m *AppUserControlMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldAppID(ctx)
 	case appusercontrol.FieldUserID:
 		return m.OldUserID(ctx)
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		return m.OldSigninVerifyByGoogleAuthentication(ctx)
+	case appusercontrol.FieldGoogleAuthenticationVerified:
+		return m.OldGoogleAuthenticationVerified(ctx)
 	case appusercontrol.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case appusercontrol.FieldUpdateAt:
 		return m.OldUpdateAt(ctx)
 	case appusercontrol.FieldDeleteAt:
 		return m.OldDeleteAt(ctx)
-	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
-		return m.OldSigninVerifyByGoogleAuthentication(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppUserControl field %s", name)
 }
@@ -4425,6 +4469,20 @@ func (m *AppUserControlMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSigninVerifyByGoogleAuthentication(v)
+		return nil
+	case appusercontrol.FieldGoogleAuthenticationVerified:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoogleAuthenticationVerified(v)
+		return nil
 	case appusercontrol.FieldCreateAt:
 		v, ok := value.(uint32)
 		if !ok {
@@ -4445,13 +4503,6 @@ func (m *AppUserControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeleteAt(v)
-		return nil
-	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSigninVerifyByGoogleAuthentication(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)
@@ -4547,6 +4598,12 @@ func (m *AppUserControlMutation) ResetField(name string) error {
 	case appusercontrol.FieldUserID:
 		m.ResetUserID()
 		return nil
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		m.ResetSigninVerifyByGoogleAuthentication()
+		return nil
+	case appusercontrol.FieldGoogleAuthenticationVerified:
+		m.ResetGoogleAuthenticationVerified()
+		return nil
 	case appusercontrol.FieldCreateAt:
 		m.ResetCreateAt()
 		return nil
@@ -4555,9 +4612,6 @@ func (m *AppUserControlMutation) ResetField(name string) error {
 		return nil
 	case appusercontrol.FieldDeleteAt:
 		m.ResetDeleteAt()
-		return nil
-	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
-		m.ResetSigninVerifyByGoogleAuthentication()
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)

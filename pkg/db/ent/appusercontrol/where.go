@@ -105,6 +105,20 @@ func UserID(v uuid.UUID) predicate.AppUserControl {
 	})
 }
 
+// SigninVerifyByGoogleAuthentication applies equality check predicate on the "signin_verify_by_google_authentication" field. It's identical to SigninVerifyByGoogleAuthenticationEQ.
+func SigninVerifyByGoogleAuthentication(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSigninVerifyByGoogleAuthentication), v))
+	})
+}
+
+// GoogleAuthenticationVerified applies equality check predicate on the "google_authentication_verified" field. It's identical to GoogleAuthenticationVerifiedEQ.
+func GoogleAuthenticationVerified(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoogleAuthenticationVerified), v))
+	})
+}
+
 // CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
 func CreateAt(v uint32) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
@@ -123,13 +137,6 @@ func UpdateAt(v uint32) predicate.AppUserControl {
 func DeleteAt(v uint32) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDeleteAt), v))
-	})
-}
-
-// SigninVerifyByGoogleAuthentication applies equality check predicate on the "signin_verify_by_google_authentication" field. It's identical to SigninVerifyByGoogleAuthenticationEQ.
-func SigninVerifyByGoogleAuthentication(v bool) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSigninVerifyByGoogleAuthentication), v))
 	})
 }
 
@@ -282,6 +289,34 @@ func UserIDLT(v uuid.UUID) predicate.AppUserControl {
 func UserIDLTE(v uuid.UUID) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldUserID), v))
+	})
+}
+
+// SigninVerifyByGoogleAuthenticationEQ applies the EQ predicate on the "signin_verify_by_google_authentication" field.
+func SigninVerifyByGoogleAuthenticationEQ(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSigninVerifyByGoogleAuthentication), v))
+	})
+}
+
+// SigninVerifyByGoogleAuthenticationNEQ applies the NEQ predicate on the "signin_verify_by_google_authentication" field.
+func SigninVerifyByGoogleAuthenticationNEQ(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSigninVerifyByGoogleAuthentication), v))
+	})
+}
+
+// GoogleAuthenticationVerifiedEQ applies the EQ predicate on the "google_authentication_verified" field.
+func GoogleAuthenticationVerifiedEQ(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGoogleAuthenticationVerified), v))
+	})
+}
+
+// GoogleAuthenticationVerifiedNEQ applies the NEQ predicate on the "google_authentication_verified" field.
+func GoogleAuthenticationVerifiedNEQ(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGoogleAuthenticationVerified), v))
 	})
 }
 
@@ -510,20 +545,6 @@ func DeleteAtLT(v uint32) predicate.AppUserControl {
 func DeleteAtLTE(v uint32) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDeleteAt), v))
-	})
-}
-
-// SigninVerifyByGoogleAuthenticationEQ applies the EQ predicate on the "signin_verify_by_google_authentication" field.
-func SigninVerifyByGoogleAuthenticationEQ(v bool) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSigninVerifyByGoogleAuthentication), v))
-	})
-}
-
-// SigninVerifyByGoogleAuthenticationNEQ applies the NEQ predicate on the "signin_verify_by_google_authentication" field.
-func SigninVerifyByGoogleAuthenticationNEQ(v bool) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldSigninVerifyByGoogleAuthentication), v))
 	})
 }
 
