@@ -46,6 +46,18 @@ func (aueu *AppUserExtraUpdate) SetUsername(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetFirstName sets the "first_name" field.
+func (aueu *AppUserExtraUpdate) SetFirstName(s string) *AppUserExtraUpdate {
+	aueu.mutation.SetFirstName(s)
+	return aueu
+}
+
+// SetLastName sets the "last_name" field.
+func (aueu *AppUserExtraUpdate) SetLastName(s string) *AppUserExtraUpdate {
+	aueu.mutation.SetLastName(s)
+	return aueu
+}
+
 // SetAddressFields sets the "address_fields" field.
 func (aueu *AppUserExtraUpdate) SetAddressFields(s []string) *AppUserExtraUpdate {
 	aueu.mutation.SetAddressFields(s)
@@ -264,6 +276,20 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserextra.FieldUsername,
 		})
 	}
+	if value, ok := aueu.mutation.FirstName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldFirstName,
+		})
+	}
+	if value, ok := aueu.mutation.LastName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldLastName,
+		})
+	}
 	if value, ok := aueu.mutation.AddressFields(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
@@ -403,6 +429,18 @@ func (aueuo *AppUserExtraUpdateOne) SetUserID(u uuid.UUID) *AppUserExtraUpdateOn
 // SetUsername sets the "username" field.
 func (aueuo *AppUserExtraUpdateOne) SetUsername(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetUsername(s)
+	return aueuo
+}
+
+// SetFirstName sets the "first_name" field.
+func (aueuo *AppUserExtraUpdateOne) SetFirstName(s string) *AppUserExtraUpdateOne {
+	aueuo.mutation.SetFirstName(s)
+	return aueuo
+}
+
+// SetLastName sets the "last_name" field.
+func (aueuo *AppUserExtraUpdateOne) SetLastName(s string) *AppUserExtraUpdateOne {
+	aueuo.mutation.SetLastName(s)
 	return aueuo
 }
 
@@ -646,6 +684,20 @@ func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserextra.FieldUsername,
+		})
+	}
+	if value, ok := aueuo.mutation.FirstName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldFirstName,
+		})
+	}
+	if value, ok := aueuo.mutation.LastName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldLastName,
 		})
 	}
 	if value, ok := aueuo.mutation.AddressFields(); ok {

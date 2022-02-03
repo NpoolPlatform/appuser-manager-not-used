@@ -41,6 +41,18 @@ func (auec *AppUserExtraCreate) SetUsername(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetFirstName sets the "first_name" field.
+func (auec *AppUserExtraCreate) SetFirstName(s string) *AppUserExtraCreate {
+	auec.mutation.SetFirstName(s)
+	return auec
+}
+
+// SetLastName sets the "last_name" field.
+func (auec *AppUserExtraCreate) SetLastName(s string) *AppUserExtraCreate {
+	auec.mutation.SetLastName(s)
+	return auec
+}
+
 // SetAddressFields sets the "address_fields" field.
 func (auec *AppUserExtraCreate) SetAddressFields(s []string) *AppUserExtraCreate {
 	auec.mutation.SetAddressFields(s)
@@ -239,6 +251,12 @@ func (auec *AppUserExtraCreate) check() error {
 	if _, ok := auec.mutation.Username(); !ok {
 		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "AppUserExtra.username"`)}
 	}
+	if _, ok := auec.mutation.FirstName(); !ok {
+		return &ValidationError{Name: "first_name", err: errors.New(`ent: missing required field "AppUserExtra.first_name"`)}
+	}
+	if _, ok := auec.mutation.LastName(); !ok {
+		return &ValidationError{Name: "last_name", err: errors.New(`ent: missing required field "AppUserExtra.last_name"`)}
+	}
 	if _, ok := auec.mutation.AddressFields(); !ok {
 		return &ValidationError{Name: "address_fields", err: errors.New(`ent: missing required field "AppUserExtra.address_fields"`)}
 	}
@@ -329,6 +347,22 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 			Column: appuserextra.FieldUsername,
 		})
 		_node.Username = value
+	}
+	if value, ok := auec.mutation.FirstName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldFirstName,
+		})
+		_node.FirstName = value
+	}
+	if value, ok := auec.mutation.LastName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldLastName,
+		})
+		_node.LastName = value
 	}
 	if value, ok := auec.mutation.AddressFields(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -497,6 +531,30 @@ func (u *AppUserExtraUpsert) SetUsername(v string) *AppUserExtraUpsert {
 // UpdateUsername sets the "username" field to the value that was provided on create.
 func (u *AppUserExtraUpsert) UpdateUsername() *AppUserExtraUpsert {
 	u.SetExcluded(appuserextra.FieldUsername)
+	return u
+}
+
+// SetFirstName sets the "first_name" field.
+func (u *AppUserExtraUpsert) SetFirstName(v string) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldFirstName, v)
+	return u
+}
+
+// UpdateFirstName sets the "first_name" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateFirstName() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldFirstName)
+	return u
+}
+
+// SetLastName sets the "last_name" field.
+func (u *AppUserExtraUpsert) SetLastName(v string) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldLastName, v)
+	return u
+}
+
+// UpdateLastName sets the "last_name" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateLastName() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldLastName)
 	return u
 }
 
@@ -739,6 +797,34 @@ func (u *AppUserExtraUpsertOne) SetUsername(v string) *AppUserExtraUpsertOne {
 func (u *AppUserExtraUpsertOne) UpdateUsername() *AppUserExtraUpsertOne {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateUsername()
+	})
+}
+
+// SetFirstName sets the "first_name" field.
+func (u *AppUserExtraUpsertOne) SetFirstName(v string) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetFirstName(v)
+	})
+}
+
+// UpdateFirstName sets the "first_name" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateFirstName() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateFirstName()
+	})
+}
+
+// SetLastName sets the "last_name" field.
+func (u *AppUserExtraUpsertOne) SetLastName(v string) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetLastName(v)
+	})
+}
+
+// UpdateLastName sets the "last_name" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateLastName() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateLastName()
 	})
 }
 
@@ -1172,6 +1258,34 @@ func (u *AppUserExtraUpsertBulk) SetUsername(v string) *AppUserExtraUpsertBulk {
 func (u *AppUserExtraUpsertBulk) UpdateUsername() *AppUserExtraUpsertBulk {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateUsername()
+	})
+}
+
+// SetFirstName sets the "first_name" field.
+func (u *AppUserExtraUpsertBulk) SetFirstName(v string) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetFirstName(v)
+	})
+}
+
+// UpdateFirstName sets the "first_name" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateFirstName() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateFirstName()
+	})
+}
+
+// SetLastName sets the "last_name" field.
+func (u *AppUserExtraUpsertBulk) SetLastName(v string) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetLastName(v)
+	})
+}
+
+// UpdateLastName sets the "last_name" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateLastName() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateLastName()
 	})
 }
 

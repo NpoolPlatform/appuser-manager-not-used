@@ -29,6 +29,8 @@ func assertAppUserExtra(t *testing.T, actual, expected *npool.AppUserExtra) {
 	assert.Equal(t, actual.AppID, expected.AppID)
 	assert.Equal(t, actual.UserID, expected.UserID)
 	assert.Equal(t, actual.Username, expected.Username)
+	assert.Equal(t, actual.FirstName, expected.FirstName)
+	assert.Equal(t, actual.LastName, expected.LastName)
 	assert.Equal(t, actual.AddressFields, expected.AddressFields)
 	assert.Equal(t, actual.Gender, expected.Gender)
 	assert.Equal(t, actual.PostalCode, expected.PostalCode)
@@ -47,6 +49,8 @@ func TestCRUD(t *testing.T) {
 		AppID:         uuid.New().String(),
 		UserID:        uuid.New().String(),
 		Username:      uuid.New().String(),
+		FirstName:     uuid.New().String(),
+		LastName:      uuid.New().String(),
 		AddressFields: []string{uuid.New().String(), uuid.New().String()},
 		Gender:        uuid.New().String(),
 		PostalCode:    uuid.New().String(),

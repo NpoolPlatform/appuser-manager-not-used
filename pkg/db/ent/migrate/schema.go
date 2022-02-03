@@ -136,6 +136,8 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "username", Type: field.TypeString},
+		{Name: "first_name", Type: field.TypeString},
+		{Name: "last_name", Type: field.TypeString},
 		{Name: "address_fields", Type: field.TypeJSON},
 		{Name: "gender", Type: field.TypeString},
 		{Name: "postal_code", Type: field.TypeString},

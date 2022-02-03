@@ -144,17 +144,17 @@ func init() {
 	appuserextraFields := schema.AppUserExtra{}.Fields()
 	_ = appuserextraFields
 	// appuserextraDescCreateAt is the schema descriptor for create_at field.
-	appuserextraDescCreateAt := appuserextraFields[11].Descriptor()
+	appuserextraDescCreateAt := appuserextraFields[13].Descriptor()
 	// appuserextra.DefaultCreateAt holds the default value on creation for the create_at field.
 	appuserextra.DefaultCreateAt = appuserextraDescCreateAt.Default.(func() uint32)
 	// appuserextraDescUpdateAt is the schema descriptor for update_at field.
-	appuserextraDescUpdateAt := appuserextraFields[12].Descriptor()
+	appuserextraDescUpdateAt := appuserextraFields[14].Descriptor()
 	// appuserextra.DefaultUpdateAt holds the default value on creation for the update_at field.
 	appuserextra.DefaultUpdateAt = appuserextraDescUpdateAt.Default.(func() uint32)
 	// appuserextra.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
 	appuserextra.UpdateDefaultUpdateAt = appuserextraDescUpdateAt.UpdateDefault.(func() uint32)
 	// appuserextraDescDeleteAt is the schema descriptor for delete_at field.
-	appuserextraDescDeleteAt := appuserextraFields[13].Descriptor()
+	appuserextraDescDeleteAt := appuserextraFields[15].Descriptor()
 	// appuserextra.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	appuserextra.DefaultDeleteAt = appuserextraDescDeleteAt.Default.(func() uint32)
 	// appuserextraDescID is the schema descriptor for id field.

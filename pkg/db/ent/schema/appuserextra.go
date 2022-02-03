@@ -23,6 +23,8 @@ func (AppUserExtra) Fields() []ent.Field {
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
 		field.String("username"),
+		field.String("first_name"),
+		field.String("last_name"),
 		field.JSON("address_fields", []string{}),
 		field.String("gender"),
 		field.String("postal_code"),

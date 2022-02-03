@@ -31,6 +31,8 @@ func dbRowToAppUserExtra(row *ent.AppUserExtra) *npool.AppUserExtra {
 		AppID:         row.AppID.String(),
 		UserID:        row.UserID.String(),
 		Username:      row.Username,
+		FirstName:     row.FirstName,
+		LastName:      row.LastName,
 		AddressFields: row.AddressFields,
 		Gender:        row.Gender,
 		PostalCode:    row.PostalCode,
@@ -60,6 +62,8 @@ func Create(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.Cr
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
 		SetUsername(in.GetInfo().GetUsername()).
+		SetFirstName(in.GetInfo().GetFirstName()).
+		SetLastName(in.GetInfo().GetLastName()).
 		SetAddressFields(in.GetInfo().GetAddressFields()).
 		SetGender(in.GetInfo().GetGender()).
 		SetPostalCode(in.GetInfo().GetPostalCode()).
@@ -99,6 +103,8 @@ func Update(ctx context.Context, in *npool.UpdateAppUserExtraRequest) (*npool.Up
 		AppUserExtra.
 		UpdateOneID(id).
 		SetUsername(in.GetInfo().GetUsername()).
+		SetFirstName(in.GetInfo().GetFirstName()).
+		SetLastName(in.GetInfo().GetLastName()).
 		SetAddressFields(in.GetInfo().GetAddressFields()).
 		SetGender(in.GetInfo().GetGender()).
 		SetPostalCode(in.GetInfo().GetPostalCode()).

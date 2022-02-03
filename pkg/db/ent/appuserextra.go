@@ -23,6 +23,10 @@ type AppUserExtra struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
+	// FirstName holds the value of the "first_name" field.
+	FirstName string `json:"first_name,omitempty"`
+	// LastName holds the value of the "last_name" field.
+	LastName string `json:"last_name,omitempty"`
 	// AddressFields holds the value of the "address_fields" field.
 	AddressFields []string `json:"address_fields,omitempty"`
 	// Gender holds the value of the "gender" field.
@@ -54,7 +58,7 @@ func (*AppUserExtra) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case appuserextra.FieldAge, appuserextra.FieldBirthday, appuserextra.FieldCreateAt, appuserextra.FieldUpdateAt, appuserextra.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case appuserextra.FieldUsername, appuserextra.FieldGender, appuserextra.FieldPostalCode, appuserextra.FieldAvatar, appuserextra.FieldOrganization:
+		case appuserextra.FieldUsername, appuserextra.FieldFirstName, appuserextra.FieldLastName, appuserextra.FieldGender, appuserextra.FieldPostalCode, appuserextra.FieldAvatar, appuserextra.FieldOrganization:
 			values[i] = new(sql.NullString)
 		case appuserextra.FieldID, appuserextra.FieldAppID, appuserextra.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -96,6 +100,18 @@ func (aue *AppUserExtra) assignValues(columns []string, values []interface{}) er
 				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
 				aue.Username = value.String
+			}
+		case appuserextra.FieldFirstName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field first_name", values[i])
+			} else if value.Valid {
+				aue.FirstName = value.String
+			}
+		case appuserextra.FieldLastName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field last_name", values[i])
+			} else if value.Valid {
+				aue.LastName = value.String
 			}
 		case appuserextra.FieldAddressFields:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -193,6 +209,10 @@ func (aue *AppUserExtra) String() string {
 	builder.WriteString(fmt.Sprintf("%v", aue.UserID))
 	builder.WriteString(", username=")
 	builder.WriteString(aue.Username)
+	builder.WriteString(", first_name=")
+	builder.WriteString(aue.FirstName)
+	builder.WriteString(", last_name=")
+	builder.WriteString(aue.LastName)
 	builder.WriteString(", address_fields=")
 	builder.WriteString(fmt.Sprintf("%v", aue.AddressFields))
 	builder.WriteString(", gender=")
