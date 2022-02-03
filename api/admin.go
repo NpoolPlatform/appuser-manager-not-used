@@ -8,6 +8,7 @@ import (
 	adminmw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/admin"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
+	"golang.org/x/xerrors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -55,4 +56,37 @@ func (s *Server) CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGene
 		return &npool.CreateGenesisRoleUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
+}
+
+func (s *Server) GetGenesisAppRoleUsersByOtherApp(ctx context.Context, in *npool.GetGenesisAppRoleUsersByOtherAppRequest) (*npool.GetGenesisAppRoleUsersByOtherAppResponse, error) {
+	role, err := adminmw.GetGenesisRole(ctx, &npool.GetGenesisRoleRequest{})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get genesis role: %v", err)
+	}
+
+	resp, err := s.GetAppRoleUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
+		AppID:  in.GetAppID(),
+		RoleID: role.Info.ID,
+	})
+	if err != nil {
+		logger.Sugar().Errorw("fail get genesis app role user by app: %v", err)
+		return &npool.GetGenesisAppRoleUsersByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetGenesisAppRoleUsersByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
+}
+
+func (s *Server) GetAppRoleUsersByOtherAppRole(ctx context.Context, in *npool.GetAppRoleUsersByOtherAppRoleRequest) (*npool.GetAppRoleUsersByOtherAppRoleResponse, error) {
+	resp, err := s.GetAppRoleUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
+		AppID:  in.GetAppID(),
+		RoleID: in.GetRoleID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorw("fail get app role user by other app role: %v", err)
+		return &npool.GetAppRoleUsersByOtherAppRoleResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetAppRoleUsersByOtherAppRoleResponse{
+		Infos: resp.Infos,
+	}, nil
 }
