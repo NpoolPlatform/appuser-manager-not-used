@@ -233,6 +233,19 @@ func (s *Server) GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserI
 	return resp, nil
 }
 
+func (s *Server) GetAppUserInfosByOtherApp(ctx context.Context, in *npool.GetAppUserInfosByOtherAppRequest) (*npool.GetAppUserInfosByOtherAppResponse, error) {
+	resp, err := appusermw.GetAppUserInfosByApp(ctx, &npool.GetAppUserInfosByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorw("fail get app user infos by app: %v", err)
+		return &npool.GetAppUserInfosByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetAppUserInfosByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
+}
+
 func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
 	resp, err := appusermw.CreateWithSecret(ctx, in)
 	if err != nil {
