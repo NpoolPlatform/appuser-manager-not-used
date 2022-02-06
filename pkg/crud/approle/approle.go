@@ -212,3 +212,38 @@ func GetByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.Ge
 		Infos: appRoles,
 	}, nil
 }
+
+func GetAppDefaultRole(ctx context.Context, appID string) (*npool.AppRole, error) {
+	myAppID, err := uuid.Parse(appID)
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		AppRole.
+		Query().
+		Where(
+			approle.AppID(myAppID),
+			approle.Default(true),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app role: %v", err)
+	}
+
+	var appRole *npool.AppRole
+	for _, info := range infos {
+		appRole = dbRowToAppRole(info)
+		break
+	}
+
+	return appRole, nil
+}

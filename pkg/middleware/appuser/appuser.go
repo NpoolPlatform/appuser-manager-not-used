@@ -20,6 +20,11 @@ import (
 )
 
 func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
+	defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("fail get default role")
+	}
+
 	resp, err := appusercrud.Create(ctx, &npool.CreateAppUserRequest{
 		Info: in.GetUser(),
 	})
@@ -36,6 +41,18 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 	if err != nil {
 		// TODO: rollback for secret create error
 		return nil, xerrors.Errorf("fail create app user secret: %v", err)
+	}
+
+	_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
+		Info: &npool.AppRoleUser{
+			AppID:  in.GetUser().GetAppID(),
+			RoleID: defaultRole.ID,
+			UserID: resp.Info.ID,
+		},
+	})
+	if err != nil {
+		// TODO: rollback for role user create error
+		return nil, xerrors.Errorf("fail create app role user: %v", err)
 	}
 
 	return &npool.CreateAppUserWithSecretResponse{
