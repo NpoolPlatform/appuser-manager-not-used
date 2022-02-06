@@ -25,6 +25,15 @@ func (s *Server) CreateAppRole(ctx context.Context, in *npool.CreateAppRoleReque
 	return resp, nil
 }
 
+func (s *Server) CreateAppRoleForOtherApp(ctx context.Context, in *npool.CreateAppRoleForOtherAppRequest) (*npool.CreateAppRoleForOtherAppResponse, error) {
+	resp, err := approlemw.CreateForOtherApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app role for other app: %v", err)
+		return &npool.CreateAppRoleForOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetAppRole(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleResponse, error) {
 	resp, err := approlecrud.Get(ctx, in)
 	if err != nil {
@@ -50,6 +59,19 @@ func (s *Server) GetAppRolesByApp(ctx context.Context, in *npool.GetAppRolesByAp
 		return &npool.GetAppRolesByAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
+}
+
+func (s *Server) GetAppRolesByOtherApp(ctx context.Context, in *npool.GetAppRolesByOtherAppRequest) (*npool.GetAppRolesByOtherAppResponse, error) {
+	resp, err := approlecrud.GetByApp(ctx, &npool.GetAppRolesByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorw("fail get app role: %v", err)
+		return &npool.GetAppRolesByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetAppRolesByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
 }
 
 func (s *Server) UpdateAppRole(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateAppRoleResponse, error) {

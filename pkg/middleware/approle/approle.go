@@ -15,9 +15,26 @@ func Create(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateA
 		return nil, xerrors.Errorf("permission denied")
 	}
 
-	if in.GetInfo().GetUserID() != in.GetInfo().GetCreatedBy() {
+	if in.GetUserID() != in.GetInfo().GetCreatedBy() {
 		return nil, xerrors.Errorf("permission denied")
 	}
 
 	return approlecrud.Create(ctx, in)
+}
+
+func CreateForOtherApp(ctx context.Context, in *npool.CreateAppRoleForOtherAppRequest) (*npool.CreateAppRoleForOtherAppResponse, error) {
+	info := in.GetInfo()
+	info.AppID = in.GetTargetAppID()
+
+	resp, err := Create(ctx, &npool.CreateAppRoleRequest{
+		UserID: info.GetCreatedBy(),
+		Info:   info,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail create app role: %v", err)
+	}
+
+	return &npool.CreateAppRoleForOtherAppResponse{
+		Info: resp.Info,
+	}, nil
 }
