@@ -88,6 +88,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateA
 	info, err := cli.
 		AppRole.
 		UpdateOneID(id).
+		SetRole(in.GetInfo().GetRole()).
 		SetDescription(in.GetInfo().GetDescription()).
 		SetDefault(in.GetInfo().GetDefault()).
 		Save(ctx)
