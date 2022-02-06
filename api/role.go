@@ -8,6 +8,7 @@ import (
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
+	approlemw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/approle"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	"golang.org/x/xerrors"
@@ -16,11 +17,7 @@ import (
 )
 
 func (s *Server) CreateAppRole(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {
-	if in.GetInfo().GetRole() == constant.GenesisRole {
-		return &npool.CreateAppRoleResponse{}, status.Error(codes.Internal, xerrors.Errorf("permission denied").Error())
-	}
-
-	resp, err := approlecrud.Create(ctx, in)
+	resp, err := approlemw.Create(ctx, in)
 	if err != nil {
 		logger.Sugar().Errorw("fail create app role: %v", err)
 		return &npool.CreateAppRoleResponse{}, status.Error(codes.Internal, err.Error())
