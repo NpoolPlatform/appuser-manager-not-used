@@ -130,6 +130,28 @@ func (s *Server) GetAppRoleUsersByAppRole(ctx context.Context, in *npool.GetAppR
 	return resp, nil
 }
 
+func (s *Server) GetAppRoleUsersByApp(ctx context.Context, in *npool.GetAppRoleUsersByAppRequest) (*npool.GetAppRoleUsersByAppResponse, error) {
+	resp, err := approleusercrud.GetUsersByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail get users by app: %v", err)
+		return &npool.GetAppRoleUsersByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppRoleUsersByOtherApp(ctx context.Context, in *npool.GetAppRoleUsersByOtherAppRequest) (*npool.GetAppRoleUsersByOtherAppResponse, error) {
+	resp, err := approleusercrud.GetUsersByApp(ctx, &npool.GetAppRoleUsersByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorw("fail get users by app: %v", err)
+		return &npool.GetAppRoleUsersByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetAppRoleUsersByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
+}
+
 func (s *Server) DeleteAppRoleUser(ctx context.Context, in *npool.DeleteAppRoleUserRequest) (*npool.DeleteAppRoleUserResponse, error) {
 	resp, err := approleusercrud.Delete(ctx, in)
 	if err != nil {
