@@ -22,6 +22,9 @@ import (
 func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
 	defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
 	if err != nil {
+		return nil, xerrors.Errorf("fail get default role: %v", err)
+	}
+	if defaultRole == nil {
 		return nil, xerrors.Errorf("fail get default role")
 	}
 
