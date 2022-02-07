@@ -91,17 +91,18 @@ func (s *Server) CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleU
 	return resp, nil
 }
 
-func (s *Server) CreateAppRoleUserForOtherApp(ctx context.Context, in *npool.CreateAppRoleUserForOtherAppRequest) (*npool.CreateAppRoleUserForOtherAppResponse, error) {
+func (s *Server) CreateAppRoleUserForOtherAppUser(ctx context.Context, in *npool.CreateAppRoleUserForOtherAppUserRequest) (*npool.CreateAppRoleUserForOtherAppUserResponse, error) {
 	info := in.GetInfo()
 	info.AppID = in.GetTargetAppID()
+	info.UserID = in.GetTargetUserID()
 	resp, err := s.CreateAppRoleUser(ctx, &npool.CreateAppRoleUserRequest{
 		Info: info,
 	})
 	if err != nil {
 		logger.Sugar().Errorw("fail create app role user for other app: %v", err)
-		return &npool.CreateAppRoleUserForOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.CreateAppRoleUserForOtherAppUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
-	return &npool.CreateAppRoleUserForOtherAppResponse{
+	return &npool.CreateAppRoleUserForOtherAppUserResponse{
 		Info: resp.Info,
 	}, nil
 }
