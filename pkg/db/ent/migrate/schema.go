@@ -131,6 +131,13 @@ var (
 		Name:       "app_user_controls",
 		Columns:    AppUserControlsColumns,
 		PrimaryKey: []*schema.Column{AppUserControlsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appusercontrol_app_id_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppUserControlsColumns[1], AppUserControlsColumns[2]},
+			},
+		},
 	}
 	// AppUserExtrasColumns holds the columns for the "app_user_extras" table.
 	AppUserExtrasColumns = []*schema.Column{
@@ -156,6 +163,13 @@ var (
 		Name:       "app_user_extras",
 		Columns:    AppUserExtrasColumns,
 		PrimaryKey: []*schema.Column{AppUserExtrasColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appuserextra_app_id_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppUserExtrasColumns[1], AppUserExtrasColumns[2]},
+			},
+		},
 	}
 	// AppUserSecretsColumns holds the columns for the "app_user_secrets" table.
 	AppUserSecretsColumns = []*schema.Column{
@@ -174,6 +188,13 @@ var (
 		Name:       "app_user_secrets",
 		Columns:    AppUserSecretsColumns,
 		PrimaryKey: []*schema.Column{AppUserSecretsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appusersecret_app_id_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{AppUserSecretsColumns[1], AppUserSecretsColumns[2]},
+			},
+		},
 	}
 	// BanAppsColumns holds the columns for the "ban_apps" table.
 	BanAppsColumns = []*schema.Column{
