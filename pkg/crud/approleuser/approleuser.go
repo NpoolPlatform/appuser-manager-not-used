@@ -252,7 +252,7 @@ func Delete(ctx context.Context, in *npool.DeleteAppRoleUserRequest) (*npool.Del
 		SetDeleteAt(uint32(time.Now().Unix())).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail update app role user: %v", err)
+		return nil, xerrors.Errorf("fail delete app role user: %v", err)
 	}
 
 	return &npool.DeleteAppRoleUserResponse{

@@ -69,6 +69,22 @@ func (s *Server) CreateAppControl(ctx context.Context, in *npool.CreateAppContro
 	return resp, nil
 }
 
+func (s *Server) CreateAppControlForOtherApp(ctx context.Context, in *npool.CreateAppControlForOtherAppRequest) (*npool.CreateAppControlForOtherAppResponse, error) {
+	info := in.GetInfo()
+	info.AppID = in.GetTargetAppID()
+
+	resp, err := appctrlcrud.Create(ctx, &npool.CreateAppControlRequest{
+		Info: info,
+	})
+	if err != nil {
+		logger.Sugar().Errorw("fail create app control for other app: %v", err)
+		return &npool.CreateAppControlForOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.CreateAppControlForOtherAppResponse{
+		Info: resp.Info,
+	}, nil
+}
+
 func (s *Server) UpdateAppControl(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.UpdateAppControlResponse, error) {
 	resp, err := appctrlcrud.Update(ctx, in)
 	if err != nil {
