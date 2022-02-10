@@ -16,16 +16,22 @@ import (
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
+	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )
 
-func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
-	defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
-	if err != nil {
-		return nil, xerrors.Errorf("fail get default role: %v", err)
-	}
-	if defaultRole == nil {
-		return nil, xerrors.Errorf("fail get default role")
+func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) (*npool.CreateAppUserWithSecretResponse, error) {
+	defaultRoleID := uuid.UUID{}.String()
+
+	if setDefaultRole {
+		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
+		if err != nil {
+			return nil, xerrors.Errorf("fail get default role: %v", err)
+		}
+		if defaultRole == nil {
+			return nil, xerrors.Errorf("fail get default role")
+		}
+		defaultRoleID = defaultRole.ID
 	}
 
 	resp, err := appusercrud.Create(ctx, &npool.CreateAppUserRequest{
@@ -49,7 +55,7 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 	_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
 		Info: &npool.AppRoleUser{
 			AppID:  in.GetUser().GetAppID(),
-			RoleID: defaultRole.ID,
+			RoleID: defaultRoleID,
 			UserID: resp.Info.ID,
 		},
 	})

@@ -247,7 +247,7 @@ func (s *Server) GetAppUserInfosByOtherApp(ctx context.Context, in *npool.GetApp
 }
 
 func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
-	resp, err := appusermw.CreateWithSecret(ctx, in)
+	resp, err := appusermw.CreateWithSecret(ctx, in, true)
 	if err != nil {
 		logger.Sugar().Errorw("fail create app user with secret: %v", err)
 		return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())

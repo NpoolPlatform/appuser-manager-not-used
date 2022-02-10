@@ -183,7 +183,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 		resp, err := appusermw.CreateWithSecret(ctx, &npool.CreateAppUserWithSecretRequest{
 			User:   in.GetUser(),
 			Secret: in.GetSecret(),
-		})
+		}, false)
 		if err != nil {
 			return nil, xerrors.Errorf("fail create user with secret: %v", err)
 		}
