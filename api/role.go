@@ -107,6 +107,21 @@ func (s *Server) CreateAppRoleUserForOtherAppUser(ctx context.Context, in *npool
 	}, nil
 }
 
+func (s *Server) CreateAppRoleUserForAppOtherUser(ctx context.Context, in *npool.CreateAppRoleUserForAppOtherUserRequest) (*npool.CreateAppRoleUserForAppOtherUserResponse, error) {
+	info := in.GetInfo()
+	info.UserID = in.GetTargetUserID()
+	resp, err := s.CreateAppRoleUser(ctx, &npool.CreateAppRoleUserRequest{
+		Info: info,
+	})
+	if err != nil {
+		logger.Sugar().Errorf("fail create app role user for other app: %v", err)
+		return &npool.CreateAppRoleUserForAppOtherUserResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.CreateAppRoleUserForAppOtherUserResponse{
+		Info: resp.Info,
+	}, nil
+}
+
 func (s *Server) GetAppRoleUser(ctx context.Context, in *npool.GetAppRoleUserRequest) (*npool.GetAppRoleUserResponse, error) {
 	resp, err := approleusercrud.Get(ctx, in)
 	if err != nil {
