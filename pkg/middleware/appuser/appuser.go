@@ -82,6 +82,10 @@ func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserReque
 		if err != nil {
 			return nil, xerrors.Errorf("fail get app role: %v", err)
 		}
+		if resp1.Info == nil {
+			continue
+		}
+
 		roles = append(roles, resp1.Info)
 	}
 
