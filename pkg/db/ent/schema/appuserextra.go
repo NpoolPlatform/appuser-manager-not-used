@@ -32,7 +32,8 @@ func (AppUserExtra) Fields() []ent.Field {
 		field.Uint32("age"),
 		field.Uint32("birthday"),
 		field.String("avatar"),
-		field.String("Organization"),
+		field.String("organization"),
+		field.String("id_number"),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

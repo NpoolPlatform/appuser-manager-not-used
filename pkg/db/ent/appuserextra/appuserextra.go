@@ -35,6 +35,8 @@ const (
 	FieldAvatar = "avatar"
 	// FieldOrganization holds the string denoting the organization field in the database.
 	FieldOrganization = "organization"
+	// FieldIDNumber holds the string denoting the id_number field in the database.
+	FieldIDNumber = "id_number"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -60,6 +62,7 @@ var Columns = []string{
 	FieldBirthday,
 	FieldAvatar,
 	FieldOrganization,
+	FieldIDNumber,
 	FieldCreateAt,
 	FieldUpdateAt,
 	FieldDeleteAt,

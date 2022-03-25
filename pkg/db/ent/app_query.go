@@ -107,7 +107,7 @@ func (aq *AppQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single App entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one App entity is not found.
+// Returns a *NotSingularError when more than one App entity is found.
 // Returns a *NotFoundError when no App entities are found.
 func (aq *AppQuery) Only(ctx context.Context) (*App, error) {
 	nodes, err := aq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (aq *AppQuery) OnlyX(ctx context.Context) *App {
 }
 
 // OnlyID is like Only, but returns the only App ID in the query.
-// Returns a *NotSingularError when exactly one App ID is not found.
+// Returns a *NotSingularError when more than one App ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (aq *AppQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (aq *AppQuery) Clone() *AppQuery {
 		order:      append([]OrderFunc{}, aq.order...),
 		predicates: append([]predicate.App{}, aq.predicates...),
 		// clone intermediate query.
-		sql:  aq.sql.Clone(),
-		path: aq.path,
+		sql:    aq.sql.Clone(),
+		path:   aq.path,
+		unique: aq.unique,
 	}
 }
 

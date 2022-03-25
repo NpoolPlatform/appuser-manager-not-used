@@ -108,9 +108,15 @@ func (aueu *AppUserExtraUpdate) SetAvatar(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (aueu *AppUserExtraUpdate) SetOrganization(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetOrganization(s)
+	return aueu
+}
+
+// SetIDNumber sets the "id_number" field.
+func (aueu *AppUserExtraUpdate) SetIDNumber(s string) *AppUserExtraUpdate {
+	aueu.mutation.SetIDNumber(s)
 	return aueu
 }
 
@@ -353,6 +359,13 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserextra.FieldOrganization,
 		})
 	}
+	if value, ok := aueu.mutation.IDNumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldIDNumber,
+		})
+	}
 	if value, ok := aueu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -494,9 +507,15 @@ func (aueuo *AppUserExtraUpdateOne) SetAvatar(s string) *AppUserExtraUpdateOne {
 	return aueuo
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (aueuo *AppUserExtraUpdateOne) SetOrganization(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetOrganization(s)
+	return aueuo
+}
+
+// SetIDNumber sets the "id_number" field.
+func (aueuo *AppUserExtraUpdateOne) SetIDNumber(s string) *AppUserExtraUpdateOne {
+	aueuo.mutation.SetIDNumber(s)
 	return aueuo
 }
 
@@ -761,6 +780,13 @@ func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserextra.FieldOrganization,
+		})
+	}
+	if value, ok := aueuo.mutation.IDNumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldIDNumber,
 		})
 	}
 	if value, ok := aueuo.mutation.CreateAt(); ok {

@@ -107,7 +107,7 @@ func (ausq *AppUserSecretQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppUserSecret entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppUserSecret entity is not found.
+// Returns a *NotSingularError when more than one AppUserSecret entity is found.
 // Returns a *NotFoundError when no AppUserSecret entities are found.
 func (ausq *AppUserSecretQuery) Only(ctx context.Context) (*AppUserSecret, error) {
 	nodes, err := ausq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (ausq *AppUserSecretQuery) OnlyX(ctx context.Context) *AppUserSecret {
 }
 
 // OnlyID is like Only, but returns the only AppUserSecret ID in the query.
-// Returns a *NotSingularError when exactly one AppUserSecret ID is not found.
+// Returns a *NotSingularError when more than one AppUserSecret ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (ausq *AppUserSecretQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (ausq *AppUserSecretQuery) Clone() *AppUserSecretQuery {
 		order:      append([]OrderFunc{}, ausq.order...),
 		predicates: append([]predicate.AppUserSecret{}, ausq.predicates...),
 		// clone intermediate query.
-		sql:  ausq.sql.Clone(),
-		path: ausq.path,
+		sql:    ausq.sql.Clone(),
+		path:   ausq.path,
+		unique: ausq.unique,
 	}
 }
 

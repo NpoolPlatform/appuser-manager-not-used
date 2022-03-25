@@ -4684,7 +4684,8 @@ type AppUserExtraMutation struct {
 	birthday       *uint32
 	addbirthday    *int32
 	avatar         *string
-	_Organization  *string
+	organization   *string
+	id_number      *string
 	create_at      *uint32
 	addcreate_at   *int32
 	update_at      *uint32
@@ -5237,21 +5238,21 @@ func (m *AppUserExtraMutation) ResetAvatar() {
 	m.avatar = nil
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (m *AppUserExtraMutation) SetOrganization(s string) {
-	m._Organization = &s
+	m.organization = &s
 }
 
-// Organization returns the value of the "Organization" field in the mutation.
+// Organization returns the value of the "organization" field in the mutation.
 func (m *AppUserExtraMutation) Organization() (r string, exists bool) {
-	v := m._Organization
+	v := m.organization
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldOrganization returns the old "Organization" field's value of the AppUserExtra entity.
+// OldOrganization returns the old "organization" field's value of the AppUserExtra entity.
 // If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *AppUserExtraMutation) OldOrganization(ctx context.Context) (v string, err error) {
@@ -5268,9 +5269,45 @@ func (m *AppUserExtraMutation) OldOrganization(ctx context.Context) (v string, e
 	return oldValue.Organization, nil
 }
 
-// ResetOrganization resets all changes to the "Organization" field.
+// ResetOrganization resets all changes to the "organization" field.
 func (m *AppUserExtraMutation) ResetOrganization() {
-	m._Organization = nil
+	m.organization = nil
+}
+
+// SetIDNumber sets the "id_number" field.
+func (m *AppUserExtraMutation) SetIDNumber(s string) {
+	m.id_number = &s
+}
+
+// IDNumber returns the value of the "id_number" field in the mutation.
+func (m *AppUserExtraMutation) IDNumber() (r string, exists bool) {
+	v := m.id_number
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIDNumber returns the old "id_number" field's value of the AppUserExtra entity.
+// If the AppUserExtra object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserExtraMutation) OldIDNumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIDNumber is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIDNumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIDNumber: %w", err)
+	}
+	return oldValue.IDNumber, nil
+}
+
+// ResetIDNumber resets all changes to the "id_number" field.
+func (m *AppUserExtraMutation) ResetIDNumber() {
+	m.id_number = nil
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -5460,7 +5497,7 @@ func (m *AppUserExtraMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserExtraMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.app_id != nil {
 		fields = append(fields, appuserextra.FieldAppID)
 	}
@@ -5494,8 +5531,11 @@ func (m *AppUserExtraMutation) Fields() []string {
 	if m.avatar != nil {
 		fields = append(fields, appuserextra.FieldAvatar)
 	}
-	if m._Organization != nil {
+	if m.organization != nil {
 		fields = append(fields, appuserextra.FieldOrganization)
+	}
+	if m.id_number != nil {
+		fields = append(fields, appuserextra.FieldIDNumber)
 	}
 	if m.create_at != nil {
 		fields = append(fields, appuserextra.FieldCreateAt)
@@ -5538,6 +5578,8 @@ func (m *AppUserExtraMutation) Field(name string) (ent.Value, bool) {
 		return m.Avatar()
 	case appuserextra.FieldOrganization:
 		return m.Organization()
+	case appuserextra.FieldIDNumber:
+		return m.IDNumber()
 	case appuserextra.FieldCreateAt:
 		return m.CreateAt()
 	case appuserextra.FieldUpdateAt:
@@ -5577,6 +5619,8 @@ func (m *AppUserExtraMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldAvatar(ctx)
 	case appuserextra.FieldOrganization:
 		return m.OldOrganization(ctx)
+	case appuserextra.FieldIDNumber:
+		return m.OldIDNumber(ctx)
 	case appuserextra.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case appuserextra.FieldUpdateAt:
@@ -5675,6 +5719,13 @@ func (m *AppUserExtraMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOrganization(v)
+		return nil
+	case appuserextra.FieldIDNumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIDNumber(v)
 		return nil
 	case appuserextra.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -5844,6 +5895,9 @@ func (m *AppUserExtraMutation) ResetField(name string) error {
 		return nil
 	case appuserextra.FieldOrganization:
 		m.ResetOrganization()
+		return nil
+	case appuserextra.FieldIDNumber:
+		m.ResetIDNumber()
 		return nil
 	case appuserextra.FieldCreateAt:
 		m.ResetCreateAt()

@@ -154,6 +154,7 @@ var (
 		{Name: "birthday", Type: field.TypeUint32},
 		{Name: "avatar", Type: field.TypeString},
 		{Name: "organization", Type: field.TypeString},
+		{Name: "id_number", Type: field.TypeString},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},

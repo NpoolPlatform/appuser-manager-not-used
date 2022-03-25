@@ -161,10 +161,17 @@ func Avatar(v string) predicate.AppUserExtra {
 	})
 }
 
-// Organization applies equality check predicate on the "Organization" field. It's identical to OrganizationEQ.
+// Organization applies equality check predicate on the "organization" field. It's identical to OrganizationEQ.
 func Organization(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldOrganization), v))
+	})
+}
+
+// IDNumber applies equality check predicate on the "id_number" field. It's identical to IDNumberEQ.
+func IDNumber(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldIDNumber), v))
 	})
 }
 
@@ -1159,21 +1166,21 @@ func AvatarContainsFold(v string) predicate.AppUserExtra {
 	})
 }
 
-// OrganizationEQ applies the EQ predicate on the "Organization" field.
+// OrganizationEQ applies the EQ predicate on the "organization" field.
 func OrganizationEQ(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationNEQ applies the NEQ predicate on the "Organization" field.
+// OrganizationNEQ applies the NEQ predicate on the "organization" field.
 func OrganizationNEQ(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationIn applies the In predicate on the "Organization" field.
+// OrganizationIn applies the In predicate on the "organization" field.
 func OrganizationIn(vs ...string) predicate.AppUserExtra {
 	v := make([]interface{}, len(vs))
 	for i := range v {
@@ -1190,7 +1197,7 @@ func OrganizationIn(vs ...string) predicate.AppUserExtra {
 	})
 }
 
-// OrganizationNotIn applies the NotIn predicate on the "Organization" field.
+// OrganizationNotIn applies the NotIn predicate on the "organization" field.
 func OrganizationNotIn(vs ...string) predicate.AppUserExtra {
 	v := make([]interface{}, len(vs))
 	for i := range v {
@@ -1207,66 +1214,177 @@ func OrganizationNotIn(vs ...string) predicate.AppUserExtra {
 	})
 }
 
-// OrganizationGT applies the GT predicate on the "Organization" field.
+// OrganizationGT applies the GT predicate on the "organization" field.
 func OrganizationGT(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationGTE applies the GTE predicate on the "Organization" field.
+// OrganizationGTE applies the GTE predicate on the "organization" field.
 func OrganizationGTE(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationLT applies the LT predicate on the "Organization" field.
+// OrganizationLT applies the LT predicate on the "organization" field.
 func OrganizationLT(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationLTE applies the LTE predicate on the "Organization" field.
+// OrganizationLTE applies the LTE predicate on the "organization" field.
 func OrganizationLTE(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationContains applies the Contains predicate on the "Organization" field.
+// OrganizationContains applies the Contains predicate on the "organization" field.
 func OrganizationContains(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationHasPrefix applies the HasPrefix predicate on the "Organization" field.
+// OrganizationHasPrefix applies the HasPrefix predicate on the "organization" field.
 func OrganizationHasPrefix(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationHasSuffix applies the HasSuffix predicate on the "Organization" field.
+// OrganizationHasSuffix applies the HasSuffix predicate on the "organization" field.
 func OrganizationHasSuffix(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationEqualFold applies the EqualFold predicate on the "Organization" field.
+// OrganizationEqualFold applies the EqualFold predicate on the "organization" field.
 func OrganizationEqualFold(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldOrganization), v))
 	})
 }
 
-// OrganizationContainsFold applies the ContainsFold predicate on the "Organization" field.
+// OrganizationContainsFold applies the ContainsFold predicate on the "organization" field.
 func OrganizationContainsFold(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldOrganization), v))
+	})
+}
+
+// IDNumberEQ applies the EQ predicate on the "id_number" field.
+func IDNumberEQ(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberNEQ applies the NEQ predicate on the "id_number" field.
+func IDNumberNEQ(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberIn applies the In predicate on the "id_number" field.
+func IDNumberIn(vs ...string) predicate.AppUserExtra {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldIDNumber), v...))
+	})
+}
+
+// IDNumberNotIn applies the NotIn predicate on the "id_number" field.
+func IDNumberNotIn(vs ...string) predicate.AppUserExtra {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldIDNumber), v...))
+	})
+}
+
+// IDNumberGT applies the GT predicate on the "id_number" field.
+func IDNumberGT(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberGTE applies the GTE predicate on the "id_number" field.
+func IDNumberGTE(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberLT applies the LT predicate on the "id_number" field.
+func IDNumberLT(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberLTE applies the LTE predicate on the "id_number" field.
+func IDNumberLTE(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberContains applies the Contains predicate on the "id_number" field.
+func IDNumberContains(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberHasPrefix applies the HasPrefix predicate on the "id_number" field.
+func IDNumberHasPrefix(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberHasSuffix applies the HasSuffix predicate on the "id_number" field.
+func IDNumberHasSuffix(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberEqualFold applies the EqualFold predicate on the "id_number" field.
+func IDNumberEqualFold(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldIDNumber), v))
+	})
+}
+
+// IDNumberContainsFold applies the ContainsFold predicate on the "id_number" field.
+func IDNumberContainsFold(v string) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldIDNumber), v))
 	})
 }
 

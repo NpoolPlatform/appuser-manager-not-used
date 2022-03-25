@@ -40,6 +40,7 @@ func dbRowToAppUserExtra(row *ent.AppUserExtra) *npool.AppUserExtra {
 		Birthday:      row.Birthday,
 		Avatar:        row.Avatar,
 		Organization:  row.Organization,
+		IDNumber:      row.IDNumber,
 	}
 }
 
@@ -71,6 +72,7 @@ func Create(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.Cr
 		SetBirthday(in.GetInfo().GetBirthday()).
 		SetAvatar(in.GetInfo().GetAvatar()).
 		SetOrganization(in.GetInfo().GetOrganization()).
+		SetIDNumber(in.GetInfo().GetIDNumber()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create app user extra: %v", err)
@@ -112,6 +114,7 @@ func Update(ctx context.Context, in *npool.UpdateAppUserExtraRequest) (*npool.Up
 		SetBirthday(in.GetInfo().GetBirthday()).
 		SetAvatar(in.GetInfo().GetAvatar()).
 		SetOrganization(in.GetInfo().GetOrganization()).
+		SetIDNumber(in.GetInfo().GetIDNumber()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail update app user extra: %v", err)

@@ -107,7 +107,7 @@ func (arq *AppRoleQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppRole entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppRole entity is not found.
+// Returns a *NotSingularError when more than one AppRole entity is found.
 // Returns a *NotFoundError when no AppRole entities are found.
 func (arq *AppRoleQuery) Only(ctx context.Context) (*AppRole, error) {
 	nodes, err := arq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (arq *AppRoleQuery) OnlyX(ctx context.Context) *AppRole {
 }
 
 // OnlyID is like Only, but returns the only AppRole ID in the query.
-// Returns a *NotSingularError when exactly one AppRole ID is not found.
+// Returns a *NotSingularError when more than one AppRole ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (arq *AppRoleQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (arq *AppRoleQuery) Clone() *AppRoleQuery {
 		order:      append([]OrderFunc{}, arq.order...),
 		predicates: append([]predicate.AppRole{}, arq.predicates...),
 		// clone intermediate query.
-		sql:  arq.sql.Clone(),
-		path: arq.path,
+		sql:    arq.sql.Clone(),
+		path:   arq.path,
+		unique: arq.unique,
 	}
 }
 

@@ -107,7 +107,7 @@ func (bauq *BanAppUserQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single BanAppUser entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one BanAppUser entity is not found.
+// Returns a *NotSingularError when more than one BanAppUser entity is found.
 // Returns a *NotFoundError when no BanAppUser entities are found.
 func (bauq *BanAppUserQuery) Only(ctx context.Context) (*BanAppUser, error) {
 	nodes, err := bauq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (bauq *BanAppUserQuery) OnlyX(ctx context.Context) *BanAppUser {
 }
 
 // OnlyID is like Only, but returns the only BanAppUser ID in the query.
-// Returns a *NotSingularError when exactly one BanAppUser ID is not found.
+// Returns a *NotSingularError when more than one BanAppUser ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (bauq *BanAppUserQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (bauq *BanAppUserQuery) Clone() *BanAppUserQuery {
 		order:      append([]OrderFunc{}, bauq.order...),
 		predicates: append([]predicate.BanAppUser{}, bauq.predicates...),
 		// clone intermediate query.
-		sql:  bauq.sql.Clone(),
-		path: bauq.path,
+		sql:    bauq.sql.Clone(),
+		path:   bauq.path,
+		unique: bauq.unique,
 	}
 }
 

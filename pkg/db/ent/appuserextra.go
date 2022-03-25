@@ -39,8 +39,10 @@ type AppUserExtra struct {
 	Birthday uint32 `json:"birthday,omitempty"`
 	// Avatar holds the value of the "avatar" field.
 	Avatar string `json:"avatar,omitempty"`
-	// Organization holds the value of the "Organization" field.
-	Organization string `json:"Organization,omitempty"`
+	// Organization holds the value of the "organization" field.
+	Organization string `json:"organization,omitempty"`
+	// IDNumber holds the value of the "id_number" field.
+	IDNumber string `json:"id_number,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -58,7 +60,7 @@ func (*AppUserExtra) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case appuserextra.FieldAge, appuserextra.FieldBirthday, appuserextra.FieldCreateAt, appuserextra.FieldUpdateAt, appuserextra.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case appuserextra.FieldUsername, appuserextra.FieldFirstName, appuserextra.FieldLastName, appuserextra.FieldGender, appuserextra.FieldPostalCode, appuserextra.FieldAvatar, appuserextra.FieldOrganization:
+		case appuserextra.FieldUsername, appuserextra.FieldFirstName, appuserextra.FieldLastName, appuserextra.FieldGender, appuserextra.FieldPostalCode, appuserextra.FieldAvatar, appuserextra.FieldOrganization, appuserextra.FieldIDNumber:
 			values[i] = new(sql.NullString)
 		case appuserextra.FieldID, appuserextra.FieldAppID, appuserextra.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -153,9 +155,15 @@ func (aue *AppUserExtra) assignValues(columns []string, values []interface{}) er
 			}
 		case appuserextra.FieldOrganization:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field Organization", values[i])
+				return fmt.Errorf("unexpected type %T for field organization", values[i])
 			} else if value.Valid {
 				aue.Organization = value.String
+			}
+		case appuserextra.FieldIDNumber:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field id_number", values[i])
+			} else if value.Valid {
+				aue.IDNumber = value.String
 			}
 		case appuserextra.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -225,8 +233,10 @@ func (aue *AppUserExtra) String() string {
 	builder.WriteString(fmt.Sprintf("%v", aue.Birthday))
 	builder.WriteString(", avatar=")
 	builder.WriteString(aue.Avatar)
-	builder.WriteString(", Organization=")
+	builder.WriteString(", organization=")
 	builder.WriteString(aue.Organization)
+	builder.WriteString(", id_number=")
+	builder.WriteString(aue.IDNumber)
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", aue.CreateAt))
 	builder.WriteString(", update_at=")

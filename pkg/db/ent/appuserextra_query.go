@@ -107,7 +107,7 @@ func (aueq *AppUserExtraQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppUserExtra entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppUserExtra entity is not found.
+// Returns a *NotSingularError when more than one AppUserExtra entity is found.
 // Returns a *NotFoundError when no AppUserExtra entities are found.
 func (aueq *AppUserExtraQuery) Only(ctx context.Context) (*AppUserExtra, error) {
 	nodes, err := aueq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (aueq *AppUserExtraQuery) OnlyX(ctx context.Context) *AppUserExtra {
 }
 
 // OnlyID is like Only, but returns the only AppUserExtra ID in the query.
-// Returns a *NotSingularError when exactly one AppUserExtra ID is not found.
+// Returns a *NotSingularError when more than one AppUserExtra ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (aueq *AppUserExtraQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (aueq *AppUserExtraQuery) Clone() *AppUserExtraQuery {
 		order:      append([]OrderFunc{}, aueq.order...),
 		predicates: append([]predicate.AppUserExtra{}, aueq.predicates...),
 		// clone intermediate query.
-		sql:  aueq.sql.Clone(),
-		path: aueq.path,
+		sql:    aueq.sql.Clone(),
+		path:   aueq.path,
+		unique: aueq.unique,
 	}
 }
 

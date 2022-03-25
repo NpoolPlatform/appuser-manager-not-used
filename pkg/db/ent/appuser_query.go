@@ -107,7 +107,7 @@ func (auq *AppUserQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppUser entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppUser entity is not found.
+// Returns a *NotSingularError when more than one AppUser entity is found.
 // Returns a *NotFoundError when no AppUser entities are found.
 func (auq *AppUserQuery) Only(ctx context.Context) (*AppUser, error) {
 	nodes, err := auq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (auq *AppUserQuery) OnlyX(ctx context.Context) *AppUser {
 }
 
 // OnlyID is like Only, but returns the only AppUser ID in the query.
-// Returns a *NotSingularError when exactly one AppUser ID is not found.
+// Returns a *NotSingularError when more than one AppUser ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (auq *AppUserQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (auq *AppUserQuery) Clone() *AppUserQuery {
 		order:      append([]OrderFunc{}, auq.order...),
 		predicates: append([]predicate.AppUser{}, auq.predicates...),
 		// clone intermediate query.
-		sql:  auq.sql.Clone(),
-		path: auq.path,
+		sql:    auq.sql.Clone(),
+		path:   auq.path,
+		unique: auq.unique,
 	}
 }
 

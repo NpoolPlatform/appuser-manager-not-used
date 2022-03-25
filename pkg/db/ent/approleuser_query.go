@@ -107,7 +107,7 @@ func (aruq *AppRoleUserQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppRoleUser entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppRoleUser entity is not found.
+// Returns a *NotSingularError when more than one AppRoleUser entity is found.
 // Returns a *NotFoundError when no AppRoleUser entities are found.
 func (aruq *AppRoleUserQuery) Only(ctx context.Context) (*AppRoleUser, error) {
 	nodes, err := aruq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (aruq *AppRoleUserQuery) OnlyX(ctx context.Context) *AppRoleUser {
 }
 
 // OnlyID is like Only, but returns the only AppRoleUser ID in the query.
-// Returns a *NotSingularError when exactly one AppRoleUser ID is not found.
+// Returns a *NotSingularError when more than one AppRoleUser ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (aruq *AppRoleUserQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (aruq *AppRoleUserQuery) Clone() *AppRoleUserQuery {
 		order:      append([]OrderFunc{}, aruq.order...),
 		predicates: append([]predicate.AppRoleUser{}, aruq.predicates...),
 		// clone intermediate query.
-		sql:  aruq.sql.Clone(),
-		path: aruq.path,
+		sql:    aruq.sql.Clone(),
+		path:   aruq.path,
+		unique: aruq.unique,
 	}
 }
 

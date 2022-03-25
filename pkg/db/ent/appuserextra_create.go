@@ -89,9 +89,15 @@ func (auec *AppUserExtraCreate) SetAvatar(s string) *AppUserExtraCreate {
 	return auec
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (auec *AppUserExtraCreate) SetOrganization(s string) *AppUserExtraCreate {
 	auec.mutation.SetOrganization(s)
+	return auec
+}
+
+// SetIDNumber sets the "id_number" field.
+func (auec *AppUserExtraCreate) SetIDNumber(s string) *AppUserExtraCreate {
+	auec.mutation.SetIDNumber(s)
 	return auec
 }
 
@@ -276,7 +282,10 @@ func (auec *AppUserExtraCreate) check() error {
 		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "AppUserExtra.avatar"`)}
 	}
 	if _, ok := auec.mutation.Organization(); !ok {
-		return &ValidationError{Name: "Organization", err: errors.New(`ent: missing required field "AppUserExtra.Organization"`)}
+		return &ValidationError{Name: "organization", err: errors.New(`ent: missing required field "AppUserExtra.organization"`)}
+	}
+	if _, ok := auec.mutation.IDNumber(); !ok {
+		return &ValidationError{Name: "id_number", err: errors.New(`ent: missing required field "AppUserExtra.id_number"`)}
 	}
 	if _, ok := auec.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUserExtra.create_at"`)}
@@ -419,6 +428,14 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 			Column: appuserextra.FieldOrganization,
 		})
 		_node.Organization = value
+	}
+	if value, ok := auec.mutation.IDNumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuserextra.FieldIDNumber,
+		})
+		_node.IDNumber = value
 	}
 	if value, ok := auec.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -642,15 +659,27 @@ func (u *AppUserExtraUpsert) UpdateAvatar() *AppUserExtraUpsert {
 	return u
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (u *AppUserExtraUpsert) SetOrganization(v string) *AppUserExtraUpsert {
 	u.Set(appuserextra.FieldOrganization, v)
 	return u
 }
 
-// UpdateOrganization sets the "Organization" field to the value that was provided on create.
+// UpdateOrganization sets the "organization" field to the value that was provided on create.
 func (u *AppUserExtraUpsert) UpdateOrganization() *AppUserExtraUpsert {
 	u.SetExcluded(appuserextra.FieldOrganization)
+	return u
+}
+
+// SetIDNumber sets the "id_number" field.
+func (u *AppUserExtraUpsert) SetIDNumber(v string) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldIDNumber, v)
+	return u
+}
+
+// UpdateIDNumber sets the "id_number" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateIDNumber() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldIDNumber)
 	return u
 }
 
@@ -926,17 +955,31 @@ func (u *AppUserExtraUpsertOne) UpdateAvatar() *AppUserExtraUpsertOne {
 	})
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (u *AppUserExtraUpsertOne) SetOrganization(v string) *AppUserExtraUpsertOne {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.SetOrganization(v)
 	})
 }
 
-// UpdateOrganization sets the "Organization" field to the value that was provided on create.
+// UpdateOrganization sets the "organization" field to the value that was provided on create.
 func (u *AppUserExtraUpsertOne) UpdateOrganization() *AppUserExtraUpsertOne {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateOrganization()
+	})
+}
+
+// SetIDNumber sets the "id_number" field.
+func (u *AppUserExtraUpsertOne) SetIDNumber(v string) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetIDNumber(v)
+	})
+}
+
+// UpdateIDNumber sets the "id_number" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateIDNumber() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateIDNumber()
 	})
 }
 
@@ -1387,17 +1430,31 @@ func (u *AppUserExtraUpsertBulk) UpdateAvatar() *AppUserExtraUpsertBulk {
 	})
 }
 
-// SetOrganization sets the "Organization" field.
+// SetOrganization sets the "organization" field.
 func (u *AppUserExtraUpsertBulk) SetOrganization(v string) *AppUserExtraUpsertBulk {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.SetOrganization(v)
 	})
 }
 
-// UpdateOrganization sets the "Organization" field to the value that was provided on create.
+// UpdateOrganization sets the "organization" field to the value that was provided on create.
 func (u *AppUserExtraUpsertBulk) UpdateOrganization() *AppUserExtraUpsertBulk {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateOrganization()
+	})
+}
+
+// SetIDNumber sets the "id_number" field.
+func (u *AppUserExtraUpsertBulk) SetIDNumber(v string) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetIDNumber(v)
+	})
+}
+
+// UpdateIDNumber sets the "id_number" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateIDNumber() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateIDNumber()
 	})
 }
 
