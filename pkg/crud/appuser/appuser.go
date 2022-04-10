@@ -49,10 +49,14 @@ func Create(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateA
 	if err != nil {
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
-
+	id := uuid.New()
+	if in.GetInfo().GetID() != "" {
+		id = uuid.MustParse(in.GetInfo().GetID())
+	}
 	info, err := cli.
 		AppUser.
 		Create().
+		SetID(id).
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetEmailAddress(in.GetInfo().GetEmailAddress()).
 		SetPhoneNo(in.GetInfo().GetPhoneNO()).
@@ -65,6 +69,27 @@ func Create(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateA
 	return &npool.CreateAppUserResponse{
 		Info: dbRowToAppUser(info),
 	}, nil
+}
+
+func CreateRevert(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateAppUserResponse, error) {
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+	err = cli.
+		AppUser.DeleteOneID(id).Exec(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail create app user: %v", err)
+	}
+
+	return &npool.CreateAppUserResponse{}, nil
 }
 
 func Update(ctx context.Context, in *npool.UpdateAppUserRequest) (*npool.UpdateAppUserResponse, error) {
