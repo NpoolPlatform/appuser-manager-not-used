@@ -255,6 +255,36 @@ func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAp
 	return resp, nil
 }
 
+func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
+	resp, err := appusermw.CreateWithSecretRevert(ctx, in, true)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user with secret: %v", err)
+		return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+//子事务屏障
+
+//func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
+//	ti, err := dtmgrpc.BarrierFromGrpc(ctx)
+//	tx,err := db.Tx()
+//	if err != nil {
+//		return &npool.CreateAppUserWithSecretResponse{}, err
+//	}
+//	return &npool.CreateAppUserWithSecretResponse{},ti.Call(tx, func(tx *sql.Tx) error {
+//		return appusermw.CreateWithSecretRevert(ctx, in, true)
+//	})
+//
+//	//
+//	//resp, err := appusermw.CreateWithSecretRevert(ctx, in, true)
+//	//if err != nil {
+//	//	logger.Sugar().Errorw("fail create app user with secret: %v", err)
+//	//	return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
+//	//}
+//	//return resp, nil
+//}
+
 func (s *Server) GetAppUserByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountRequest) (*npool.GetAppUserByAppAccountResponse, error) {
 	resp, err := appusercrud.GetByAppAccount(ctx, in)
 	if err != nil {

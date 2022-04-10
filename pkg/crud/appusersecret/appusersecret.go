@@ -77,6 +77,34 @@ func Create(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.C
 	}, nil
 }
 
+func CreateRevert(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
+	if err := validateAppUserSecret(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+	_, err = cli.
+		AppUserSecret.
+		Delete().
+		Where(
+			appusersecret.AppID(uuid.MustParse(in.GetInfo().GetAppID())),
+			appusersecret.UserID(uuid.MustParse(in.GetInfo().GetUserID())),
+		).
+		Exec(ctx)
+
+	if err != nil {
+		return nil, xerrors.Errorf("fail delete app user secret: %v", err)
+	}
+
+	return &npool.CreateAppUserSecretResponse{}, nil
+}
+
 func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
 	id, err := uuid.Parse(in.GetInfo().GetID())
 	if err != nil {

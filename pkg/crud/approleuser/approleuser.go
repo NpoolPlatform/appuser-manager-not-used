@@ -67,6 +67,41 @@ func Create(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npool.Cre
 	}, nil
 }
 
+func CreateRevert(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npool.CreateAppRoleUserResponse, error) {
+	if err := validateAppRoleUser(in.GetInfo()); err != nil {
+		return nil, xerrors.Errorf("invalid parameter: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	err = cli.
+		AppRoleUser.DeleteOne(&ent.AppRoleUser{
+		AppID:  uuid.MustParse(in.GetInfo().GetAppID()),
+		UserID: uuid.MustParse(in.GetInfo().GetUserID()),
+		RoleID: uuid.MustParse(in.GetInfo().GetRoleID()),
+	}).Exec(ctx)
+	_, err = cli.
+		AppRoleUser.
+		Delete().
+		Where(
+			approleuser.AppID(uuid.MustParse(in.GetInfo().GetAppID())),
+			approleuser.UserID(uuid.MustParse(in.GetInfo().GetUserID())),
+			approleuser.RoleID(uuid.MustParse(in.GetInfo().GetRoleID())),
+		).
+		Exec(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail create app role user: %v", err)
+	}
+
+	return &npool.CreateAppRoleUserResponse{}, nil
+}
+
 func Get(ctx context.Context, in *npool.GetAppRoleUserRequest) (*npool.GetAppRoleUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
