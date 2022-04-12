@@ -80,12 +80,6 @@ func CreateRevert(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npo
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 
-	err = cli.
-		AppRoleUser.DeleteOne(&ent.AppRoleUser{
-		AppID:  uuid.MustParse(in.GetInfo().GetAppID()),
-		UserID: uuid.MustParse(in.GetInfo().GetUserID()),
-		RoleID: uuid.MustParse(in.GetInfo().GetRoleID()),
-	}).Exec(ctx)
 	_, err = cli.
 		AppRoleUser.
 		Delete().

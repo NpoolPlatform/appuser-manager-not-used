@@ -264,9 +264,9 @@ func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.Cr
 	return resp, nil
 }
 
-//子事务屏障
+// 子事务屏障
 
-//func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
+// func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
 //	ti, err := dtmgrpc.BarrierFromGrpc(ctx)
 //	tx,err := db.Tx()
 //	if err != nil {
@@ -283,7 +283,7 @@ func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.Cr
 //	//	return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
 //	//}
 //	//return resp, nil
-//}
+// }
 
 func (s *Server) GetAppUserByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountRequest) (*npool.GetAppUserByAppAccountResponse, error) {
 	resp, err := appusercrud.GetByAppAccount(ctx, in)

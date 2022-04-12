@@ -6,7 +6,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
-	db "github.com/NpoolPlatform/appuser-manager/pkg/db"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
 

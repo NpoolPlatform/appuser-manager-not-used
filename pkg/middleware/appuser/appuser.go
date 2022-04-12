@@ -110,9 +110,9 @@ func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecr
 	}, nil
 }
 
-//子事务屏障使用方法
+// 子事务屏障使用方法
 
-//func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) error {
+// func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) error {
 //	defaultRoleID := uuid.UUID{}.String()
 //
 //	if setDefaultRole {
@@ -157,7 +157,7 @@ func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecr
 //	}
 //
 //	return nil
-//}
+// }
 
 func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserRequest) (*npool.GetUserRolesByAppUserResponse, error) {
 	resp, err := approleusercrud.GetByAppUser(ctx, &npool.GetAppRoleUserByAppUserRequest{
