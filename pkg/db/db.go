@@ -31,18 +31,18 @@ func Client() (*ent.Client, error) {
 	return client()
 }
 
-//func DB() (*sql.DB,error) {
+// func DB() (*sql.DB,error) {
 //	conn, err := mysql.GetConn()
 //	if err != nil {
 //		return nil, err
 //	}
 //	return conn, err
-//}
+// }
 //
-//func Tx() (*sql.Tx,error) {
+// func Tx() (*sql.Tx,error) {
 //	conn, err := mysql.GetConn()
 //	if err != nil {
 //		return nil, err
 //	}
 //	return conn.BeginTx(context.Background(),nil)
-//}
+// }
