@@ -110,55 +110,6 @@ func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecr
 	}, nil
 }
 
-// 子事务屏障使用方法
-
-// func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) error {
-//	defaultRoleID := uuid.UUID{}.String()
-//
-//	if setDefaultRole {
-//		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
-//		if err != nil {
-//			return  xerrors.Errorf("fail get default role: %v", err)
-//		}
-//		if defaultRole == nil {
-//			return xerrors.Errorf("fail get default role")
-//		}
-//		defaultRoleID = defaultRole.ID
-//	}
-//
-//	resp, err := appusercrud.CreateRevert(ctx, &npool.CreateAppUserRequest{
-//		Info: in.GetUser(),
-//	})
-//	if err != nil {
-//		return xerrors.Errorf("fail create app user: %v", err)
-//	}
-//
-//	inSecret := in.GetSecret()
-//	inSecret.UserID = resp.Info.ID
-//
-//	_, err = appusersecretcrud.CreateRevert(ctx, &npool.CreateAppUserSecretRequest{
-//		Info: inSecret,
-//	})
-//	if err != nil {
-//		// TODO: rollback for secret create error
-//		return xerrors.Errorf("fail create app user secret: %v", err)
-//	}
-//
-//	_, err = approleusercrud.CreateRevert(ctx, &npool.CreateAppRoleUserRequest{
-//		Info: &npool.AppRoleUser{
-//			AppID:  in.GetUser().GetAppID(),
-//			RoleID: defaultRoleID,
-//			UserID: resp.Info.ID,
-//		},
-//	})
-//	if err != nil {
-//		// TODO: rollback for role user create error
-//		return xerrors.Errorf("fail create app role user: %v", err)
-//	}
-//
-//	return nil
-// }
-
 func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserRequest) (*npool.GetUserRolesByAppUserResponse, error) {
 	resp, err := approleusercrud.GetByAppUser(ctx, &npool.GetAppRoleUserByAppUserRequest{
 		AppID:  in.GetAppID(),

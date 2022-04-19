@@ -191,9 +191,9 @@ var (
 		PrimaryKey: []*schema.Column{AppUserSecretsColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "appusersecret_app_id_user_id",
+				Name:    "appusersecret_app_id_user_id_delete_at",
 				Unique:  true,
-				Columns: []*schema.Column{AppUserSecretsColumns[1], AppUserSecretsColumns[2]},
+				Columns: []*schema.Column{AppUserSecretsColumns[1], AppUserSecretsColumns[2], AppUserSecretsColumns[8]},
 			},
 		},
 	}

@@ -51,6 +51,6 @@ func (AppUserSecret) Edges() []ent.Edge {
 
 func (AppUserSecret) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "user_id").Unique(),
+		index.Fields("app_id", "user_id", "delete_at").Unique(),
 	}
 }
