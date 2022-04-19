@@ -2,6 +2,7 @@ package appuser
 
 import (
 	"context"
+	"time"
 
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
@@ -84,7 +85,7 @@ func CreateRevert(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.C
 		return nil, xerrors.Errorf("fail get db client: %v", err)
 	}
 	err = cli.
-		AppUser.DeleteOneID(id).Exec(ctx)
+		AppUser.UpdateOneID(id).SetDeleteAt(uint32(time.Now().Unix())).Exec(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create app user: %v", err)
 	}
@@ -223,6 +224,7 @@ func GetByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountReques
 					appuser.EmailAddress(in.GetAccount()),
 					appuser.PhoneNo(in.GetAccount()),
 				),
+				appuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
