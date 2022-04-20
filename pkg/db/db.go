@@ -8,6 +8,9 @@ import (
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
+
+	// ent policy runtime
+	_ "github.com/NpoolPlatform/sphinx-coininfo/pkg/db/ent/runtime"
 )
 
 func client() (*ent.Client, error) {

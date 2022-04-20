@@ -255,12 +255,12 @@ func (aruq *AppRoleUserQuery) Clone() *AppRoleUserQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreateAt uint32 `json:"create_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppRoleUser.Query().
-//		GroupBy(approleuser.FieldAppID).
+//		GroupBy(approleuser.FieldCreateAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +282,11 @@ func (aruq *AppRoleUserQuery) GroupBy(field string, fields ...string) *AppRoleUs
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreateAt uint32 `json:"create_at,omitempty"`
 //	}
 //
 //	client.AppRoleUser.Query().
-//		Select(approleuser.FieldAppID).
+//		Select(approleuser.FieldCreateAt).
 //		Scan(ctx, &v)
 //
 func (aruq *AppRoleUserQuery) Select(fields ...string) *AppRoleUserSelect {
@@ -306,6 +306,12 @@ func (aruq *AppRoleUserQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		aruq.sql = prev
+	}
+	if approleuser.Policy == nil {
+		return errors.New("ent: uninitialized approleuser.Policy (forgotten import ent/runtime?)")
+	}
+	if err := approleuser.Policy.EvalQuery(ctx, aruq); err != nil {
+		return err
 	}
 	return nil
 }

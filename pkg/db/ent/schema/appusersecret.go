@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
@@ -13,6 +11,12 @@ import (
 // AppUserSecret holds the schema definition for the AppUserSecret entity.
 type AppUserSecret struct {
 	ent.Schema
+}
+
+func (AppUserSecret) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
 }
 
 // Fields of the AppUserSecret.
@@ -26,21 +30,6 @@ func (AppUserSecret) Fields() []ent.Field {
 		field.String("password_hash"),
 		field.String("salt"),
 		field.String("google_secret"),
-		field.Uint32("create_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("update_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}).
-			UpdateDefault(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("delete_at").
-			DefaultFunc(func() uint32 {
-				return 0
-			}),
 	}
 }
 
@@ -51,6 +40,6 @@ func (AppUserSecret) Edges() []ent.Edge {
 
 func (AppUserSecret) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("app_id", "user_id", "delete_at").Unique(),
+		index.Fields("app_id", "user_id").Unique(),
 	}
 }

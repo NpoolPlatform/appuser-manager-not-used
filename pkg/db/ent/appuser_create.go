@@ -23,30 +23,6 @@ type AppUserCreate struct {
 	conflict []sql.ConflictOption
 }
 
-// SetAppID sets the "app_id" field.
-func (auc *AppUserCreate) SetAppID(u uuid.UUID) *AppUserCreate {
-	auc.mutation.SetAppID(u)
-	return auc
-}
-
-// SetEmailAddress sets the "email_address" field.
-func (auc *AppUserCreate) SetEmailAddress(s string) *AppUserCreate {
-	auc.mutation.SetEmailAddress(s)
-	return auc
-}
-
-// SetPhoneNo sets the "phone_no" field.
-func (auc *AppUserCreate) SetPhoneNo(s string) *AppUserCreate {
-	auc.mutation.SetPhoneNo(s)
-	return auc
-}
-
-// SetImportFromApp sets the "import_from_app" field.
-func (auc *AppUserCreate) SetImportFromApp(u uuid.UUID) *AppUserCreate {
-	auc.mutation.SetImportFromApp(u)
-	return auc
-}
-
 // SetCreateAt sets the "create_at" field.
 func (auc *AppUserCreate) SetCreateAt(u uint32) *AppUserCreate {
 	auc.mutation.SetCreateAt(u)
@@ -89,6 +65,30 @@ func (auc *AppUserCreate) SetNillableDeleteAt(u *uint32) *AppUserCreate {
 	return auc
 }
 
+// SetAppID sets the "app_id" field.
+func (auc *AppUserCreate) SetAppID(u uuid.UUID) *AppUserCreate {
+	auc.mutation.SetAppID(u)
+	return auc
+}
+
+// SetEmailAddress sets the "email_address" field.
+func (auc *AppUserCreate) SetEmailAddress(s string) *AppUserCreate {
+	auc.mutation.SetEmailAddress(s)
+	return auc
+}
+
+// SetPhoneNo sets the "phone_no" field.
+func (auc *AppUserCreate) SetPhoneNo(s string) *AppUserCreate {
+	auc.mutation.SetPhoneNo(s)
+	return auc
+}
+
+// SetImportFromApp sets the "import_from_app" field.
+func (auc *AppUserCreate) SetImportFromApp(u uuid.UUID) *AppUserCreate {
+	auc.mutation.SetImportFromApp(u)
+	return auc
+}
+
 // SetID sets the "id" field.
 func (auc *AppUserCreate) SetID(u uuid.UUID) *AppUserCreate {
 	auc.mutation.SetID(u)
@@ -114,7 +114,9 @@ func (auc *AppUserCreate) Save(ctx context.Context) (*AppUser, error) {
 		err  error
 		node *AppUser
 	)
-	auc.defaults()
+	if err := auc.defaults(); err != nil {
+		return nil, err
+	}
 	if len(auc.hooks) == 0 {
 		if err = auc.check(); err != nil {
 			return nil, err
@@ -173,27 +175,49 @@ func (auc *AppUserCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (auc *AppUserCreate) defaults() {
+func (auc *AppUserCreate) defaults() error {
 	if _, ok := auc.mutation.CreateAt(); !ok {
+		if appuser.DefaultCreateAt == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultCreateAt (forgotten import ent/runtime?)")
+		}
 		v := appuser.DefaultCreateAt()
 		auc.mutation.SetCreateAt(v)
 	}
 	if _, ok := auc.mutation.UpdateAt(); !ok {
+		if appuser.DefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := appuser.DefaultUpdateAt()
 		auc.mutation.SetUpdateAt(v)
 	}
 	if _, ok := auc.mutation.DeleteAt(); !ok {
+		if appuser.DefaultDeleteAt == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultDeleteAt (forgotten import ent/runtime?)")
+		}
 		v := appuser.DefaultDeleteAt()
 		auc.mutation.SetDeleteAt(v)
 	}
 	if _, ok := auc.mutation.ID(); !ok {
+		if appuser.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := appuser.DefaultID()
 		auc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (auc *AppUserCreate) check() error {
+	if _, ok := auc.mutation.CreateAt(); !ok {
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUser.create_at"`)}
+	}
+	if _, ok := auc.mutation.UpdateAt(); !ok {
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "AppUser.update_at"`)}
+	}
+	if _, ok := auc.mutation.DeleteAt(); !ok {
+		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppUser.delete_at"`)}
+	}
 	if _, ok := auc.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUser.app_id"`)}
 	}
@@ -205,15 +229,6 @@ func (auc *AppUserCreate) check() error {
 	}
 	if _, ok := auc.mutation.ImportFromApp(); !ok {
 		return &ValidationError{Name: "import_from_app", err: errors.New(`ent: missing required field "AppUser.import_from_app"`)}
-	}
-	if _, ok := auc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUser.create_at"`)}
-	}
-	if _, ok := auc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "AppUser.update_at"`)}
-	}
-	if _, ok := auc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppUser.delete_at"`)}
 	}
 	return nil
 }
@@ -252,6 +267,30 @@ func (auc *AppUserCreate) createSpec() (*AppUser, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
+	if value, ok := auc.mutation.CreateAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuser.FieldCreateAt,
+		})
+		_node.CreateAt = value
+	}
+	if value, ok := auc.mutation.UpdateAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuser.FieldUpdateAt,
+		})
+		_node.UpdateAt = value
+	}
+	if value, ok := auc.mutation.DeleteAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuser.FieldDeleteAt,
+		})
+		_node.DeleteAt = value
+	}
 	if value, ok := auc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -284,30 +323,6 @@ func (auc *AppUserCreate) createSpec() (*AppUser, *sqlgraph.CreateSpec) {
 		})
 		_node.ImportFromApp = value
 	}
-	if value, ok := auc.mutation.CreateAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuser.FieldCreateAt,
-		})
-		_node.CreateAt = value
-	}
-	if value, ok := auc.mutation.UpdateAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuser.FieldUpdateAt,
-		})
-		_node.UpdateAt = value
-	}
-	if value, ok := auc.mutation.DeleteAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuser.FieldDeleteAt,
-		})
-		_node.DeleteAt = value
-	}
 	return _node, _spec
 }
 
@@ -315,7 +330,7 @@ func (auc *AppUserCreate) createSpec() (*AppUser, *sqlgraph.CreateSpec) {
 // of the `INSERT` statement. For example:
 //
 //	client.AppUser.Create().
-//		SetAppID(v).
+//		SetCreateAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -324,7 +339,7 @@ func (auc *AppUserCreate) createSpec() (*AppUser, *sqlgraph.CreateSpec) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserUpsert) {
-//			SetAppID(v+v).
+//			SetCreateAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -361,54 +376,6 @@ type (
 		*sql.UpdateSet
 	}
 )
-
-// SetAppID sets the "app_id" field.
-func (u *AppUserUpsert) SetAppID(v uuid.UUID) *AppUserUpsert {
-	u.Set(appuser.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppUserUpsert) UpdateAppID() *AppUserUpsert {
-	u.SetExcluded(appuser.FieldAppID)
-	return u
-}
-
-// SetEmailAddress sets the "email_address" field.
-func (u *AppUserUpsert) SetEmailAddress(v string) *AppUserUpsert {
-	u.Set(appuser.FieldEmailAddress, v)
-	return u
-}
-
-// UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
-func (u *AppUserUpsert) UpdateEmailAddress() *AppUserUpsert {
-	u.SetExcluded(appuser.FieldEmailAddress)
-	return u
-}
-
-// SetPhoneNo sets the "phone_no" field.
-func (u *AppUserUpsert) SetPhoneNo(v string) *AppUserUpsert {
-	u.Set(appuser.FieldPhoneNo, v)
-	return u
-}
-
-// UpdatePhoneNo sets the "phone_no" field to the value that was provided on create.
-func (u *AppUserUpsert) UpdatePhoneNo() *AppUserUpsert {
-	u.SetExcluded(appuser.FieldPhoneNo)
-	return u
-}
-
-// SetImportFromApp sets the "import_from_app" field.
-func (u *AppUserUpsert) SetImportFromApp(v uuid.UUID) *AppUserUpsert {
-	u.Set(appuser.FieldImportFromApp, v)
-	return u
-}
-
-// UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
-func (u *AppUserUpsert) UpdateImportFromApp() *AppUserUpsert {
-	u.SetExcluded(appuser.FieldImportFromApp)
-	return u
-}
 
 // SetCreateAt sets the "create_at" field.
 func (u *AppUserUpsert) SetCreateAt(v uint32) *AppUserUpsert {
@@ -464,6 +431,54 @@ func (u *AppUserUpsert) AddDeleteAt(v uint32) *AppUserUpsert {
 	return u
 }
 
+// SetAppID sets the "app_id" field.
+func (u *AppUserUpsert) SetAppID(v uuid.UUID) *AppUserUpsert {
+	u.Set(appuser.FieldAppID, v)
+	return u
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppUserUpsert) UpdateAppID() *AppUserUpsert {
+	u.SetExcluded(appuser.FieldAppID)
+	return u
+}
+
+// SetEmailAddress sets the "email_address" field.
+func (u *AppUserUpsert) SetEmailAddress(v string) *AppUserUpsert {
+	u.Set(appuser.FieldEmailAddress, v)
+	return u
+}
+
+// UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
+func (u *AppUserUpsert) UpdateEmailAddress() *AppUserUpsert {
+	u.SetExcluded(appuser.FieldEmailAddress)
+	return u
+}
+
+// SetPhoneNo sets the "phone_no" field.
+func (u *AppUserUpsert) SetPhoneNo(v string) *AppUserUpsert {
+	u.Set(appuser.FieldPhoneNo, v)
+	return u
+}
+
+// UpdatePhoneNo sets the "phone_no" field to the value that was provided on create.
+func (u *AppUserUpsert) UpdatePhoneNo() *AppUserUpsert {
+	u.SetExcluded(appuser.FieldPhoneNo)
+	return u
+}
+
+// SetImportFromApp sets the "import_from_app" field.
+func (u *AppUserUpsert) SetImportFromApp(v uuid.UUID) *AppUserUpsert {
+	u.Set(appuser.FieldImportFromApp, v)
+	return u
+}
+
+// UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
+func (u *AppUserUpsert) UpdateImportFromApp() *AppUserUpsert {
+	u.SetExcluded(appuser.FieldImportFromApp)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -512,62 +527,6 @@ func (u *AppUserUpsertOne) Update(set func(*AppUserUpsert)) *AppUserUpsertOne {
 		set(&AppUserUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetAppID sets the "app_id" field.
-func (u *AppUserUpsertOne) SetAppID(v uuid.UUID) *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppUserUpsertOne) UpdateAppID() *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// SetEmailAddress sets the "email_address" field.
-func (u *AppUserUpsertOne) SetEmailAddress(v string) *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetEmailAddress(v)
-	})
-}
-
-// UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
-func (u *AppUserUpsertOne) UpdateEmailAddress() *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdateEmailAddress()
-	})
-}
-
-// SetPhoneNo sets the "phone_no" field.
-func (u *AppUserUpsertOne) SetPhoneNo(v string) *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetPhoneNo(v)
-	})
-}
-
-// UpdatePhoneNo sets the "phone_no" field to the value that was provided on create.
-func (u *AppUserUpsertOne) UpdatePhoneNo() *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdatePhoneNo()
-	})
-}
-
-// SetImportFromApp sets the "import_from_app" field.
-func (u *AppUserUpsertOne) SetImportFromApp(v uuid.UUID) *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetImportFromApp(v)
-	})
-}
-
-// UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
-func (u *AppUserUpsertOne) UpdateImportFromApp() *AppUserUpsertOne {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdateImportFromApp()
-	})
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -630,6 +589,62 @@ func (u *AppUserUpsertOne) AddDeleteAt(v uint32) *AppUserUpsertOne {
 func (u *AppUserUpsertOne) UpdateDeleteAt() *AppUserUpsertOne {
 	return u.Update(func(s *AppUserUpsert) {
 		s.UpdateDeleteAt()
+	})
+}
+
+// SetAppID sets the "app_id" field.
+func (u *AppUserUpsertOne) SetAppID(v uuid.UUID) *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppUserUpsertOne) UpdateAppID() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetEmailAddress sets the "email_address" field.
+func (u *AppUserUpsertOne) SetEmailAddress(v string) *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetEmailAddress(v)
+	})
+}
+
+// UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
+func (u *AppUserUpsertOne) UpdateEmailAddress() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdateEmailAddress()
+	})
+}
+
+// SetPhoneNo sets the "phone_no" field.
+func (u *AppUserUpsertOne) SetPhoneNo(v string) *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetPhoneNo(v)
+	})
+}
+
+// UpdatePhoneNo sets the "phone_no" field to the value that was provided on create.
+func (u *AppUserUpsertOne) UpdatePhoneNo() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdatePhoneNo()
+	})
+}
+
+// SetImportFromApp sets the "import_from_app" field.
+func (u *AppUserUpsertOne) SetImportFromApp(v uuid.UUID) *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetImportFromApp(v)
+	})
+}
+
+// UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
+func (u *AppUserUpsertOne) UpdateImportFromApp() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdateImportFromApp()
 	})
 }
 
@@ -765,7 +780,7 @@ func (aucb *AppUserCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserUpsert) {
-//			SetAppID(v+v).
+//			SetCreateAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -849,62 +864,6 @@ func (u *AppUserUpsertBulk) Update(set func(*AppUserUpsert)) *AppUserUpsertBulk 
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppUserUpsertBulk) SetAppID(v uuid.UUID) *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppUserUpsertBulk) UpdateAppID() *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// SetEmailAddress sets the "email_address" field.
-func (u *AppUserUpsertBulk) SetEmailAddress(v string) *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetEmailAddress(v)
-	})
-}
-
-// UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
-func (u *AppUserUpsertBulk) UpdateEmailAddress() *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdateEmailAddress()
-	})
-}
-
-// SetPhoneNo sets the "phone_no" field.
-func (u *AppUserUpsertBulk) SetPhoneNo(v string) *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetPhoneNo(v)
-	})
-}
-
-// UpdatePhoneNo sets the "phone_no" field to the value that was provided on create.
-func (u *AppUserUpsertBulk) UpdatePhoneNo() *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdatePhoneNo()
-	})
-}
-
-// SetImportFromApp sets the "import_from_app" field.
-func (u *AppUserUpsertBulk) SetImportFromApp(v uuid.UUID) *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.SetImportFromApp(v)
-	})
-}
-
-// UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
-func (u *AppUserUpsertBulk) UpdateImportFromApp() *AppUserUpsertBulk {
-	return u.Update(func(s *AppUserUpsert) {
-		s.UpdateImportFromApp()
-	})
-}
-
 // SetCreateAt sets the "create_at" field.
 func (u *AppUserUpsertBulk) SetCreateAt(v uint32) *AppUserUpsertBulk {
 	return u.Update(func(s *AppUserUpsert) {
@@ -965,6 +924,62 @@ func (u *AppUserUpsertBulk) AddDeleteAt(v uint32) *AppUserUpsertBulk {
 func (u *AppUserUpsertBulk) UpdateDeleteAt() *AppUserUpsertBulk {
 	return u.Update(func(s *AppUserUpsert) {
 		s.UpdateDeleteAt()
+	})
+}
+
+// SetAppID sets the "app_id" field.
+func (u *AppUserUpsertBulk) SetAppID(v uuid.UUID) *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppUserUpsertBulk) UpdateAppID() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetEmailAddress sets the "email_address" field.
+func (u *AppUserUpsertBulk) SetEmailAddress(v string) *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetEmailAddress(v)
+	})
+}
+
+// UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
+func (u *AppUserUpsertBulk) UpdateEmailAddress() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdateEmailAddress()
+	})
+}
+
+// SetPhoneNo sets the "phone_no" field.
+func (u *AppUserUpsertBulk) SetPhoneNo(v string) *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetPhoneNo(v)
+	})
+}
+
+// UpdatePhoneNo sets the "phone_no" field to the value that was provided on create.
+func (u *AppUserUpsertBulk) UpdatePhoneNo() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdatePhoneNo()
+	})
+}
+
+// SetImportFromApp sets the "import_from_app" field.
+func (u *AppUserUpsertBulk) SetImportFromApp(v uuid.UUID) *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.SetImportFromApp(v)
+	})
+}
+
+// UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
+func (u *AppUserUpsertBulk) UpdateImportFromApp() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.UpdateImportFromApp()
 	})
 }
 
