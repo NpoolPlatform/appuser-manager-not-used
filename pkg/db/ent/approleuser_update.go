@@ -28,24 +28,6 @@ func (aruu *AppRoleUserUpdate) Where(ps ...predicate.AppRoleUser) *AppRoleUserUp
 	return aruu
 }
 
-// SetAppID sets the "app_id" field.
-func (aruu *AppRoleUserUpdate) SetAppID(u uuid.UUID) *AppRoleUserUpdate {
-	aruu.mutation.SetAppID(u)
-	return aruu
-}
-
-// SetRoleID sets the "role_id" field.
-func (aruu *AppRoleUserUpdate) SetRoleID(u uuid.UUID) *AppRoleUserUpdate {
-	aruu.mutation.SetRoleID(u)
-	return aruu
-}
-
-// SetUserID sets the "user_id" field.
-func (aruu *AppRoleUserUpdate) SetUserID(u uuid.UUID) *AppRoleUserUpdate {
-	aruu.mutation.SetUserID(u)
-	return aruu
-}
-
 // SetCreateAt sets the "create_at" field.
 func (aruu *AppRoleUserUpdate) SetCreateAt(u uint32) *AppRoleUserUpdate {
 	aruu.mutation.ResetCreateAt()
@@ -101,6 +83,24 @@ func (aruu *AppRoleUserUpdate) AddDeleteAt(u int32) *AppRoleUserUpdate {
 	return aruu
 }
 
+// SetAppID sets the "app_id" field.
+func (aruu *AppRoleUserUpdate) SetAppID(u uuid.UUID) *AppRoleUserUpdate {
+	aruu.mutation.SetAppID(u)
+	return aruu
+}
+
+// SetRoleID sets the "role_id" field.
+func (aruu *AppRoleUserUpdate) SetRoleID(u uuid.UUID) *AppRoleUserUpdate {
+	aruu.mutation.SetRoleID(u)
+	return aruu
+}
+
+// SetUserID sets the "user_id" field.
+func (aruu *AppRoleUserUpdate) SetUserID(u uuid.UUID) *AppRoleUserUpdate {
+	aruu.mutation.SetUserID(u)
+	return aruu
+}
+
 // Mutation returns the AppRoleUserMutation object of the builder.
 func (aruu *AppRoleUserUpdate) Mutation() *AppRoleUserMutation {
 	return aruu.mutation
@@ -112,7 +112,9 @@ func (aruu *AppRoleUserUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	aruu.defaults()
+	if err := aruu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(aruu.hooks) == 0 {
 		affected, err = aruu.sqlSave(ctx)
 	} else {
@@ -162,11 +164,15 @@ func (aruu *AppRoleUserUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aruu *AppRoleUserUpdate) defaults() {
+func (aruu *AppRoleUserUpdate) defaults() error {
 	if _, ok := aruu.mutation.UpdateAt(); !ok {
+		if approleuser.UpdateDefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := approleuser.UpdateDefaultUpdateAt()
 		aruu.mutation.SetUpdateAt(v)
 	}
+	return nil
 }
 
 func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -186,27 +192,6 @@ func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := aruu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldAppID,
-		})
-	}
-	if value, ok := aruu.mutation.RoleID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldRoleID,
-		})
-	}
-	if value, ok := aruu.mutation.UserID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldUserID,
-		})
 	}
 	if value, ok := aruu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -250,6 +235,27 @@ func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approleuser.FieldDeleteAt,
 		})
 	}
+	if value, ok := aruu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldAppID,
+		})
+	}
+	if value, ok := aruu.mutation.RoleID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldRoleID,
+		})
+	}
+	if value, ok := aruu.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldUserID,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, aruu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{approleuser.Label}
@@ -267,24 +273,6 @@ type AppRoleUserUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppRoleUserMutation
-}
-
-// SetAppID sets the "app_id" field.
-func (aruuo *AppRoleUserUpdateOne) SetAppID(u uuid.UUID) *AppRoleUserUpdateOne {
-	aruuo.mutation.SetAppID(u)
-	return aruuo
-}
-
-// SetRoleID sets the "role_id" field.
-func (aruuo *AppRoleUserUpdateOne) SetRoleID(u uuid.UUID) *AppRoleUserUpdateOne {
-	aruuo.mutation.SetRoleID(u)
-	return aruuo
-}
-
-// SetUserID sets the "user_id" field.
-func (aruuo *AppRoleUserUpdateOne) SetUserID(u uuid.UUID) *AppRoleUserUpdateOne {
-	aruuo.mutation.SetUserID(u)
-	return aruuo
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -342,6 +330,24 @@ func (aruuo *AppRoleUserUpdateOne) AddDeleteAt(u int32) *AppRoleUserUpdateOne {
 	return aruuo
 }
 
+// SetAppID sets the "app_id" field.
+func (aruuo *AppRoleUserUpdateOne) SetAppID(u uuid.UUID) *AppRoleUserUpdateOne {
+	aruuo.mutation.SetAppID(u)
+	return aruuo
+}
+
+// SetRoleID sets the "role_id" field.
+func (aruuo *AppRoleUserUpdateOne) SetRoleID(u uuid.UUID) *AppRoleUserUpdateOne {
+	aruuo.mutation.SetRoleID(u)
+	return aruuo
+}
+
+// SetUserID sets the "user_id" field.
+func (aruuo *AppRoleUserUpdateOne) SetUserID(u uuid.UUID) *AppRoleUserUpdateOne {
+	aruuo.mutation.SetUserID(u)
+	return aruuo
+}
+
 // Mutation returns the AppRoleUserMutation object of the builder.
 func (aruuo *AppRoleUserUpdateOne) Mutation() *AppRoleUserMutation {
 	return aruuo.mutation
@@ -360,7 +366,9 @@ func (aruuo *AppRoleUserUpdateOne) Save(ctx context.Context) (*AppRoleUser, erro
 		err  error
 		node *AppRoleUser
 	)
-	aruuo.defaults()
+	if err := aruuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(aruuo.hooks) == 0 {
 		node, err = aruuo.sqlSave(ctx)
 	} else {
@@ -410,11 +418,15 @@ func (aruuo *AppRoleUserUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aruuo *AppRoleUserUpdateOne) defaults() {
+func (aruuo *AppRoleUserUpdateOne) defaults() error {
 	if _, ok := aruuo.mutation.UpdateAt(); !ok {
+		if approleuser.UpdateDefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := approleuser.UpdateDefaultUpdateAt()
 		aruuo.mutation.SetUpdateAt(v)
 	}
+	return nil
 }
 
 func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleUser, err error) {
@@ -451,27 +463,6 @@ func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleU
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := aruuo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldAppID,
-		})
-	}
-	if value, ok := aruuo.mutation.RoleID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldRoleID,
-		})
-	}
-	if value, ok := aruuo.mutation.UserID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldUserID,
-		})
 	}
 	if value, ok := aruuo.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -513,6 +504,27 @@ func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleU
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: approleuser.FieldDeleteAt,
+		})
+	}
+	if value, ok := aruuo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldAppID,
+		})
+	}
+	if value, ok := aruuo.mutation.RoleID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldRoleID,
+		})
+	}
+	if value, ok := aruuo.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldUserID,
 		})
 	}
 	_node = &AppRoleUser{config: aruuo.config}

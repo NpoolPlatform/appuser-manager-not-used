@@ -172,7 +172,6 @@ func Get(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppU
 		Where(
 			appusersecret.And(
 				appusersecret.ID(id),
-				appusersecret.DeleteAt(0),
 			),
 		).
 		All(ctx)

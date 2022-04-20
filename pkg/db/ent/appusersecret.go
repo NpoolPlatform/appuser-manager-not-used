@@ -16,6 +16,12 @@ type AppUserSecret struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreateAt holds the value of the "create_at" field.
+	CreateAt uint32 `json:"create_at,omitempty"`
+	// UpdateAt holds the value of the "update_at" field.
+	UpdateAt uint32 `json:"update_at,omitempty"`
+	// DeleteAt holds the value of the "delete_at" field.
+	DeleteAt uint32 `json:"delete_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -26,12 +32,6 @@ type AppUserSecret struct {
 	Salt string `json:"salt,omitempty"`
 	// GoogleSecret holds the value of the "google_secret" field.
 	GoogleSecret string `json:"google_secret,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -66,6 +66,24 @@ func (aus *AppUserSecret) assignValues(columns []string, values []interface{}) e
 			} else if value != nil {
 				aus.ID = *value
 			}
+		case appusersecret.FieldCreateAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field create_at", values[i])
+			} else if value.Valid {
+				aus.CreateAt = uint32(value.Int64)
+			}
+		case appusersecret.FieldUpdateAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field update_at", values[i])
+			} else if value.Valid {
+				aus.UpdateAt = uint32(value.Int64)
+			}
+		case appusersecret.FieldDeleteAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
+			} else if value.Valid {
+				aus.DeleteAt = uint32(value.Int64)
+			}
 		case appusersecret.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
@@ -96,24 +114,6 @@ func (aus *AppUserSecret) assignValues(columns []string, values []interface{}) e
 			} else if value.Valid {
 				aus.GoogleSecret = value.String
 			}
-		case appusersecret.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				aus.CreateAt = uint32(value.Int64)
-			}
-		case appusersecret.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				aus.UpdateAt = uint32(value.Int64)
-			}
-		case appusersecret.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				aus.DeleteAt = uint32(value.Int64)
-			}
 		}
 	}
 	return nil
@@ -142,6 +142,12 @@ func (aus *AppUserSecret) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppUserSecret(")
 	builder.WriteString(fmt.Sprintf("id=%v", aus.ID))
+	builder.WriteString(", create_at=")
+	builder.WriteString(fmt.Sprintf("%v", aus.CreateAt))
+	builder.WriteString(", update_at=")
+	builder.WriteString(fmt.Sprintf("%v", aus.UpdateAt))
+	builder.WriteString(", delete_at=")
+	builder.WriteString(fmt.Sprintf("%v", aus.DeleteAt))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", aus.AppID))
 	builder.WriteString(", user_id=")
@@ -152,12 +158,6 @@ func (aus *AppUserSecret) String() string {
 	builder.WriteString(aus.Salt)
 	builder.WriteString(", google_secret=")
 	builder.WriteString(aus.GoogleSecret)
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", aus.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", aus.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", aus.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

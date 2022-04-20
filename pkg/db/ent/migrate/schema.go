@@ -73,12 +73,12 @@ var (
 	// AppRoleUsersColumns holds the columns for the "app_role_users" table.
 	AppRoleUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "role_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "role_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
 	}
 	// AppRoleUsersTable holds the schema information for the "app_role_users" table.
 	AppRoleUsersTable = &schema.Table{
@@ -89,13 +89,13 @@ var (
 	// AppUsersColumns holds the columns for the "app_users" table.
 	AppUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "email_address", Type: field.TypeString},
 		{Name: "phone_no", Type: field.TypeString},
 		{Name: "import_from_app", Type: field.TypeUUID},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppUsersTable holds the schema information for the "app_users" table.
 	AppUsersTable = &schema.Table{
@@ -106,12 +106,12 @@ var (
 			{
 				Name:    "appuser_app_id_email_address",
 				Unique:  false,
-				Columns: []*schema.Column{AppUsersColumns[1], AppUsersColumns[2]},
+				Columns: []*schema.Column{AppUsersColumns[4], AppUsersColumns[5]},
 			},
 			{
 				Name:    "appuser_app_id_phone_no",
 				Unique:  false,
-				Columns: []*schema.Column{AppUsersColumns[1], AppUsersColumns[3]},
+				Columns: []*schema.Column{AppUsersColumns[4], AppUsersColumns[6]},
 			},
 		},
 	}
@@ -175,14 +175,14 @@ var (
 	// AppUserSecretsColumns holds the columns for the "app_user_secrets" table.
 	AppUserSecretsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "password_hash", Type: field.TypeString},
 		{Name: "salt", Type: field.TypeString},
 		{Name: "google_secret", Type: field.TypeString},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppUserSecretsTable holds the schema information for the "app_user_secrets" table.
 	AppUserSecretsTable = &schema.Table{
@@ -191,9 +191,9 @@ var (
 		PrimaryKey: []*schema.Column{AppUserSecretsColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "appusersecret_app_id_user_id_delete_at",
+				Name:    "appusersecret_app_id_user_id",
 				Unique:  true,
-				Columns: []*schema.Column{AppUserSecretsColumns[1], AppUserSecretsColumns[2], AppUserSecretsColumns[8]},
+				Columns: []*schema.Column{AppUserSecretsColumns[4], AppUserSecretsColumns[5]},
 			},
 		},
 	}

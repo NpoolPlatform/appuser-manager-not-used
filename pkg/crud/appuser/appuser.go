@@ -146,7 +146,6 @@ func Get(ctx context.Context, in *npool.GetAppUserRequest) (*npool.GetAppUserRes
 		Where(
 			appuser.And(
 				appuser.ID(id),
-				appuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
@@ -224,7 +223,6 @@ func GetByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountReques
 					appuser.EmailAddress(in.GetAccount()),
 					appuser.PhoneNo(in.GetAccount()),
 				),
-				appuser.DeleteAt(0),
 			),
 		).
 		All(ctx)

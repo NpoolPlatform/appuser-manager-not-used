@@ -9,6 +9,7 @@ import (
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	db "github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
 
 	"github.com/google/uuid"
@@ -117,7 +118,6 @@ func Get(ctx context.Context, in *npool.GetAppRoleUserRequest) (*npool.GetAppRol
 		Where(
 			approleuser.And(
 				approleuser.ID(id),
-				approleuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
@@ -162,7 +162,6 @@ func GetByAppUser(ctx context.Context, in *npool.GetAppRoleUserByAppUserRequest)
 			approleuser.And(
 				approleuser.AppID(appID),
 				approleuser.UserID(userID),
-				approleuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
@@ -206,7 +205,6 @@ func GetUsersByAppRole(ctx context.Context, in *npool.GetAppRoleUsersByAppRoleRe
 			approleuser.And(
 				approleuser.AppID(appID),
 				approleuser.RoleID(roleID),
-				approleuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
@@ -244,7 +242,6 @@ func GetUsersByApp(ctx context.Context, in *npool.GetAppRoleUsersByAppRequest) (
 		Where(
 			approleuser.And(
 				approleuser.AppID(appID),
-				approleuser.DeleteAt(0),
 			),
 		).
 		All(ctx)

@@ -28,36 +28,6 @@ func (ausu *AppUserSecretUpdate) Where(ps ...predicate.AppUserSecret) *AppUserSe
 	return ausu
 }
 
-// SetAppID sets the "app_id" field.
-func (ausu *AppUserSecretUpdate) SetAppID(u uuid.UUID) *AppUserSecretUpdate {
-	ausu.mutation.SetAppID(u)
-	return ausu
-}
-
-// SetUserID sets the "user_id" field.
-func (ausu *AppUserSecretUpdate) SetUserID(u uuid.UUID) *AppUserSecretUpdate {
-	ausu.mutation.SetUserID(u)
-	return ausu
-}
-
-// SetPasswordHash sets the "password_hash" field.
-func (ausu *AppUserSecretUpdate) SetPasswordHash(s string) *AppUserSecretUpdate {
-	ausu.mutation.SetPasswordHash(s)
-	return ausu
-}
-
-// SetSalt sets the "salt" field.
-func (ausu *AppUserSecretUpdate) SetSalt(s string) *AppUserSecretUpdate {
-	ausu.mutation.SetSalt(s)
-	return ausu
-}
-
-// SetGoogleSecret sets the "google_secret" field.
-func (ausu *AppUserSecretUpdate) SetGoogleSecret(s string) *AppUserSecretUpdate {
-	ausu.mutation.SetGoogleSecret(s)
-	return ausu
-}
-
 // SetCreateAt sets the "create_at" field.
 func (ausu *AppUserSecretUpdate) SetCreateAt(u uint32) *AppUserSecretUpdate {
 	ausu.mutation.ResetCreateAt()
@@ -113,6 +83,36 @@ func (ausu *AppUserSecretUpdate) AddDeleteAt(u int32) *AppUserSecretUpdate {
 	return ausu
 }
 
+// SetAppID sets the "app_id" field.
+func (ausu *AppUserSecretUpdate) SetAppID(u uuid.UUID) *AppUserSecretUpdate {
+	ausu.mutation.SetAppID(u)
+	return ausu
+}
+
+// SetUserID sets the "user_id" field.
+func (ausu *AppUserSecretUpdate) SetUserID(u uuid.UUID) *AppUserSecretUpdate {
+	ausu.mutation.SetUserID(u)
+	return ausu
+}
+
+// SetPasswordHash sets the "password_hash" field.
+func (ausu *AppUserSecretUpdate) SetPasswordHash(s string) *AppUserSecretUpdate {
+	ausu.mutation.SetPasswordHash(s)
+	return ausu
+}
+
+// SetSalt sets the "salt" field.
+func (ausu *AppUserSecretUpdate) SetSalt(s string) *AppUserSecretUpdate {
+	ausu.mutation.SetSalt(s)
+	return ausu
+}
+
+// SetGoogleSecret sets the "google_secret" field.
+func (ausu *AppUserSecretUpdate) SetGoogleSecret(s string) *AppUserSecretUpdate {
+	ausu.mutation.SetGoogleSecret(s)
+	return ausu
+}
+
 // Mutation returns the AppUserSecretMutation object of the builder.
 func (ausu *AppUserSecretUpdate) Mutation() *AppUserSecretMutation {
 	return ausu.mutation
@@ -124,7 +124,9 @@ func (ausu *AppUserSecretUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	ausu.defaults()
+	if err := ausu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(ausu.hooks) == 0 {
 		affected, err = ausu.sqlSave(ctx)
 	} else {
@@ -174,11 +176,15 @@ func (ausu *AppUserSecretUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (ausu *AppUserSecretUpdate) defaults() {
+func (ausu *AppUserSecretUpdate) defaults() error {
 	if _, ok := ausu.mutation.UpdateAt(); !ok {
+		if appusersecret.UpdateDefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized appusersecret.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := appusersecret.UpdateDefaultUpdateAt()
 		ausu.mutation.SetUpdateAt(v)
 	}
+	return nil
 }
 
 func (ausu *AppUserSecretUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -198,41 +204,6 @@ func (ausu *AppUserSecretUpdate) sqlSave(ctx context.Context) (n int, err error)
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := ausu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appusersecret.FieldAppID,
-		})
-	}
-	if value, ok := ausu.mutation.UserID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appusersecret.FieldUserID,
-		})
-	}
-	if value, ok := ausu.mutation.PasswordHash(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appusersecret.FieldPasswordHash,
-		})
-	}
-	if value, ok := ausu.mutation.Salt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appusersecret.FieldSalt,
-		})
-	}
-	if value, ok := ausu.mutation.GoogleSecret(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appusersecret.FieldGoogleSecret,
-		})
 	}
 	if value, ok := ausu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -276,6 +247,41 @@ func (ausu *AppUserSecretUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Column: appusersecret.FieldDeleteAt,
 		})
 	}
+	if value, ok := ausu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appusersecret.FieldAppID,
+		})
+	}
+	if value, ok := ausu.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appusersecret.FieldUserID,
+		})
+	}
+	if value, ok := ausu.mutation.PasswordHash(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusersecret.FieldPasswordHash,
+		})
+	}
+	if value, ok := ausu.mutation.Salt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusersecret.FieldSalt,
+		})
+	}
+	if value, ok := ausu.mutation.GoogleSecret(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusersecret.FieldGoogleSecret,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ausu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appusersecret.Label}
@@ -293,36 +299,6 @@ type AppUserSecretUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppUserSecretMutation
-}
-
-// SetAppID sets the "app_id" field.
-func (ausuo *AppUserSecretUpdateOne) SetAppID(u uuid.UUID) *AppUserSecretUpdateOne {
-	ausuo.mutation.SetAppID(u)
-	return ausuo
-}
-
-// SetUserID sets the "user_id" field.
-func (ausuo *AppUserSecretUpdateOne) SetUserID(u uuid.UUID) *AppUserSecretUpdateOne {
-	ausuo.mutation.SetUserID(u)
-	return ausuo
-}
-
-// SetPasswordHash sets the "password_hash" field.
-func (ausuo *AppUserSecretUpdateOne) SetPasswordHash(s string) *AppUserSecretUpdateOne {
-	ausuo.mutation.SetPasswordHash(s)
-	return ausuo
-}
-
-// SetSalt sets the "salt" field.
-func (ausuo *AppUserSecretUpdateOne) SetSalt(s string) *AppUserSecretUpdateOne {
-	ausuo.mutation.SetSalt(s)
-	return ausuo
-}
-
-// SetGoogleSecret sets the "google_secret" field.
-func (ausuo *AppUserSecretUpdateOne) SetGoogleSecret(s string) *AppUserSecretUpdateOne {
-	ausuo.mutation.SetGoogleSecret(s)
-	return ausuo
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -380,6 +356,36 @@ func (ausuo *AppUserSecretUpdateOne) AddDeleteAt(u int32) *AppUserSecretUpdateOn
 	return ausuo
 }
 
+// SetAppID sets the "app_id" field.
+func (ausuo *AppUserSecretUpdateOne) SetAppID(u uuid.UUID) *AppUserSecretUpdateOne {
+	ausuo.mutation.SetAppID(u)
+	return ausuo
+}
+
+// SetUserID sets the "user_id" field.
+func (ausuo *AppUserSecretUpdateOne) SetUserID(u uuid.UUID) *AppUserSecretUpdateOne {
+	ausuo.mutation.SetUserID(u)
+	return ausuo
+}
+
+// SetPasswordHash sets the "password_hash" field.
+func (ausuo *AppUserSecretUpdateOne) SetPasswordHash(s string) *AppUserSecretUpdateOne {
+	ausuo.mutation.SetPasswordHash(s)
+	return ausuo
+}
+
+// SetSalt sets the "salt" field.
+func (ausuo *AppUserSecretUpdateOne) SetSalt(s string) *AppUserSecretUpdateOne {
+	ausuo.mutation.SetSalt(s)
+	return ausuo
+}
+
+// SetGoogleSecret sets the "google_secret" field.
+func (ausuo *AppUserSecretUpdateOne) SetGoogleSecret(s string) *AppUserSecretUpdateOne {
+	ausuo.mutation.SetGoogleSecret(s)
+	return ausuo
+}
+
 // Mutation returns the AppUserSecretMutation object of the builder.
 func (ausuo *AppUserSecretUpdateOne) Mutation() *AppUserSecretMutation {
 	return ausuo.mutation
@@ -398,7 +404,9 @@ func (ausuo *AppUserSecretUpdateOne) Save(ctx context.Context) (*AppUserSecret, 
 		err  error
 		node *AppUserSecret
 	)
-	ausuo.defaults()
+	if err := ausuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(ausuo.hooks) == 0 {
 		node, err = ausuo.sqlSave(ctx)
 	} else {
@@ -448,11 +456,15 @@ func (ausuo *AppUserSecretUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (ausuo *AppUserSecretUpdateOne) defaults() {
+func (ausuo *AppUserSecretUpdateOne) defaults() error {
 	if _, ok := ausuo.mutation.UpdateAt(); !ok {
+		if appusersecret.UpdateDefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized appusersecret.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := appusersecret.UpdateDefaultUpdateAt()
 		ausuo.mutation.SetUpdateAt(v)
 	}
+	return nil
 }
 
 func (ausuo *AppUserSecretUpdateOne) sqlSave(ctx context.Context) (_node *AppUserSecret, err error) {
@@ -489,41 +501,6 @@ func (ausuo *AppUserSecretUpdateOne) sqlSave(ctx context.Context) (_node *AppUse
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := ausuo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appusersecret.FieldAppID,
-		})
-	}
-	if value, ok := ausuo.mutation.UserID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appusersecret.FieldUserID,
-		})
-	}
-	if value, ok := ausuo.mutation.PasswordHash(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appusersecret.FieldPasswordHash,
-		})
-	}
-	if value, ok := ausuo.mutation.Salt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appusersecret.FieldSalt,
-		})
-	}
-	if value, ok := ausuo.mutation.GoogleSecret(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appusersecret.FieldGoogleSecret,
-		})
 	}
 	if value, ok := ausuo.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -565,6 +542,41 @@ func (ausuo *AppUserSecretUpdateOne) sqlSave(ctx context.Context) (_node *AppUse
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appusersecret.FieldDeleteAt,
+		})
+	}
+	if value, ok := ausuo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appusersecret.FieldAppID,
+		})
+	}
+	if value, ok := ausuo.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appusersecret.FieldUserID,
+		})
+	}
+	if value, ok := ausuo.mutation.PasswordHash(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusersecret.FieldPasswordHash,
+		})
+	}
+	if value, ok := ausuo.mutation.Salt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusersecret.FieldSalt,
+		})
+	}
+	if value, ok := ausuo.mutation.GoogleSecret(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusersecret.FieldGoogleSecret,
 		})
 	}
 	_node = &AppUserSecret{config: ausuo.config}
