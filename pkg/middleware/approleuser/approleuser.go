@@ -2,13 +2,12 @@ package approleuser
 
 import (
 	"context"
+	"fmt"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
 	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
-
-	"golang.org/x/xerrors"
 )
 
 func CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npool.CreateAppRoleUserResponse, error) {
@@ -16,11 +15,11 @@ func CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleUserRequest) 
 		ID: in.GetInfo().GetRoleID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get role: %v", err)
+		return nil, fmt.Errorf("fail get role: %v", err)
 	}
 
 	if role.Info.Role == constant.GenesisRole {
-		return nil, xerrors.Errorf("permission denied")
+		return nil, fmt.Errorf("permission denied")
 	}
 
 	resp, err := approleusercrud.GetByAppUser(ctx, &npool.GetAppRoleUserByAppUserRequest{
@@ -28,12 +27,12 @@ func CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleUserRequest) 
 		UserID: in.GetInfo().GetUserID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app role user: %v", err)
+		return nil, fmt.Errorf("fail get app role user: %v", err)
 	}
 
 	for _, info := range resp.Infos {
 		if in.GetInfo().GetRoleID() == info.RoleID {
-			return nil, xerrors.Errorf("app role user exist")
+			return nil, fmt.Errorf("app role user exist")
 		}
 	}
 

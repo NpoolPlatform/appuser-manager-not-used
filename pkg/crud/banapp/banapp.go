@@ -2,6 +2,7 @@ package banapp
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
@@ -12,13 +13,11 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 
 	"github.com/google/uuid"
-
-	"golang.org/x/xerrors"
 )
 
 func validateBanApp(info *npool.BanApp) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
-		return xerrors.Errorf("invalid app id: %v", err)
+		return fmt.Errorf("invalid app id: %v", err)
 	}
 	return nil
 }
@@ -33,7 +32,7 @@ func dbRowToBanApp(row *ent.BanApp) *npool.BanApp {
 
 func Create(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
 	if err := validateBanApp(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -41,7 +40,7 @@ func Create(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBa
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -51,7 +50,7 @@ func Create(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBa
 		SetMessage(in.GetInfo().GetMessage()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail create ban app: %v", err)
+		return nil, fmt.Errorf("fail create ban app: %v", err)
 	}
 
 	return &npool.CreateBanAppResponse{
@@ -62,7 +61,7 @@ func Create(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBa
 func Get(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
+		return nil, fmt.Errorf("invalid id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -70,7 +69,7 @@ func Get(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppRespo
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -84,7 +83,7 @@ func Get(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppRespo
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query ban app: %v", err)
+		return nil, fmt.Errorf("fail query ban app: %v", err)
 	}
 
 	var banApp *npool.BanApp
@@ -104,12 +103,12 @@ func GetByApp(ctx context.Context, in *npool.GetBanAppByAppRequest) (*npool.GetB
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	infos, err := cli.
@@ -123,7 +122,7 @@ func GetByApp(ctx context.Context, in *npool.GetBanAppByAppRequest) (*npool.GetB
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query ban app by app: %v", err)
+		return nil, fmt.Errorf("fail query ban app by app: %v", err)
 	}
 
 	var banApp *npool.BanApp
@@ -140,11 +139,11 @@ func GetByApp(ctx context.Context, in *npool.GetBanAppByAppRequest) (*npool.GetB
 func Update(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetInfo().GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
+		return nil, fmt.Errorf("invalid id: %v", err)
 	}
 
 	if err := validateBanApp(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -152,7 +151,7 @@ func Update(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBa
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -161,7 +160,7 @@ func Update(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBa
 		SetMessage(in.GetInfo().GetMessage()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail update ban app: %v", err)
+		return nil, fmt.Errorf("fail update ban app: %v", err)
 	}
 
 	return &npool.UpdateBanAppResponse{
@@ -172,7 +171,7 @@ func Update(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBa
 func Delete(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid id: %v", err)
+		return nil, fmt.Errorf("invalid id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -180,7 +179,7 @@ func Delete(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBa
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -189,7 +188,7 @@ func Delete(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBa
 		SetDeleteAt(uint32(time.Now().Unix())).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail delete ban app: %v", err)
+		return nil, fmt.Errorf("fail delete ban app: %v", err)
 	}
 
 	return &npool.DeleteBanAppResponse{

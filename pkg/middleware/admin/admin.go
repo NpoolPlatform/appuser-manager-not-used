@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"fmt"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
@@ -12,8 +13,6 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
 	"github.com/google/uuid"
-
-	"golang.org/x/xerrors"
 )
 
 func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*npool.CreateAdminAppsResponse, error) {
@@ -23,7 +22,7 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 		ID: constant.GenesisAppID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get genesis app: %v", err)
+		return nil, fmt.Errorf("fail get genesis app: %v", err)
 	}
 
 	if genesis.Info == nil {
@@ -39,7 +38,7 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 			Info: &adminApp,
 		}, true)
 		if err != nil {
-			return nil, xerrors.Errorf("fail create genesis app: %v", err)
+			return nil, fmt.Errorf("fail create genesis app: %v", err)
 		}
 
 		apps = append(apps, resp.Info)
@@ -51,7 +50,7 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 		ID: constant.ChurchAppID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get genesis app: %v", err)
+		return nil, fmt.Errorf("fail get genesis app: %v", err)
 	}
 
 	if church.Info == nil {
@@ -67,7 +66,7 @@ func CreateAdminApps(ctx context.Context, in *npool.CreateAdminAppsRequest) (*np
 			Info: &adminApp,
 		}, true)
 		if err != nil {
-			return nil, xerrors.Errorf("fail create church app: %v", err)
+			return nil, fmt.Errorf("fail create church app: %v", err)
 		}
 
 		apps = append(apps, resp.Info)
@@ -87,7 +86,7 @@ func GetAdminApps(ctx context.Context, in *npool.GetAdminAppsRequest) (*npool.Ge
 		ID: constant.GenesisAppID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get genesis app: %v", err)
+		return nil, fmt.Errorf("fail get genesis app: %v", err)
 	}
 
 	if resp.Info != nil {
@@ -98,7 +97,7 @@ func GetAdminApps(ctx context.Context, in *npool.GetAdminAppsRequest) (*npool.Ge
 		ID: constant.ChurchAppID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get church app: %v", err)
+		return nil, fmt.Errorf("fail get church app: %v", err)
 	}
 
 	if resp.Info != nil {
@@ -123,7 +122,7 @@ func CreateGenesisRole(ctx context.Context, in *npool.CreateGenesisRoleRequest) 
 		Info: &genesisRole,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail create genesis role: %v", err)
+		return nil, fmt.Errorf("fail create genesis role: %v", err)
 	}
 
 	return &npool.CreateGenesisRoleResponse{
@@ -137,7 +136,7 @@ func GetGenesisRole(ctx context.Context, in *npool.GetGenesisRoleRequest) (*npoo
 		Role:  constant.GenesisRole,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app role by app role: %v", err)
+		return nil, fmt.Errorf("fail get app role by app role: %v", err)
 	}
 
 	return &npool.GetGenesisRoleResponse{
@@ -147,7 +146,7 @@ func GetGenesisRole(ctx context.Context, in *npool.GetGenesisRoleRequest) (*npoo
 
 func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserRequest) (*npool.CreateGenesisRoleUserResponse, error) {
 	if in.GetUser().GetAppID() != constant.GenesisAppID && in.GetUser().GetAppID() != constant.ChurchAppID {
-		return nil, xerrors.Errorf("invalid app id for genesis role user")
+		return nil, fmt.Errorf("invalid app id for genesis role user")
 	}
 
 	resp, err := approlecrud.GetByAppRole(ctx, &npool.GetAppRoleByAppRoleRequest{
@@ -155,7 +154,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 		Role:  constant.GenesisRole,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app role by app role: %v", err)
+		return nil, fmt.Errorf("fail get app role by app role: %v", err)
 	}
 
 	resp1, err := approleusercrud.GetUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{
@@ -163,10 +162,10 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 		RoleID: resp.Info.ID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get genesis role user: %v", err)
+		return nil, fmt.Errorf("fail get genesis role user: %v", err)
 	}
 	if len(resp1.Infos) > 0 {
-		return nil, xerrors.Errorf("genesis user already exist")
+		return nil, fmt.Errorf("genesis user already exist")
 	}
 
 	resp2, err := appusercrud.GetByAppAccount(ctx, &npool.GetAppUserByAppAccountRequest{
@@ -174,7 +173,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 		Account: in.GetUser().GetEmailAddress(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app user: %v", err)
+		return nil, fmt.Errorf("fail get app user: %v", err)
 	}
 
 	myUser := resp2.Info
@@ -185,7 +184,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 			Secret: in.GetSecret(),
 		}, false)
 		if err != nil {
-			return nil, xerrors.Errorf("fail create user with secret: %v", err)
+			return nil, fmt.Errorf("fail create user with secret: %v", err)
 		}
 		myUser = resp.Info
 	}
@@ -198,7 +197,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 		},
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail create genesis role user: %v", err)
+		return nil, fmt.Errorf("fail create genesis role user: %v", err)
 	}
 
 	return &npool.CreateGenesisRoleUserResponse{
