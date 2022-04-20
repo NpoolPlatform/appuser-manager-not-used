@@ -15,7 +15,6 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/urfave/cli/v2 v2.4.0
 	golang.org/x/crypto v0.0.0-20220208233918-bba287dce954
-	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f
 	google.golang.org/grpc v1.45.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
 	google.golang.org/protobuf v1.27.1
@@ -88,6 +87,7 @@ require (
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
