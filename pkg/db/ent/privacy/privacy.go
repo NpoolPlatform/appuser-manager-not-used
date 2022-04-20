@@ -4,7 +4,7 @@ package privacy
 
 import (
 	"context"
-	"golang.org/x/xerrors"
+	"fmt"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 
@@ -28,17 +28,17 @@ var (
 
 // Allowf returns an formatted wrapped Allow decision.
 func Allowf(format string, a ...interface{}) error {
-	return xerrors.Errorf(format+": %w", append(a, Allow)...)
+	return fmt.Errorf(format+": %w", append(a, Allow)...)
 }
 
 // Denyf returns an formatted wrapped Deny decision.
 func Denyf(format string, a ...interface{}) error {
-	return xerrors.Errorf(format+": %w", append(a, Deny)...)
+	return fmt.Errorf(format+": %w", append(a, Deny)...)
 }
 
 // Skipf returns an formatted wrapped Skip decision.
 func Skipf(format string, a ...interface{}) error {
-	return xerrors.Errorf(format+": %w", append(a, Skip)...)
+	return fmt.Errorf(format+": %w", append(a, Skip)...)
 }
 
 // DecisionContext creates a new context from the given parent context with

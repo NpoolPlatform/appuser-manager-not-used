@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
@@ -11,22 +12,20 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 
 	"github.com/google/uuid"
-
-	"golang.org/x/xerrors"
 )
 
 func validateApp(info *npool.App) error {
 	if _, err := uuid.Parse(info.GetCreatedBy()); err != nil {
-		return xerrors.Errorf("invalid app creator: %v", err)
+		return fmt.Errorf("invalid app creator: %v", err)
 	}
 	if info.GetName() == "" {
-		return xerrors.Errorf("invalid app name")
+		return fmt.Errorf("invalid app name")
 	}
 	if info.GetLogo() == "" {
-		return xerrors.Errorf("invalid app logo")
+		return fmt.Errorf("invalid app logo")
 	}
 	if info.GetDescription() == "" {
-		return xerrors.Errorf("invalid app description")
+		return fmt.Errorf("invalid app description")
 	}
 	return nil
 }
@@ -43,12 +42,12 @@ func dbRowToApp(row *ent.App) *npool.App {
 
 func Create(ctx context.Context, in *npool.CreateAppRequest, withID bool) (*npool.CreateAppResponse, error) {
 	if err := validateApp(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	if withID {
 		if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
-			return nil, xerrors.Errorf("need id but invalid id: %v", err)
+			return nil, fmt.Errorf("need id but invalid id: %v", err)
 		}
 	}
 
@@ -57,7 +56,7 @@ func Create(ctx context.Context, in *npool.CreateAppRequest, withID bool) (*npoo
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	rc := cli.
@@ -73,7 +72,7 @@ func Create(ctx context.Context, in *npool.CreateAppRequest, withID bool) (*npoo
 
 	info, err := rc.Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail create app: %v", err)
+		return nil, fmt.Errorf("fail create app: %v", err)
 	}
 
 	return &npool.CreateAppResponse{
@@ -84,11 +83,11 @@ func Create(ctx context.Context, in *npool.CreateAppRequest, withID bool) (*npoo
 func Update(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
 	id, err := uuid.Parse(in.GetInfo().GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	if err := validateApp(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -96,7 +95,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppRe
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -107,7 +106,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppRe
 		SetDescription(in.GetInfo().GetDescription()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail update app: %v", err)
+		return nil, fmt.Errorf("fail update app: %v", err)
 	}
 
 	return &npool.UpdateAppResponse{
@@ -118,7 +117,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppRe
 func Get(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -126,7 +125,7 @@ func Get(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, e
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -137,7 +136,7 @@ func Get(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, e
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app: %v", err)
+		return nil, fmt.Errorf("fail query app: %v", err)
 	}
 
 	var myApp *npool.App
@@ -157,7 +156,7 @@ func GetAll(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsRespon
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -165,7 +164,7 @@ func GetAll(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsRespon
 		Query().
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app: %v", err)
+		return nil, fmt.Errorf("fail query app: %v", err)
 	}
 
 	apps := []*npool.App{}
@@ -181,7 +180,7 @@ func GetAll(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsRespon
 func GetByCreator(ctx context.Context, in *npool.GetAppsByCreatorRequest) (*npool.GetAppsByCreatorResponse, error) {
 	userID, err := uuid.Parse(in.GetUserID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid user id: %v", err)
+		return nil, fmt.Errorf("invalid user id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -189,7 +188,7 @@ func GetByCreator(ctx context.Context, in *npool.GetAppsByCreatorRequest) (*npoo
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -200,7 +199,7 @@ func GetByCreator(ctx context.Context, in *npool.GetAppsByCreatorRequest) (*npoo
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app: %v", err)
+		return nil, fmt.Errorf("fail query app: %v", err)
 	}
 
 	apps := []*npool.App{}

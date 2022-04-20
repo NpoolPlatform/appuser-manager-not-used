@@ -2,6 +2,7 @@ package approle
 
 import (
 	"context"
+	"fmt"
 
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
@@ -11,16 +12,14 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
 
 	"github.com/google/uuid"
-
-	"golang.org/x/xerrors"
 )
 
 func validateAppRole(info *npool.AppRole) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
-		return xerrors.Errorf("invalid app id: %v", err)
+		return fmt.Errorf("invalid app id: %v", err)
 	}
 	if _, err := uuid.Parse(info.GetCreatedBy()); err != nil {
-		return xerrors.Errorf("invalid creator: %v", err)
+		return fmt.Errorf("invalid creator: %v", err)
 	}
 	return nil
 }
@@ -38,7 +37,7 @@ func dbRowToAppRole(row *ent.AppRole) *npool.AppRole {
 
 func Create(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {
 	if err := validateAppRole(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -46,7 +45,7 @@ func Create(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateA
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -59,7 +58,7 @@ func Create(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateA
 		SetDefault(in.GetInfo().GetDefault()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail create app role: %v", err)
+		return nil, fmt.Errorf("fail create app role: %v", err)
 	}
 
 	return &npool.CreateAppRoleResponse{
@@ -70,11 +69,11 @@ func Create(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateA
 func Update(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateAppRoleResponse, error) {
 	id, err := uuid.Parse(in.GetInfo().GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app role id: %v", err)
+		return nil, fmt.Errorf("invalid app role id: %v", err)
 	}
 
 	if err := validateAppRole(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -82,7 +81,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateA
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -93,7 +92,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateA
 		SetDefault(in.GetInfo().GetDefault()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail update app role: %v", err)
+		return nil, fmt.Errorf("fail update app role: %v", err)
 	}
 
 	return &npool.UpdateAppRoleResponse{
@@ -104,7 +103,7 @@ func Update(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateA
 func Get(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app role id: %v", err)
+		return nil, fmt.Errorf("invalid app role id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -112,7 +111,7 @@ func Get(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleRes
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -126,7 +125,7 @@ func Get(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleRes
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app role: %v", err)
+		return nil, fmt.Errorf("fail query app role: %v", err)
 	}
 
 	var myAppRole *npool.AppRole
@@ -143,7 +142,7 @@ func Get(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleRes
 func GetByAppRole(ctx context.Context, in *npool.GetAppRoleByAppRoleRequest) (*npool.GetAppRoleByAppRoleResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -151,7 +150,7 @@ func GetByAppRole(ctx context.Context, in *npool.GetAppRoleByAppRoleRequest) (*n
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -165,7 +164,7 @@ func GetByAppRole(ctx context.Context, in *npool.GetAppRoleByAppRoleRequest) (*n
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app role: %v", err)
+		return nil, fmt.Errorf("fail query app role: %v", err)
 	}
 
 	var appRole *npool.AppRole
@@ -182,7 +181,7 @@ func GetByAppRole(ctx context.Context, in *npool.GetAppRoleByAppRoleRequest) (*n
 func GetByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.GetAppRolesByAppResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -190,7 +189,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.Ge
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -201,7 +200,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.Ge
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app role: %v", err)
+		return nil, fmt.Errorf("fail query app role: %v", err)
 	}
 
 	appRoles := []*npool.AppRole{}
@@ -217,7 +216,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppRolesByAppRequest) (*npool.Ge
 func GetAppDefaultRole(ctx context.Context, appID string) (*npool.AppRole, error) {
 	myAppID, err := uuid.Parse(appID)
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -225,7 +224,7 @@ func GetAppDefaultRole(ctx context.Context, appID string) (*npool.AppRole, error
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -237,7 +236,7 @@ func GetAppDefaultRole(ctx context.Context, appID string) (*npool.AppRole, error
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app role: %v", err)
+		return nil, fmt.Errorf("fail query app role: %v", err)
 	}
 
 	var appRole *npool.AppRole

@@ -2,6 +2,7 @@ package appcontrol
 
 import (
 	"context"
+	"fmt"
 
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
@@ -11,13 +12,11 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 
 	"github.com/google/uuid"
-
-	"golang.org/x/xerrors"
 )
 
 func validateAppControl(info *npool.AppControl) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
-		return xerrors.Errorf("invalid app id: %v", err)
+		return fmt.Errorf("invalid app id: %v", err)
 	}
 	return nil
 }
@@ -37,7 +36,7 @@ func dbRowToAppControl(row *ent.AppControl) *npool.AppControl {
 
 func Create(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.CreateAppControlResponse, error) {
 	if err := validateAppControl(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -45,7 +44,7 @@ func Create(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.Crea
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -60,7 +59,7 @@ func Create(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.Crea
 		SetInvitationCodeMust(in.GetInfo().GetInvitationCodeMust()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail create app control: %v", err)
+		return nil, fmt.Errorf("fail create app control: %v", err)
 	}
 
 	return &npool.CreateAppControlResponse{
@@ -71,11 +70,11 @@ func Create(ctx context.Context, in *npool.CreateAppControlRequest) (*npool.Crea
 func Update(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.UpdateAppControlResponse, error) {
 	id, err := uuid.Parse(in.GetInfo().GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app control id: %v", err)
+		return nil, fmt.Errorf("invalid app control id: %v", err)
 	}
 
 	if err := validateAppControl(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -83,7 +82,7 @@ func Update(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.Upda
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	info, err := cli.
@@ -97,7 +96,7 @@ func Update(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.Upda
 		SetInvitationCodeMust(in.GetInfo().GetInvitationCodeMust()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail update app control: %v", err)
+		return nil, fmt.Errorf("fail update app control: %v", err)
 	}
 
 	return &npool.UpdateAppControlResponse{
@@ -108,7 +107,7 @@ func Update(ctx context.Context, in *npool.UpdateAppControlRequest) (*npool.Upda
 func Get(ctx context.Context, in *npool.GetAppControlRequest) (*npool.GetAppControlResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app control id: %v", err)
+		return nil, fmt.Errorf("invalid app control id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -116,7 +115,7 @@ func Get(ctx context.Context, in *npool.GetAppControlRequest) (*npool.GetAppCont
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -127,7 +126,7 @@ func Get(ctx context.Context, in *npool.GetAppControlRequest) (*npool.GetAppCont
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app control: %v", err)
+		return nil, fmt.Errorf("fail query app control: %v", err)
 	}
 
 	var myAppControl *npool.AppControl
@@ -144,7 +143,7 @@ func Get(ctx context.Context, in *npool.GetAppControlRequest) (*npool.GetAppCont
 func GetByApp(ctx context.Context, in *npool.GetAppControlByAppRequest) (*npool.GetAppControlByAppResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -152,7 +151,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppControlByAppRequest) (*npool.
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -163,7 +162,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppControlByAppRequest) (*npool.
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app control: %v", err)
+		return nil, fmt.Errorf("fail query app control: %v", err)
 	}
 
 	var myAppControl *npool.AppControl
