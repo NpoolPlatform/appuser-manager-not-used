@@ -53,6 +53,7 @@ var runCmd = &cli.Command{
 
 func rpcRegister(server grpc.ServiceRegistrar) error {
 	api.Register(server)
+	apimgrcli.RegisterGRPC(server)
 	return nil
 }
 
@@ -63,7 +64,6 @@ func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.Dial
 	}
 
 	apimgrcli.Register(mux)
-
 	return nil
 }
 
