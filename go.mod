@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.10.1
 	github.com/NpoolPlatform/api-manager v0.0.0-20220121051827-18c807c114dc
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220120091626-4e8035637592
-	github.com/NpoolPlatform/message v0.0.0-20220325025213-802b6147cbd4
+	github.com/NpoolPlatform/message v0.0.0-20220503155625-3b24cf03e4d6
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.8.0
@@ -16,7 +16,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220208233918-bba287dce954
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
-	google.golang.org/grpc v1.45.0
+	google.golang.org/grpc v1.46.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
 	google.golang.org/protobuf v1.27.1
 )
