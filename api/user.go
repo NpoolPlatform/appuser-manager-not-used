@@ -10,6 +10,7 @@ import (
 	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
+	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthird"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	appusermw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/appuser"
 
@@ -251,6 +252,24 @@ func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAp
 	if err != nil {
 		logger.Sugar().Errorw("fail create app user with secret: %v", err)
 		return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) CreateAppUserWithThird(ctx context.Context, in *npool.CreateAppUserWithThirdRequest) (*npool.CreateAppUserWithThirdResponse, error) {
+	resp, err := appusermw.CreateWithThird(ctx, in, true)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user with third: %v", err)
+		return &npool.CreateAppUserWithThirdResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppUserThirdByAppThird(ctx context.Context, in *npool.GetAppUserThirdByAppThirdRequest) (*npool.GetAppUserThirdByAppThirdResponse, error) {
+	resp, err := appuserthirdcrud.GetByAppUserThird(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user third: %v", err)
+		return &npool.GetAppUserThirdByAppThirdResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }

@@ -30,6 +30,9 @@ type AppUserExtra func(*sql.Selector)
 // AppUserSecret is the predicate function for appusersecret builders.
 type AppUserSecret func(*sql.Selector)
 
+// AppUserThird is the predicate function for appuserthird builders.
+type AppUserThird func(*sql.Selector)
+
 // BanApp is the predicate function for banapp builders.
 type BanApp func(*sql.Selector)
 

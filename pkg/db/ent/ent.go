@@ -16,6 +16,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthird"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 )
@@ -46,6 +47,7 @@ func columnChecker(table string) func(string) error {
 		appusercontrol.Table: appusercontrol.ValidColumn,
 		appuserextra.Table:   appuserextra.ValidColumn,
 		appusersecret.Table:  appusersecret.ValidColumn,
+		appuserthird.Table:   appuserthird.ValidColumn,
 		banapp.Table:         banapp.ValidColumn,
 		banappuser.Table:     banappuser.ValidColumn,
 	}

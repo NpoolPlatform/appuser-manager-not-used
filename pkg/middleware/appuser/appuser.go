@@ -2,6 +2,7 @@ package appuser
 
 import (
 	"context"
+	"fmt"
 
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
 	appcontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
@@ -11,6 +12,7 @@ import (
 	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
+	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthird"
 	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
@@ -61,6 +63,52 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 	}
 
 	return &npool.CreateAppUserWithSecretResponse{
+		Info: resp.Info,
+	}, nil
+}
+
+func CreateWithThird(ctx context.Context, in *npool.CreateAppUserWithThirdRequest, setDefaultRole bool) (*npool.CreateAppUserWithThirdResponse, error) {
+	resp, err := appusercrud.Create(ctx, &npool.CreateAppUserRequest{
+		Info: in.GetUser(),
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail create app user: %v", err)
+	}
+
+	inThird := in.GetThird()
+	inThird.UserID = resp.Info.ID
+	fmt.Println("i*******************nThird")
+	fmt.Println(inThird)
+	_, err = appuserthirdcrud.Create(ctx, &npool.CreateAppUserThirdRequest{
+		Info: inThird,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail create app user third: %v", err)
+	}
+
+	if setDefaultRole {
+		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
+		if err != nil {
+			return nil, xerrors.Errorf("fail get default role: %v", err)
+		}
+		if defaultRole == nil {
+			return nil, xerrors.Errorf("fail get default role")
+		}
+
+		_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
+			Info: &npool.AppRoleUser{
+				AppID:  in.GetUser().GetAppID(),
+				RoleID: defaultRole.ID,
+				UserID: resp.Info.ID,
+			},
+		})
+		if err != nil {
+			// TODO: rollback for role user create error
+			return nil, xerrors.Errorf("fail create app role user: %v", err)
+		}
+	}
+
+	return &npool.CreateAppUserWithThirdResponse{
 		Info: resp.Info,
 	}, nil
 }

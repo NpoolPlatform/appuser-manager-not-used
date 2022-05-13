@@ -197,6 +197,27 @@ var (
 			},
 		},
 	}
+	// AppUserThirdsColumns holds the columns for the "app_user_thirds" table.
+	AppUserThirdsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "third_user_id", Type: field.TypeString},
+		{Name: "third", Type: field.TypeEnum, Enums: []string{"github", "google", "facebook", "twitter"}},
+		{Name: "third_id", Type: field.TypeString},
+		{Name: "third_user_name", Type: field.TypeString},
+		{Name: "third_user_picture", Type: field.TypeString},
+		{Name: "third_extra", Type: field.TypeString, Size: 2147483647},
+	}
+	// AppUserThirdsTable holds the schema information for the "app_user_thirds" table.
+	AppUserThirdsTable = &schema.Table{
+		Name:       "app_user_thirds",
+		Columns:    AppUserThirdsColumns,
+		PrimaryKey: []*schema.Column{AppUserThirdsColumns[0]},
+	}
 	// BanAppsColumns holds the columns for the "ban_apps" table.
 	BanAppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -238,6 +259,7 @@ var (
 		AppUserControlsTable,
 		AppUserExtrasTable,
 		AppUserSecretsTable,
+		AppUserThirdsTable,
 		BanAppsTable,
 		BanAppUsersTable,
 	}
