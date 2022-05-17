@@ -23,4 +23,4 @@ require (
 
 replace google.golang.org/grpc => github.com/grpc/grpc-go v1.41.0
 
-replace github.com/NpoolPlatform/message => github.com/NpoolPlatform/message v0.0.0-20220517084247-b0923c6f2ac7
+replace github.com/NpoolPlatform/message => github.com/NpoolPlatform/message v0.0.0-20220517103704-7a7ba36495a4
