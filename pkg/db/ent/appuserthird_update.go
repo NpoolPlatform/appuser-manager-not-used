@@ -125,12 +125,6 @@ func (autu *AppUserThirdUpdate) SetThirdUserPicture(s string) *AppUserThirdUpdat
 	return autu
 }
 
-// SetThirdExtra sets the "third_extra" field.
-func (autu *AppUserThirdUpdate) SetThirdExtra(s string) *AppUserThirdUpdate {
-	autu.mutation.SetThirdExtra(s)
-	return autu
-}
-
 // Mutation returns the AppUserThirdMutation object of the builder.
 func (autu *AppUserThirdUpdate) Mutation() *AppUserThirdMutation {
 	return autu.mutation
@@ -330,13 +324,6 @@ func (autu *AppUserThirdUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserthird.FieldThirdUserPicture,
 		})
 	}
-	if value, ok := autu.mutation.ThirdExtra(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuserthird.FieldThirdExtra,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, autu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appuserthird.Label}
@@ -450,12 +437,6 @@ func (autuo *AppUserThirdUpdateOne) SetThirdUserName(s string) *AppUserThirdUpda
 // SetThirdUserPicture sets the "third_user_picture" field.
 func (autuo *AppUserThirdUpdateOne) SetThirdUserPicture(s string) *AppUserThirdUpdateOne {
 	autuo.mutation.SetThirdUserPicture(s)
-	return autuo
-}
-
-// SetThirdExtra sets the "third_extra" field.
-func (autuo *AppUserThirdUpdateOne) SetThirdExtra(s string) *AppUserThirdUpdateOne {
-	autuo.mutation.SetThirdExtra(s)
 	return autuo
 }
 
@@ -680,13 +661,6 @@ func (autuo *AppUserThirdUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserthird.FieldThirdUserPicture,
-		})
-	}
-	if value, ok := autuo.mutation.ThirdExtra(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuserthird.FieldThirdExtra,
 		})
 	}
 	_node = &AppUserThird{config: autuo.config}

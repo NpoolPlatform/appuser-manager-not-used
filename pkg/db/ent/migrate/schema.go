@@ -210,7 +210,6 @@ var (
 		{Name: "third_id", Type: field.TypeString},
 		{Name: "third_user_name", Type: field.TypeString},
 		{Name: "third_user_picture", Type: field.TypeString},
-		{Name: "third_extra", Type: field.TypeString, Size: 2147483647},
 	}
 	// AppUserThirdsTable holds the schema information for the "app_user_thirds" table.
 	AppUserThirdsTable = &schema.Table{

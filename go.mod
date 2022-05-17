@@ -16,11 +16,11 @@ require (
 	golang.org/x/crypto v0.0.0-20220208233918-bba287dce954
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
-	google.golang.org/grpc v1.46.0
+	google.golang.org/grpc v1.46.2
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
 	google.golang.org/protobuf v1.27.1
 )
 
 replace google.golang.org/grpc => github.com/grpc/grpc-go v1.41.0
 
-replace github.com/NpoolPlatform/message => github.com/NpoolPlatform/message v0.0.0-20220513083342-73e8b9445198
+replace github.com/NpoolPlatform/message => github.com/NpoolPlatform/message v0.0.0-20220517084247-b0923c6f2ac7

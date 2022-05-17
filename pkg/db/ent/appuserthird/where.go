@@ -154,13 +154,6 @@ func ThirdUserPicture(v string) predicate.AppUserThird {
 	})
 }
 
-// ThirdExtra applies equality check predicate on the "third_extra" field. It's identical to ThirdExtraEQ.
-func ThirdExtra(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThirdExtra), v))
-	})
-}
-
 // CreateAtEQ applies the EQ predicate on the "create_at" field.
 func CreateAtEQ(v uint32) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
@@ -1030,117 +1023,6 @@ func ThirdUserPictureEqualFold(v string) predicate.AppUserThird {
 func ThirdUserPictureContainsFold(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldThirdUserPicture), v))
-	})
-}
-
-// ThirdExtraEQ applies the EQ predicate on the "third_extra" field.
-func ThirdExtraEQ(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraNEQ applies the NEQ predicate on the "third_extra" field.
-func ThirdExtraNEQ(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraIn applies the In predicate on the "third_extra" field.
-func ThirdExtraIn(vs ...string) predicate.AppUserThird {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldThirdExtra), v...))
-	})
-}
-
-// ThirdExtraNotIn applies the NotIn predicate on the "third_extra" field.
-func ThirdExtraNotIn(vs ...string) predicate.AppUserThird {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldThirdExtra), v...))
-	})
-}
-
-// ThirdExtraGT applies the GT predicate on the "third_extra" field.
-func ThirdExtraGT(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraGTE applies the GTE predicate on the "third_extra" field.
-func ThirdExtraGTE(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraLT applies the LT predicate on the "third_extra" field.
-func ThirdExtraLT(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraLTE applies the LTE predicate on the "third_extra" field.
-func ThirdExtraLTE(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraContains applies the Contains predicate on the "third_extra" field.
-func ThirdExtraContains(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraHasPrefix applies the HasPrefix predicate on the "third_extra" field.
-func ThirdExtraHasPrefix(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraHasSuffix applies the HasSuffix predicate on the "third_extra" field.
-func ThirdExtraHasSuffix(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraEqualFold applies the EqualFold predicate on the "third_extra" field.
-func ThirdExtraEqualFold(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldThirdExtra), v))
-	})
-}
-
-// ThirdExtraContainsFold applies the ContainsFold predicate on the "third_extra" field.
-func ThirdExtraContainsFold(v string) predicate.AppUserThird {
-	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldThirdExtra), v))
 	})
 }
 

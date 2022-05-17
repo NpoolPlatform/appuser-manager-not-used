@@ -36,8 +36,6 @@ type AppUserThird struct {
 	ThirdUserName string `json:"third_user_name,omitempty"`
 	// ThirdUserPicture holds the value of the "third_user_picture" field.
 	ThirdUserPicture string `json:"third_user_picture,omitempty"`
-	// ThirdExtra holds the value of the "third_extra" field.
-	ThirdExtra string `json:"third_extra,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -47,7 +45,7 @@ func (*AppUserThird) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appuserthird.FieldCreateAt, appuserthird.FieldUpdateAt, appuserthird.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case appuserthird.FieldThirdUserID, appuserthird.FieldThird, appuserthird.FieldThirdID, appuserthird.FieldThirdUserName, appuserthird.FieldThirdUserPicture, appuserthird.FieldThirdExtra:
+		case appuserthird.FieldThirdUserID, appuserthird.FieldThird, appuserthird.FieldThirdID, appuserthird.FieldThirdUserName, appuserthird.FieldThirdUserPicture:
 			values[i] = new(sql.NullString)
 		case appuserthird.FieldID, appuserthird.FieldAppID, appuserthird.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -132,12 +130,6 @@ func (aut *AppUserThird) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				aut.ThirdUserPicture = value.String
 			}
-		case appuserthird.FieldThirdExtra:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field third_extra", values[i])
-			} else if value.Valid {
-				aut.ThirdExtra = value.String
-			}
 		}
 	}
 	return nil
@@ -186,8 +178,6 @@ func (aut *AppUserThird) String() string {
 	builder.WriteString(aut.ThirdUserName)
 	builder.WriteString(", third_user_picture=")
 	builder.WriteString(aut.ThirdUserPicture)
-	builder.WriteString(", third_extra=")
-	builder.WriteString(aut.ThirdExtra)
 	builder.WriteByte(')')
 	return builder.String()
 }

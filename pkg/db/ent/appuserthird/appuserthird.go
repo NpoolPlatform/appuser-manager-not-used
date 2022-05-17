@@ -34,8 +34,6 @@ const (
 	FieldThirdUserName = "third_user_name"
 	// FieldThirdUserPicture holds the string denoting the third_user_picture field in the database.
 	FieldThirdUserPicture = "third_user_picture"
-	// FieldThirdExtra holds the string denoting the third_extra field in the database.
-	FieldThirdExtra = "third_extra"
 	// Table holds the table name of the appuserthird in the database.
 	Table = "app_user_thirds"
 )
@@ -53,7 +51,6 @@ var Columns = []string{
 	FieldThirdID,
 	FieldThirdUserName,
 	FieldThirdUserPicture,
-	FieldThirdExtra,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

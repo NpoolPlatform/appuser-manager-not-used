@@ -107,12 +107,6 @@ func (autc *AppUserThirdCreate) SetThirdUserPicture(s string) *AppUserThirdCreat
 	return autc
 }
 
-// SetThirdExtra sets the "third_extra" field.
-func (autc *AppUserThirdCreate) SetThirdExtra(s string) *AppUserThirdCreate {
-	autc.mutation.SetThirdExtra(s)
-	return autc
-}
-
 // SetID sets the "id" field.
 func (autc *AppUserThirdCreate) SetID(u uuid.UUID) *AppUserThirdCreate {
 	autc.mutation.SetID(u)
@@ -268,9 +262,6 @@ func (autc *AppUserThirdCreate) check() error {
 	if _, ok := autc.mutation.ThirdUserPicture(); !ok {
 		return &ValidationError{Name: "third_user_picture", err: errors.New(`ent: missing required field "AppUserThird.third_user_picture"`)}
 	}
-	if _, ok := autc.mutation.ThirdExtra(); !ok {
-		return &ValidationError{Name: "third_extra", err: errors.New(`ent: missing required field "AppUserThird.third_extra"`)}
-	}
 	return nil
 }
 
@@ -387,14 +378,6 @@ func (autc *AppUserThirdCreate) createSpec() (*AppUserThird, *sqlgraph.CreateSpe
 			Column: appuserthird.FieldThirdUserPicture,
 		})
 		_node.ThirdUserPicture = value
-	}
-	if value, ok := autc.mutation.ThirdExtra(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuserthird.FieldThirdExtra,
-		})
-		_node.ThirdExtra = value
 	}
 	return _node, _spec
 }
@@ -585,18 +568,6 @@ func (u *AppUserThirdUpsert) SetThirdUserPicture(v string) *AppUserThirdUpsert {
 // UpdateThirdUserPicture sets the "third_user_picture" field to the value that was provided on create.
 func (u *AppUserThirdUpsert) UpdateThirdUserPicture() *AppUserThirdUpsert {
 	u.SetExcluded(appuserthird.FieldThirdUserPicture)
-	return u
-}
-
-// SetThirdExtra sets the "third_extra" field.
-func (u *AppUserThirdUpsert) SetThirdExtra(v string) *AppUserThirdUpsert {
-	u.Set(appuserthird.FieldThirdExtra, v)
-	return u
-}
-
-// UpdateThirdExtra sets the "third_extra" field to the value that was provided on create.
-func (u *AppUserThirdUpsert) UpdateThirdExtra() *AppUserThirdUpsert {
-	u.SetExcluded(appuserthird.FieldThirdExtra)
 	return u
 }
 
@@ -808,20 +779,6 @@ func (u *AppUserThirdUpsertOne) SetThirdUserPicture(v string) *AppUserThirdUpser
 func (u *AppUserThirdUpsertOne) UpdateThirdUserPicture() *AppUserThirdUpsertOne {
 	return u.Update(func(s *AppUserThirdUpsert) {
 		s.UpdateThirdUserPicture()
-	})
-}
-
-// SetThirdExtra sets the "third_extra" field.
-func (u *AppUserThirdUpsertOne) SetThirdExtra(v string) *AppUserThirdUpsertOne {
-	return u.Update(func(s *AppUserThirdUpsert) {
-		s.SetThirdExtra(v)
-	})
-}
-
-// UpdateThirdExtra sets the "third_extra" field to the value that was provided on create.
-func (u *AppUserThirdUpsertOne) UpdateThirdExtra() *AppUserThirdUpsertOne {
-	return u.Update(func(s *AppUserThirdUpsert) {
-		s.UpdateThirdExtra()
 	})
 }
 
@@ -1199,20 +1156,6 @@ func (u *AppUserThirdUpsertBulk) SetThirdUserPicture(v string) *AppUserThirdUpse
 func (u *AppUserThirdUpsertBulk) UpdateThirdUserPicture() *AppUserThirdUpsertBulk {
 	return u.Update(func(s *AppUserThirdUpsert) {
 		s.UpdateThirdUserPicture()
-	})
-}
-
-// SetThirdExtra sets the "third_extra" field.
-func (u *AppUserThirdUpsertBulk) SetThirdExtra(v string) *AppUserThirdUpsertBulk {
-	return u.Update(func(s *AppUserThirdUpsert) {
-		s.SetThirdExtra(v)
-	})
-}
-
-// UpdateThirdExtra sets the "third_extra" field to the value that was provided on create.
-func (u *AppUserThirdUpsertBulk) UpdateThirdExtra() *AppUserThirdUpsertBulk {
-	return u.Update(func(s *AppUserThirdUpsert) {
-		s.UpdateThirdExtra()
 	})
 }
 

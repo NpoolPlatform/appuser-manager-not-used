@@ -38,7 +38,6 @@ func dbRowToAppUserThird(row *ent.AppUserThird) *npool.AppUserThird {
 		ThirdId:          row.ThirdID,
 		ThirdUserName:    row.ThirdUserName,
 		ThirdUserPicture: row.ThirdUserPicture,
-		ThirdExtra:       row.ThirdExtra,
 		Third:            row.Third.String(),
 	}
 }
@@ -65,7 +64,6 @@ func Create(ctx context.Context, in *npool.CreateAppUserThirdRequest) (*npool.Cr
 		SetThirdUserPicture(in.GetInfo().GetThirdUserPicture()).
 		SetThirdID(in.GetInfo().GetThirdId()).
 		SetThirdUserID(in.GetInfo().GetThirdUserId()).
-		SetThirdExtra(in.GetInfo().GetThirdExtra()).
 		Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user third: %v", err)

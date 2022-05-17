@@ -6778,7 +6778,6 @@ type AppUserThirdMutation struct {
 	third_id           *string
 	third_user_name    *string
 	third_user_picture *string
-	third_extra        *string
 	clearedFields      map[string]struct{}
 	done               bool
 	oldValue           func(context.Context) (*AppUserThird, error)
@@ -7309,42 +7308,6 @@ func (m *AppUserThirdMutation) ResetThirdUserPicture() {
 	m.third_user_picture = nil
 }
 
-// SetThirdExtra sets the "third_extra" field.
-func (m *AppUserThirdMutation) SetThirdExtra(s string) {
-	m.third_extra = &s
-}
-
-// ThirdExtra returns the value of the "third_extra" field in the mutation.
-func (m *AppUserThirdMutation) ThirdExtra() (r string, exists bool) {
-	v := m.third_extra
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldThirdExtra returns the old "third_extra" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldThirdExtra(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdExtra is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdExtra requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdExtra: %w", err)
-	}
-	return oldValue.ThirdExtra, nil
-}
-
-// ResetThirdExtra resets all changes to the "third_extra" field.
-func (m *AppUserThirdMutation) ResetThirdExtra() {
-	m.third_extra = nil
-}
-
 // Where appends a list predicates to the AppUserThirdMutation builder.
 func (m *AppUserThirdMutation) Where(ps ...predicate.AppUserThird) {
 	m.predicates = append(m.predicates, ps...)
@@ -7364,7 +7327,7 @@ func (m *AppUserThirdMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserThirdMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 10)
 	if m.create_at != nil {
 		fields = append(fields, appuserthird.FieldCreateAt)
 	}
@@ -7395,9 +7358,6 @@ func (m *AppUserThirdMutation) Fields() []string {
 	if m.third_user_picture != nil {
 		fields = append(fields, appuserthird.FieldThirdUserPicture)
 	}
-	if m.third_extra != nil {
-		fields = append(fields, appuserthird.FieldThirdExtra)
-	}
 	return fields
 }
 
@@ -7426,8 +7386,6 @@ func (m *AppUserThirdMutation) Field(name string) (ent.Value, bool) {
 		return m.ThirdUserName()
 	case appuserthird.FieldThirdUserPicture:
 		return m.ThirdUserPicture()
-	case appuserthird.FieldThirdExtra:
-		return m.ThirdExtra()
 	}
 	return nil, false
 }
@@ -7457,8 +7415,6 @@ func (m *AppUserThirdMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldThirdUserName(ctx)
 	case appuserthird.FieldThirdUserPicture:
 		return m.OldThirdUserPicture(ctx)
-	case appuserthird.FieldThirdExtra:
-		return m.OldThirdExtra(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppUserThird field %s", name)
 }
@@ -7537,13 +7493,6 @@ func (m *AppUserThirdMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetThirdUserPicture(v)
-		return nil
-	case appuserthird.FieldThirdExtra:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetThirdExtra(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserThird field %s", name)
@@ -7662,9 +7611,6 @@ func (m *AppUserThirdMutation) ResetField(name string) error {
 		return nil
 	case appuserthird.FieldThirdUserPicture:
 		m.ResetThirdUserPicture()
-		return nil
-	case appuserthird.FieldThirdExtra:
-		m.ResetThirdExtra()
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserThird field %s", name)

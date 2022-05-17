@@ -41,24 +41,12 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 	}
 
 	if setDefaultRole {
-		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
-		if err != nil {
-			return nil, xerrors.Errorf("fail get default role: %v", err)
-		}
-		if defaultRole == nil {
-			return nil, xerrors.Errorf("fail get default role")
-		}
-
-		_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
-			Info: &npool.AppRoleUser{
-				AppID:  in.GetUser().GetAppID(),
-				RoleID: defaultRole.ID,
-				UserID: resp.Info.ID,
-			},
+		err := SetRole(ctx, &npool.AppRoleUser{
+			AppID:  in.GetUser().GetAppID(),
+			UserID: resp.GetInfo().GetID(),
 		})
 		if err != nil {
-			// TODO: rollback for role user create error
-			return nil, xerrors.Errorf("fail create app role user: %v", err)
+			return nil, err
 		}
 	}
 
@@ -75,10 +63,19 @@ func CreateWithThird(ctx context.Context, in *npool.CreateAppUserWithThirdReques
 		return nil, xerrors.Errorf("fail create app user: %v", err)
 	}
 
+	if setDefaultRole {
+		err := SetRole(ctx, &npool.AppRoleUser{
+			AppID:  in.GetUser().GetAppID(),
+			UserID: resp.GetInfo().GetID(),
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	inThird := in.GetThird()
 	inThird.UserID = resp.Info.ID
-	fmt.Println("i*******************nThird")
-	fmt.Println(inThird)
+
 	_, err = appuserthirdcrud.Create(ctx, &npool.CreateAppUserThirdRequest{
 		Info: inThird,
 	})
@@ -86,31 +83,30 @@ func CreateWithThird(ctx context.Context, in *npool.CreateAppUserWithThirdReques
 		return nil, fmt.Errorf("fail create app user third: %v", err)
 	}
 
-	if setDefaultRole {
-		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
-		if err != nil {
-			return nil, xerrors.Errorf("fail get default role: %v", err)
-		}
-		if defaultRole == nil {
-			return nil, xerrors.Errorf("fail get default role")
-		}
-
-		_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
-			Info: &npool.AppRoleUser{
-				AppID:  in.GetUser().GetAppID(),
-				RoleID: defaultRole.ID,
-				UserID: resp.Info.ID,
-			},
-		})
-		if err != nil {
-			// TODO: rollback for role user create error
-			return nil, xerrors.Errorf("fail create app role user: %v", err)
-		}
-	}
-
 	return &npool.CreateAppUserWithThirdResponse{
 		Info: resp.Info,
 	}, nil
+}
+
+func SetRole(ctx context.Context, in *npool.AppRoleUser) error {
+	defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetAppID())
+	if err != nil {
+		return fmt.Errorf("fail get default role: %v", err)
+	}
+	if defaultRole == nil {
+		return fmt.Errorf("fail get default role")
+	}
+	_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
+		Info: &npool.AppRoleUser{
+			AppID:  in.GetAppID(),
+			RoleID: defaultRole.ID,
+			UserID: in.GetUserID(),
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("fail create app role user: %v", err)
+	}
+	return nil
 }
 
 func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserRequest) (*npool.GetUserRolesByAppUserResponse, error) {

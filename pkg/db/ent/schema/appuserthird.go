@@ -37,7 +37,6 @@ func (AppUserThird) Fields() []ent.Field {
 		field.String("third_id"),
 		field.String("third_user_name"),
 		field.String("third_user_picture"),
-		field.Text("third_extra"),
 	}
 }
 

@@ -32,7 +32,6 @@ func assertAppUser(t *testing.T, actual, expected *npool.AppUserThird) {
 	assert.Equal(t, actual.Third, constant.ThirdGithub)
 	assert.Equal(t, actual.ThirdUserName, expected.ThirdUserName)
 	assert.Equal(t, actual.ThirdUserPicture, expected.ThirdUserPicture)
-	assert.Equal(t, actual.ThirdExtra, expected.ThirdExtra)
 	assert.Equal(t, actual.ThirdId, expected.ThirdId)
 }
 
@@ -48,7 +47,6 @@ func TestCRUD(t *testing.T) {
 		Third:            constant.ThirdGithub,
 		ThirdUserName:    uuid.New().String(),
 		ThirdUserPicture: uuid.New().String(),
-		ThirdExtra:       uuid.New().String(),
 		ThirdId:          uuid.New().String(),
 	}
 

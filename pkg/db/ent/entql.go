@@ -218,7 +218,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appuserthird.FieldThirdID:          {Type: field.TypeString, Column: appuserthird.FieldThirdID},
 			appuserthird.FieldThirdUserName:    {Type: field.TypeString, Column: appuserthird.FieldThirdUserName},
 			appuserthird.FieldThirdUserPicture: {Type: field.TypeString, Column: appuserthird.FieldThirdUserPicture},
-			appuserthird.FieldThirdExtra:       {Type: field.TypeString, Column: appuserthird.FieldThirdExtra},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -1011,11 +1010,6 @@ func (f *AppUserThirdFilter) WhereThirdUserName(p entql.StringP) {
 // WhereThirdUserPicture applies the entql string predicate on the third_user_picture field.
 func (f *AppUserThirdFilter) WhereThirdUserPicture(p entql.StringP) {
 	f.Where(p.Field(appuserthird.FieldThirdUserPicture))
-}
-
-// WhereThirdExtra applies the entql string predicate on the third_extra field.
-func (f *AppUserThirdFilter) WhereThirdExtra(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThirdExtra))
 }
 
 // addPredicate implements the predicateAdder interface.
