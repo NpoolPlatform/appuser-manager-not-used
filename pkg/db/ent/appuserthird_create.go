@@ -84,8 +84,8 @@ func (autc *AppUserThirdCreate) SetThirdUserID(s string) *AppUserThirdCreate {
 }
 
 // SetThird sets the "third" field.
-func (autc *AppUserThirdCreate) SetThird(a appuserthird.Third) *AppUserThirdCreate {
-	autc.mutation.SetThird(a)
+func (autc *AppUserThirdCreate) SetThird(s string) *AppUserThirdCreate {
+	autc.mutation.SetThird(s)
 	return autc
 }
 
@@ -101,9 +101,9 @@ func (autc *AppUserThirdCreate) SetThirdUserName(s string) *AppUserThirdCreate {
 	return autc
 }
 
-// SetThirdUserPicture sets the "third_user_picture" field.
-func (autc *AppUserThirdCreate) SetThirdUserPicture(s string) *AppUserThirdCreate {
-	autc.mutation.SetThirdUserPicture(s)
+// SetThirdUserAvatar sets the "third_user_avatar" field.
+func (autc *AppUserThirdCreate) SetThirdUserAvatar(s string) *AppUserThirdCreate {
+	autc.mutation.SetThirdUserAvatar(s)
 	return autc
 }
 
@@ -248,19 +248,14 @@ func (autc *AppUserThirdCreate) check() error {
 	if _, ok := autc.mutation.Third(); !ok {
 		return &ValidationError{Name: "third", err: errors.New(`ent: missing required field "AppUserThird.third"`)}
 	}
-	if v, ok := autc.mutation.Third(); ok {
-		if err := appuserthird.ThirdValidator(v); err != nil {
-			return &ValidationError{Name: "third", err: fmt.Errorf(`ent: validator failed for field "AppUserThird.third": %w`, err)}
-		}
-	}
 	if _, ok := autc.mutation.ThirdID(); !ok {
 		return &ValidationError{Name: "third_id", err: errors.New(`ent: missing required field "AppUserThird.third_id"`)}
 	}
 	if _, ok := autc.mutation.ThirdUserName(); !ok {
 		return &ValidationError{Name: "third_user_name", err: errors.New(`ent: missing required field "AppUserThird.third_user_name"`)}
 	}
-	if _, ok := autc.mutation.ThirdUserPicture(); !ok {
-		return &ValidationError{Name: "third_user_picture", err: errors.New(`ent: missing required field "AppUserThird.third_user_picture"`)}
+	if _, ok := autc.mutation.ThirdUserAvatar(); !ok {
+		return &ValidationError{Name: "third_user_avatar", err: errors.New(`ent: missing required field "AppUserThird.third_user_avatar"`)}
 	}
 	return nil
 }
@@ -349,7 +344,7 @@ func (autc *AppUserThirdCreate) createSpec() (*AppUserThird, *sqlgraph.CreateSpe
 	}
 	if value, ok := autc.mutation.Third(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserthird.FieldThird,
 		})
@@ -371,13 +366,13 @@ func (autc *AppUserThirdCreate) createSpec() (*AppUserThird, *sqlgraph.CreateSpe
 		})
 		_node.ThirdUserName = value
 	}
-	if value, ok := autc.mutation.ThirdUserPicture(); ok {
+	if value, ok := autc.mutation.ThirdUserAvatar(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthird.FieldThirdUserPicture,
+			Column: appuserthird.FieldThirdUserAvatar,
 		})
-		_node.ThirdUserPicture = value
+		_node.ThirdUserAvatar = value
 	}
 	return _node, _spec
 }
@@ -524,7 +519,7 @@ func (u *AppUserThirdUpsert) UpdateThirdUserID() *AppUserThirdUpsert {
 }
 
 // SetThird sets the "third" field.
-func (u *AppUserThirdUpsert) SetThird(v appuserthird.Third) *AppUserThirdUpsert {
+func (u *AppUserThirdUpsert) SetThird(v string) *AppUserThirdUpsert {
 	u.Set(appuserthird.FieldThird, v)
 	return u
 }
@@ -559,15 +554,15 @@ func (u *AppUserThirdUpsert) UpdateThirdUserName() *AppUserThirdUpsert {
 	return u
 }
 
-// SetThirdUserPicture sets the "third_user_picture" field.
-func (u *AppUserThirdUpsert) SetThirdUserPicture(v string) *AppUserThirdUpsert {
-	u.Set(appuserthird.FieldThirdUserPicture, v)
+// SetThirdUserAvatar sets the "third_user_avatar" field.
+func (u *AppUserThirdUpsert) SetThirdUserAvatar(v string) *AppUserThirdUpsert {
+	u.Set(appuserthird.FieldThirdUserAvatar, v)
 	return u
 }
 
-// UpdateThirdUserPicture sets the "third_user_picture" field to the value that was provided on create.
-func (u *AppUserThirdUpsert) UpdateThirdUserPicture() *AppUserThirdUpsert {
-	u.SetExcluded(appuserthird.FieldThirdUserPicture)
+// UpdateThirdUserAvatar sets the "third_user_avatar" field to the value that was provided on create.
+func (u *AppUserThirdUpsert) UpdateThirdUserAvatar() *AppUserThirdUpsert {
+	u.SetExcluded(appuserthird.FieldThirdUserAvatar)
 	return u
 }
 
@@ -727,7 +722,7 @@ func (u *AppUserThirdUpsertOne) UpdateThirdUserID() *AppUserThirdUpsertOne {
 }
 
 // SetThird sets the "third" field.
-func (u *AppUserThirdUpsertOne) SetThird(v appuserthird.Third) *AppUserThirdUpsertOne {
+func (u *AppUserThirdUpsertOne) SetThird(v string) *AppUserThirdUpsertOne {
 	return u.Update(func(s *AppUserThirdUpsert) {
 		s.SetThird(v)
 	})
@@ -768,17 +763,17 @@ func (u *AppUserThirdUpsertOne) UpdateThirdUserName() *AppUserThirdUpsertOne {
 	})
 }
 
-// SetThirdUserPicture sets the "third_user_picture" field.
-func (u *AppUserThirdUpsertOne) SetThirdUserPicture(v string) *AppUserThirdUpsertOne {
+// SetThirdUserAvatar sets the "third_user_avatar" field.
+func (u *AppUserThirdUpsertOne) SetThirdUserAvatar(v string) *AppUserThirdUpsertOne {
 	return u.Update(func(s *AppUserThirdUpsert) {
-		s.SetThirdUserPicture(v)
+		s.SetThirdUserAvatar(v)
 	})
 }
 
-// UpdateThirdUserPicture sets the "third_user_picture" field to the value that was provided on create.
-func (u *AppUserThirdUpsertOne) UpdateThirdUserPicture() *AppUserThirdUpsertOne {
+// UpdateThirdUserAvatar sets the "third_user_avatar" field to the value that was provided on create.
+func (u *AppUserThirdUpsertOne) UpdateThirdUserAvatar() *AppUserThirdUpsertOne {
 	return u.Update(func(s *AppUserThirdUpsert) {
-		s.UpdateThirdUserPicture()
+		s.UpdateThirdUserAvatar()
 	})
 }
 
@@ -1104,7 +1099,7 @@ func (u *AppUserThirdUpsertBulk) UpdateThirdUserID() *AppUserThirdUpsertBulk {
 }
 
 // SetThird sets the "third" field.
-func (u *AppUserThirdUpsertBulk) SetThird(v appuserthird.Third) *AppUserThirdUpsertBulk {
+func (u *AppUserThirdUpsertBulk) SetThird(v string) *AppUserThirdUpsertBulk {
 	return u.Update(func(s *AppUserThirdUpsert) {
 		s.SetThird(v)
 	})
@@ -1145,17 +1140,17 @@ func (u *AppUserThirdUpsertBulk) UpdateThirdUserName() *AppUserThirdUpsertBulk {
 	})
 }
 
-// SetThirdUserPicture sets the "third_user_picture" field.
-func (u *AppUserThirdUpsertBulk) SetThirdUserPicture(v string) *AppUserThirdUpsertBulk {
+// SetThirdUserAvatar sets the "third_user_avatar" field.
+func (u *AppUserThirdUpsertBulk) SetThirdUserAvatar(v string) *AppUserThirdUpsertBulk {
 	return u.Update(func(s *AppUserThirdUpsert) {
-		s.SetThirdUserPicture(v)
+		s.SetThirdUserAvatar(v)
 	})
 }
 
-// UpdateThirdUserPicture sets the "third_user_picture" field to the value that was provided on create.
-func (u *AppUserThirdUpsertBulk) UpdateThirdUserPicture() *AppUserThirdUpsertBulk {
+// UpdateThirdUserAvatar sets the "third_user_avatar" field to the value that was provided on create.
+func (u *AppUserThirdUpsertBulk) UpdateThirdUserAvatar() *AppUserThirdUpsertBulk {
 	return u.Update(func(s *AppUserThirdUpsert) {
-		s.UpdateThirdUserPicture()
+		s.UpdateThirdUserAvatar()
 	})
 }
 

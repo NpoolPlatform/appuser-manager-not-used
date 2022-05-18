@@ -102,8 +102,8 @@ func (autu *AppUserThirdUpdate) SetThirdUserID(s string) *AppUserThirdUpdate {
 }
 
 // SetThird sets the "third" field.
-func (autu *AppUserThirdUpdate) SetThird(a appuserthird.Third) *AppUserThirdUpdate {
-	autu.mutation.SetThird(a)
+func (autu *AppUserThirdUpdate) SetThird(s string) *AppUserThirdUpdate {
+	autu.mutation.SetThird(s)
 	return autu
 }
 
@@ -119,9 +119,9 @@ func (autu *AppUserThirdUpdate) SetThirdUserName(s string) *AppUserThirdUpdate {
 	return autu
 }
 
-// SetThirdUserPicture sets the "third_user_picture" field.
-func (autu *AppUserThirdUpdate) SetThirdUserPicture(s string) *AppUserThirdUpdate {
-	autu.mutation.SetThirdUserPicture(s)
+// SetThirdUserAvatar sets the "third_user_avatar" field.
+func (autu *AppUserThirdUpdate) SetThirdUserAvatar(s string) *AppUserThirdUpdate {
+	autu.mutation.SetThirdUserAvatar(s)
 	return autu
 }
 
@@ -140,18 +140,12 @@ func (autu *AppUserThirdUpdate) Save(ctx context.Context) (int, error) {
 		return 0, err
 	}
 	if len(autu.hooks) == 0 {
-		if err = autu.check(); err != nil {
-			return 0, err
-		}
 		affected, err = autu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppUserThirdMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = autu.check(); err != nil {
-				return 0, err
 			}
 			autu.mutation = mutation
 			affected, err = autu.sqlSave(ctx)
@@ -201,16 +195,6 @@ func (autu *AppUserThirdUpdate) defaults() error {
 		}
 		v := appuserthird.UpdateDefaultUpdateAt()
 		autu.mutation.SetUpdateAt(v)
-	}
-	return nil
-}
-
-// check runs all checks and user-defined validators on the builder.
-func (autu *AppUserThirdUpdate) check() error {
-	if v, ok := autu.mutation.Third(); ok {
-		if err := appuserthird.ThirdValidator(v); err != nil {
-			return &ValidationError{Name: "third", err: fmt.Errorf(`ent: validator failed for field "AppUserThird.third": %w`, err)}
-		}
 	}
 	return nil
 }
@@ -298,7 +282,7 @@ func (autu *AppUserThirdUpdate) sqlSave(ctx context.Context) (n int, err error) 
 	}
 	if value, ok := autu.mutation.Third(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserthird.FieldThird,
 		})
@@ -317,11 +301,11 @@ func (autu *AppUserThirdUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserthird.FieldThirdUserName,
 		})
 	}
-	if value, ok := autu.mutation.ThirdUserPicture(); ok {
+	if value, ok := autu.mutation.ThirdUserAvatar(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthird.FieldThirdUserPicture,
+			Column: appuserthird.FieldThirdUserAvatar,
 		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, autu.driver, _spec); err != nil {
@@ -417,8 +401,8 @@ func (autuo *AppUserThirdUpdateOne) SetThirdUserID(s string) *AppUserThirdUpdate
 }
 
 // SetThird sets the "third" field.
-func (autuo *AppUserThirdUpdateOne) SetThird(a appuserthird.Third) *AppUserThirdUpdateOne {
-	autuo.mutation.SetThird(a)
+func (autuo *AppUserThirdUpdateOne) SetThird(s string) *AppUserThirdUpdateOne {
+	autuo.mutation.SetThird(s)
 	return autuo
 }
 
@@ -434,9 +418,9 @@ func (autuo *AppUserThirdUpdateOne) SetThirdUserName(s string) *AppUserThirdUpda
 	return autuo
 }
 
-// SetThirdUserPicture sets the "third_user_picture" field.
-func (autuo *AppUserThirdUpdateOne) SetThirdUserPicture(s string) *AppUserThirdUpdateOne {
-	autuo.mutation.SetThirdUserPicture(s)
+// SetThirdUserAvatar sets the "third_user_avatar" field.
+func (autuo *AppUserThirdUpdateOne) SetThirdUserAvatar(s string) *AppUserThirdUpdateOne {
+	autuo.mutation.SetThirdUserAvatar(s)
 	return autuo
 }
 
@@ -462,18 +446,12 @@ func (autuo *AppUserThirdUpdateOne) Save(ctx context.Context) (*AppUserThird, er
 		return nil, err
 	}
 	if len(autuo.hooks) == 0 {
-		if err = autuo.check(); err != nil {
-			return nil, err
-		}
 		node, err = autuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppUserThirdMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = autuo.check(); err != nil {
-				return nil, err
 			}
 			autuo.mutation = mutation
 			node, err = autuo.sqlSave(ctx)
@@ -523,16 +501,6 @@ func (autuo *AppUserThirdUpdateOne) defaults() error {
 		}
 		v := appuserthird.UpdateDefaultUpdateAt()
 		autuo.mutation.SetUpdateAt(v)
-	}
-	return nil
-}
-
-// check runs all checks and user-defined validators on the builder.
-func (autuo *AppUserThirdUpdateOne) check() error {
-	if v, ok := autuo.mutation.Third(); ok {
-		if err := appuserthird.ThirdValidator(v); err != nil {
-			return &ValidationError{Name: "third", err: fmt.Errorf(`ent: validator failed for field "AppUserThird.third": %w`, err)}
-		}
 	}
 	return nil
 }
@@ -637,7 +605,7 @@ func (autuo *AppUserThirdUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 	}
 	if value, ok := autuo.mutation.Third(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserthird.FieldThird,
 		})
@@ -656,11 +624,11 @@ func (autuo *AppUserThirdUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Column: appuserthird.FieldThirdUserName,
 		})
 	}
-	if value, ok := autuo.mutation.ThirdUserPicture(); ok {
+	if value, ok := autuo.mutation.ThirdUserAvatar(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthird.FieldThirdUserPicture,
+			Column: appuserthird.FieldThirdUserAvatar,
 		})
 	}
 	_node = &AppUserThird{config: autuo.config}

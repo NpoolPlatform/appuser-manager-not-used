@@ -206,10 +206,10 @@ var (
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "third_user_id", Type: field.TypeString},
-		{Name: "third", Type: field.TypeEnum, Enums: []string{"github", "google", "facebook", "twitter"}},
+		{Name: "third", Type: field.TypeString},
 		{Name: "third_id", Type: field.TypeString},
 		{Name: "third_user_name", Type: field.TypeString},
-		{Name: "third_user_picture", Type: field.TypeString},
+		{Name: "third_user_avatar", Type: field.TypeString},
 	}
 	// AppUserThirdsTable holds the schema information for the "app_user_thirds" table.
 	AppUserThirdsTable = &schema.Table{

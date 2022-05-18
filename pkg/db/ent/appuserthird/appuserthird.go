@@ -3,8 +3,6 @@
 package appuserthird
 
 import (
-	"fmt"
-
 	"entgo.io/ent"
 	"github.com/google/uuid"
 )
@@ -32,8 +30,8 @@ const (
 	FieldThirdID = "third_id"
 	// FieldThirdUserName holds the string denoting the third_user_name field in the database.
 	FieldThirdUserName = "third_user_name"
-	// FieldThirdUserPicture holds the string denoting the third_user_picture field in the database.
-	FieldThirdUserPicture = "third_user_picture"
+	// FieldThirdUserAvatar holds the string denoting the third_user_avatar field in the database.
+	FieldThirdUserAvatar = "third_user_avatar"
 	// Table holds the table name of the appuserthird in the database.
 	Table = "app_user_thirds"
 )
@@ -50,7 +48,7 @@ var Columns = []string{
 	FieldThird,
 	FieldThirdID,
 	FieldThirdUserName,
-	FieldThirdUserPicture,
+	FieldThirdUserAvatar,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -83,28 +81,3 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
-
-// Third defines the type for the "third" enum field.
-type Third string
-
-// Third values.
-const (
-	ThirdGithub   Third = "github"
-	ThirdGoogle   Third = "google"
-	ThirdFacebook Third = "facebook"
-	ThirdTwitter  Third = "twitter"
-)
-
-func (t Third) String() string {
-	return string(t)
-}
-
-// ThirdValidator is a validator for the "third" field enum values. It is called by the builders before save.
-func ThirdValidator(t Third) error {
-	switch t {
-	case ThirdGithub, ThirdGoogle, ThirdFacebook, ThirdTwitter:
-		return nil
-	default:
-		return fmt.Errorf("appuserthird: invalid enum value for third field: %q", t)
-	}
-}

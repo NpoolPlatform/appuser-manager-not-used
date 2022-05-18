@@ -20,10 +20,10 @@ func validateAppUserThird(info *npool.AppUserThird) error {
 	if _, err := uuid.Parse(info.GetUserID()); err != nil {
 		return fmt.Errorf("invalid user id: %v", err)
 	}
-	if info.GetThirdId() == "" {
+	if info.GetThirdID() == "" {
 		return fmt.Errorf("invalid third id")
 	}
-	if info.GetThirdUserId() == "" {
+	if info.GetThirdUserID() == "" {
 		return fmt.Errorf("invalid third user id")
 	}
 	return nil
@@ -31,14 +31,14 @@ func validateAppUserThird(info *npool.AppUserThird) error {
 
 func dbRowToAppUserThird(row *ent.AppUserThird) *npool.AppUserThird {
 	return &npool.AppUserThird{
-		ID:               row.ID.String(),
-		AppID:            row.AppID.String(),
-		UserID:           row.UserID.String(),
-		ThirdUserId:      row.ThirdUserID,
-		ThirdId:          row.ThirdID,
-		ThirdUserName:    row.ThirdUserName,
-		ThirdUserPicture: row.ThirdUserPicture,
-		Third:            row.Third.String(),
+		ID:              row.ID.String(),
+		AppID:           row.AppID.String(),
+		UserID:          row.UserID.String(),
+		ThirdUserID:     row.ThirdUserID,
+		ThirdID:         row.ThirdID,
+		ThirdUserName:   row.ThirdUserName,
+		ThirdUserAvatar: row.ThirdUserAvatar,
+		Third:           row.Third,
 	}
 }
 
@@ -59,11 +59,11 @@ func Create(ctx context.Context, in *npool.CreateAppUserThirdRequest) (*npool.Cr
 		Create().
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
-		SetThird(appuserthird.Third(in.GetInfo().GetThird())).
+		SetThird(in.GetInfo().GetThird()).
 		SetThirdUserName(in.GetInfo().GetThirdUserName()).
-		SetThirdUserPicture(in.GetInfo().GetThirdUserPicture()).
-		SetThirdID(in.GetInfo().GetThirdId()).
-		SetThirdUserID(in.GetInfo().GetThirdUserId()).
+		SetThirdUserAvatar(in.GetInfo().GetThirdUserAvatar()).
+		SetThirdID(in.GetInfo().GetThirdID()).
+		SetThirdUserID(in.GetInfo().GetThirdUserID()).
 		Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user third: %v", err)

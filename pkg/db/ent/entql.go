@@ -208,16 +208,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUserThird",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appuserthird.FieldCreateAt:         {Type: field.TypeUint32, Column: appuserthird.FieldCreateAt},
-			appuserthird.FieldUpdateAt:         {Type: field.TypeUint32, Column: appuserthird.FieldUpdateAt},
-			appuserthird.FieldDeleteAt:         {Type: field.TypeUint32, Column: appuserthird.FieldDeleteAt},
-			appuserthird.FieldAppID:            {Type: field.TypeUUID, Column: appuserthird.FieldAppID},
-			appuserthird.FieldUserID:           {Type: field.TypeUUID, Column: appuserthird.FieldUserID},
-			appuserthird.FieldThirdUserID:      {Type: field.TypeString, Column: appuserthird.FieldThirdUserID},
-			appuserthird.FieldThird:            {Type: field.TypeEnum, Column: appuserthird.FieldThird},
-			appuserthird.FieldThirdID:          {Type: field.TypeString, Column: appuserthird.FieldThirdID},
-			appuserthird.FieldThirdUserName:    {Type: field.TypeString, Column: appuserthird.FieldThirdUserName},
-			appuserthird.FieldThirdUserPicture: {Type: field.TypeString, Column: appuserthird.FieldThirdUserPicture},
+			appuserthird.FieldCreateAt:        {Type: field.TypeUint32, Column: appuserthird.FieldCreateAt},
+			appuserthird.FieldUpdateAt:        {Type: field.TypeUint32, Column: appuserthird.FieldUpdateAt},
+			appuserthird.FieldDeleteAt:        {Type: field.TypeUint32, Column: appuserthird.FieldDeleteAt},
+			appuserthird.FieldAppID:           {Type: field.TypeUUID, Column: appuserthird.FieldAppID},
+			appuserthird.FieldUserID:          {Type: field.TypeUUID, Column: appuserthird.FieldUserID},
+			appuserthird.FieldThirdUserID:     {Type: field.TypeString, Column: appuserthird.FieldThirdUserID},
+			appuserthird.FieldThird:           {Type: field.TypeString, Column: appuserthird.FieldThird},
+			appuserthird.FieldThirdID:         {Type: field.TypeString, Column: appuserthird.FieldThirdID},
+			appuserthird.FieldThirdUserName:   {Type: field.TypeString, Column: appuserthird.FieldThirdUserName},
+			appuserthird.FieldThirdUserAvatar: {Type: field.TypeString, Column: appuserthird.FieldThirdUserAvatar},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -1007,9 +1007,9 @@ func (f *AppUserThirdFilter) WhereThirdUserName(p entql.StringP) {
 	f.Where(p.Field(appuserthird.FieldThirdUserName))
 }
 
-// WhereThirdUserPicture applies the entql string predicate on the third_user_picture field.
-func (f *AppUserThirdFilter) WhereThirdUserPicture(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThirdUserPicture))
+// WhereThirdUserAvatar applies the entql string predicate on the third_user_avatar field.
+func (f *AppUserThirdFilter) WhereThirdUserAvatar(p entql.StringP) {
+	f.Where(p.Field(appuserthird.FieldThirdUserAvatar))
 }
 
 // addPredicate implements the predicateAdder interface.

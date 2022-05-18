@@ -29,13 +29,13 @@ type AppUserThird struct {
 	// ThirdUserID holds the value of the "third_user_id" field.
 	ThirdUserID string `json:"third_user_id,omitempty"`
 	// Third holds the value of the "third" field.
-	Third appuserthird.Third `json:"third,omitempty"`
+	Third string `json:"third,omitempty"`
 	// ThirdID holds the value of the "third_id" field.
 	ThirdID string `json:"third_id,omitempty"`
 	// ThirdUserName holds the value of the "third_user_name" field.
 	ThirdUserName string `json:"third_user_name,omitempty"`
-	// ThirdUserPicture holds the value of the "third_user_picture" field.
-	ThirdUserPicture string `json:"third_user_picture,omitempty"`
+	// ThirdUserAvatar holds the value of the "third_user_avatar" field.
+	ThirdUserAvatar string `json:"third_user_avatar,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -45,7 +45,7 @@ func (*AppUserThird) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appuserthird.FieldCreateAt, appuserthird.FieldUpdateAt, appuserthird.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case appuserthird.FieldThirdUserID, appuserthird.FieldThird, appuserthird.FieldThirdID, appuserthird.FieldThirdUserName, appuserthird.FieldThirdUserPicture:
+		case appuserthird.FieldThirdUserID, appuserthird.FieldThird, appuserthird.FieldThirdID, appuserthird.FieldThirdUserName, appuserthird.FieldThirdUserAvatar:
 			values[i] = new(sql.NullString)
 		case appuserthird.FieldID, appuserthird.FieldAppID, appuserthird.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -110,7 +110,7 @@ func (aut *AppUserThird) assignValues(columns []string, values []interface{}) er
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field third", values[i])
 			} else if value.Valid {
-				aut.Third = appuserthird.Third(value.String)
+				aut.Third = value.String
 			}
 		case appuserthird.FieldThirdID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -124,11 +124,11 @@ func (aut *AppUserThird) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				aut.ThirdUserName = value.String
 			}
-		case appuserthird.FieldThirdUserPicture:
+		case appuserthird.FieldThirdUserAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field third_user_picture", values[i])
+				return fmt.Errorf("unexpected type %T for field third_user_avatar", values[i])
 			} else if value.Valid {
-				aut.ThirdUserPicture = value.String
+				aut.ThirdUserAvatar = value.String
 			}
 		}
 	}
@@ -171,13 +171,13 @@ func (aut *AppUserThird) String() string {
 	builder.WriteString(", third_user_id=")
 	builder.WriteString(aut.ThirdUserID)
 	builder.WriteString(", third=")
-	builder.WriteString(fmt.Sprintf("%v", aut.Third))
+	builder.WriteString(aut.Third)
 	builder.WriteString(", third_id=")
 	builder.WriteString(aut.ThirdID)
 	builder.WriteString(", third_user_name=")
 	builder.WriteString(aut.ThirdUserName)
-	builder.WriteString(", third_user_picture=")
-	builder.WriteString(aut.ThirdUserPicture)
+	builder.WriteString(", third_user_avatar=")
+	builder.WriteString(aut.ThirdUserAvatar)
 	builder.WriteByte(')')
 	return builder.String()
 }

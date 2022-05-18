@@ -3,7 +3,6 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
-	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
 	"github.com/google/uuid"
 )
 
@@ -27,16 +26,10 @@ func (AppUserThird) Fields() []ent.Field {
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
 		field.String("third_user_id"),
-		field.Enum("third").
-			Values(
-				constant.ThirdGithub,
-				constant.ThirdGoogle,
-				constant.ThirdFaceBook,
-				constant.ThirdTwitter,
-			),
+		field.String("third"),
 		field.String("third_id"),
 		field.String("third_user_name"),
-		field.String("third_user_picture"),
+		field.String("third_user_avatar"),
 	}
 }
 

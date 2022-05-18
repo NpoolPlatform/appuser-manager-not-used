@@ -133,6 +133,13 @@ func ThirdUserID(v string) predicate.AppUserThird {
 	})
 }
 
+// Third applies equality check predicate on the "third" field. It's identical to ThirdEQ.
+func Third(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldThird), v))
+	})
+}
+
 // ThirdID applies equality check predicate on the "third_id" field. It's identical to ThirdIDEQ.
 func ThirdID(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
@@ -147,10 +154,10 @@ func ThirdUserName(v string) predicate.AppUserThird {
 	})
 }
 
-// ThirdUserPicture applies equality check predicate on the "third_user_picture" field. It's identical to ThirdUserPictureEQ.
-func ThirdUserPicture(v string) predicate.AppUserThird {
+// ThirdUserAvatar applies equality check predicate on the "third_user_avatar" field. It's identical to ThirdUserAvatarEQ.
+func ThirdUserAvatar(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.EQ(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
@@ -646,21 +653,21 @@ func ThirdUserIDContainsFold(v string) predicate.AppUserThird {
 }
 
 // ThirdEQ applies the EQ predicate on the "third" field.
-func ThirdEQ(v Third) predicate.AppUserThird {
+func ThirdEQ(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldThird), v))
 	})
 }
 
 // ThirdNEQ applies the NEQ predicate on the "third" field.
-func ThirdNEQ(v Third) predicate.AppUserThird {
+func ThirdNEQ(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldThird), v))
 	})
 }
 
 // ThirdIn applies the In predicate on the "third" field.
-func ThirdIn(vs ...Third) predicate.AppUserThird {
+func ThirdIn(vs ...string) predicate.AppUserThird {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -677,7 +684,7 @@ func ThirdIn(vs ...Third) predicate.AppUserThird {
 }
 
 // ThirdNotIn applies the NotIn predicate on the "third" field.
-func ThirdNotIn(vs ...Third) predicate.AppUserThird {
+func ThirdNotIn(vs ...string) predicate.AppUserThird {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -690,6 +697,69 @@ func ThirdNotIn(vs ...Third) predicate.AppUserThird {
 			return
 		}
 		s.Where(sql.NotIn(s.C(FieldThird), v...))
+	})
+}
+
+// ThirdGT applies the GT predicate on the "third" field.
+func ThirdGT(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldThird), v))
+	})
+}
+
+// ThirdGTE applies the GTE predicate on the "third" field.
+func ThirdGTE(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldThird), v))
+	})
+}
+
+// ThirdLT applies the LT predicate on the "third" field.
+func ThirdLT(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldThird), v))
+	})
+}
+
+// ThirdLTE applies the LTE predicate on the "third" field.
+func ThirdLTE(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldThird), v))
+	})
+}
+
+// ThirdContains applies the Contains predicate on the "third" field.
+func ThirdContains(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldThird), v))
+	})
+}
+
+// ThirdHasPrefix applies the HasPrefix predicate on the "third" field.
+func ThirdHasPrefix(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldThird), v))
+	})
+}
+
+// ThirdHasSuffix applies the HasSuffix predicate on the "third" field.
+func ThirdHasSuffix(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldThird), v))
+	})
+}
+
+// ThirdEqualFold applies the EqualFold predicate on the "third" field.
+func ThirdEqualFold(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldThird), v))
+	})
+}
+
+// ThirdContainsFold applies the ContainsFold predicate on the "third" field.
+func ThirdContainsFold(v string) predicate.AppUserThird {
+	return predicate.AppUserThird(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldThird), v))
 	})
 }
 
@@ -915,22 +985,22 @@ func ThirdUserNameContainsFold(v string) predicate.AppUserThird {
 	})
 }
 
-// ThirdUserPictureEQ applies the EQ predicate on the "third_user_picture" field.
-func ThirdUserPictureEQ(v string) predicate.AppUserThird {
+// ThirdUserAvatarEQ applies the EQ predicate on the "third_user_avatar" field.
+func ThirdUserAvatarEQ(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.EQ(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureNEQ applies the NEQ predicate on the "third_user_picture" field.
-func ThirdUserPictureNEQ(v string) predicate.AppUserThird {
+// ThirdUserAvatarNEQ applies the NEQ predicate on the "third_user_avatar" field.
+func ThirdUserAvatarNEQ(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.NEQ(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureIn applies the In predicate on the "third_user_picture" field.
-func ThirdUserPictureIn(vs ...string) predicate.AppUserThird {
+// ThirdUserAvatarIn applies the In predicate on the "third_user_avatar" field.
+func ThirdUserAvatarIn(vs ...string) predicate.AppUserThird {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -942,12 +1012,12 @@ func ThirdUserPictureIn(vs ...string) predicate.AppUserThird {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldThirdUserPicture), v...))
+		s.Where(sql.In(s.C(FieldThirdUserAvatar), v...))
 	})
 }
 
-// ThirdUserPictureNotIn applies the NotIn predicate on the "third_user_picture" field.
-func ThirdUserPictureNotIn(vs ...string) predicate.AppUserThird {
+// ThirdUserAvatarNotIn applies the NotIn predicate on the "third_user_avatar" field.
+func ThirdUserAvatarNotIn(vs ...string) predicate.AppUserThird {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -959,70 +1029,70 @@ func ThirdUserPictureNotIn(vs ...string) predicate.AppUserThird {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldThirdUserPicture), v...))
+		s.Where(sql.NotIn(s.C(FieldThirdUserAvatar), v...))
 	})
 }
 
-// ThirdUserPictureGT applies the GT predicate on the "third_user_picture" field.
-func ThirdUserPictureGT(v string) predicate.AppUserThird {
+// ThirdUserAvatarGT applies the GT predicate on the "third_user_avatar" field.
+func ThirdUserAvatarGT(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.GT(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureGTE applies the GTE predicate on the "third_user_picture" field.
-func ThirdUserPictureGTE(v string) predicate.AppUserThird {
+// ThirdUserAvatarGTE applies the GTE predicate on the "third_user_avatar" field.
+func ThirdUserAvatarGTE(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.GTE(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureLT applies the LT predicate on the "third_user_picture" field.
-func ThirdUserPictureLT(v string) predicate.AppUserThird {
+// ThirdUserAvatarLT applies the LT predicate on the "third_user_avatar" field.
+func ThirdUserAvatarLT(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.LT(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureLTE applies the LTE predicate on the "third_user_picture" field.
-func ThirdUserPictureLTE(v string) predicate.AppUserThird {
+// ThirdUserAvatarLTE applies the LTE predicate on the "third_user_avatar" field.
+func ThirdUserAvatarLTE(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.LTE(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureContains applies the Contains predicate on the "third_user_picture" field.
-func ThirdUserPictureContains(v string) predicate.AppUserThird {
+// ThirdUserAvatarContains applies the Contains predicate on the "third_user_avatar" field.
+func ThirdUserAvatarContains(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.Contains(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureHasPrefix applies the HasPrefix predicate on the "third_user_picture" field.
-func ThirdUserPictureHasPrefix(v string) predicate.AppUserThird {
+// ThirdUserAvatarHasPrefix applies the HasPrefix predicate on the "third_user_avatar" field.
+func ThirdUserAvatarHasPrefix(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.HasPrefix(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureHasSuffix applies the HasSuffix predicate on the "third_user_picture" field.
-func ThirdUserPictureHasSuffix(v string) predicate.AppUserThird {
+// ThirdUserAvatarHasSuffix applies the HasSuffix predicate on the "third_user_avatar" field.
+func ThirdUserAvatarHasSuffix(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.HasSuffix(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureEqualFold applies the EqualFold predicate on the "third_user_picture" field.
-func ThirdUserPictureEqualFold(v string) predicate.AppUserThird {
+// ThirdUserAvatarEqualFold applies the EqualFold predicate on the "third_user_avatar" field.
+func ThirdUserAvatarEqualFold(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.EqualFold(s.C(FieldThirdUserAvatar), v))
 	})
 }
 
-// ThirdUserPictureContainsFold applies the ContainsFold predicate on the "third_user_picture" field.
-func ThirdUserPictureContainsFold(v string) predicate.AppUserThird {
+// ThirdUserAvatarContainsFold applies the ContainsFold predicate on the "third_user_avatar" field.
+func ThirdUserAvatarContainsFold(v string) predicate.AppUserThird {
 	return predicate.AppUserThird(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldThirdUserPicture), v))
+		s.Where(sql.ContainsFold(s.C(FieldThirdUserAvatar), v))
 	})
 }
 

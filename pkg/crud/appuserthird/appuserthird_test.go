@@ -28,11 +28,11 @@ func init() {
 func assertAppUser(t *testing.T, actual, expected *npool.AppUserThird) {
 	assert.Equal(t, actual.AppID, expected.AppID)
 	assert.Equal(t, actual.UserID, expected.UserID)
-	assert.Equal(t, actual.ThirdUserId, expected.ThirdUserId)
+	assert.Equal(t, actual.ThirdUserID, expected.ThirdUserID)
 	assert.Equal(t, actual.Third, constant.ThirdGithub)
 	assert.Equal(t, actual.ThirdUserName, expected.ThirdUserName)
-	assert.Equal(t, actual.ThirdUserPicture, expected.ThirdUserPicture)
-	assert.Equal(t, actual.ThirdId, expected.ThirdId)
+	assert.Equal(t, actual.ThirdUserAvatar, expected.ThirdUserAvatar)
+	assert.Equal(t, actual.ThirdID, expected.ThirdID)
 }
 
 func TestCRUD(t *testing.T) {
@@ -41,13 +41,13 @@ func TestCRUD(t *testing.T) {
 	}
 
 	appUser := npool.AppUserThird{
-		AppID:            uuid.New().String(),
-		UserID:           uuid.New().String(),
-		ThirdUserId:      uuid.New().String(),
-		Third:            constant.ThirdGithub,
-		ThirdUserName:    uuid.New().String(),
-		ThirdUserPicture: uuid.New().String(),
-		ThirdId:          uuid.New().String(),
+		AppID:           uuid.New().String(),
+		UserID:          uuid.New().String(),
+		ThirdUserID:     uuid.New().String(),
+		Third:           constant.ThirdGithub,
+		ThirdUserName:   uuid.New().String(),
+		ThirdUserAvatar: uuid.New().String(),
+		ThirdID:         uuid.New().String(),
 	}
 
 	resp, err := Create(context.Background(), &npool.CreateAppUserThirdRequest{
@@ -61,8 +61,8 @@ func TestCRUD(t *testing.T) {
 
 	resp1, err := GetByAppUserThird(context.Background(), &npool.GetAppUserThirdByAppThirdRequest{
 		AppID:       resp.Info.AppID,
-		ThirdID:     resp.Info.ThirdId,
-		ThirdUserID: resp.Info.ThirdUserId,
+		ThirdID:     resp.Info.ThirdID,
+		ThirdUserID: resp.Info.ThirdUserID,
 	})
 	if assert.Nil(t, err) {
 		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
