@@ -140,12 +140,18 @@ func (autu *AppUserThirdUpdate) Save(ctx context.Context) (int, error) {
 		return 0, err
 	}
 	if len(autu.hooks) == 0 {
+		if err = autu.check(); err != nil {
+			return 0, err
+		}
 		affected, err = autu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppUserThirdMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = autu.check(); err != nil {
+				return 0, err
 			}
 			autu.mutation = mutation
 			affected, err = autu.sqlSave(ctx)
@@ -195,6 +201,16 @@ func (autu *AppUserThirdUpdate) defaults() error {
 		}
 		v := appuserthird.UpdateDefaultUpdateAt()
 		autu.mutation.SetUpdateAt(v)
+	}
+	return nil
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (autu *AppUserThirdUpdate) check() error {
+	if v, ok := autu.mutation.ThirdUserAvatar(); ok {
+		if err := appuserthird.ThirdUserAvatarValidator(v); err != nil {
+			return &ValidationError{Name: "third_user_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThird.third_user_avatar": %w`, err)}
+		}
 	}
 	return nil
 }
@@ -446,12 +462,18 @@ func (autuo *AppUserThirdUpdateOne) Save(ctx context.Context) (*AppUserThird, er
 		return nil, err
 	}
 	if len(autuo.hooks) == 0 {
+		if err = autuo.check(); err != nil {
+			return nil, err
+		}
 		node, err = autuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppUserThirdMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = autuo.check(); err != nil {
+				return nil, err
 			}
 			autuo.mutation = mutation
 			node, err = autuo.sqlSave(ctx)
@@ -501,6 +523,16 @@ func (autuo *AppUserThirdUpdateOne) defaults() error {
 		}
 		v := appuserthird.UpdateDefaultUpdateAt()
 		autuo.mutation.SetUpdateAt(v)
+	}
+	return nil
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (autuo *AppUserThirdUpdateOne) check() error {
+	if v, ok := autuo.mutation.ThirdUserAvatar(); ok {
+		if err := appuserthird.ThirdUserAvatarValidator(v); err != nil {
+			return &ValidationError{Name: "third_user_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThird.third_user_avatar": %w`, err)}
+		}
 	}
 	return nil
 }

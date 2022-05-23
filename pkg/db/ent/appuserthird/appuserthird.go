@@ -78,6 +78,8 @@ var (
 	UpdateDefaultUpdateAt func() uint32
 	// DefaultDeleteAt holds the default value on creation for the "delete_at" field.
 	DefaultDeleteAt func() uint32
+	// ThirdUserAvatarValidator is a validator for the "third_user_avatar" field. It is called by the builders before save.
+	ThirdUserAvatarValidator func(string) error
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

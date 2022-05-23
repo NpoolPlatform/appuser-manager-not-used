@@ -215,6 +215,10 @@ func init() {
 	appuserthirdDescDeleteAt := appuserthirdMixinFields0[2].Descriptor()
 	// appuserthird.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	appuserthird.DefaultDeleteAt = appuserthirdDescDeleteAt.Default.(func() uint32)
+	// appuserthirdDescThirdUserAvatar is the schema descriptor for third_user_avatar field.
+	appuserthirdDescThirdUserAvatar := appuserthirdFields[7].Descriptor()
+	// appuserthird.ThirdUserAvatarValidator is a validator for the "third_user_avatar" field. It is called by the builders before save.
+	appuserthird.ThirdUserAvatarValidator = appuserthirdDescThirdUserAvatar.Validators[0].(func(string) error)
 	// appuserthirdDescID is the schema descriptor for id field.
 	appuserthirdDescID := appuserthirdFields[0].Descriptor()
 	// appuserthird.DefaultID holds the default value on creation for the id field.

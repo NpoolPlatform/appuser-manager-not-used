@@ -29,7 +29,7 @@ func (AppUserThird) Fields() []ent.Field {
 		field.String("third"),
 		field.String("third_id"),
 		field.String("third_user_name"),
-		field.String("third_user_avatar"),
+		field.String("third_user_avatar").MaxLen(1024),
 	}
 }
 

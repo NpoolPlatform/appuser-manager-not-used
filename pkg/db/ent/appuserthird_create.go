@@ -257,6 +257,11 @@ func (autc *AppUserThirdCreate) check() error {
 	if _, ok := autc.mutation.ThirdUserAvatar(); !ok {
 		return &ValidationError{Name: "third_user_avatar", err: errors.New(`ent: missing required field "AppUserThird.third_user_avatar"`)}
 	}
+	if v, ok := autc.mutation.ThirdUserAvatar(); ok {
+		if err := appuserthird.ThirdUserAvatarValidator(v); err != nil {
+			return &ValidationError{Name: "third_user_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThird.third_user_avatar": %w`, err)}
+		}
+	}
 	return nil
 }
 
