@@ -113,15 +113,15 @@ func (f AppUserSecretFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Valu
 	return f(ctx, mv)
 }
 
-// The AppUserThirdFunc type is an adapter to allow the use of ordinary
-// function as AppUserThird mutator.
-type AppUserThirdFunc func(context.Context, *ent.AppUserThirdMutation) (ent.Value, error)
+// The AppUserThirdPartyFunc type is an adapter to allow the use of ordinary
+// function as AppUserThirdParty mutator.
+type AppUserThirdPartyFunc func(context.Context, *ent.AppUserThirdPartyMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f AppUserThirdFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.AppUserThirdMutation)
+func (f AppUserThirdPartyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppUserThirdPartyMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserThirdMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserThirdPartyMutation", m)
 	}
 	return f(ctx, mv)
 }

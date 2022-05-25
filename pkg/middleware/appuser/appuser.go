@@ -12,7 +12,7 @@ import (
 	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
-	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthird"
+	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthirdparty"
 	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
@@ -55,7 +55,7 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 	}, nil
 }
 
-func CreateWithThird(ctx context.Context, in *npool.CreateAppUserWithThirdRequest, setDefaultRole bool) (*npool.CreateAppUserWithThirdResponse, error) {
+func CreateWithThirdParty(ctx context.Context, in *npool.CreateAppUserWithThirdPartyRequest, setDefaultRole bool) (*npool.CreateAppUserWithThirdPartyResponse, error) {
 	resp, err := appusercrud.Create(ctx, &npool.CreateAppUserRequest{
 		Info: in.GetUser(),
 	})
@@ -76,14 +76,14 @@ func CreateWithThird(ctx context.Context, in *npool.CreateAppUserWithThirdReques
 	inThird := in.GetThird()
 	inThird.UserID = resp.Info.ID
 
-	_, err = appuserthirdcrud.Create(ctx, &npool.CreateAppUserThirdRequest{
+	_, err = appuserthirdcrud.Create(ctx, &npool.CreateAppUserThirdPartyRequest{
 		Info: inThird,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user third: %v", err)
 	}
 
-	return &npool.CreateAppUserWithThirdResponse{
+	return &npool.CreateAppUserWithThirdPartyResponse{
 		Info: resp.Info,
 	}, nil
 }

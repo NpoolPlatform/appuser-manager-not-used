@@ -357,28 +357,28 @@ func (f AppUserSecretMutationRuleFunc) EvalMutation(ctx context.Context, m ent.M
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppUserSecretMutation", m)
 }
 
-// The AppUserThirdQueryRuleFunc type is an adapter to allow the use of ordinary
+// The AppUserThirdPartyQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type AppUserThirdQueryRuleFunc func(context.Context, *ent.AppUserThirdQuery) error
+type AppUserThirdPartyQueryRuleFunc func(context.Context, *ent.AppUserThirdPartyQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f AppUserThirdQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.AppUserThirdQuery); ok {
+func (f AppUserThirdPartyQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppUserThirdPartyQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppUserThirdQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppUserThirdPartyQuery", q)
 }
 
-// The AppUserThirdMutationRuleFunc type is an adapter to allow the use of ordinary
+// The AppUserThirdPartyMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type AppUserThirdMutationRuleFunc func(context.Context, *ent.AppUserThirdMutation) error
+type AppUserThirdPartyMutationRuleFunc func(context.Context, *ent.AppUserThirdPartyMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f AppUserThirdMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.AppUserThirdMutation); ok {
+func (f AppUserThirdPartyMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppUserThirdPartyMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppUserThirdMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppUserThirdPartyMutation", m)
 }
 
 // The BanAppQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -480,7 +480,7 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppUserSecretQuery:
 		return q.Filter(), nil
-	case *ent.AppUserThirdQuery:
+	case *ent.AppUserThirdPartyQuery:
 		return q.Filter(), nil
 	case *ent.BanAppQuery:
 		return q.Filter(), nil
@@ -509,7 +509,7 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 		return m.Filter(), nil
 	case *ent.AppUserSecretMutation:
 		return m.Filter(), nil
-	case *ent.AppUserThirdMutation:
+	case *ent.AppUserThirdPartyMutation:
 		return m.Filter(), nil
 	case *ent.BanAppMutation:
 		return m.Filter(), nil

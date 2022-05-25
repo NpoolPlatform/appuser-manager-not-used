@@ -16,7 +16,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthird"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
@@ -34,17 +34,17 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeApp            = "App"
-	TypeAppControl     = "AppControl"
-	TypeAppRole        = "AppRole"
-	TypeAppRoleUser    = "AppRoleUser"
-	TypeAppUser        = "AppUser"
-	TypeAppUserControl = "AppUserControl"
-	TypeAppUserExtra   = "AppUserExtra"
-	TypeAppUserSecret  = "AppUserSecret"
-	TypeAppUserThird   = "AppUserThird"
-	TypeBanApp         = "BanApp"
-	TypeBanAppUser     = "BanAppUser"
+	TypeApp               = "App"
+	TypeAppControl        = "AppControl"
+	TypeAppRole           = "AppRole"
+	TypeAppRoleUser       = "AppRoleUser"
+	TypeAppUser           = "AppUser"
+	TypeAppUserControl    = "AppUserControl"
+	TypeAppUserExtra      = "AppUserExtra"
+	TypeAppUserSecret     = "AppUserSecret"
+	TypeAppUserThirdParty = "AppUserThirdParty"
+	TypeBanApp            = "BanApp"
+	TypeBanAppUser        = "BanAppUser"
 )
 
 // AppMutation represents an operation that mutates the App nodes in the graph.
@@ -6759,42 +6759,41 @@ func (m *AppUserSecretMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppUserSecret edge %s", name)
 }
 
-// AppUserThirdMutation represents an operation that mutates the AppUserThird nodes in the graph.
-type AppUserThirdMutation struct {
+// AppUserThirdPartyMutation represents an operation that mutates the AppUserThirdParty nodes in the graph.
+type AppUserThirdPartyMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *uuid.UUID
-	create_at         *uint32
-	addcreate_at      *int32
-	update_at         *uint32
-	addupdate_at      *int32
-	delete_at         *uint32
-	adddelete_at      *int32
-	app_id            *uuid.UUID
-	user_id           *uuid.UUID
-	third_user_id     *string
-	third             *string
-	third_id          *string
-	third_user_name   *string
-	third_user_avatar *string
-	clearedFields     map[string]struct{}
-	done              bool
-	oldValue          func(context.Context) (*AppUserThird, error)
-	predicates        []predicate.AppUserThird
+	op                      Op
+	typ                     string
+	id                      *uuid.UUID
+	create_at               *uint32
+	addcreate_at            *int32
+	update_at               *uint32
+	addupdate_at            *int32
+	delete_at               *uint32
+	adddelete_at            *int32
+	app_id                  *uuid.UUID
+	user_id                 *uuid.UUID
+	third_party_user_id     *string
+	third_party_id          *string
+	third_party_user_name   *string
+	third_party_user_avatar *string
+	clearedFields           map[string]struct{}
+	done                    bool
+	oldValue                func(context.Context) (*AppUserThirdParty, error)
+	predicates              []predicate.AppUserThirdParty
 }
 
-var _ ent.Mutation = (*AppUserThirdMutation)(nil)
+var _ ent.Mutation = (*AppUserThirdPartyMutation)(nil)
 
-// appuserthirdOption allows management of the mutation configuration using functional options.
-type appuserthirdOption func(*AppUserThirdMutation)
+// appuserthirdpartyOption allows management of the mutation configuration using functional options.
+type appuserthirdpartyOption func(*AppUserThirdPartyMutation)
 
-// newAppUserThirdMutation creates new mutation for the AppUserThird entity.
-func newAppUserThirdMutation(c config, op Op, opts ...appuserthirdOption) *AppUserThirdMutation {
-	m := &AppUserThirdMutation{
+// newAppUserThirdPartyMutation creates new mutation for the AppUserThirdParty entity.
+func newAppUserThirdPartyMutation(c config, op Op, opts ...appuserthirdpartyOption) *AppUserThirdPartyMutation {
+	m := &AppUserThirdPartyMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeAppUserThird,
+		typ:           TypeAppUserThirdParty,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -6803,20 +6802,20 @@ func newAppUserThirdMutation(c config, op Op, opts ...appuserthirdOption) *AppUs
 	return m
 }
 
-// withAppUserThirdID sets the ID field of the mutation.
-func withAppUserThirdID(id uuid.UUID) appuserthirdOption {
-	return func(m *AppUserThirdMutation) {
+// withAppUserThirdPartyID sets the ID field of the mutation.
+func withAppUserThirdPartyID(id uuid.UUID) appuserthirdpartyOption {
+	return func(m *AppUserThirdPartyMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *AppUserThird
+			value *AppUserThirdParty
 		)
-		m.oldValue = func(ctx context.Context) (*AppUserThird, error) {
+		m.oldValue = func(ctx context.Context) (*AppUserThirdParty, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().AppUserThird.Get(ctx, id)
+					value, err = m.Client().AppUserThirdParty.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -6825,10 +6824,10 @@ func withAppUserThirdID(id uuid.UUID) appuserthirdOption {
 	}
 }
 
-// withAppUserThird sets the old AppUserThird of the mutation.
-func withAppUserThird(node *AppUserThird) appuserthirdOption {
-	return func(m *AppUserThirdMutation) {
-		m.oldValue = func(context.Context) (*AppUserThird, error) {
+// withAppUserThirdParty sets the old AppUserThirdParty of the mutation.
+func withAppUserThirdParty(node *AppUserThirdParty) appuserthirdpartyOption {
+	return func(m *AppUserThirdPartyMutation) {
+		m.oldValue = func(context.Context) (*AppUserThirdParty, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -6837,7 +6836,7 @@ func withAppUserThird(node *AppUserThird) appuserthirdOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m AppUserThirdMutation) Client() *Client {
+func (m AppUserThirdPartyMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -6845,7 +6844,7 @@ func (m AppUserThirdMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m AppUserThirdMutation) Tx() (*Tx, error) {
+func (m AppUserThirdPartyMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -6855,14 +6854,14 @@ func (m AppUserThirdMutation) Tx() (*Tx, error) {
 }
 
 // SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of AppUserThird entities.
-func (m *AppUserThirdMutation) SetID(id uuid.UUID) {
+// operation is only accepted on creation of AppUserThirdParty entities.
+func (m *AppUserThirdPartyMutation) SetID(id uuid.UUID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *AppUserThirdMutation) ID() (id uuid.UUID, exists bool) {
+func (m *AppUserThirdPartyMutation) ID() (id uuid.UUID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -6873,7 +6872,7 @@ func (m *AppUserThirdMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *AppUserThirdMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *AppUserThirdPartyMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
@@ -6882,20 +6881,20 @@ func (m *AppUserThirdMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().AppUserThird.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().AppUserThirdParty.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
 // SetCreateAt sets the "create_at" field.
-func (m *AppUserThirdMutation) SetCreateAt(u uint32) {
+func (m *AppUserThirdPartyMutation) SetCreateAt(u uint32) {
 	m.create_at = &u
 	m.addcreate_at = nil
 }
 
 // CreateAt returns the value of the "create_at" field in the mutation.
-func (m *AppUserThirdMutation) CreateAt() (r uint32, exists bool) {
+func (m *AppUserThirdPartyMutation) CreateAt() (r uint32, exists bool) {
 	v := m.create_at
 	if v == nil {
 		return
@@ -6903,10 +6902,10 @@ func (m *AppUserThirdMutation) CreateAt() (r uint32, exists bool) {
 	return *v, true
 }
 
-// OldCreateAt returns the old "create_at" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldCreateAt returns the old "create_at" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
+func (m *AppUserThirdPartyMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreateAt is only allowed on UpdateOne operations")
 	}
@@ -6921,7 +6920,7 @@ func (m *AppUserThirdMutation) OldCreateAt(ctx context.Context) (v uint32, err e
 }
 
 // AddCreateAt adds u to the "create_at" field.
-func (m *AppUserThirdMutation) AddCreateAt(u int32) {
+func (m *AppUserThirdPartyMutation) AddCreateAt(u int32) {
 	if m.addcreate_at != nil {
 		*m.addcreate_at += u
 	} else {
@@ -6930,7 +6929,7 @@ func (m *AppUserThirdMutation) AddCreateAt(u int32) {
 }
 
 // AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
-func (m *AppUserThirdMutation) AddedCreateAt() (r int32, exists bool) {
+func (m *AppUserThirdPartyMutation) AddedCreateAt() (r int32, exists bool) {
 	v := m.addcreate_at
 	if v == nil {
 		return
@@ -6939,19 +6938,19 @@ func (m *AppUserThirdMutation) AddedCreateAt() (r int32, exists bool) {
 }
 
 // ResetCreateAt resets all changes to the "create_at" field.
-func (m *AppUserThirdMutation) ResetCreateAt() {
+func (m *AppUserThirdPartyMutation) ResetCreateAt() {
 	m.create_at = nil
 	m.addcreate_at = nil
 }
 
 // SetUpdateAt sets the "update_at" field.
-func (m *AppUserThirdMutation) SetUpdateAt(u uint32) {
+func (m *AppUserThirdPartyMutation) SetUpdateAt(u uint32) {
 	m.update_at = &u
 	m.addupdate_at = nil
 }
 
 // UpdateAt returns the value of the "update_at" field in the mutation.
-func (m *AppUserThirdMutation) UpdateAt() (r uint32, exists bool) {
+func (m *AppUserThirdPartyMutation) UpdateAt() (r uint32, exists bool) {
 	v := m.update_at
 	if v == nil {
 		return
@@ -6959,10 +6958,10 @@ func (m *AppUserThirdMutation) UpdateAt() (r uint32, exists bool) {
 	return *v, true
 }
 
-// OldUpdateAt returns the old "update_at" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdateAt returns the old "update_at" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
+func (m *AppUserThirdPartyMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdateAt is only allowed on UpdateOne operations")
 	}
@@ -6977,7 +6976,7 @@ func (m *AppUserThirdMutation) OldUpdateAt(ctx context.Context) (v uint32, err e
 }
 
 // AddUpdateAt adds u to the "update_at" field.
-func (m *AppUserThirdMutation) AddUpdateAt(u int32) {
+func (m *AppUserThirdPartyMutation) AddUpdateAt(u int32) {
 	if m.addupdate_at != nil {
 		*m.addupdate_at += u
 	} else {
@@ -6986,7 +6985,7 @@ func (m *AppUserThirdMutation) AddUpdateAt(u int32) {
 }
 
 // AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
-func (m *AppUserThirdMutation) AddedUpdateAt() (r int32, exists bool) {
+func (m *AppUserThirdPartyMutation) AddedUpdateAt() (r int32, exists bool) {
 	v := m.addupdate_at
 	if v == nil {
 		return
@@ -6995,19 +6994,19 @@ func (m *AppUserThirdMutation) AddedUpdateAt() (r int32, exists bool) {
 }
 
 // ResetUpdateAt resets all changes to the "update_at" field.
-func (m *AppUserThirdMutation) ResetUpdateAt() {
+func (m *AppUserThirdPartyMutation) ResetUpdateAt() {
 	m.update_at = nil
 	m.addupdate_at = nil
 }
 
 // SetDeleteAt sets the "delete_at" field.
-func (m *AppUserThirdMutation) SetDeleteAt(u uint32) {
+func (m *AppUserThirdPartyMutation) SetDeleteAt(u uint32) {
 	m.delete_at = &u
 	m.adddelete_at = nil
 }
 
 // DeleteAt returns the value of the "delete_at" field in the mutation.
-func (m *AppUserThirdMutation) DeleteAt() (r uint32, exists bool) {
+func (m *AppUserThirdPartyMutation) DeleteAt() (r uint32, exists bool) {
 	v := m.delete_at
 	if v == nil {
 		return
@@ -7015,10 +7014,10 @@ func (m *AppUserThirdMutation) DeleteAt() (r uint32, exists bool) {
 	return *v, true
 }
 
-// OldDeleteAt returns the old "delete_at" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldDeleteAt returns the old "delete_at" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldDeleteAt(ctx context.Context) (v uint32, err error) {
+func (m *AppUserThirdPartyMutation) OldDeleteAt(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeleteAt is only allowed on UpdateOne operations")
 	}
@@ -7033,7 +7032,7 @@ func (m *AppUserThirdMutation) OldDeleteAt(ctx context.Context) (v uint32, err e
 }
 
 // AddDeleteAt adds u to the "delete_at" field.
-func (m *AppUserThirdMutation) AddDeleteAt(u int32) {
+func (m *AppUserThirdPartyMutation) AddDeleteAt(u int32) {
 	if m.adddelete_at != nil {
 		*m.adddelete_at += u
 	} else {
@@ -7042,7 +7041,7 @@ func (m *AppUserThirdMutation) AddDeleteAt(u int32) {
 }
 
 // AddedDeleteAt returns the value that was added to the "delete_at" field in this mutation.
-func (m *AppUserThirdMutation) AddedDeleteAt() (r int32, exists bool) {
+func (m *AppUserThirdPartyMutation) AddedDeleteAt() (r int32, exists bool) {
 	v := m.adddelete_at
 	if v == nil {
 		return
@@ -7051,18 +7050,18 @@ func (m *AppUserThirdMutation) AddedDeleteAt() (r int32, exists bool) {
 }
 
 // ResetDeleteAt resets all changes to the "delete_at" field.
-func (m *AppUserThirdMutation) ResetDeleteAt() {
+func (m *AppUserThirdPartyMutation) ResetDeleteAt() {
 	m.delete_at = nil
 	m.adddelete_at = nil
 }
 
 // SetAppID sets the "app_id" field.
-func (m *AppUserThirdMutation) SetAppID(u uuid.UUID) {
+func (m *AppUserThirdPartyMutation) SetAppID(u uuid.UUID) {
 	m.app_id = &u
 }
 
 // AppID returns the value of the "app_id" field in the mutation.
-func (m *AppUserThirdMutation) AppID() (r uuid.UUID, exists bool) {
+func (m *AppUserThirdPartyMutation) AppID() (r uuid.UUID, exists bool) {
 	v := m.app_id
 	if v == nil {
 		return
@@ -7070,10 +7069,10 @@ func (m *AppUserThirdMutation) AppID() (r uuid.UUID, exists bool) {
 	return *v, true
 }
 
-// OldAppID returns the old "app_id" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldAppID returns the old "app_id" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppUserThirdPartyMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
 	}
@@ -7088,17 +7087,17 @@ func (m *AppUserThirdMutation) OldAppID(ctx context.Context) (v uuid.UUID, err e
 }
 
 // ResetAppID resets all changes to the "app_id" field.
-func (m *AppUserThirdMutation) ResetAppID() {
+func (m *AppUserThirdPartyMutation) ResetAppID() {
 	m.app_id = nil
 }
 
 // SetUserID sets the "user_id" field.
-func (m *AppUserThirdMutation) SetUserID(u uuid.UUID) {
+func (m *AppUserThirdPartyMutation) SetUserID(u uuid.UUID) {
 	m.user_id = &u
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *AppUserThirdMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *AppUserThirdPartyMutation) UserID() (r uuid.UUID, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -7106,10 +7105,10 @@ func (m *AppUserThirdMutation) UserID() (r uuid.UUID, exists bool) {
 	return *v, true
 }
 
-// OldUserID returns the old "user_id" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldUserID returns the old "user_id" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *AppUserThirdPartyMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -7124,239 +7123,200 @@ func (m *AppUserThirdMutation) OldUserID(ctx context.Context) (v uuid.UUID, err 
 }
 
 // ResetUserID resets all changes to the "user_id" field.
-func (m *AppUserThirdMutation) ResetUserID() {
+func (m *AppUserThirdPartyMutation) ResetUserID() {
 	m.user_id = nil
 }
 
-// SetThirdUserID sets the "third_user_id" field.
-func (m *AppUserThirdMutation) SetThirdUserID(s string) {
-	m.third_user_id = &s
+// SetThirdPartyUserID sets the "third_party_user_id" field.
+func (m *AppUserThirdPartyMutation) SetThirdPartyUserID(s string) {
+	m.third_party_user_id = &s
 }
 
-// ThirdUserID returns the value of the "third_user_id" field in the mutation.
-func (m *AppUserThirdMutation) ThirdUserID() (r string, exists bool) {
-	v := m.third_user_id
+// ThirdPartyUserID returns the value of the "third_party_user_id" field in the mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyUserID() (r string, exists bool) {
+	v := m.third_party_user_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldThirdUserID returns the old "third_user_id" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldThirdPartyUserID returns the old "third_party_user_id" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldThirdUserID(ctx context.Context) (v string, err error) {
+func (m *AppUserThirdPartyMutation) OldThirdPartyUserID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdUserID is only allowed on UpdateOne operations")
+		return v, errors.New("OldThirdPartyUserID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdUserID requires an ID field in the mutation")
+		return v, errors.New("OldThirdPartyUserID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdUserID: %w", err)
+		return v, fmt.Errorf("querying old value for OldThirdPartyUserID: %w", err)
 	}
-	return oldValue.ThirdUserID, nil
+	return oldValue.ThirdPartyUserID, nil
 }
 
-// ResetThirdUserID resets all changes to the "third_user_id" field.
-func (m *AppUserThirdMutation) ResetThirdUserID() {
-	m.third_user_id = nil
+// ResetThirdPartyUserID resets all changes to the "third_party_user_id" field.
+func (m *AppUserThirdPartyMutation) ResetThirdPartyUserID() {
+	m.third_party_user_id = nil
 }
 
-// SetThird sets the "third" field.
-func (m *AppUserThirdMutation) SetThird(s string) {
-	m.third = &s
+// SetThirdPartyID sets the "third_party_id" field.
+func (m *AppUserThirdPartyMutation) SetThirdPartyID(s string) {
+	m.third_party_id = &s
 }
 
-// Third returns the value of the "third" field in the mutation.
-func (m *AppUserThirdMutation) Third() (r string, exists bool) {
-	v := m.third
+// ThirdPartyID returns the value of the "third_party_id" field in the mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyID() (r string, exists bool) {
+	v := m.third_party_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldThird returns the old "third" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldThirdPartyID returns the old "third_party_id" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldThird(ctx context.Context) (v string, err error) {
+func (m *AppUserThirdPartyMutation) OldThirdPartyID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThird is only allowed on UpdateOne operations")
+		return v, errors.New("OldThirdPartyID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThird requires an ID field in the mutation")
+		return v, errors.New("OldThirdPartyID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThird: %w", err)
+		return v, fmt.Errorf("querying old value for OldThirdPartyID: %w", err)
 	}
-	return oldValue.Third, nil
+	return oldValue.ThirdPartyID, nil
 }
 
-// ResetThird resets all changes to the "third" field.
-func (m *AppUserThirdMutation) ResetThird() {
-	m.third = nil
+// ResetThirdPartyID resets all changes to the "third_party_id" field.
+func (m *AppUserThirdPartyMutation) ResetThirdPartyID() {
+	m.third_party_id = nil
 }
 
-// SetThirdID sets the "third_id" field.
-func (m *AppUserThirdMutation) SetThirdID(s string) {
-	m.third_id = &s
+// SetThirdPartyUserName sets the "third_party_user_name" field.
+func (m *AppUserThirdPartyMutation) SetThirdPartyUserName(s string) {
+	m.third_party_user_name = &s
 }
 
-// ThirdID returns the value of the "third_id" field in the mutation.
-func (m *AppUserThirdMutation) ThirdID() (r string, exists bool) {
-	v := m.third_id
+// ThirdPartyUserName returns the value of the "third_party_user_name" field in the mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyUserName() (r string, exists bool) {
+	v := m.third_party_user_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldThirdID returns the old "third_id" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldThirdPartyUserName returns the old "third_party_user_name" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldThirdID(ctx context.Context) (v string, err error) {
+func (m *AppUserThirdPartyMutation) OldThirdPartyUserName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdID is only allowed on UpdateOne operations")
+		return v, errors.New("OldThirdPartyUserName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdID requires an ID field in the mutation")
+		return v, errors.New("OldThirdPartyUserName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdID: %w", err)
+		return v, fmt.Errorf("querying old value for OldThirdPartyUserName: %w", err)
 	}
-	return oldValue.ThirdID, nil
+	return oldValue.ThirdPartyUserName, nil
 }
 
-// ResetThirdID resets all changes to the "third_id" field.
-func (m *AppUserThirdMutation) ResetThirdID() {
-	m.third_id = nil
+// ResetThirdPartyUserName resets all changes to the "third_party_user_name" field.
+func (m *AppUserThirdPartyMutation) ResetThirdPartyUserName() {
+	m.third_party_user_name = nil
 }
 
-// SetThirdUserName sets the "third_user_name" field.
-func (m *AppUserThirdMutation) SetThirdUserName(s string) {
-	m.third_user_name = &s
+// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
+func (m *AppUserThirdPartyMutation) SetThirdPartyUserAvatar(s string) {
+	m.third_party_user_avatar = &s
 }
 
-// ThirdUserName returns the value of the "third_user_name" field in the mutation.
-func (m *AppUserThirdMutation) ThirdUserName() (r string, exists bool) {
-	v := m.third_user_name
+// ThirdPartyUserAvatar returns the value of the "third_party_user_avatar" field in the mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyUserAvatar() (r string, exists bool) {
+	v := m.third_party_user_avatar
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldThirdUserName returns the old "third_user_name" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
+// OldThirdPartyUserAvatar returns the old "third_party_user_avatar" field's value of the AppUserThirdParty entity.
+// If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldThirdUserName(ctx context.Context) (v string, err error) {
+func (m *AppUserThirdPartyMutation) OldThirdPartyUserAvatar(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdUserName is only allowed on UpdateOne operations")
+		return v, errors.New("OldThirdPartyUserAvatar is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdUserName requires an ID field in the mutation")
+		return v, errors.New("OldThirdPartyUserAvatar requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdUserName: %w", err)
+		return v, fmt.Errorf("querying old value for OldThirdPartyUserAvatar: %w", err)
 	}
-	return oldValue.ThirdUserName, nil
+	return oldValue.ThirdPartyUserAvatar, nil
 }
 
-// ResetThirdUserName resets all changes to the "third_user_name" field.
-func (m *AppUserThirdMutation) ResetThirdUserName() {
-	m.third_user_name = nil
+// ResetThirdPartyUserAvatar resets all changes to the "third_party_user_avatar" field.
+func (m *AppUserThirdPartyMutation) ResetThirdPartyUserAvatar() {
+	m.third_party_user_avatar = nil
 }
 
-// SetThirdUserAvatar sets the "third_user_avatar" field.
-func (m *AppUserThirdMutation) SetThirdUserAvatar(s string) {
-	m.third_user_avatar = &s
-}
-
-// ThirdUserAvatar returns the value of the "third_user_avatar" field in the mutation.
-func (m *AppUserThirdMutation) ThirdUserAvatar() (r string, exists bool) {
-	v := m.third_user_avatar
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldThirdUserAvatar returns the old "third_user_avatar" field's value of the AppUserThird entity.
-// If the AppUserThird object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdMutation) OldThirdUserAvatar(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdUserAvatar is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdUserAvatar requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdUserAvatar: %w", err)
-	}
-	return oldValue.ThirdUserAvatar, nil
-}
-
-// ResetThirdUserAvatar resets all changes to the "third_user_avatar" field.
-func (m *AppUserThirdMutation) ResetThirdUserAvatar() {
-	m.third_user_avatar = nil
-}
-
-// Where appends a list predicates to the AppUserThirdMutation builder.
-func (m *AppUserThirdMutation) Where(ps ...predicate.AppUserThird) {
+// Where appends a list predicates to the AppUserThirdPartyMutation builder.
+func (m *AppUserThirdPartyMutation) Where(ps ...predicate.AppUserThirdParty) {
 	m.predicates = append(m.predicates, ps...)
 }
 
 // Op returns the operation name.
-func (m *AppUserThirdMutation) Op() Op {
+func (m *AppUserThirdPartyMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (AppUserThird).
-func (m *AppUserThirdMutation) Type() string {
+// Type returns the node type of this mutation (AppUserThirdParty).
+func (m *AppUserThirdPartyMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *AppUserThirdMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+func (m *AppUserThirdPartyMutation) Fields() []string {
+	fields := make([]string, 0, 9)
 	if m.create_at != nil {
-		fields = append(fields, appuserthird.FieldCreateAt)
+		fields = append(fields, appuserthirdparty.FieldCreateAt)
 	}
 	if m.update_at != nil {
-		fields = append(fields, appuserthird.FieldUpdateAt)
+		fields = append(fields, appuserthirdparty.FieldUpdateAt)
 	}
 	if m.delete_at != nil {
-		fields = append(fields, appuserthird.FieldDeleteAt)
+		fields = append(fields, appuserthirdparty.FieldDeleteAt)
 	}
 	if m.app_id != nil {
-		fields = append(fields, appuserthird.FieldAppID)
+		fields = append(fields, appuserthirdparty.FieldAppID)
 	}
 	if m.user_id != nil {
-		fields = append(fields, appuserthird.FieldUserID)
+		fields = append(fields, appuserthirdparty.FieldUserID)
 	}
-	if m.third_user_id != nil {
-		fields = append(fields, appuserthird.FieldThirdUserID)
+	if m.third_party_user_id != nil {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyUserID)
 	}
-	if m.third != nil {
-		fields = append(fields, appuserthird.FieldThird)
+	if m.third_party_id != nil {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyID)
 	}
-	if m.third_id != nil {
-		fields = append(fields, appuserthird.FieldThirdID)
+	if m.third_party_user_name != nil {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyUserName)
 	}
-	if m.third_user_name != nil {
-		fields = append(fields, appuserthird.FieldThirdUserName)
-	}
-	if m.third_user_avatar != nil {
-		fields = append(fields, appuserthird.FieldThirdUserAvatar)
+	if m.third_party_user_avatar != nil {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyUserAvatar)
 	}
 	return fields
 }
@@ -7364,28 +7324,26 @@ func (m *AppUserThirdMutation) Fields() []string {
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *AppUserThirdMutation) Field(name string) (ent.Value, bool) {
+func (m *AppUserThirdPartyMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case appuserthird.FieldCreateAt:
+	case appuserthirdparty.FieldCreateAt:
 		return m.CreateAt()
-	case appuserthird.FieldUpdateAt:
+	case appuserthirdparty.FieldUpdateAt:
 		return m.UpdateAt()
-	case appuserthird.FieldDeleteAt:
+	case appuserthirdparty.FieldDeleteAt:
 		return m.DeleteAt()
-	case appuserthird.FieldAppID:
+	case appuserthirdparty.FieldAppID:
 		return m.AppID()
-	case appuserthird.FieldUserID:
+	case appuserthirdparty.FieldUserID:
 		return m.UserID()
-	case appuserthird.FieldThirdUserID:
-		return m.ThirdUserID()
-	case appuserthird.FieldThird:
-		return m.Third()
-	case appuserthird.FieldThirdID:
-		return m.ThirdID()
-	case appuserthird.FieldThirdUserName:
-		return m.ThirdUserName()
-	case appuserthird.FieldThirdUserAvatar:
-		return m.ThirdUserAvatar()
+	case appuserthirdparty.FieldThirdPartyUserID:
+		return m.ThirdPartyUserID()
+	case appuserthirdparty.FieldThirdPartyID:
+		return m.ThirdPartyID()
+	case appuserthirdparty.FieldThirdPartyUserName:
+		return m.ThirdPartyUserName()
+	case appuserthirdparty.FieldThirdPartyUserAvatar:
+		return m.ThirdPartyUserAvatar()
 	}
 	return nil, false
 }
@@ -7393,123 +7351,114 @@ func (m *AppUserThirdMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *AppUserThirdMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *AppUserThirdPartyMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case appuserthird.FieldCreateAt:
+	case appuserthirdparty.FieldCreateAt:
 		return m.OldCreateAt(ctx)
-	case appuserthird.FieldUpdateAt:
+	case appuserthirdparty.FieldUpdateAt:
 		return m.OldUpdateAt(ctx)
-	case appuserthird.FieldDeleteAt:
+	case appuserthirdparty.FieldDeleteAt:
 		return m.OldDeleteAt(ctx)
-	case appuserthird.FieldAppID:
+	case appuserthirdparty.FieldAppID:
 		return m.OldAppID(ctx)
-	case appuserthird.FieldUserID:
+	case appuserthirdparty.FieldUserID:
 		return m.OldUserID(ctx)
-	case appuserthird.FieldThirdUserID:
-		return m.OldThirdUserID(ctx)
-	case appuserthird.FieldThird:
-		return m.OldThird(ctx)
-	case appuserthird.FieldThirdID:
-		return m.OldThirdID(ctx)
-	case appuserthird.FieldThirdUserName:
-		return m.OldThirdUserName(ctx)
-	case appuserthird.FieldThirdUserAvatar:
-		return m.OldThirdUserAvatar(ctx)
+	case appuserthirdparty.FieldThirdPartyUserID:
+		return m.OldThirdPartyUserID(ctx)
+	case appuserthirdparty.FieldThirdPartyID:
+		return m.OldThirdPartyID(ctx)
+	case appuserthirdparty.FieldThirdPartyUserName:
+		return m.OldThirdPartyUserName(ctx)
+	case appuserthirdparty.FieldThirdPartyUserAvatar:
+		return m.OldThirdPartyUserAvatar(ctx)
 	}
-	return nil, fmt.Errorf("unknown AppUserThird field %s", name)
+	return nil, fmt.Errorf("unknown AppUserThirdParty field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *AppUserThirdMutation) SetField(name string, value ent.Value) error {
+func (m *AppUserThirdPartyMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case appuserthird.FieldCreateAt:
+	case appuserthirdparty.FieldCreateAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreateAt(v)
 		return nil
-	case appuserthird.FieldUpdateAt:
+	case appuserthirdparty.FieldUpdateAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdateAt(v)
 		return nil
-	case appuserthird.FieldDeleteAt:
+	case appuserthirdparty.FieldDeleteAt:
 		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeleteAt(v)
 		return nil
-	case appuserthird.FieldAppID:
+	case appuserthirdparty.FieldAppID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAppID(v)
 		return nil
-	case appuserthird.FieldUserID:
+	case appuserthirdparty.FieldUserID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserID(v)
 		return nil
-	case appuserthird.FieldThirdUserID:
+	case appuserthirdparty.FieldThirdPartyUserID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetThirdUserID(v)
+		m.SetThirdPartyUserID(v)
 		return nil
-	case appuserthird.FieldThird:
+	case appuserthirdparty.FieldThirdPartyID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetThird(v)
+		m.SetThirdPartyID(v)
 		return nil
-	case appuserthird.FieldThirdID:
+	case appuserthirdparty.FieldThirdPartyUserName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetThirdID(v)
+		m.SetThirdPartyUserName(v)
 		return nil
-	case appuserthird.FieldThirdUserName:
+	case appuserthirdparty.FieldThirdPartyUserAvatar:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetThirdUserName(v)
-		return nil
-	case appuserthird.FieldThirdUserAvatar:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetThirdUserAvatar(v)
+		m.SetThirdPartyUserAvatar(v)
 		return nil
 	}
-	return fmt.Errorf("unknown AppUserThird field %s", name)
+	return fmt.Errorf("unknown AppUserThirdParty field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *AppUserThirdMutation) AddedFields() []string {
+func (m *AppUserThirdPartyMutation) AddedFields() []string {
 	var fields []string
 	if m.addcreate_at != nil {
-		fields = append(fields, appuserthird.FieldCreateAt)
+		fields = append(fields, appuserthirdparty.FieldCreateAt)
 	}
 	if m.addupdate_at != nil {
-		fields = append(fields, appuserthird.FieldUpdateAt)
+		fields = append(fields, appuserthirdparty.FieldUpdateAt)
 	}
 	if m.adddelete_at != nil {
-		fields = append(fields, appuserthird.FieldDeleteAt)
+		fields = append(fields, appuserthirdparty.FieldDeleteAt)
 	}
 	return fields
 }
@@ -7517,13 +7466,13 @@ func (m *AppUserThirdMutation) AddedFields() []string {
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *AppUserThirdMutation) AddedField(name string) (ent.Value, bool) {
+func (m *AppUserThirdPartyMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case appuserthird.FieldCreateAt:
+	case appuserthirdparty.FieldCreateAt:
 		return m.AddedCreateAt()
-	case appuserthird.FieldUpdateAt:
+	case appuserthirdparty.FieldUpdateAt:
 		return m.AddedUpdateAt()
-	case appuserthird.FieldDeleteAt:
+	case appuserthirdparty.FieldDeleteAt:
 		return m.AddedDeleteAt()
 	}
 	return nil, false
@@ -7532,23 +7481,23 @@ func (m *AppUserThirdMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *AppUserThirdMutation) AddField(name string, value ent.Value) error {
+func (m *AppUserThirdPartyMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case appuserthird.FieldCreateAt:
+	case appuserthirdparty.FieldCreateAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreateAt(v)
 		return nil
-	case appuserthird.FieldUpdateAt:
+	case appuserthirdparty.FieldUpdateAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUpdateAt(v)
 		return nil
-	case appuserthird.FieldDeleteAt:
+	case appuserthirdparty.FieldDeleteAt:
 		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -7556,112 +7505,109 @@ func (m *AppUserThirdMutation) AddField(name string, value ent.Value) error {
 		m.AddDeleteAt(v)
 		return nil
 	}
-	return fmt.Errorf("unknown AppUserThird numeric field %s", name)
+	return fmt.Errorf("unknown AppUserThirdParty numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *AppUserThirdMutation) ClearedFields() []string {
+func (m *AppUserThirdPartyMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *AppUserThirdMutation) FieldCleared(name string) bool {
+func (m *AppUserThirdPartyMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *AppUserThirdMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown AppUserThird nullable field %s", name)
+func (m *AppUserThirdPartyMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown AppUserThirdParty nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *AppUserThirdMutation) ResetField(name string) error {
+func (m *AppUserThirdPartyMutation) ResetField(name string) error {
 	switch name {
-	case appuserthird.FieldCreateAt:
+	case appuserthirdparty.FieldCreateAt:
 		m.ResetCreateAt()
 		return nil
-	case appuserthird.FieldUpdateAt:
+	case appuserthirdparty.FieldUpdateAt:
 		m.ResetUpdateAt()
 		return nil
-	case appuserthird.FieldDeleteAt:
+	case appuserthirdparty.FieldDeleteAt:
 		m.ResetDeleteAt()
 		return nil
-	case appuserthird.FieldAppID:
+	case appuserthirdparty.FieldAppID:
 		m.ResetAppID()
 		return nil
-	case appuserthird.FieldUserID:
+	case appuserthirdparty.FieldUserID:
 		m.ResetUserID()
 		return nil
-	case appuserthird.FieldThirdUserID:
-		m.ResetThirdUserID()
+	case appuserthirdparty.FieldThirdPartyUserID:
+		m.ResetThirdPartyUserID()
 		return nil
-	case appuserthird.FieldThird:
-		m.ResetThird()
+	case appuserthirdparty.FieldThirdPartyID:
+		m.ResetThirdPartyID()
 		return nil
-	case appuserthird.FieldThirdID:
-		m.ResetThirdID()
+	case appuserthirdparty.FieldThirdPartyUserName:
+		m.ResetThirdPartyUserName()
 		return nil
-	case appuserthird.FieldThirdUserName:
-		m.ResetThirdUserName()
-		return nil
-	case appuserthird.FieldThirdUserAvatar:
-		m.ResetThirdUserAvatar()
+	case appuserthirdparty.FieldThirdPartyUserAvatar:
+		m.ResetThirdPartyUserAvatar()
 		return nil
 	}
-	return fmt.Errorf("unknown AppUserThird field %s", name)
+	return fmt.Errorf("unknown AppUserThirdParty field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *AppUserThirdMutation) AddedEdges() []string {
+func (m *AppUserThirdPartyMutation) AddedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *AppUserThirdMutation) AddedIDs(name string) []ent.Value {
+func (m *AppUserThirdPartyMutation) AddedIDs(name string) []ent.Value {
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *AppUserThirdMutation) RemovedEdges() []string {
+func (m *AppUserThirdPartyMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *AppUserThirdMutation) RemovedIDs(name string) []ent.Value {
+func (m *AppUserThirdPartyMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *AppUserThirdMutation) ClearedEdges() []string {
+func (m *AppUserThirdPartyMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *AppUserThirdMutation) EdgeCleared(name string) bool {
+func (m *AppUserThirdPartyMutation) EdgeCleared(name string) bool {
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *AppUserThirdMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown AppUserThird unique edge %s", name)
+func (m *AppUserThirdPartyMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppUserThirdParty unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *AppUserThirdMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown AppUserThird edge %s", name)
+func (m *AppUserThirdPartyMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppUserThirdParty edge %s", name)
 }
 
 // BanAppMutation represents an operation that mutates the BanApp nodes in the graph.

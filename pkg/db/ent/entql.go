@@ -11,7 +11,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthird"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 
@@ -199,25 +199,24 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[8] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
-			Table:   appuserthird.Table,
-			Columns: appuserthird.Columns,
+			Table:   appuserthirdparty.Table,
+			Columns: appuserthirdparty.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeUUID,
-				Column: appuserthird.FieldID,
+				Column: appuserthirdparty.FieldID,
 			},
 		},
-		Type: "AppUserThird",
+		Type: "AppUserThirdParty",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appuserthird.FieldCreateAt:        {Type: field.TypeUint32, Column: appuserthird.FieldCreateAt},
-			appuserthird.FieldUpdateAt:        {Type: field.TypeUint32, Column: appuserthird.FieldUpdateAt},
-			appuserthird.FieldDeleteAt:        {Type: field.TypeUint32, Column: appuserthird.FieldDeleteAt},
-			appuserthird.FieldAppID:           {Type: field.TypeUUID, Column: appuserthird.FieldAppID},
-			appuserthird.FieldUserID:          {Type: field.TypeUUID, Column: appuserthird.FieldUserID},
-			appuserthird.FieldThirdUserID:     {Type: field.TypeString, Column: appuserthird.FieldThirdUserID},
-			appuserthird.FieldThird:           {Type: field.TypeString, Column: appuserthird.FieldThird},
-			appuserthird.FieldThirdID:         {Type: field.TypeString, Column: appuserthird.FieldThirdID},
-			appuserthird.FieldThirdUserName:   {Type: field.TypeString, Column: appuserthird.FieldThirdUserName},
-			appuserthird.FieldThirdUserAvatar: {Type: field.TypeString, Column: appuserthird.FieldThirdUserAvatar},
+			appuserthirdparty.FieldCreateAt:             {Type: field.TypeUint32, Column: appuserthirdparty.FieldCreateAt},
+			appuserthirdparty.FieldUpdateAt:             {Type: field.TypeUint32, Column: appuserthirdparty.FieldUpdateAt},
+			appuserthirdparty.FieldDeleteAt:             {Type: field.TypeUint32, Column: appuserthirdparty.FieldDeleteAt},
+			appuserthirdparty.FieldAppID:                {Type: field.TypeUUID, Column: appuserthirdparty.FieldAppID},
+			appuserthirdparty.FieldUserID:               {Type: field.TypeUUID, Column: appuserthirdparty.FieldUserID},
+			appuserthirdparty.FieldThirdPartyUserID:     {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserID},
+			appuserthirdparty.FieldThirdPartyID:         {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyID},
+			appuserthirdparty.FieldThirdPartyUserName:   {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserName},
+			appuserthirdparty.FieldThirdPartyUserAvatar: {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserAvatar},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -924,32 +923,32 @@ func (f *AppUserSecretFilter) WhereDeleteAt(p entql.Uint32P) {
 }
 
 // addPredicate implements the predicateAdder interface.
-func (autq *AppUserThirdQuery) addPredicate(pred func(s *sql.Selector)) {
-	autq.predicates = append(autq.predicates, pred)
+func (autpq *AppUserThirdPartyQuery) addPredicate(pred func(s *sql.Selector)) {
+	autpq.predicates = append(autpq.predicates, pred)
 }
 
-// Filter returns a Filter implementation to apply filters on the AppUserThirdQuery builder.
-func (autq *AppUserThirdQuery) Filter() *AppUserThirdFilter {
-	return &AppUserThirdFilter{autq}
+// Filter returns a Filter implementation to apply filters on the AppUserThirdPartyQuery builder.
+func (autpq *AppUserThirdPartyQuery) Filter() *AppUserThirdPartyFilter {
+	return &AppUserThirdPartyFilter{autpq}
 }
 
 // addPredicate implements the predicateAdder interface.
-func (m *AppUserThirdMutation) addPredicate(pred func(s *sql.Selector)) {
+func (m *AppUserThirdPartyMutation) addPredicate(pred func(s *sql.Selector)) {
 	m.predicates = append(m.predicates, pred)
 }
 
-// Filter returns an entql.Where implementation to apply filters on the AppUserThirdMutation builder.
-func (m *AppUserThirdMutation) Filter() *AppUserThirdFilter {
-	return &AppUserThirdFilter{m}
+// Filter returns an entql.Where implementation to apply filters on the AppUserThirdPartyMutation builder.
+func (m *AppUserThirdPartyMutation) Filter() *AppUserThirdPartyFilter {
+	return &AppUserThirdPartyFilter{m}
 }
 
-// AppUserThirdFilter provides a generic filtering capability at runtime for AppUserThirdQuery.
-type AppUserThirdFilter struct {
+// AppUserThirdPartyFilter provides a generic filtering capability at runtime for AppUserThirdPartyQuery.
+type AppUserThirdPartyFilter struct {
 	predicateAdder
 }
 
 // Where applies the entql predicate on the query filter.
-func (f *AppUserThirdFilter) Where(p entql.P) {
+func (f *AppUserThirdPartyFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
 		if err := schemaGraph.EvalP(schemaGraph.Nodes[8].Type, p, s); err != nil {
 			s.AddError(err)
@@ -958,58 +957,53 @@ func (f *AppUserThirdFilter) Where(p entql.P) {
 }
 
 // WhereID applies the entql [16]byte predicate on the id field.
-func (f *AppUserThirdFilter) WhereID(p entql.ValueP) {
-	f.Where(p.Field(appuserthird.FieldID))
+func (f *AppUserThirdPartyFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(appuserthirdparty.FieldID))
 }
 
 // WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppUserThirdFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserthird.FieldCreateAt))
+func (f *AppUserThirdPartyFilter) WhereCreateAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserthirdparty.FieldCreateAt))
 }
 
 // WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppUserThirdFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserthird.FieldUpdateAt))
+func (f *AppUserThirdPartyFilter) WhereUpdateAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserthirdparty.FieldUpdateAt))
 }
 
 // WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppUserThirdFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserthird.FieldDeleteAt))
+func (f *AppUserThirdPartyFilter) WhereDeleteAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserthirdparty.FieldDeleteAt))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
-func (f *AppUserThirdFilter) WhereAppID(p entql.ValueP) {
-	f.Where(p.Field(appuserthird.FieldAppID))
+func (f *AppUserThirdPartyFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(appuserthirdparty.FieldAppID))
 }
 
 // WhereUserID applies the entql [16]byte predicate on the user_id field.
-func (f *AppUserThirdFilter) WhereUserID(p entql.ValueP) {
-	f.Where(p.Field(appuserthird.FieldUserID))
+func (f *AppUserThirdPartyFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(appuserthirdparty.FieldUserID))
 }
 
-// WhereThirdUserID applies the entql string predicate on the third_user_id field.
-func (f *AppUserThirdFilter) WhereThirdUserID(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThirdUserID))
+// WhereThirdPartyUserID applies the entql string predicate on the third_party_user_id field.
+func (f *AppUserThirdPartyFilter) WhereThirdPartyUserID(p entql.StringP) {
+	f.Where(p.Field(appuserthirdparty.FieldThirdPartyUserID))
 }
 
-// WhereThird applies the entql string predicate on the third field.
-func (f *AppUserThirdFilter) WhereThird(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThird))
+// WhereThirdPartyID applies the entql string predicate on the third_party_id field.
+func (f *AppUserThirdPartyFilter) WhereThirdPartyID(p entql.StringP) {
+	f.Where(p.Field(appuserthirdparty.FieldThirdPartyID))
 }
 
-// WhereThirdID applies the entql string predicate on the third_id field.
-func (f *AppUserThirdFilter) WhereThirdID(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThirdID))
+// WhereThirdPartyUserName applies the entql string predicate on the third_party_user_name field.
+func (f *AppUserThirdPartyFilter) WhereThirdPartyUserName(p entql.StringP) {
+	f.Where(p.Field(appuserthirdparty.FieldThirdPartyUserName))
 }
 
-// WhereThirdUserName applies the entql string predicate on the third_user_name field.
-func (f *AppUserThirdFilter) WhereThirdUserName(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThirdUserName))
-}
-
-// WhereThirdUserAvatar applies the entql string predicate on the third_user_avatar field.
-func (f *AppUserThirdFilter) WhereThirdUserAvatar(p entql.StringP) {
-	f.Where(p.Field(appuserthird.FieldThirdUserAvatar))
+// WhereThirdPartyUserAvatar applies the entql string predicate on the third_party_user_avatar field.
+func (f *AppUserThirdPartyFilter) WhereThirdPartyUserAvatar(p entql.StringP) {
+	f.Where(p.Field(appuserthirdparty.FieldThirdPartyUserAvatar))
 }
 
 // addPredicate implements the predicateAdder interface.

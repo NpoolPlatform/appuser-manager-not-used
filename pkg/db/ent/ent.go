@@ -16,7 +16,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthird"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 )
@@ -39,17 +39,17 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		app.Table:            app.ValidColumn,
-		appcontrol.Table:     appcontrol.ValidColumn,
-		approle.Table:        approle.ValidColumn,
-		approleuser.Table:    approleuser.ValidColumn,
-		appuser.Table:        appuser.ValidColumn,
-		appusercontrol.Table: appusercontrol.ValidColumn,
-		appuserextra.Table:   appuserextra.ValidColumn,
-		appusersecret.Table:  appusersecret.ValidColumn,
-		appuserthird.Table:   appuserthird.ValidColumn,
-		banapp.Table:         banapp.ValidColumn,
-		banappuser.Table:     banappuser.ValidColumn,
+		app.Table:               app.ValidColumn,
+		appcontrol.Table:        appcontrol.ValidColumn,
+		approle.Table:           approle.ValidColumn,
+		approleuser.Table:       approleuser.ValidColumn,
+		appuser.Table:           appuser.ValidColumn,
+		appusercontrol.Table:    appusercontrol.ValidColumn,
+		appuserextra.Table:      appuserextra.ValidColumn,
+		appusersecret.Table:     appusersecret.ValidColumn,
+		appuserthirdparty.Table: appuserthirdparty.ValidColumn,
+		banapp.Table:            banapp.ValidColumn,
+		banappuser.Table:        banappuser.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

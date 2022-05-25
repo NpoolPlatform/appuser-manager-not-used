@@ -197,25 +197,24 @@ var (
 			},
 		},
 	}
-	// AppUserThirdsColumns holds the columns for the "app_user_thirds" table.
-	AppUserThirdsColumns = []*schema.Column{
+	// AppUserThirdPartiesColumns holds the columns for the "app_user_third_parties" table.
+	AppUserThirdPartiesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 		{Name: "delete_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "third_user_id", Type: field.TypeString},
-		{Name: "third", Type: field.TypeString},
-		{Name: "third_id", Type: field.TypeString},
-		{Name: "third_user_name", Type: field.TypeString},
-		{Name: "third_user_avatar", Type: field.TypeString, Size: 1024},
+		{Name: "third_party_user_id", Type: field.TypeString},
+		{Name: "third_party_id", Type: field.TypeString},
+		{Name: "third_party_user_name", Type: field.TypeString},
+		{Name: "third_party_user_avatar", Type: field.TypeString, Size: 1024},
 	}
-	// AppUserThirdsTable holds the schema information for the "app_user_thirds" table.
-	AppUserThirdsTable = &schema.Table{
-		Name:       "app_user_thirds",
-		Columns:    AppUserThirdsColumns,
-		PrimaryKey: []*schema.Column{AppUserThirdsColumns[0]},
+	// AppUserThirdPartiesTable holds the schema information for the "app_user_third_parties" table.
+	AppUserThirdPartiesTable = &schema.Table{
+		Name:       "app_user_third_parties",
+		Columns:    AppUserThirdPartiesColumns,
+		PrimaryKey: []*schema.Column{AppUserThirdPartiesColumns[0]},
 	}
 	// BanAppsColumns holds the columns for the "ban_apps" table.
 	BanAppsColumns = []*schema.Column{
@@ -258,7 +257,7 @@ var (
 		AppUserControlsTable,
 		AppUserExtrasTable,
 		AppUserSecretsTable,
-		AppUserThirdsTable,
+		AppUserThirdPartiesTable,
 		BanAppsTable,
 		BanAppUsersTable,
 	}

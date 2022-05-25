@@ -13,7 +13,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthird"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
@@ -187,42 +187,42 @@ func init() {
 	appusersecretDescID := appusersecretFields[0].Descriptor()
 	// appusersecret.DefaultID holds the default value on creation for the id field.
 	appusersecret.DefaultID = appusersecretDescID.Default.(func() uuid.UUID)
-	appuserthirdMixin := schema.AppUserThird{}.Mixin()
-	appuserthird.Policy = privacy.NewPolicies(appuserthirdMixin[0], schema.AppUserThird{})
-	appuserthird.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+	appuserthirdpartyMixin := schema.AppUserThirdParty{}.Mixin()
+	appuserthirdparty.Policy = privacy.NewPolicies(appuserthirdpartyMixin[0], schema.AppUserThirdParty{})
+	appuserthirdparty.Hooks[0] = func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := appuserthird.Policy.EvalMutation(ctx, m); err != nil {
+			if err := appuserthirdparty.Policy.EvalMutation(ctx, m); err != nil {
 				return nil, err
 			}
 			return next.Mutate(ctx, m)
 		})
 	}
-	appuserthirdMixinFields0 := appuserthirdMixin[0].Fields()
-	_ = appuserthirdMixinFields0
-	appuserthirdFields := schema.AppUserThird{}.Fields()
-	_ = appuserthirdFields
-	// appuserthirdDescCreateAt is the schema descriptor for create_at field.
-	appuserthirdDescCreateAt := appuserthirdMixinFields0[0].Descriptor()
-	// appuserthird.DefaultCreateAt holds the default value on creation for the create_at field.
-	appuserthird.DefaultCreateAt = appuserthirdDescCreateAt.Default.(func() uint32)
-	// appuserthirdDescUpdateAt is the schema descriptor for update_at field.
-	appuserthirdDescUpdateAt := appuserthirdMixinFields0[1].Descriptor()
-	// appuserthird.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appuserthird.DefaultUpdateAt = appuserthirdDescUpdateAt.Default.(func() uint32)
-	// appuserthird.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appuserthird.UpdateDefaultUpdateAt = appuserthirdDescUpdateAt.UpdateDefault.(func() uint32)
-	// appuserthirdDescDeleteAt is the schema descriptor for delete_at field.
-	appuserthirdDescDeleteAt := appuserthirdMixinFields0[2].Descriptor()
-	// appuserthird.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appuserthird.DefaultDeleteAt = appuserthirdDescDeleteAt.Default.(func() uint32)
-	// appuserthirdDescThirdUserAvatar is the schema descriptor for third_user_avatar field.
-	appuserthirdDescThirdUserAvatar := appuserthirdFields[7].Descriptor()
-	// appuserthird.ThirdUserAvatarValidator is a validator for the "third_user_avatar" field. It is called by the builders before save.
-	appuserthird.ThirdUserAvatarValidator = appuserthirdDescThirdUserAvatar.Validators[0].(func(string) error)
-	// appuserthirdDescID is the schema descriptor for id field.
-	appuserthirdDescID := appuserthirdFields[0].Descriptor()
-	// appuserthird.DefaultID holds the default value on creation for the id field.
-	appuserthird.DefaultID = appuserthirdDescID.Default.(func() uuid.UUID)
+	appuserthirdpartyMixinFields0 := appuserthirdpartyMixin[0].Fields()
+	_ = appuserthirdpartyMixinFields0
+	appuserthirdpartyFields := schema.AppUserThirdParty{}.Fields()
+	_ = appuserthirdpartyFields
+	// appuserthirdpartyDescCreateAt is the schema descriptor for create_at field.
+	appuserthirdpartyDescCreateAt := appuserthirdpartyMixinFields0[0].Descriptor()
+	// appuserthirdparty.DefaultCreateAt holds the default value on creation for the create_at field.
+	appuserthirdparty.DefaultCreateAt = appuserthirdpartyDescCreateAt.Default.(func() uint32)
+	// appuserthirdpartyDescUpdateAt is the schema descriptor for update_at field.
+	appuserthirdpartyDescUpdateAt := appuserthirdpartyMixinFields0[1].Descriptor()
+	// appuserthirdparty.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appuserthirdparty.DefaultUpdateAt = appuserthirdpartyDescUpdateAt.Default.(func() uint32)
+	// appuserthirdparty.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appuserthirdparty.UpdateDefaultUpdateAt = appuserthirdpartyDescUpdateAt.UpdateDefault.(func() uint32)
+	// appuserthirdpartyDescDeleteAt is the schema descriptor for delete_at field.
+	appuserthirdpartyDescDeleteAt := appuserthirdpartyMixinFields0[2].Descriptor()
+	// appuserthirdparty.DefaultDeleteAt holds the default value on creation for the delete_at field.
+	appuserthirdparty.DefaultDeleteAt = appuserthirdpartyDescDeleteAt.Default.(func() uint32)
+	// appuserthirdpartyDescThirdPartyUserAvatar is the schema descriptor for third_party_user_avatar field.
+	appuserthirdpartyDescThirdPartyUserAvatar := appuserthirdpartyFields[6].Descriptor()
+	// appuserthirdparty.ThirdPartyUserAvatarValidator is a validator for the "third_party_user_avatar" field. It is called by the builders before save.
+	appuserthirdparty.ThirdPartyUserAvatarValidator = appuserthirdpartyDescThirdPartyUserAvatar.Validators[0].(func(string) error)
+	// appuserthirdpartyDescID is the schema descriptor for id field.
+	appuserthirdpartyDescID := appuserthirdpartyFields[0].Descriptor()
+	// appuserthirdparty.DefaultID holds the default value on creation for the id field.
+	appuserthirdparty.DefaultID = appuserthirdpartyDescID.Default.(func() uuid.UUID)
 	banappFields := schema.BanApp{}.Fields()
 	_ = banappFields
 	// banappDescCreateAt is the schema descriptor for create_at field.
