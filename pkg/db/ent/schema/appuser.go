@@ -22,7 +22,9 @@ func (AppUser) Mixin() []ent.Mixin {
 // Fields of the AppUser.
 func (AppUser) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Unique(),
+		field.UUID("id", uuid.UUID{}).
+			Default(uuid.New).
+			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.String("email_address"),
 		field.String("phone_no"),

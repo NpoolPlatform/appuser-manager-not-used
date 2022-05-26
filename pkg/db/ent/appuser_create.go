@@ -95,6 +95,14 @@ func (auc *AppUserCreate) SetID(u uuid.UUID) *AppUserCreate {
 	return auc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (auc *AppUserCreate) SetNillableID(u *uuid.UUID) *AppUserCreate {
+	if u != nil {
+		auc.SetID(*u)
+	}
+	return auc
+}
+
 // Mutation returns the AppUserMutation object of the builder.
 func (auc *AppUserCreate) Mutation() *AppUserMutation {
 	return auc.mutation
@@ -188,6 +196,13 @@ func (auc *AppUserCreate) defaults() error {
 		}
 		v := appuser.DefaultDeleteAt()
 		auc.mutation.SetDeleteAt(v)
+	}
+	if _, ok := auc.mutation.ID(); !ok {
+		if appuser.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultID (forgotten import ent/runtime?)")
+		}
+		v := appuser.DefaultID()
+		auc.mutation.SetID(v)
 	}
 	return nil
 }

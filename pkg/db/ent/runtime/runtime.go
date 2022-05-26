@@ -146,6 +146,10 @@ func init() {
 	appuserDescDeleteAt := appuserMixinFields0[2].Descriptor()
 	// appuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
 	appuser.DefaultDeleteAt = appuserDescDeleteAt.Default.(func() uint32)
+	// appuserDescID is the schema descriptor for id field.
+	appuserDescID := appuserFields[0].Descriptor()
+	// appuser.DefaultID holds the default value on creation for the id field.
+	appuser.DefaultID = appuserDescID.Default.(func() uuid.UUID)
 	appusercontrolFields := schema.AppUserControl{}.Fields()
 	_ = appusercontrolFields
 	// appusercontrolDescCreateAt is the schema descriptor for create_at field.
