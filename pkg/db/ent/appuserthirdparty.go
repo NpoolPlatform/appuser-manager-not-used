@@ -30,8 +30,8 @@ type AppUserThirdParty struct {
 	ThirdPartyUserID string `json:"third_party_user_id,omitempty"`
 	// ThirdPartyID holds the value of the "third_party_id" field.
 	ThirdPartyID string `json:"third_party_id,omitempty"`
-	// ThirdPartyUserName holds the value of the "third_party_user_name" field.
-	ThirdPartyUserName string `json:"third_party_user_name,omitempty"`
+	// ThirdPartyUsername holds the value of the "third_party_username" field.
+	ThirdPartyUsername string `json:"third_party_username,omitempty"`
 	// ThirdPartyUserAvatar holds the value of the "third_party_user_avatar" field.
 	ThirdPartyUserAvatar string `json:"third_party_user_avatar,omitempty"`
 }
@@ -43,7 +43,7 @@ func (*AppUserThirdParty) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appuserthirdparty.FieldCreateAt, appuserthirdparty.FieldUpdateAt, appuserthirdparty.FieldDeleteAt:
 			values[i] = new(sql.NullInt64)
-		case appuserthirdparty.FieldThirdPartyUserID, appuserthirdparty.FieldThirdPartyID, appuserthirdparty.FieldThirdPartyUserName, appuserthirdparty.FieldThirdPartyUserAvatar:
+		case appuserthirdparty.FieldThirdPartyUserID, appuserthirdparty.FieldThirdPartyID, appuserthirdparty.FieldThirdPartyUsername, appuserthirdparty.FieldThirdPartyUserAvatar:
 			values[i] = new(sql.NullString)
 		case appuserthirdparty.FieldID, appuserthirdparty.FieldAppID, appuserthirdparty.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -110,11 +110,11 @@ func (autp *AppUserThirdParty) assignValues(columns []string, values []interface
 			} else if value.Valid {
 				autp.ThirdPartyID = value.String
 			}
-		case appuserthirdparty.FieldThirdPartyUserName:
+		case appuserthirdparty.FieldThirdPartyUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field third_party_user_name", values[i])
+				return fmt.Errorf("unexpected type %T for field third_party_username", values[i])
 			} else if value.Valid {
-				autp.ThirdPartyUserName = value.String
+				autp.ThirdPartyUsername = value.String
 			}
 		case appuserthirdparty.FieldThirdPartyUserAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -164,8 +164,8 @@ func (autp *AppUserThirdParty) String() string {
 	builder.WriteString(autp.ThirdPartyUserID)
 	builder.WriteString(", third_party_id=")
 	builder.WriteString(autp.ThirdPartyID)
-	builder.WriteString(", third_party_user_name=")
-	builder.WriteString(autp.ThirdPartyUserName)
+	builder.WriteString(", third_party_username=")
+	builder.WriteString(autp.ThirdPartyUsername)
 	builder.WriteString(", third_party_user_avatar=")
 	builder.WriteString(autp.ThirdPartyUserAvatar)
 	builder.WriteByte(')')

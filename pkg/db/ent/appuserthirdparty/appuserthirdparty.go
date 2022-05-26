@@ -26,8 +26,8 @@ const (
 	FieldThirdPartyUserID = "third_party_user_id"
 	// FieldThirdPartyID holds the string denoting the third_party_id field in the database.
 	FieldThirdPartyID = "third_party_id"
-	// FieldThirdPartyUserName holds the string denoting the third_party_user_name field in the database.
-	FieldThirdPartyUserName = "third_party_user_name"
+	// FieldThirdPartyUsername holds the string denoting the third_party_username field in the database.
+	FieldThirdPartyUsername = "third_party_username"
 	// FieldThirdPartyUserAvatar holds the string denoting the third_party_user_avatar field in the database.
 	FieldThirdPartyUserAvatar = "third_party_user_avatar"
 	// Table holds the table name of the appuserthirdparty in the database.
@@ -44,7 +44,7 @@ var Columns = []string{
 	FieldUserID,
 	FieldThirdPartyUserID,
 	FieldThirdPartyID,
-	FieldThirdPartyUserName,
+	FieldThirdPartyUsername,
 	FieldThirdPartyUserAvatar,
 }
 

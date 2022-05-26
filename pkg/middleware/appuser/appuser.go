@@ -73,7 +73,7 @@ func CreateWithThirdParty(ctx context.Context, in *npool.CreateAppUserWithThirdP
 		}
 	}
 
-	inThird := in.GetThird()
+	inThird := in.GetThirdParty()
 	inThird.UserID = resp.Info.ID
 
 	_, err = appuserthirdcrud.Create(ctx, &npool.CreateAppUserThirdPartyRequest{

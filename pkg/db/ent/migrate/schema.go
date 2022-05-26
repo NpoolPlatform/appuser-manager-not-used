@@ -207,7 +207,7 @@ var (
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "third_party_user_id", Type: field.TypeString},
 		{Name: "third_party_id", Type: field.TypeString},
-		{Name: "third_party_user_name", Type: field.TypeString},
+		{Name: "third_party_username", Type: field.TypeString},
 		{Name: "third_party_user_avatar", Type: field.TypeString, Size: 1024},
 	}
 	// AppUserThirdPartiesTable holds the schema information for the "app_user_third_parties" table.

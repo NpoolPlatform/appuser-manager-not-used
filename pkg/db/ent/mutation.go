@@ -6775,7 +6775,7 @@ type AppUserThirdPartyMutation struct {
 	user_id                 *uuid.UUID
 	third_party_user_id     *string
 	third_party_id          *string
-	third_party_user_name   *string
+	third_party_username    *string
 	third_party_user_avatar *string
 	clearedFields           map[string]struct{}
 	done                    bool
@@ -7199,40 +7199,40 @@ func (m *AppUserThirdPartyMutation) ResetThirdPartyID() {
 	m.third_party_id = nil
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (m *AppUserThirdPartyMutation) SetThirdPartyUserName(s string) {
-	m.third_party_user_name = &s
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (m *AppUserThirdPartyMutation) SetThirdPartyUsername(s string) {
+	m.third_party_username = &s
 }
 
-// ThirdPartyUserName returns the value of the "third_party_user_name" field in the mutation.
-func (m *AppUserThirdPartyMutation) ThirdPartyUserName() (r string, exists bool) {
-	v := m.third_party_user_name
+// ThirdPartyUsername returns the value of the "third_party_username" field in the mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyUsername() (r string, exists bool) {
+	v := m.third_party_username
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldThirdPartyUserName returns the old "third_party_user_name" field's value of the AppUserThirdParty entity.
+// OldThirdPartyUsername returns the old "third_party_username" field's value of the AppUserThirdParty entity.
 // If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdPartyMutation) OldThirdPartyUserName(ctx context.Context) (v string, err error) {
+func (m *AppUserThirdPartyMutation) OldThirdPartyUsername(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdPartyUserName is only allowed on UpdateOne operations")
+		return v, errors.New("OldThirdPartyUsername is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdPartyUserName requires an ID field in the mutation")
+		return v, errors.New("OldThirdPartyUsername requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdPartyUserName: %w", err)
+		return v, fmt.Errorf("querying old value for OldThirdPartyUsername: %w", err)
 	}
-	return oldValue.ThirdPartyUserName, nil
+	return oldValue.ThirdPartyUsername, nil
 }
 
-// ResetThirdPartyUserName resets all changes to the "third_party_user_name" field.
-func (m *AppUserThirdPartyMutation) ResetThirdPartyUserName() {
-	m.third_party_user_name = nil
+// ResetThirdPartyUsername resets all changes to the "third_party_username" field.
+func (m *AppUserThirdPartyMutation) ResetThirdPartyUsername() {
+	m.third_party_username = nil
 }
 
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
@@ -7312,8 +7312,8 @@ func (m *AppUserThirdPartyMutation) Fields() []string {
 	if m.third_party_id != nil {
 		fields = append(fields, appuserthirdparty.FieldThirdPartyID)
 	}
-	if m.third_party_user_name != nil {
-		fields = append(fields, appuserthirdparty.FieldThirdPartyUserName)
+	if m.third_party_username != nil {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyUsername)
 	}
 	if m.third_party_user_avatar != nil {
 		fields = append(fields, appuserthirdparty.FieldThirdPartyUserAvatar)
@@ -7340,8 +7340,8 @@ func (m *AppUserThirdPartyMutation) Field(name string) (ent.Value, bool) {
 		return m.ThirdPartyUserID()
 	case appuserthirdparty.FieldThirdPartyID:
 		return m.ThirdPartyID()
-	case appuserthirdparty.FieldThirdPartyUserName:
-		return m.ThirdPartyUserName()
+	case appuserthirdparty.FieldThirdPartyUsername:
+		return m.ThirdPartyUsername()
 	case appuserthirdparty.FieldThirdPartyUserAvatar:
 		return m.ThirdPartyUserAvatar()
 	}
@@ -7367,8 +7367,8 @@ func (m *AppUserThirdPartyMutation) OldField(ctx context.Context, name string) (
 		return m.OldThirdPartyUserID(ctx)
 	case appuserthirdparty.FieldThirdPartyID:
 		return m.OldThirdPartyID(ctx)
-	case appuserthirdparty.FieldThirdPartyUserName:
-		return m.OldThirdPartyUserName(ctx)
+	case appuserthirdparty.FieldThirdPartyUsername:
+		return m.OldThirdPartyUsername(ctx)
 	case appuserthirdparty.FieldThirdPartyUserAvatar:
 		return m.OldThirdPartyUserAvatar(ctx)
 	}
@@ -7429,12 +7429,12 @@ func (m *AppUserThirdPartyMutation) SetField(name string, value ent.Value) error
 		}
 		m.SetThirdPartyID(v)
 		return nil
-	case appuserthirdparty.FieldThirdPartyUserName:
+	case appuserthirdparty.FieldThirdPartyUsername:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetThirdPartyUserName(v)
+		m.SetThirdPartyUsername(v)
 		return nil
 	case appuserthirdparty.FieldThirdPartyUserAvatar:
 		v, ok := value.(string)
@@ -7552,8 +7552,8 @@ func (m *AppUserThirdPartyMutation) ResetField(name string) error {
 	case appuserthirdparty.FieldThirdPartyID:
 		m.ResetThirdPartyID()
 		return nil
-	case appuserthirdparty.FieldThirdPartyUserName:
-		m.ResetThirdPartyUserName()
+	case appuserthirdparty.FieldThirdPartyUsername:
+		m.ResetThirdPartyUsername()
 		return nil
 	case appuserthirdparty.FieldThirdPartyUserAvatar:
 		m.ResetThirdPartyUserAvatar()

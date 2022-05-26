@@ -28,7 +28,7 @@ func assertAppUser(t *testing.T, actual, expected *npool.AppUserThirdParty) {
 	assert.Equal(t, actual.AppID, expected.AppID)
 	assert.Equal(t, actual.UserID, expected.UserID)
 	assert.Equal(t, actual.ThirdPartyUserID, expected.ThirdPartyUserID)
-	assert.Equal(t, actual.ThirdPartyUserName, expected.ThirdPartyUserName)
+	assert.Equal(t, actual.ThirdPartyUsername, expected.ThirdPartyUsername)
 	assert.Equal(t, actual.ThirdPartyUserAvatar, expected.ThirdPartyUserAvatar)
 	assert.Equal(t, actual.ThirdPartyID, expected.ThirdPartyID)
 }
@@ -42,7 +42,7 @@ func TestCRUD(t *testing.T) {
 		AppID:                uuid.New().String(),
 		UserID:               uuid.New().String(),
 		ThirdPartyUserID:     uuid.New().String(),
-		ThirdPartyUserName:   uuid.New().String(),
+		ThirdPartyUsername:   uuid.New().String(),
 		ThirdPartyUserAvatar: uuid.New().String(),
 		ThirdPartyID:         uuid.New().String(),
 	}

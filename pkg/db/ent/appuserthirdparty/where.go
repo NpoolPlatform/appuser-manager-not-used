@@ -140,10 +140,10 @@ func ThirdPartyID(v string) predicate.AppUserThirdParty {
 	})
 }
 
-// ThirdPartyUserName applies equality check predicate on the "third_party_user_name" field. It's identical to ThirdPartyUserNameEQ.
-func ThirdPartyUserName(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsername applies equality check predicate on the "third_party_username" field. It's identical to ThirdPartyUsernameEQ.
+func ThirdPartyUsername(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.EQ(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
@@ -756,22 +756,22 @@ func ThirdPartyIDContainsFold(v string) predicate.AppUserThirdParty {
 	})
 }
 
-// ThirdPartyUserNameEQ applies the EQ predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameEQ(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameEQ applies the EQ predicate on the "third_party_username" field.
+func ThirdPartyUsernameEQ(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.EQ(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameNEQ applies the NEQ predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameNEQ(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameNEQ applies the NEQ predicate on the "third_party_username" field.
+func ThirdPartyUsernameNEQ(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.NEQ(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameIn applies the In predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameIn(vs ...string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameIn applies the In predicate on the "third_party_username" field.
+func ThirdPartyUsernameIn(vs ...string) predicate.AppUserThirdParty {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -783,12 +783,12 @@ func ThirdPartyUserNameIn(vs ...string) predicate.AppUserThirdParty {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldThirdPartyUserName), v...))
+		s.Where(sql.In(s.C(FieldThirdPartyUsername), v...))
 	})
 }
 
-// ThirdPartyUserNameNotIn applies the NotIn predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameNotIn(vs ...string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameNotIn applies the NotIn predicate on the "third_party_username" field.
+func ThirdPartyUsernameNotIn(vs ...string) predicate.AppUserThirdParty {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -800,70 +800,70 @@ func ThirdPartyUserNameNotIn(vs ...string) predicate.AppUserThirdParty {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldThirdPartyUserName), v...))
+		s.Where(sql.NotIn(s.C(FieldThirdPartyUsername), v...))
 	})
 }
 
-// ThirdPartyUserNameGT applies the GT predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameGT(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameGT applies the GT predicate on the "third_party_username" field.
+func ThirdPartyUsernameGT(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.GT(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameGTE applies the GTE predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameGTE(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameGTE applies the GTE predicate on the "third_party_username" field.
+func ThirdPartyUsernameGTE(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.GTE(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameLT applies the LT predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameLT(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameLT applies the LT predicate on the "third_party_username" field.
+func ThirdPartyUsernameLT(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.LT(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameLTE applies the LTE predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameLTE(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameLTE applies the LTE predicate on the "third_party_username" field.
+func ThirdPartyUsernameLTE(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.LTE(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameContains applies the Contains predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameContains(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameContains applies the Contains predicate on the "third_party_username" field.
+func ThirdPartyUsernameContains(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.Contains(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameHasPrefix applies the HasPrefix predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameHasPrefix(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameHasPrefix applies the HasPrefix predicate on the "third_party_username" field.
+func ThirdPartyUsernameHasPrefix(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.HasPrefix(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameHasSuffix applies the HasSuffix predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameHasSuffix(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameHasSuffix applies the HasSuffix predicate on the "third_party_username" field.
+func ThirdPartyUsernameHasSuffix(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.HasSuffix(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameEqualFold applies the EqualFold predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameEqualFold(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameEqualFold applies the EqualFold predicate on the "third_party_username" field.
+func ThirdPartyUsernameEqualFold(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.EqualFold(s.C(FieldThirdPartyUsername), v))
 	})
 }
 
-// ThirdPartyUserNameContainsFold applies the ContainsFold predicate on the "third_party_user_name" field.
-func ThirdPartyUserNameContainsFold(v string) predicate.AppUserThirdParty {
+// ThirdPartyUsernameContainsFold applies the ContainsFold predicate on the "third_party_username" field.
+func ThirdPartyUsernameContainsFold(v string) predicate.AppUserThirdParty {
 	return predicate.AppUserThirdParty(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldThirdPartyUserName), v))
+		s.Where(sql.ContainsFold(s.C(FieldThirdPartyUsername), v))
 	})
 }
 

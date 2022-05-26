@@ -89,9 +89,9 @@ func (autpc *AppUserThirdPartyCreate) SetThirdPartyID(s string) *AppUserThirdPar
 	return autpc
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (autpc *AppUserThirdPartyCreate) SetThirdPartyUserName(s string) *AppUserThirdPartyCreate {
-	autpc.mutation.SetThirdPartyUserName(s)
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (autpc *AppUserThirdPartyCreate) SetThirdPartyUsername(s string) *AppUserThirdPartyCreate {
+	autpc.mutation.SetThirdPartyUsername(s)
 	return autpc
 }
 
@@ -242,8 +242,8 @@ func (autpc *AppUserThirdPartyCreate) check() error {
 	if _, ok := autpc.mutation.ThirdPartyID(); !ok {
 		return &ValidationError{Name: "third_party_id", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_id"`)}
 	}
-	if _, ok := autpc.mutation.ThirdPartyUserName(); !ok {
-		return &ValidationError{Name: "third_party_user_name", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_user_name"`)}
+	if _, ok := autpc.mutation.ThirdPartyUsername(); !ok {
+		return &ValidationError{Name: "third_party_username", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_username"`)}
 	}
 	if _, ok := autpc.mutation.ThirdPartyUserAvatar(); !ok {
 		return &ValidationError{Name: "third_party_user_avatar", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_user_avatar"`)}
@@ -346,13 +346,13 @@ func (autpc *AppUserThirdPartyCreate) createSpec() (*AppUserThirdParty, *sqlgrap
 		})
 		_node.ThirdPartyID = value
 	}
-	if value, ok := autpc.mutation.ThirdPartyUserName(); ok {
+	if value, ok := autpc.mutation.ThirdPartyUsername(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthirdparty.FieldThirdPartyUserName,
+			Column: appuserthirdparty.FieldThirdPartyUsername,
 		})
-		_node.ThirdPartyUserName = value
+		_node.ThirdPartyUsername = value
 	}
 	if value, ok := autpc.mutation.ThirdPartyUserAvatar(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -518,15 +518,15 @@ func (u *AppUserThirdPartyUpsert) UpdateThirdPartyID() *AppUserThirdPartyUpsert 
 	return u
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (u *AppUserThirdPartyUpsert) SetThirdPartyUserName(v string) *AppUserThirdPartyUpsert {
-	u.Set(appuserthirdparty.FieldThirdPartyUserName, v)
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (u *AppUserThirdPartyUpsert) SetThirdPartyUsername(v string) *AppUserThirdPartyUpsert {
+	u.Set(appuserthirdparty.FieldThirdPartyUsername, v)
 	return u
 }
 
-// UpdateThirdPartyUserName sets the "third_party_user_name" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsert) UpdateThirdPartyUserName() *AppUserThirdPartyUpsert {
-	u.SetExcluded(appuserthirdparty.FieldThirdPartyUserName)
+// UpdateThirdPartyUsername sets the "third_party_username" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsert) UpdateThirdPartyUsername() *AppUserThirdPartyUpsert {
+	u.SetExcluded(appuserthirdparty.FieldThirdPartyUsername)
 	return u
 }
 
@@ -711,17 +711,17 @@ func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyID() *AppUserThirdPartyUpse
 	})
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (u *AppUserThirdPartyUpsertOne) SetThirdPartyUserName(v string) *AppUserThirdPartyUpsertOne {
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (u *AppUserThirdPartyUpsertOne) SetThirdPartyUsername(v string) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetThirdPartyUserName(v)
+		s.SetThirdPartyUsername(v)
 	})
 }
 
-// UpdateThirdPartyUserName sets the "third_party_user_name" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyUserName() *AppUserThirdPartyUpsertOne {
+// UpdateThirdPartyUsername sets the "third_party_username" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyUsername() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateThirdPartyUserName()
+		s.UpdateThirdPartyUsername()
 	})
 }
 
@@ -1074,17 +1074,17 @@ func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyID() *AppUserThirdPartyUps
 	})
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (u *AppUserThirdPartyUpsertBulk) SetThirdPartyUserName(v string) *AppUserThirdPartyUpsertBulk {
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (u *AppUserThirdPartyUpsertBulk) SetThirdPartyUsername(v string) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetThirdPartyUserName(v)
+		s.SetThirdPartyUsername(v)
 	})
 }
 
-// UpdateThirdPartyUserName sets the "third_party_user_name" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyUserName() *AppUserThirdPartyUpsertBulk {
+// UpdateThirdPartyUsername sets the "third_party_username" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyUsername() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateThirdPartyUserName()
+		s.UpdateThirdPartyUsername()
 	})
 }
 

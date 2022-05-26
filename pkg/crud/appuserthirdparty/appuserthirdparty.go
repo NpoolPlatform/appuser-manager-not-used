@@ -36,7 +36,7 @@ func dbRowToAppUserThirdParty(row *ent.AppUserThirdParty) *npool.AppUserThirdPar
 		UserID:               row.UserID.String(),
 		ThirdPartyUserID:     row.ThirdPartyUserID,
 		ThirdPartyID:         row.ThirdPartyID,
-		ThirdPartyUserName:   row.ThirdPartyUserName,
+		ThirdPartyUsername:   row.ThirdPartyUsername,
 		ThirdPartyUserAvatar: row.ThirdPartyUserAvatar,
 	}
 }
@@ -58,7 +58,7 @@ func Create(ctx context.Context, in *npool.CreateAppUserThirdPartyRequest) (*npo
 		Create().
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetUserID(uuid.MustParse(in.GetInfo().GetUserID())).
-		SetThirdPartyUserName(in.GetInfo().GetThirdPartyUserName()).
+		SetThirdPartyUsername(in.GetInfo().GetThirdPartyUsername()).
 		SetThirdPartyUserAvatar(in.GetInfo().GetThirdPartyUserAvatar()).
 		SetThirdPartyID(in.GetInfo().GetThirdPartyID()).
 		SetThirdPartyUserID(in.GetInfo().GetThirdPartyUserID()).

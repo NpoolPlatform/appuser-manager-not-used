@@ -107,9 +107,9 @@ func (autpu *AppUserThirdPartyUpdate) SetThirdPartyID(s string) *AppUserThirdPar
 	return autpu
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUserName(s string) *AppUserThirdPartyUpdate {
-	autpu.mutation.SetThirdPartyUserName(s)
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUsername(s string) *AppUserThirdPartyUpdate {
+	autpu.mutation.SetThirdPartyUsername(s)
 	return autpu
 }
 
@@ -297,11 +297,11 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 			Column: appuserthirdparty.FieldThirdPartyID,
 		})
 	}
-	if value, ok := autpu.mutation.ThirdPartyUserName(); ok {
+	if value, ok := autpu.mutation.ThirdPartyUsername(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthirdparty.FieldThirdPartyUserName,
+			Column: appuserthirdparty.FieldThirdPartyUsername,
 		})
 	}
 	if value, ok := autpu.mutation.ThirdPartyUserAvatar(); ok {
@@ -409,9 +409,9 @@ func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyID(s string) *AppUserThir
 	return autpuo
 }
 
-// SetThirdPartyUserName sets the "third_party_user_name" field.
-func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUserName(s string) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.SetThirdPartyUserName(s)
+// SetThirdPartyUsername sets the "third_party_username" field.
+func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUsername(s string) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.SetThirdPartyUsername(s)
 	return autpuo
 }
 
@@ -623,11 +623,11 @@ func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *A
 			Column: appuserthirdparty.FieldThirdPartyID,
 		})
 	}
-	if value, ok := autpuo.mutation.ThirdPartyUserName(); ok {
+	if value, ok := autpuo.mutation.ThirdPartyUsername(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthirdparty.FieldThirdPartyUserName,
+			Column: appuserthirdparty.FieldThirdPartyUsername,
 		})
 	}
 	if value, ok := autpuo.mutation.ThirdPartyUserAvatar(); ok {
