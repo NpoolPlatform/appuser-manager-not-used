@@ -3,6 +3,7 @@
 package appusersecret
 
 import (
+	"entgo.io/ent"
 	"github.com/google/uuid"
 )
 
@@ -11,6 +12,12 @@ const (
 	Label = "app_user_secret"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCreateAt holds the string denoting the create_at field in the database.
+	FieldCreateAt = "create_at"
+	// FieldUpdateAt holds the string denoting the update_at field in the database.
+	FieldUpdateAt = "update_at"
+	// FieldDeleteAt holds the string denoting the delete_at field in the database.
+	FieldDeleteAt = "delete_at"
 	// FieldAppID holds the string denoting the app_id field in the database.
 	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
@@ -21,12 +28,6 @@ const (
 	FieldSalt = "salt"
 	// FieldGoogleSecret holds the string denoting the google_secret field in the database.
 	FieldGoogleSecret = "google_secret"
-	// FieldCreateAt holds the string denoting the create_at field in the database.
-	FieldCreateAt = "create_at"
-	// FieldUpdateAt holds the string denoting the update_at field in the database.
-	FieldUpdateAt = "update_at"
-	// FieldDeleteAt holds the string denoting the delete_at field in the database.
-	FieldDeleteAt = "delete_at"
 	// Table holds the table name of the appusersecret in the database.
 	Table = "app_user_secrets"
 )
@@ -34,14 +35,14 @@ const (
 // Columns holds all SQL columns for appusersecret fields.
 var Columns = []string{
 	FieldID,
+	FieldCreateAt,
+	FieldUpdateAt,
+	FieldDeleteAt,
 	FieldAppID,
 	FieldUserID,
 	FieldPasswordHash,
 	FieldSalt,
 	FieldGoogleSecret,
-	FieldCreateAt,
-	FieldUpdateAt,
-	FieldDeleteAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -54,7 +55,15 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "github.com/NpoolPlatform/appuser-manager/pkg/db/ent/runtime"
+//
 var (
+	Hooks  [1]ent.Hook
+	Policy ent.Policy
 	// DefaultCreateAt holds the default value on creation for the "create_at" field.
 	DefaultCreateAt func() uint32
 	// DefaultUpdateAt holds the default value on creation for the "update_at" field.

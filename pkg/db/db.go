@@ -8,6 +8,9 @@ import (
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
+
+	// ent policy runtime
+	_ "github.com/NpoolPlatform/appuser-manager/pkg/db/ent/runtime"
 )
 
 func client() (*ent.Client, error) {
@@ -30,3 +33,19 @@ func Init() error {
 func Client() (*ent.Client, error) {
 	return client()
 }
+
+// func DB() (*sql.DB,error) {
+//	conn, err := mysql.GetConn()
+//	if err != nil {
+//		return nil, err
+//	}
+//	return conn, err
+// }
+//
+// func Tx() (*sql.Tx,error) {
+//	conn, err := mysql.GetConn()
+//	if err != nil {
+//		return nil, err
+//	}
+//	return conn.BeginTx(context.Background(),nil)
+// }

@@ -28,30 +28,6 @@ func (auu *AppUserUpdate) Where(ps ...predicate.AppUser) *AppUserUpdate {
 	return auu
 }
 
-// SetAppID sets the "app_id" field.
-func (auu *AppUserUpdate) SetAppID(u uuid.UUID) *AppUserUpdate {
-	auu.mutation.SetAppID(u)
-	return auu
-}
-
-// SetEmailAddress sets the "email_address" field.
-func (auu *AppUserUpdate) SetEmailAddress(s string) *AppUserUpdate {
-	auu.mutation.SetEmailAddress(s)
-	return auu
-}
-
-// SetPhoneNo sets the "phone_no" field.
-func (auu *AppUserUpdate) SetPhoneNo(s string) *AppUserUpdate {
-	auu.mutation.SetPhoneNo(s)
-	return auu
-}
-
-// SetImportFromApp sets the "import_from_app" field.
-func (auu *AppUserUpdate) SetImportFromApp(u uuid.UUID) *AppUserUpdate {
-	auu.mutation.SetImportFromApp(u)
-	return auu
-}
-
 // SetCreateAt sets the "create_at" field.
 func (auu *AppUserUpdate) SetCreateAt(u uint32) *AppUserUpdate {
 	auu.mutation.ResetCreateAt()
@@ -107,6 +83,30 @@ func (auu *AppUserUpdate) AddDeleteAt(u int32) *AppUserUpdate {
 	return auu
 }
 
+// SetAppID sets the "app_id" field.
+func (auu *AppUserUpdate) SetAppID(u uuid.UUID) *AppUserUpdate {
+	auu.mutation.SetAppID(u)
+	return auu
+}
+
+// SetEmailAddress sets the "email_address" field.
+func (auu *AppUserUpdate) SetEmailAddress(s string) *AppUserUpdate {
+	auu.mutation.SetEmailAddress(s)
+	return auu
+}
+
+// SetPhoneNo sets the "phone_no" field.
+func (auu *AppUserUpdate) SetPhoneNo(s string) *AppUserUpdate {
+	auu.mutation.SetPhoneNo(s)
+	return auu
+}
+
+// SetImportFromApp sets the "import_from_app" field.
+func (auu *AppUserUpdate) SetImportFromApp(u uuid.UUID) *AppUserUpdate {
+	auu.mutation.SetImportFromApp(u)
+	return auu
+}
+
 // Mutation returns the AppUserMutation object of the builder.
 func (auu *AppUserUpdate) Mutation() *AppUserMutation {
 	return auu.mutation
@@ -118,7 +118,9 @@ func (auu *AppUserUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	auu.defaults()
+	if err := auu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(auu.hooks) == 0 {
 		affected, err = auu.sqlSave(ctx)
 	} else {
@@ -168,11 +170,15 @@ func (auu *AppUserUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (auu *AppUserUpdate) defaults() {
+func (auu *AppUserUpdate) defaults() error {
 	if _, ok := auu.mutation.UpdateAt(); !ok {
+		if appuser.UpdateDefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized appuser.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := appuser.UpdateDefaultUpdateAt()
 		auu.mutation.SetUpdateAt(v)
 	}
+	return nil
 }
 
 func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -192,34 +198,6 @@ func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := auu.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appuser.FieldAppID,
-		})
-	}
-	if value, ok := auu.mutation.EmailAddress(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuser.FieldEmailAddress,
-		})
-	}
-	if value, ok := auu.mutation.PhoneNo(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuser.FieldPhoneNo,
-		})
-	}
-	if value, ok := auu.mutation.ImportFromApp(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appuser.FieldImportFromApp,
-		})
 	}
 	if value, ok := auu.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -263,6 +241,34 @@ func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appuser.FieldDeleteAt,
 		})
 	}
+	if value, ok := auu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuser.FieldAppID,
+		})
+	}
+	if value, ok := auu.mutation.EmailAddress(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuser.FieldEmailAddress,
+		})
+	}
+	if value, ok := auu.mutation.PhoneNo(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuser.FieldPhoneNo,
+		})
+	}
+	if value, ok := auu.mutation.ImportFromApp(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuser.FieldImportFromApp,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, auu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appuser.Label}
@@ -280,30 +286,6 @@ type AppUserUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppUserMutation
-}
-
-// SetAppID sets the "app_id" field.
-func (auuo *AppUserUpdateOne) SetAppID(u uuid.UUID) *AppUserUpdateOne {
-	auuo.mutation.SetAppID(u)
-	return auuo
-}
-
-// SetEmailAddress sets the "email_address" field.
-func (auuo *AppUserUpdateOne) SetEmailAddress(s string) *AppUserUpdateOne {
-	auuo.mutation.SetEmailAddress(s)
-	return auuo
-}
-
-// SetPhoneNo sets the "phone_no" field.
-func (auuo *AppUserUpdateOne) SetPhoneNo(s string) *AppUserUpdateOne {
-	auuo.mutation.SetPhoneNo(s)
-	return auuo
-}
-
-// SetImportFromApp sets the "import_from_app" field.
-func (auuo *AppUserUpdateOne) SetImportFromApp(u uuid.UUID) *AppUserUpdateOne {
-	auuo.mutation.SetImportFromApp(u)
-	return auuo
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -361,6 +343,30 @@ func (auuo *AppUserUpdateOne) AddDeleteAt(u int32) *AppUserUpdateOne {
 	return auuo
 }
 
+// SetAppID sets the "app_id" field.
+func (auuo *AppUserUpdateOne) SetAppID(u uuid.UUID) *AppUserUpdateOne {
+	auuo.mutation.SetAppID(u)
+	return auuo
+}
+
+// SetEmailAddress sets the "email_address" field.
+func (auuo *AppUserUpdateOne) SetEmailAddress(s string) *AppUserUpdateOne {
+	auuo.mutation.SetEmailAddress(s)
+	return auuo
+}
+
+// SetPhoneNo sets the "phone_no" field.
+func (auuo *AppUserUpdateOne) SetPhoneNo(s string) *AppUserUpdateOne {
+	auuo.mutation.SetPhoneNo(s)
+	return auuo
+}
+
+// SetImportFromApp sets the "import_from_app" field.
+func (auuo *AppUserUpdateOne) SetImportFromApp(u uuid.UUID) *AppUserUpdateOne {
+	auuo.mutation.SetImportFromApp(u)
+	return auuo
+}
+
 // Mutation returns the AppUserMutation object of the builder.
 func (auuo *AppUserUpdateOne) Mutation() *AppUserMutation {
 	return auuo.mutation
@@ -379,7 +385,9 @@ func (auuo *AppUserUpdateOne) Save(ctx context.Context) (*AppUser, error) {
 		err  error
 		node *AppUser
 	)
-	auuo.defaults()
+	if err := auuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(auuo.hooks) == 0 {
 		node, err = auuo.sqlSave(ctx)
 	} else {
@@ -429,11 +437,15 @@ func (auuo *AppUserUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (auuo *AppUserUpdateOne) defaults() {
+func (auuo *AppUserUpdateOne) defaults() error {
 	if _, ok := auuo.mutation.UpdateAt(); !ok {
+		if appuser.UpdateDefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized appuser.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := appuser.UpdateDefaultUpdateAt()
 		auuo.mutation.SetUpdateAt(v)
 	}
+	return nil
 }
 
 func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err error) {
@@ -470,34 +482,6 @@ func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err 
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := auuo.mutation.AppID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appuser.FieldAppID,
-		})
-	}
-	if value, ok := auuo.mutation.EmailAddress(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuser.FieldEmailAddress,
-		})
-	}
-	if value, ok := auuo.mutation.PhoneNo(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: appuser.FieldPhoneNo,
-		})
-	}
-	if value, ok := auuo.mutation.ImportFromApp(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: appuser.FieldImportFromApp,
-		})
 	}
 	if value, ok := auuo.mutation.CreateAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -539,6 +523,34 @@ func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err 
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: appuser.FieldDeleteAt,
+		})
+	}
+	if value, ok := auuo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuser.FieldAppID,
+		})
+	}
+	if value, ok := auuo.mutation.EmailAddress(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuser.FieldEmailAddress,
+		})
+	}
+	if value, ok := auuo.mutation.PhoneNo(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuser.FieldPhoneNo,
+		})
+	}
+	if value, ok := auuo.mutation.ImportFromApp(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuser.FieldImportFromApp,
 		})
 	}
 	_node = &AppUser{config: auuo.config}

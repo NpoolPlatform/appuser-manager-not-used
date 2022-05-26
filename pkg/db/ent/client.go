@@ -543,7 +543,8 @@ func (c *AppRoleUserClient) GetX(ctx context.Context, id uuid.UUID) *AppRoleUser
 
 // Hooks returns the client hooks.
 func (c *AppRoleUserClient) Hooks() []Hook {
-	return c.hooks.AppRoleUser
+	hooks := c.hooks.AppRoleUser
+	return append(hooks[:len(hooks):len(hooks)], approleuser.Hooks[:]...)
 }
 
 // AppUserClient is a client for the AppUser schema.
@@ -633,7 +634,8 @@ func (c *AppUserClient) GetX(ctx context.Context, id uuid.UUID) *AppUser {
 
 // Hooks returns the client hooks.
 func (c *AppUserClient) Hooks() []Hook {
-	return c.hooks.AppUser
+	hooks := c.hooks.AppUser
+	return append(hooks[:len(hooks):len(hooks)], appuser.Hooks[:]...)
 }
 
 // AppUserControlClient is a client for the AppUserControl schema.
@@ -903,7 +905,8 @@ func (c *AppUserSecretClient) GetX(ctx context.Context, id uuid.UUID) *AppUserSe
 
 // Hooks returns the client hooks.
 func (c *AppUserSecretClient) Hooks() []Hook {
-	return c.hooks.AppUserSecret
+	hooks := c.hooks.AppUserSecret
+	return append(hooks[:len(hooks):len(hooks)], appusersecret.Hooks[:]...)
 }
 
 // BanAppClient is a client for the BanApp schema.

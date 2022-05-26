@@ -255,12 +255,12 @@ func (auq *AppUserQuery) Clone() *AppUserQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreateAt uint32 `json:"create_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppUser.Query().
-//		GroupBy(appuser.FieldAppID).
+//		GroupBy(appuser.FieldCreateAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +282,11 @@ func (auq *AppUserQuery) GroupBy(field string, fields ...string) *AppUserGroupBy
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreateAt uint32 `json:"create_at,omitempty"`
 //	}
 //
 //	client.AppUser.Query().
-//		Select(appuser.FieldAppID).
+//		Select(appuser.FieldCreateAt).
 //		Scan(ctx, &v)
 //
 func (auq *AppUserQuery) Select(fields ...string) *AppUserSelect {
@@ -306,6 +306,12 @@ func (auq *AppUserQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		auq.sql = prev
+	}
+	if appuser.Policy == nil {
+		return errors.New("ent: uninitialized appuser.Policy (forgotten import ent/runtime?)")
+	}
+	if err := appuser.Policy.EvalQuery(ctx, auq); err != nil {
+		return err
 	}
 	return nil
 }

@@ -91,27 +91,6 @@ func IDLTE(id uuid.UUID) predicate.AppRoleUser {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
-	})
-}
-
-// RoleID applies equality check predicate on the "role_id" field. It's identical to RoleIDEQ.
-func RoleID(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldRoleID), v))
-	})
-}
-
-// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUserID), v))
-	})
-}
-
 // CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
 func CreateAt(v uint32) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
@@ -133,231 +112,24 @@ func DeleteAt(v uint32) predicate.AppRoleUser {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.AppRoleUser {
+// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
+func AppID(v uuid.UUID) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAppID), v))
 	})
 }
 
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.AppRoleUser {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.AppRoleUser {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
-	})
-}
-
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
-	})
-}
-
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
-	})
-}
-
-// RoleIDEQ applies the EQ predicate on the "role_id" field.
-func RoleIDEQ(v uuid.UUID) predicate.AppRoleUser {
+// RoleID applies equality check predicate on the "role_id" field. It's identical to RoleIDEQ.
+func RoleID(v uuid.UUID) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRoleID), v))
 	})
 }
 
-// RoleIDNEQ applies the NEQ predicate on the "role_id" field.
-func RoleIDNEQ(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldRoleID), v))
-	})
-}
-
-// RoleIDIn applies the In predicate on the "role_id" field.
-func RoleIDIn(vs ...uuid.UUID) predicate.AppRoleUser {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldRoleID), v...))
-	})
-}
-
-// RoleIDNotIn applies the NotIn predicate on the "role_id" field.
-func RoleIDNotIn(vs ...uuid.UUID) predicate.AppRoleUser {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldRoleID), v...))
-	})
-}
-
-// RoleIDGT applies the GT predicate on the "role_id" field.
-func RoleIDGT(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldRoleID), v))
-	})
-}
-
-// RoleIDGTE applies the GTE predicate on the "role_id" field.
-func RoleIDGTE(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldRoleID), v))
-	})
-}
-
-// RoleIDLT applies the LT predicate on the "role_id" field.
-func RoleIDLT(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldRoleID), v))
-	})
-}
-
-// RoleIDLTE applies the LTE predicate on the "role_id" field.
-func RoleIDLTE(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldRoleID), v))
-	})
-}
-
-// UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v uuid.UUID) predicate.AppRoleUser {
+// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
+func UserID(v uuid.UUID) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...uuid.UUID) predicate.AppRoleUser {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldUserID), v...))
-	})
-}
-
-// UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...uuid.UUID) predicate.AppRoleUser {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldUserID), v...))
-	})
-}
-
-// UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v uuid.UUID) predicate.AppRoleUser {
-	return predicate.AppRoleUser(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldUserID), v))
 	})
 }
 
@@ -586,6 +358,234 @@ func DeleteAtLT(v uint32) predicate.AppRoleUser {
 func DeleteAtLTE(v uint32) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDeleteAt), v))
+	})
+}
+
+// AppIDEQ applies the EQ predicate on the "app_id" field.
+func AppIDEQ(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDNEQ applies the NEQ predicate on the "app_id" field.
+func AppIDNEQ(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDIn applies the In predicate on the "app_id" field.
+func AppIDIn(vs ...uuid.UUID) predicate.AppRoleUser {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAppID), v...))
+	})
+}
+
+// AppIDNotIn applies the NotIn predicate on the "app_id" field.
+func AppIDNotIn(vs ...uuid.UUID) predicate.AppRoleUser {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAppID), v...))
+	})
+}
+
+// AppIDGT applies the GT predicate on the "app_id" field.
+func AppIDGT(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDGTE applies the GTE predicate on the "app_id" field.
+func AppIDGTE(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDLT applies the LT predicate on the "app_id" field.
+func AppIDLT(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDLTE applies the LTE predicate on the "app_id" field.
+func AppIDLTE(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppID), v))
+	})
+}
+
+// RoleIDEQ applies the EQ predicate on the "role_id" field.
+func RoleIDEQ(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoleID), v))
+	})
+}
+
+// RoleIDNEQ applies the NEQ predicate on the "role_id" field.
+func RoleIDNEQ(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRoleID), v))
+	})
+}
+
+// RoleIDIn applies the In predicate on the "role_id" field.
+func RoleIDIn(vs ...uuid.UUID) predicate.AppRoleUser {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRoleID), v...))
+	})
+}
+
+// RoleIDNotIn applies the NotIn predicate on the "role_id" field.
+func RoleIDNotIn(vs ...uuid.UUID) predicate.AppRoleUser {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRoleID), v...))
+	})
+}
+
+// RoleIDGT applies the GT predicate on the "role_id" field.
+func RoleIDGT(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRoleID), v))
+	})
+}
+
+// RoleIDGTE applies the GTE predicate on the "role_id" field.
+func RoleIDGTE(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRoleID), v))
+	})
+}
+
+// RoleIDLT applies the LT predicate on the "role_id" field.
+func RoleIDLT(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRoleID), v))
+	})
+}
+
+// RoleIDLTE applies the LTE predicate on the "role_id" field.
+func RoleIDLTE(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRoleID), v))
+	})
+}
+
+// UserIDEQ applies the EQ predicate on the "user_id" field.
+func UserIDEQ(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDNEQ applies the NEQ predicate on the "user_id" field.
+func UserIDNEQ(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDIn applies the In predicate on the "user_id" field.
+func UserIDIn(vs ...uuid.UUID) predicate.AppRoleUser {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUserID), v...))
+	})
+}
+
+// UserIDNotIn applies the NotIn predicate on the "user_id" field.
+func UserIDNotIn(vs ...uuid.UUID) predicate.AppRoleUser {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUserID), v...))
+	})
+}
+
+// UserIDGT applies the GT predicate on the "user_id" field.
+func UserIDGT(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDGTE applies the GTE predicate on the "user_id" field.
+func UserIDGTE(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDLT applies the LT predicate on the "user_id" field.
+func UserIDLT(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUserID), v))
+	})
+}
+
+// UserIDLTE applies the LTE predicate on the "user_id" field.
+func UserIDLTE(v uuid.UUID) predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUserID), v))
 	})
 }
 

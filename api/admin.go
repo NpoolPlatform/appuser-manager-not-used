@@ -2,13 +2,13 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	adminmw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/admin"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
-	"golang.org/x/xerrors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -61,7 +61,7 @@ func (s *Server) CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGene
 func (s *Server) GetGenesisAppRoleUsersByOtherApp(ctx context.Context, in *npool.GetGenesisAppRoleUsersByOtherAppRequest) (*npool.GetGenesisAppRoleUsersByOtherAppResponse, error) {
 	role, err := adminmw.GetGenesisRole(ctx, &npool.GetGenesisRoleRequest{})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get genesis role: %v", err)
+		return nil, fmt.Errorf("fail get genesis role: %v", err)
 	}
 
 	resp, err := s.GetAppRoleUsersByAppRole(ctx, &npool.GetAppRoleUsersByAppRoleRequest{

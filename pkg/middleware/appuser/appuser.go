@@ -2,6 +2,7 @@ package appuser
 
 import (
 	"context"
+	"fmt"
 
 	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
 	appcontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
@@ -15,8 +16,6 @@ import (
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
-
-	"golang.org/x/xerrors"
 )
 
 func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) (*npool.CreateAppUserWithSecretResponse, error) {
@@ -24,27 +23,27 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 		Info: in.GetUser(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail create app user: %v", err)
+		return nil, fmt.Errorf("fail create app user: %v", err)
 	}
 
 	inSecret := in.GetSecret()
-	inSecret.UserID = resp.Info.ID
+	inSecret.UserID = resp.Info.GetID()
 
 	_, err = appusersecretcrud.Create(ctx, &npool.CreateAppUserSecretRequest{
 		Info: inSecret,
 	})
 	if err != nil {
 		// TODO: rollback for secret create error
-		return nil, xerrors.Errorf("fail create app user secret: %v", err)
+		return nil, fmt.Errorf("fail create app user secret: %v", err)
 	}
 
 	if setDefaultRole {
 		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
 		if err != nil {
-			return nil, xerrors.Errorf("fail get default role: %v", err)
+			return nil, fmt.Errorf("fail get default role: %v", err)
 		}
 		if defaultRole == nil {
-			return nil, xerrors.Errorf("fail get default role")
+			return nil, fmt.Errorf("fail get default role")
 		}
 
 		_, err = approleusercrud.Create(ctx, &npool.CreateAppRoleUserRequest{
@@ -56,10 +55,55 @@ func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequ
 		})
 		if err != nil {
 			// TODO: rollback for role user create error
-			return nil, xerrors.Errorf("fail create app role user: %v", err)
+			return nil, fmt.Errorf("fail create app role user: %v", err)
 		}
 	}
 
+	return &npool.CreateAppUserWithSecretResponse{
+		Info: resp.Info,
+	}, nil
+}
+
+func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) (*npool.CreateAppUserWithSecretResponse, error) {
+	resp, err := appusercrud.CreateRevert(ctx, &npool.CreateAppUserRequest{
+		Info: in.GetUser(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail create app user: %v", err)
+	}
+
+	inSecret := in.GetSecret()
+	inSecret.UserID = in.GetUser().GetID()
+
+	_, err = appusersecretcrud.CreateRevert(ctx, &npool.CreateAppUserSecretRequest{
+		Info: inSecret,
+	})
+	if err != nil {
+		// TODO: rollback for secret create error
+		return nil, fmt.Errorf("fail create app user secret: %v", err)
+	}
+
+	if setDefaultRole {
+		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
+		if err != nil {
+			return nil, fmt.Errorf("fail get default role: %v", err)
+		}
+		if defaultRole == nil {
+			return nil, fmt.Errorf("fail get default role")
+		}
+
+		_, err = approleusercrud.CreateRevert(ctx, &npool.CreateAppRoleUserRequest{
+			Info: &npool.AppRoleUser{
+				AppID:  in.GetUser().GetAppID(),
+				RoleID: defaultRole.ID,
+				UserID: in.GetUser().GetID(),
+			},
+		})
+		if err != nil {
+			// TODO: rollback for role user create error
+			return nil, fmt.Errorf("fail create app role user: %v", err)
+		}
+	}
 	return &npool.CreateAppUserWithSecretResponse{
 		Info: resp.Info,
 	}, nil
@@ -71,7 +115,7 @@ func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserReque
 		UserID: in.GetUserID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app role user by app user: %v", err)
+		return nil, fmt.Errorf("fail get app role user by app user: %v", err)
 	}
 
 	roles := []*npool.AppRole{}
@@ -80,7 +124,7 @@ func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserReque
 			ID: info.RoleID,
 		})
 		if err != nil {
-			return nil, xerrors.Errorf("fail get app role: %v", err)
+			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
 		if resp1.Info == nil {
 			continue
@@ -152,10 +196,10 @@ func VerifyByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAp
 		Account: in.GetAccount(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app user by app account: %v", err)
+		return nil, fmt.Errorf("fail get app user by app account: %v", err)
 	}
 	if resp.Info == nil {
-		return nil, xerrors.Errorf("fail get app user by app account")
+		return nil, fmt.Errorf("fail get app user by app account")
 	}
 
 	resp1, err := appusersecretcrud.GetByAppUser(ctx, &npool.GetAppUserSecretByAppUserRequest{
@@ -163,20 +207,20 @@ func VerifyByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAp
 		UserID: resp.Info.ID,
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app user secret by app user: %v", err)
+		return nil, fmt.Errorf("fail get app user secret by app user: %v", err)
 	}
 	if resp1.Info == nil {
-		return nil, xerrors.Errorf("fail get app user secret by app user")
+		return nil, fmt.Errorf("fail get app user secret by app user")
 	}
 
 	err = encrypt.VerifyWithSalt(in.GetPasswordHash(), resp1.Info.PasswordHash, resp1.Info.Salt)
 	if err != nil {
-		return nil, xerrors.Errorf("invalid account or password: %v", err)
+		return nil, fmt.Errorf("invalid account or password: %v", err)
 	}
 
 	info, err := expandAppUserInfo(ctx, resp.Info)
 	if err != nil {
-		return nil, xerrors.Errorf("fail expand app user: %v", err)
+		return nil, fmt.Errorf("fail expand app user: %v", err)
 	}
 
 	return &npool.VerifyAppUserByAppAccountPasswordResponse{
@@ -189,15 +233,15 @@ func GetAppUserInfo(ctx context.Context, in *npool.GetAppUserInfoRequest) (*npoo
 		ID: in.GetID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app user: %v", err)
+		return nil, fmt.Errorf("fail get app user: %v", err)
 	}
 	if resp.Info == nil {
-		return nil, xerrors.Errorf("fail get app user")
+		return nil, fmt.Errorf("fail get app user")
 	}
 
 	info, err := expandAppUserInfo(ctx, resp.Info)
 	if err != nil {
-		return nil, xerrors.Errorf("fail expand app user: %v", err)
+		return nil, fmt.Errorf("fail expand app user: %v", err)
 	}
 
 	return &npool.GetAppUserInfoResponse{
@@ -211,15 +255,15 @@ func GetAppUserInfoByAppUser(ctx context.Context, in *npool.GetAppUserInfoByAppU
 		UserID: in.GetUserID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app user: %v", err)
+		return nil, fmt.Errorf("fail get app user: %v", err)
 	}
 	if resp.Info == nil {
-		return nil, xerrors.Errorf("fail get app user")
+		return nil, fmt.Errorf("fail get app user")
 	}
 
 	info, err := expandAppUserInfo(ctx, resp.Info)
 	if err != nil {
-		return nil, xerrors.Errorf("fail expand app user: %v", err)
+		return nil, fmt.Errorf("fail expand app user: %v", err)
 	}
 
 	return &npool.GetAppUserInfoByAppUserResponse{
@@ -232,14 +276,14 @@ func GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppReq
 		AppID: in.GetAppID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app user by app: %v", err)
+		return nil, fmt.Errorf("fail get app user by app: %v", err)
 	}
 
 	infos := []*npool.AppUserInfo{}
 	for _, info := range resp.Infos {
 		userInfo, err := expandAppUserInfo(ctx, info)
 		if err != nil {
-			return nil, xerrors.Errorf("fail expand app user: %v", err)
+			return nil, fmt.Errorf("fail expand app user: %v", err)
 		}
 		infos = append(infos, userInfo)
 	}
@@ -276,15 +320,15 @@ func GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetApp
 		ID: in.GetID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get app: %v", err)
+		return nil, fmt.Errorf("fail get app: %v", err)
 	}
 	if resp.Info == nil {
-		return nil, xerrors.Errorf("fail get app")
+		return nil, fmt.Errorf("fail get app")
 	}
 
 	info, err := expandAppInfo(ctx, resp.Info)
 	if err != nil {
-		return nil, xerrors.Errorf("fail expand app info: %v", err)
+		return nil, fmt.Errorf("fail expand app info: %v", err)
 	}
 
 	return &npool.GetAppInfoResponse{
@@ -295,14 +339,14 @@ func GetAppInfo(ctx context.Context, in *npool.GetAppInfoRequest) (*npool.GetApp
 func GetAppInfos(ctx context.Context, in *npool.GetAppInfosRequest) (*npool.GetAppInfosResponse, error) {
 	resp, err := appcrud.GetAll(ctx, &npool.GetAppsRequest{})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get apps: %v", err)
+		return nil, fmt.Errorf("fail get apps: %v", err)
 	}
 
 	infos := []*npool.AppInfo{}
 	for _, info := range resp.Infos {
 		appInfo, err := expandAppInfo(ctx, info)
 		if err != nil {
-			return nil, xerrors.Errorf("fail expand app info: %v", err)
+			return nil, fmt.Errorf("fail expand app info: %v", err)
 		}
 		infos = append(infos, appInfo)
 	}
@@ -317,14 +361,14 @@ func GetAppInfosByCreator(ctx context.Context, in *npool.GetAppInfosByCreatorReq
 		UserID: in.GetUserID(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail get apps by creator: %v", err)
+		return nil, fmt.Errorf("fail get apps by creator: %v", err)
 	}
 
 	infos := []*npool.AppInfo{}
 	for _, info := range resp.Infos {
 		appInfo, err := expandAppInfo(ctx, info)
 		if err != nil {
-			return nil, xerrors.Errorf("fail expand app info: %v", err)
+			return nil, fmt.Errorf("fail expand app info: %v", err)
 		}
 		infos = append(infos, appInfo)
 	}
