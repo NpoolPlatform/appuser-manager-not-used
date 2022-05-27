@@ -28,10 +28,3 @@ const (
 	CreateAppUserWithSecret       = "CreateAppUserWithSecret"
 	CreateAppUserWithSecretRevert = "CreateAppUserWithSecretRevert"
 )
-
-var DTMEntry = map[string]*DTMAction{
-	CreateAppUserWithSecret: &DTMAction{ //nolint
-		Action: CreateAppUserWithSecret,
-		Revert: CreateAppUserWithSecretRevert,
-	},
-}
