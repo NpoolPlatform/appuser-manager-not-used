@@ -3,12 +3,11 @@ package schema
 import (
 	"time"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/privacy"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/rule"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/privacy"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/rule"
 )
 
 type TimeMixin struct {

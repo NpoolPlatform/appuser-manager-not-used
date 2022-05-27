@@ -23,24 +23,6 @@ type AppRoleUserCreate struct {
 	conflict []sql.ConflictOption
 }
 
-// SetAppID sets the "app_id" field.
-func (aruc *AppRoleUserCreate) SetAppID(u uuid.UUID) *AppRoleUserCreate {
-	aruc.mutation.SetAppID(u)
-	return aruc
-}
-
-// SetRoleID sets the "role_id" field.
-func (aruc *AppRoleUserCreate) SetRoleID(u uuid.UUID) *AppRoleUserCreate {
-	aruc.mutation.SetRoleID(u)
-	return aruc
-}
-
-// SetUserID sets the "user_id" field.
-func (aruc *AppRoleUserCreate) SetUserID(u uuid.UUID) *AppRoleUserCreate {
-	aruc.mutation.SetUserID(u)
-	return aruc
-}
-
 // SetCreateAt sets the "create_at" field.
 func (aruc *AppRoleUserCreate) SetCreateAt(u uint32) *AppRoleUserCreate {
 	aruc.mutation.SetCreateAt(u)
@@ -83,6 +65,24 @@ func (aruc *AppRoleUserCreate) SetNillableDeleteAt(u *uint32) *AppRoleUserCreate
 	return aruc
 }
 
+// SetAppID sets the "app_id" field.
+func (aruc *AppRoleUserCreate) SetAppID(u uuid.UUID) *AppRoleUserCreate {
+	aruc.mutation.SetAppID(u)
+	return aruc
+}
+
+// SetRoleID sets the "role_id" field.
+func (aruc *AppRoleUserCreate) SetRoleID(u uuid.UUID) *AppRoleUserCreate {
+	aruc.mutation.SetRoleID(u)
+	return aruc
+}
+
+// SetUserID sets the "user_id" field.
+func (aruc *AppRoleUserCreate) SetUserID(u uuid.UUID) *AppRoleUserCreate {
+	aruc.mutation.SetUserID(u)
+	return aruc
+}
+
 // SetID sets the "id" field.
 func (aruc *AppRoleUserCreate) SetID(u uuid.UUID) *AppRoleUserCreate {
 	aruc.mutation.SetID(u)
@@ -108,7 +108,9 @@ func (aruc *AppRoleUserCreate) Save(ctx context.Context) (*AppRoleUser, error) {
 		err  error
 		node *AppRoleUser
 	)
-	aruc.defaults()
+	if err := aruc.defaults(); err != nil {
+		return nil, err
+	}
 	if len(aruc.hooks) == 0 {
 		if err = aruc.check(); err != nil {
 			return nil, err
@@ -167,36 +169,40 @@ func (aruc *AppRoleUserCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aruc *AppRoleUserCreate) defaults() {
+func (aruc *AppRoleUserCreate) defaults() error {
 	if _, ok := aruc.mutation.CreateAt(); !ok {
+		if approleuser.DefaultCreateAt == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultCreateAt (forgotten import ent/runtime?)")
+		}
 		v := approleuser.DefaultCreateAt()
 		aruc.mutation.SetCreateAt(v)
 	}
 	if _, ok := aruc.mutation.UpdateAt(); !ok {
+		if approleuser.DefaultUpdateAt == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultUpdateAt (forgotten import ent/runtime?)")
+		}
 		v := approleuser.DefaultUpdateAt()
 		aruc.mutation.SetUpdateAt(v)
 	}
 	if _, ok := aruc.mutation.DeleteAt(); !ok {
+		if approleuser.DefaultDeleteAt == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultDeleteAt (forgotten import ent/runtime?)")
+		}
 		v := approleuser.DefaultDeleteAt()
 		aruc.mutation.SetDeleteAt(v)
 	}
 	if _, ok := aruc.mutation.ID(); !ok {
+		if approleuser.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := approleuser.DefaultID()
 		aruc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (aruc *AppRoleUserCreate) check() error {
-	if _, ok := aruc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppRoleUser.app_id"`)}
-	}
-	if _, ok := aruc.mutation.RoleID(); !ok {
-		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "AppRoleUser.role_id"`)}
-	}
-	if _, ok := aruc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppRoleUser.user_id"`)}
-	}
 	if _, ok := aruc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppRoleUser.create_at"`)}
 	}
@@ -205,6 +211,15 @@ func (aruc *AppRoleUserCreate) check() error {
 	}
 	if _, ok := aruc.mutation.DeleteAt(); !ok {
 		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppRoleUser.delete_at"`)}
+	}
+	if _, ok := aruc.mutation.AppID(); !ok {
+		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppRoleUser.app_id"`)}
+	}
+	if _, ok := aruc.mutation.RoleID(); !ok {
+		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "AppRoleUser.role_id"`)}
+	}
+	if _, ok := aruc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppRoleUser.user_id"`)}
 	}
 	return nil
 }
@@ -243,30 +258,6 @@ func (aruc *AppRoleUserCreate) createSpec() (*AppRoleUser, *sqlgraph.CreateSpec)
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := aruc.mutation.AppID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldAppID,
-		})
-		_node.AppID = value
-	}
-	if value, ok := aruc.mutation.RoleID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldRoleID,
-		})
-		_node.RoleID = value
-	}
-	if value, ok := aruc.mutation.UserID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: approleuser.FieldUserID,
-		})
-		_node.UserID = value
-	}
 	if value, ok := aruc.mutation.CreateAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
@@ -291,6 +282,30 @@ func (aruc *AppRoleUserCreate) createSpec() (*AppRoleUser, *sqlgraph.CreateSpec)
 		})
 		_node.DeleteAt = value
 	}
+	if value, ok := aruc.mutation.AppID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldAppID,
+		})
+		_node.AppID = value
+	}
+	if value, ok := aruc.mutation.RoleID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldRoleID,
+		})
+		_node.RoleID = value
+	}
+	if value, ok := aruc.mutation.UserID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: approleuser.FieldUserID,
+		})
+		_node.UserID = value
+	}
 	return _node, _spec
 }
 
@@ -298,7 +313,7 @@ func (aruc *AppRoleUserCreate) createSpec() (*AppRoleUser, *sqlgraph.CreateSpec)
 // of the `INSERT` statement. For example:
 //
 //	client.AppRoleUser.Create().
-//		SetAppID(v).
+//		SetCreateAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -307,7 +322,7 @@ func (aruc *AppRoleUserCreate) createSpec() (*AppRoleUser, *sqlgraph.CreateSpec)
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppRoleUserUpsert) {
-//			SetAppID(v+v).
+//			SetCreateAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -344,42 +359,6 @@ type (
 		*sql.UpdateSet
 	}
 )
-
-// SetAppID sets the "app_id" field.
-func (u *AppRoleUserUpsert) SetAppID(v uuid.UUID) *AppRoleUserUpsert {
-	u.Set(approleuser.FieldAppID, v)
-	return u
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsert) UpdateAppID() *AppRoleUserUpsert {
-	u.SetExcluded(approleuser.FieldAppID)
-	return u
-}
-
-// SetRoleID sets the "role_id" field.
-func (u *AppRoleUserUpsert) SetRoleID(v uuid.UUID) *AppRoleUserUpsert {
-	u.Set(approleuser.FieldRoleID, v)
-	return u
-}
-
-// UpdateRoleID sets the "role_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsert) UpdateRoleID() *AppRoleUserUpsert {
-	u.SetExcluded(approleuser.FieldRoleID)
-	return u
-}
-
-// SetUserID sets the "user_id" field.
-func (u *AppRoleUserUpsert) SetUserID(v uuid.UUID) *AppRoleUserUpsert {
-	u.Set(approleuser.FieldUserID, v)
-	return u
-}
-
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsert) UpdateUserID() *AppRoleUserUpsert {
-	u.SetExcluded(approleuser.FieldUserID)
-	return u
-}
 
 // SetCreateAt sets the "create_at" field.
 func (u *AppRoleUserUpsert) SetCreateAt(v uint32) *AppRoleUserUpsert {
@@ -435,6 +414,42 @@ func (u *AppRoleUserUpsert) AddDeleteAt(v uint32) *AppRoleUserUpsert {
 	return u
 }
 
+// SetAppID sets the "app_id" field.
+func (u *AppRoleUserUpsert) SetAppID(v uuid.UUID) *AppRoleUserUpsert {
+	u.Set(approleuser.FieldAppID, v)
+	return u
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsert) UpdateAppID() *AppRoleUserUpsert {
+	u.SetExcluded(approleuser.FieldAppID)
+	return u
+}
+
+// SetRoleID sets the "role_id" field.
+func (u *AppRoleUserUpsert) SetRoleID(v uuid.UUID) *AppRoleUserUpsert {
+	u.Set(approleuser.FieldRoleID, v)
+	return u
+}
+
+// UpdateRoleID sets the "role_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsert) UpdateRoleID() *AppRoleUserUpsert {
+	u.SetExcluded(approleuser.FieldRoleID)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *AppRoleUserUpsert) SetUserID(v uuid.UUID) *AppRoleUserUpsert {
+	u.Set(approleuser.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsert) UpdateUserID() *AppRoleUserUpsert {
+	u.SetExcluded(approleuser.FieldUserID)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -483,48 +498,6 @@ func (u *AppRoleUserUpsertOne) Update(set func(*AppRoleUserUpsert)) *AppRoleUser
 		set(&AppRoleUserUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetAppID sets the "app_id" field.
-func (u *AppRoleUserUpsertOne) SetAppID(v uuid.UUID) *AppRoleUserUpsertOne {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsertOne) UpdateAppID() *AppRoleUserUpsertOne {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// SetRoleID sets the "role_id" field.
-func (u *AppRoleUserUpsertOne) SetRoleID(v uuid.UUID) *AppRoleUserUpsertOne {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.SetRoleID(v)
-	})
-}
-
-// UpdateRoleID sets the "role_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsertOne) UpdateRoleID() *AppRoleUserUpsertOne {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.UpdateRoleID()
-	})
-}
-
-// SetUserID sets the "user_id" field.
-func (u *AppRoleUserUpsertOne) SetUserID(v uuid.UUID) *AppRoleUserUpsertOne {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.SetUserID(v)
-	})
-}
-
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsertOne) UpdateUserID() *AppRoleUserUpsertOne {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.UpdateUserID()
-	})
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -587,6 +560,48 @@ func (u *AppRoleUserUpsertOne) AddDeleteAt(v uint32) *AppRoleUserUpsertOne {
 func (u *AppRoleUserUpsertOne) UpdateDeleteAt() *AppRoleUserUpsertOne {
 	return u.Update(func(s *AppRoleUserUpsert) {
 		s.UpdateDeleteAt()
+	})
+}
+
+// SetAppID sets the "app_id" field.
+func (u *AppRoleUserUpsertOne) SetAppID(v uuid.UUID) *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsertOne) UpdateAppID() *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetRoleID sets the "role_id" field.
+func (u *AppRoleUserUpsertOne) SetRoleID(v uuid.UUID) *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.SetRoleID(v)
+	})
+}
+
+// UpdateRoleID sets the "role_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsertOne) UpdateRoleID() *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.UpdateRoleID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *AppRoleUserUpsertOne) SetUserID(v uuid.UUID) *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsertOne) UpdateUserID() *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.UpdateUserID()
 	})
 }
 
@@ -722,7 +737,7 @@ func (arucb *AppRoleUserCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppRoleUserUpsert) {
-//			SetAppID(v+v).
+//			SetCreateAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -806,48 +821,6 @@ func (u *AppRoleUserUpsertBulk) Update(set func(*AppRoleUserUpsert)) *AppRoleUse
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *AppRoleUserUpsertBulk) SetAppID(v uuid.UUID) *AppRoleUserUpsertBulk {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.SetAppID(v)
-	})
-}
-
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsertBulk) UpdateAppID() *AppRoleUserUpsertBulk {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.UpdateAppID()
-	})
-}
-
-// SetRoleID sets the "role_id" field.
-func (u *AppRoleUserUpsertBulk) SetRoleID(v uuid.UUID) *AppRoleUserUpsertBulk {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.SetRoleID(v)
-	})
-}
-
-// UpdateRoleID sets the "role_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsertBulk) UpdateRoleID() *AppRoleUserUpsertBulk {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.UpdateRoleID()
-	})
-}
-
-// SetUserID sets the "user_id" field.
-func (u *AppRoleUserUpsertBulk) SetUserID(v uuid.UUID) *AppRoleUserUpsertBulk {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.SetUserID(v)
-	})
-}
-
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *AppRoleUserUpsertBulk) UpdateUserID() *AppRoleUserUpsertBulk {
-	return u.Update(func(s *AppRoleUserUpsert) {
-		s.UpdateUserID()
-	})
-}
-
 // SetCreateAt sets the "create_at" field.
 func (u *AppRoleUserUpsertBulk) SetCreateAt(v uint32) *AppRoleUserUpsertBulk {
 	return u.Update(func(s *AppRoleUserUpsert) {
@@ -908,6 +881,48 @@ func (u *AppRoleUserUpsertBulk) AddDeleteAt(v uint32) *AppRoleUserUpsertBulk {
 func (u *AppRoleUserUpsertBulk) UpdateDeleteAt() *AppRoleUserUpsertBulk {
 	return u.Update(func(s *AppRoleUserUpsert) {
 		s.UpdateDeleteAt()
+	})
+}
+
+// SetAppID sets the "app_id" field.
+func (u *AppRoleUserUpsertBulk) SetAppID(v uuid.UUID) *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsertBulk) UpdateAppID() *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetRoleID sets the "role_id" field.
+func (u *AppRoleUserUpsertBulk) SetRoleID(v uuid.UUID) *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.SetRoleID(v)
+	})
+}
+
+// UpdateRoleID sets the "role_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsertBulk) UpdateRoleID() *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.UpdateRoleID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *AppRoleUserUpsertBulk) SetUserID(v uuid.UUID) *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *AppRoleUserUpsertBulk) UpdateUserID() *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.UpdateUserID()
 	})
 }
 

@@ -2,6 +2,8 @@ package appusersecret
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	npool "github.com/NpoolPlatform/message/npool/appusermgr"
 
@@ -12,19 +14,17 @@ import (
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
 
 	"github.com/google/uuid"
-
-	"golang.org/x/xerrors"
 )
 
 func validateAppUserSecret(info *npool.AppUserSecret) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
-		return xerrors.Errorf("invalid app id: %v", err)
+		return fmt.Errorf("invalid app id: %v", err)
 	}
 	if _, err := uuid.Parse(info.GetUserID()); err != nil {
-		return xerrors.Errorf("invalid user id: %v", err)
+		return fmt.Errorf("invalid user id: %v", err)
 	}
 	if info.GetPasswordHash() == "" {
-		return xerrors.Errorf("invalid password hash")
+		return fmt.Errorf("invalid password hash")
 	}
 	return nil
 }
@@ -42,7 +42,7 @@ func dbRowToAppUserSecret(row *ent.AppUserSecret) *npool.AppUserSecret {
 
 func Create(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
 	if err := validateAppUserSecret(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -50,13 +50,13 @@ func Create(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.C
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	salt := encrypt.Salt()
 	password, err := encrypt.EncryptWithSalt(in.GetInfo().GetPasswordHash(), salt)
 	if err != nil {
-		return nil, xerrors.Errorf("fail get encrypted password: %v", err)
+		return nil, fmt.Errorf("fail get encrypted password: %v", err)
 	}
 
 	info, err := cli.
@@ -69,7 +69,7 @@ func Create(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.C
 		SetGoogleSecret(in.GetInfo().GetGoogleSecret()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail create app user secret: %v", err)
+		return nil, fmt.Errorf("fail create app user secret: %v", err)
 	}
 
 	return &npool.CreateAppUserSecretResponse{
@@ -77,14 +77,9 @@ func Create(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.C
 	}, nil
 }
 
-func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
-	id, err := uuid.Parse(in.GetInfo().GetID())
-	if err != nil {
-		return nil, xerrors.Errorf("invalid app user secret id: %v", err)
-	}
-
+func CreateRevert(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
 	if err := validateAppUserSecret(in.GetInfo()); err != nil {
-		return nil, xerrors.Errorf("invalid parameter: %v", err)
+		return nil, fmt.Errorf("invalid parameter: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -92,7 +87,41 @@ func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.U
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
+	}
+	_, err = cli.
+		AppUserSecret.
+		Update().
+		SetDeleteAt(uint32(time.Now().Unix())).
+		Where(
+			appusersecret.AppID(uuid.MustParse(in.GetInfo().GetAppID())),
+			appusersecret.UserID(uuid.MustParse(in.GetInfo().GetUserID())),
+		).
+		Save(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("fail delete app user secret: %v", err)
+	}
+
+	return &npool.CreateAppUserSecretResponse{}, nil
+}
+
+func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
+	id, err := uuid.Parse(in.GetInfo().GetID())
+	if err != nil {
+		return nil, fmt.Errorf("invalid app user secret id: %v", err)
+	}
+
+	if err := validateAppUserSecret(in.GetInfo()); err != nil {
+		return nil, fmt.Errorf("invalid parameter: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	salt := in.GetInfo().GetSalt()
@@ -102,7 +131,7 @@ func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.U
 		salt = encrypt.Salt()
 		password, err = encrypt.EncryptWithSalt(in.GetInfo().GetPasswordHash(), salt)
 		if err != nil {
-			return nil, xerrors.Errorf("fail get encrypted password: %v", err)
+			return nil, fmt.Errorf("fail get encrypted password: %v", err)
 		}
 	}
 
@@ -114,7 +143,7 @@ func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.U
 		SetGoogleSecret(in.GetInfo().GetGoogleSecret()).
 		Save(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail update app user secret: %v", err)
+		return nil, fmt.Errorf("fail update app user secret: %v", err)
 	}
 
 	return &npool.UpdateAppUserSecretResponse{
@@ -125,7 +154,7 @@ func Update(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.U
 func Get(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppUserSecretResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app user secret id: %v", err)
+		return nil, fmt.Errorf("invalid app user secret id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -133,7 +162,7 @@ func Get(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppU
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -142,12 +171,11 @@ func Get(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppU
 		Where(
 			appusersecret.And(
 				appusersecret.ID(id),
-				appusersecret.DeleteAt(0),
 			),
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app user secret: %v", err)
+		return nil, fmt.Errorf("fail query app user secret: %v", err)
 	}
 
 	var myAppUserSecret *npool.AppUserSecret
@@ -164,12 +192,12 @@ func Get(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppU
 func GetByAppUser(ctx context.Context, in *npool.GetAppUserSecretByAppUserRequest) (*npool.GetAppUserSecretByAppUserResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
+		return nil, fmt.Errorf("invalid app id: %v", err)
 	}
 
 	userID, err := uuid.Parse(in.GetUserID())
 	if err != nil {
-		return nil, xerrors.Errorf("invalid user id: %v", err)
+		return nil, fmt.Errorf("invalid user id: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, constant.DBTimeout)
@@ -177,7 +205,7 @@ func GetByAppUser(ctx context.Context, in *npool.GetAppUserSecretByAppUserReques
 
 	cli, err := db.Client()
 	if err != nil {
-		return nil, xerrors.Errorf("fail get db client: %v", err)
+		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 
 	infos, err := cli.
@@ -191,7 +219,7 @@ func GetByAppUser(ctx context.Context, in *npool.GetAppUserSecretByAppUserReques
 		).
 		All(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("fail query app user secret: %v", err)
+		return nil, fmt.Errorf("fail query app user secret: %v", err)
 	}
 
 	var appUserSecret *npool.AppUserSecret

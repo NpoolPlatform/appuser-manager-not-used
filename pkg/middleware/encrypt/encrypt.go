@@ -2,11 +2,11 @@ package encrypt
 
 import (
 	"crypto/md5"
+	"fmt"
 	"math/rand"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/xerrors"
 )
 
 func Upper(size int) []byte {
@@ -73,7 +73,7 @@ func EncryptWithSalt(content, salt string) (string, error) { //nolint
 
 	hash, err := bcrypt.GenerateFromPassword(salted, bcrypt.DefaultCost)
 	if err != nil {
-		return "", xerrors.Errorf("encrypt salted error: %v", err)
+		return "", fmt.Errorf("encrypt salted error: %v", err)
 	}
 
 	return string(hash), nil
@@ -84,7 +84,7 @@ func VerifyWithSalt(content, target, salt string) error {
 
 	err := bcrypt.CompareHashAndPassword([]byte(target), salted)
 	if err != nil {
-		return xerrors.Errorf("mismatch content and target")
+		return fmt.Errorf("mismatch content and target")
 	}
 	return nil
 }

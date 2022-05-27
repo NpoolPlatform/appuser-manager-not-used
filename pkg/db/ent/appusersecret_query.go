@@ -255,12 +255,12 @@ func (ausq *AppUserSecretQuery) Clone() *AppUserSecretQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreateAt uint32 `json:"create_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppUserSecret.Query().
-//		GroupBy(appusersecret.FieldAppID).
+//		GroupBy(appusersecret.FieldCreateAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +282,11 @@ func (ausq *AppUserSecretQuery) GroupBy(field string, fields ...string) *AppUser
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreateAt uint32 `json:"create_at,omitempty"`
 //	}
 //
 //	client.AppUserSecret.Query().
-//		Select(appusersecret.FieldAppID).
+//		Select(appusersecret.FieldCreateAt).
 //		Scan(ctx, &v)
 //
 func (ausq *AppUserSecretQuery) Select(fields ...string) *AppUserSecretSelect {
@@ -306,6 +306,12 @@ func (ausq *AppUserSecretQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		ausq.sql = prev
+	}
+	if appusersecret.Policy == nil {
+		return errors.New("ent: uninitialized appusersecret.Policy (forgotten import ent/runtime?)")
+	}
+	if err := appusersecret.Policy.EvalQuery(ctx, ausq); err != nil {
+		return err
 	}
 	return nil
 }

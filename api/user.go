@@ -274,6 +274,15 @@ func (s *Server) GetAppUserThirdPartyByAppThirdPartyID(ctx context.Context, in *
 	return resp, nil
 }
 
+func (s *Server) CreateAppUserWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecretRequest) (*npool.CreateAppUserWithSecretResponse, error) {
+	resp, err := appusermw.CreateWithSecretRevert(ctx, in, true)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user with secret: %v", err)
+		return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetAppUserByAppAccount(ctx context.Context, in *npool.GetAppUserByAppAccountRequest) (*npool.GetAppUserByAppAccountResponse, error) {
 	resp, err := appusercrud.GetByAppAccount(ctx, in)
 	if err != nil {

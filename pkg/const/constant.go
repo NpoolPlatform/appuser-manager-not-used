@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+type DTMAction struct {
+	Action string
+	Revert string
+}
+
 const (
 	SignupByMobile = "mobile"
 	SignupByEmail  = "email"
@@ -19,4 +24,14 @@ const (
 
 	ChurchAppName = "Church Dashboard"
 	ChurchAppID   = "ab4d1208-7da9-11ec-a6ea-fb41bda845cd"
+
+	CreateAppUserWithSecret       = "CreateAppUserWithSecret"
+	CreateAppUserWithSecretRevert = "CreateAppUserWithSecretRevert"
 )
+
+var DTMEntry = map[string]*DTMAction{
+	CreateAppUserWithSecret: &DTMAction{ //nolint
+		Action: CreateAppUserWithSecret,
+		Revert: CreateAppUserWithSecretRevert,
+	},
+}
