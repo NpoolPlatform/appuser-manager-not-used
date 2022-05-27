@@ -28,6 +28,8 @@ type Tx struct {
 	AppUserExtra *AppUserExtraClient
 	// AppUserSecret is the client for interacting with the AppUserSecret builders.
 	AppUserSecret *AppUserSecretClient
+	// AppUserThirdParty is the client for interacting with the AppUserThirdParty builders.
+	AppUserThirdParty *AppUserThirdPartyClient
 	// BanApp is the client for interacting with the BanApp builders.
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
@@ -175,6 +177,7 @@ func (tx *Tx) init() {
 	tx.AppUserControl = NewAppUserControlClient(tx.config)
 	tx.AppUserExtra = NewAppUserExtraClient(tx.config)
 	tx.AppUserSecret = NewAppUserSecretClient(tx.config)
+	tx.AppUserThirdParty = NewAppUserThirdPartyClient(tx.config)
 	tx.BanApp = NewBanAppClient(tx.config)
 	tx.BanAppUser = NewBanAppUserClient(tx.config)
 }

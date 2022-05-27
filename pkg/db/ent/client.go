@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 
@@ -46,6 +47,8 @@ type Client struct {
 	AppUserExtra *AppUserExtraClient
 	// AppUserSecret is the client for interacting with the AppUserSecret builders.
 	AppUserSecret *AppUserSecretClient
+	// AppUserThirdParty is the client for interacting with the AppUserThirdParty builders.
+	AppUserThirdParty *AppUserThirdPartyClient
 	// BanApp is the client for interacting with the BanApp builders.
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
@@ -71,6 +74,7 @@ func (c *Client) init() {
 	c.AppUserControl = NewAppUserControlClient(c.config)
 	c.AppUserExtra = NewAppUserExtraClient(c.config)
 	c.AppUserSecret = NewAppUserSecretClient(c.config)
+	c.AppUserThirdParty = NewAppUserThirdPartyClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 	c.BanAppUser = NewBanAppUserClient(c.config)
 }
@@ -104,18 +108,19 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		App:            NewAppClient(cfg),
-		AppControl:     NewAppControlClient(cfg),
-		AppRole:        NewAppRoleClient(cfg),
-		AppRoleUser:    NewAppRoleUserClient(cfg),
-		AppUser:        NewAppUserClient(cfg),
-		AppUserControl: NewAppUserControlClient(cfg),
-		AppUserExtra:   NewAppUserExtraClient(cfg),
-		AppUserSecret:  NewAppUserSecretClient(cfg),
-		BanApp:         NewBanAppClient(cfg),
-		BanAppUser:     NewBanAppUserClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		App:               NewAppClient(cfg),
+		AppControl:        NewAppControlClient(cfg),
+		AppRole:           NewAppRoleClient(cfg),
+		AppRoleUser:       NewAppRoleUserClient(cfg),
+		AppUser:           NewAppUserClient(cfg),
+		AppUserControl:    NewAppUserControlClient(cfg),
+		AppUserExtra:      NewAppUserExtraClient(cfg),
+		AppUserSecret:     NewAppUserSecretClient(cfg),
+		AppUserThirdParty: NewAppUserThirdPartyClient(cfg),
+		BanApp:            NewBanAppClient(cfg),
+		BanAppUser:        NewBanAppUserClient(cfg),
 	}, nil
 }
 
@@ -133,18 +138,19 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		App:            NewAppClient(cfg),
-		AppControl:     NewAppControlClient(cfg),
-		AppRole:        NewAppRoleClient(cfg),
-		AppRoleUser:    NewAppRoleUserClient(cfg),
-		AppUser:        NewAppUserClient(cfg),
-		AppUserControl: NewAppUserControlClient(cfg),
-		AppUserExtra:   NewAppUserExtraClient(cfg),
-		AppUserSecret:  NewAppUserSecretClient(cfg),
-		BanApp:         NewBanAppClient(cfg),
-		BanAppUser:     NewBanAppUserClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		App:               NewAppClient(cfg),
+		AppControl:        NewAppControlClient(cfg),
+		AppRole:           NewAppRoleClient(cfg),
+		AppRoleUser:       NewAppRoleUserClient(cfg),
+		AppUser:           NewAppUserClient(cfg),
+		AppUserControl:    NewAppUserControlClient(cfg),
+		AppUserExtra:      NewAppUserExtraClient(cfg),
+		AppUserSecret:     NewAppUserSecretClient(cfg),
+		AppUserThirdParty: NewAppUserThirdPartyClient(cfg),
+		BanApp:            NewBanAppClient(cfg),
+		BanAppUser:        NewBanAppUserClient(cfg),
 	}, nil
 }
 
@@ -182,6 +188,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppUserControl.Use(hooks...)
 	c.AppUserExtra.Use(hooks...)
 	c.AppUserSecret.Use(hooks...)
+	c.AppUserThirdParty.Use(hooks...)
 	c.BanApp.Use(hooks...)
 	c.BanAppUser.Use(hooks...)
 }
@@ -907,6 +914,97 @@ func (c *AppUserSecretClient) GetX(ctx context.Context, id uuid.UUID) *AppUserSe
 func (c *AppUserSecretClient) Hooks() []Hook {
 	hooks := c.hooks.AppUserSecret
 	return append(hooks[:len(hooks):len(hooks)], appusersecret.Hooks[:]...)
+}
+
+// AppUserThirdPartyClient is a client for the AppUserThirdParty schema.
+type AppUserThirdPartyClient struct {
+	config
+}
+
+// NewAppUserThirdPartyClient returns a client for the AppUserThirdParty from the given config.
+func NewAppUserThirdPartyClient(c config) *AppUserThirdPartyClient {
+	return &AppUserThirdPartyClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appuserthirdparty.Hooks(f(g(h())))`.
+func (c *AppUserThirdPartyClient) Use(hooks ...Hook) {
+	c.hooks.AppUserThirdParty = append(c.hooks.AppUserThirdParty, hooks...)
+}
+
+// Create returns a create builder for AppUserThirdParty.
+func (c *AppUserThirdPartyClient) Create() *AppUserThirdPartyCreate {
+	mutation := newAppUserThirdPartyMutation(c.config, OpCreate)
+	return &AppUserThirdPartyCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppUserThirdParty entities.
+func (c *AppUserThirdPartyClient) CreateBulk(builders ...*AppUserThirdPartyCreate) *AppUserThirdPartyCreateBulk {
+	return &AppUserThirdPartyCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppUserThirdParty.
+func (c *AppUserThirdPartyClient) Update() *AppUserThirdPartyUpdate {
+	mutation := newAppUserThirdPartyMutation(c.config, OpUpdate)
+	return &AppUserThirdPartyUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppUserThirdPartyClient) UpdateOne(autp *AppUserThirdParty) *AppUserThirdPartyUpdateOne {
+	mutation := newAppUserThirdPartyMutation(c.config, OpUpdateOne, withAppUserThirdParty(autp))
+	return &AppUserThirdPartyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppUserThirdPartyClient) UpdateOneID(id uuid.UUID) *AppUserThirdPartyUpdateOne {
+	mutation := newAppUserThirdPartyMutation(c.config, OpUpdateOne, withAppUserThirdPartyID(id))
+	return &AppUserThirdPartyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppUserThirdParty.
+func (c *AppUserThirdPartyClient) Delete() *AppUserThirdPartyDelete {
+	mutation := newAppUserThirdPartyMutation(c.config, OpDelete)
+	return &AppUserThirdPartyDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppUserThirdPartyClient) DeleteOne(autp *AppUserThirdParty) *AppUserThirdPartyDeleteOne {
+	return c.DeleteOneID(autp.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppUserThirdPartyClient) DeleteOneID(id uuid.UUID) *AppUserThirdPartyDeleteOne {
+	builder := c.Delete().Where(appuserthirdparty.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppUserThirdPartyDeleteOne{builder}
+}
+
+// Query returns a query builder for AppUserThirdParty.
+func (c *AppUserThirdPartyClient) Query() *AppUserThirdPartyQuery {
+	return &AppUserThirdPartyQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppUserThirdParty entity by its id.
+func (c *AppUserThirdPartyClient) Get(ctx context.Context, id uuid.UUID) (*AppUserThirdParty, error) {
+	return c.Query().Where(appuserthirdparty.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppUserThirdPartyClient) GetX(ctx context.Context, id uuid.UUID) *AppUserThirdParty {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppUserThirdPartyClient) Hooks() []Hook {
+	hooks := c.hooks.AppUserThirdParty
+	return append(hooks[:len(hooks):len(hooks)], appuserthirdparty.Hooks[:]...)
 }
 
 // BanAppClient is a client for the BanApp schema.

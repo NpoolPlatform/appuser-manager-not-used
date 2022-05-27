@@ -12,6 +12,7 @@ import (
 	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
+	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthirdparty"
 	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
@@ -105,6 +106,50 @@ func CreateWithSecretRevert(ctx context.Context, in *npool.CreateAppUserWithSecr
 		}
 	}
 	return &npool.CreateAppUserWithSecretResponse{
+		Info: resp.Info,
+	}, nil
+}
+
+func CreateWithThirdParty(ctx context.Context, in *npool.CreateAppUserWithThirdPartyRequest, setDefaultRole bool) (*npool.CreateAppUserWithThirdPartyResponse, error) {
+	resp, err := appusercrud.Create(ctx, &npool.CreateAppUserRequest{
+		Info: in.GetUser(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail create app user: %v", err)
+	}
+
+	inThird := in.GetThirdParty()
+	inThird.UserID = resp.Info.ID
+
+	_, err = appuserthirdcrud.Create(ctx, &npool.CreateAppUserThirdPartyRequest{
+		Info: inThird,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail create app user third: %v", err)
+	}
+
+	if setDefaultRole {
+		defaultRole, err := approlecrud.GetAppDefaultRole(ctx, in.GetUser().GetAppID())
+		if err != nil {
+			return nil, fmt.Errorf("fail get default role: %v", err)
+		}
+		if defaultRole == nil {
+			return nil, fmt.Errorf("fail get default role")
+		}
+
+		_, err = approleusercrud.CreateRevert(ctx, &npool.CreateAppRoleUserRequest{
+			Info: &npool.AppRoleUser{
+				AppID:  in.GetUser().GetAppID(),
+				RoleID: defaultRole.ID,
+				UserID: in.GetUser().GetID(),
+			},
+		})
+		if err != nil {
+			// TODO: rollback for role user create error
+			return nil, fmt.Errorf("fail create app role user: %v", err)
+		}
+	}
+	return &npool.CreateAppUserWithThirdPartyResponse{
 		Info: resp.Info,
 	}, nil
 }

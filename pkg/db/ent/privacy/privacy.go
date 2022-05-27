@@ -357,6 +357,30 @@ func (f AppUserSecretMutationRuleFunc) EvalMutation(ctx context.Context, m ent.M
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppUserSecretMutation", m)
 }
 
+// The AppUserThirdPartyQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AppUserThirdPartyQueryRuleFunc func(context.Context, *ent.AppUserThirdPartyQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AppUserThirdPartyQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AppUserThirdPartyQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppUserThirdPartyQuery", q)
+}
+
+// The AppUserThirdPartyMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AppUserThirdPartyMutationRuleFunc func(context.Context, *ent.AppUserThirdPartyMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AppUserThirdPartyMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AppUserThirdPartyMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppUserThirdPartyMutation", m)
+}
+
 // The BanAppQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type BanAppQueryRuleFunc func(context.Context, *ent.BanAppQuery) error
@@ -456,6 +480,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppUserSecretQuery:
 		return q.Filter(), nil
+	case *ent.AppUserThirdPartyQuery:
+		return q.Filter(), nil
 	case *ent.BanAppQuery:
 		return q.Filter(), nil
 	case *ent.BanAppUserQuery:
@@ -482,6 +508,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.AppUserExtraMutation:
 		return m.Filter(), nil
 	case *ent.AppUserSecretMutation:
+		return m.Filter(), nil
+	case *ent.AppUserThirdPartyMutation:
 		return m.Filter(), nil
 	case *ent.BanAppMutation:
 		return m.Filter(), nil

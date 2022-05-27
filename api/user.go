@@ -10,6 +10,7 @@ import (
 	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
 	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
 	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
+	appuserthirdpartycrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthirdparty"
 	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
 	appusermw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/appuser"
 
@@ -251,6 +252,24 @@ func (s *Server) CreateAppUserWithSecret(ctx context.Context, in *npool.CreateAp
 	if err != nil {
 		logger.Sugar().Errorw("fail create app user with secret: %v", err)
 		return &npool.CreateAppUserWithSecretResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) CreateAppUserWithThirdParty(ctx context.Context, in *npool.CreateAppUserWithThirdPartyRequest) (*npool.CreateAppUserWithThirdPartyResponse, error) {
+	resp, err := appusermw.CreateWithThirdParty(ctx, in, true)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user with third: %v", err)
+		return &npool.CreateAppUserWithThirdPartyResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppUserThirdPartyByAppThirdPartyID(ctx context.Context, in *npool.GetAppUserThirdPartyByAppThirdPartyIDRequest) (*npool.GetAppUserThirdPartyByAppThirdPartyIDResponse, error) {
+	resp, err := appuserthirdpartycrud.GetByAppUserThirdParty(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorw("fail create app user ThirdParty: %v", err)
+		return &npool.GetAppUserThirdPartyByAppThirdPartyIDResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
