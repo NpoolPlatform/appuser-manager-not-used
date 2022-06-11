@@ -29,6 +29,7 @@ func dbRowToAppUser(row *ent.AppUser) *npool.AppUser {
 		EmailAddress:  row.EmailAddress,
 		PhoneNO:       row.PhoneNo,
 		ImportFromApp: row.ImportFromApp.String(),
+		CreateAt:      row.CreateAt,
 	}
 }
 
