@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppUserQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUser
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (auq *AppUserQuery) Clone() *AppUserQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppUser.Query().
-//		GroupBy(appuser.FieldCreateAt).
+//		GroupBy(appuser.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (auq *AppUserQuery) GroupBy(field string, fields ...string) *AppUserGroupBy
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppUser.Query().
-//		Select(appuser.FieldCreateAt).
+//		Select(appuser.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (auq *AppUserQuery) Select(fields ...string) *AppUserSelect {
@@ -333,6 +335,9 @@ func (auq *AppUserQuery) sqlAll(ctx context.Context) ([]*AppUser, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(auq.modifiers) > 0 {
+		_spec.Modifiers = auq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, auq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -344,6 +349,9 @@ func (auq *AppUserQuery) sqlAll(ctx context.Context) ([]*AppUser, error) {
 
 func (auq *AppUserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := auq.querySpec()
+	if len(auq.modifiers) > 0 {
+		_spec.Modifiers = auq.modifiers
+	}
 	_spec.Node.Columns = auq.fields
 	if len(auq.fields) > 0 {
 		_spec.Unique = auq.unique != nil && *auq.unique
@@ -422,6 +430,9 @@ func (auq *AppUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if auq.unique != nil && *auq.unique {
 		selector.Distinct()
 	}
+	for _, m := range auq.modifiers {
+		m(selector)
+	}
 	for _, p := range auq.predicates {
 		p(selector)
 	}
@@ -437,6 +448,32 @@ func (auq *AppUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (auq *AppUserQuery) ForUpdate(opts ...sql.LockOption) *AppUserQuery {
+	if auq.driver.Dialect() == dialect.Postgres {
+		auq.Unique(false)
+	}
+	auq.modifiers = append(auq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return auq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (auq *AppUserQuery) ForShare(opts ...sql.LockOption) *AppUserQuery {
+	if auq.driver.Dialect() == dialect.Postgres {
+		auq.Unique(false)
+	}
+	auq.modifiers = append(auq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return auq
 }
 
 // AppUserGroupBy is the group-by builder for AppUser entities.

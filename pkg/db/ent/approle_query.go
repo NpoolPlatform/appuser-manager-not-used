@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppRoleQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppRole
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (arq *AppRoleQuery) Clone() *AppRoleQuery {
 // Example:
 //
 //	var v []struct {
-//		CreatedBy uuid.UUID `json:"created_by,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppRole.Query().
-//		GroupBy(approle.FieldCreatedBy).
+//		GroupBy(approle.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (arq *AppRoleQuery) GroupBy(field string, fields ...string) *AppRoleGroupBy
 // Example:
 //
 //	var v []struct {
-//		CreatedBy uuid.UUID `json:"created_by,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppRole.Query().
-//		Select(approle.FieldCreatedBy).
+//		Select(approle.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (arq *AppRoleQuery) Select(fields ...string) *AppRoleSelect {
@@ -306,6 +308,12 @@ func (arq *AppRoleQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		arq.sql = prev
+	}
+	if approle.Policy == nil {
+		return errors.New("ent: uninitialized approle.Policy (forgotten import ent/runtime?)")
+	}
+	if err := approle.Policy.EvalQuery(ctx, arq); err != nil {
+		return err
 	}
 	return nil
 }
@@ -327,6 +335,9 @@ func (arq *AppRoleQuery) sqlAll(ctx context.Context) ([]*AppRole, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(arq.modifiers) > 0 {
+		_spec.Modifiers = arq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, arq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -338,6 +349,9 @@ func (arq *AppRoleQuery) sqlAll(ctx context.Context) ([]*AppRole, error) {
 
 func (arq *AppRoleQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := arq.querySpec()
+	if len(arq.modifiers) > 0 {
+		_spec.Modifiers = arq.modifiers
+	}
 	_spec.Node.Columns = arq.fields
 	if len(arq.fields) > 0 {
 		_spec.Unique = arq.unique != nil && *arq.unique
@@ -416,6 +430,9 @@ func (arq *AppRoleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if arq.unique != nil && *arq.unique {
 		selector.Distinct()
 	}
+	for _, m := range arq.modifiers {
+		m(selector)
+	}
 	for _, p := range arq.predicates {
 		p(selector)
 	}
@@ -431,6 +448,32 @@ func (arq *AppRoleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (arq *AppRoleQuery) ForUpdate(opts ...sql.LockOption) *AppRoleQuery {
+	if arq.driver.Dialect() == dialect.Postgres {
+		arq.Unique(false)
+	}
+	arq.modifiers = append(arq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return arq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (arq *AppRoleQuery) ForShare(opts ...sql.LockOption) *AppRoleQuery {
+	if arq.driver.Dialect() == dialect.Postgres {
+		arq.Unique(false)
+	}
+	arq.modifiers = append(arq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return arq
 }
 
 // AppRoleGroupBy is the group-by builder for AppRole entities.

@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 	"github.com/google/uuid"
 )
 
@@ -13,7 +14,7 @@ type AppUserThirdParty struct {
 
 func (AppUserThirdParty) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		TimeMixin{},
+		mixin.TimeMixin{},
 	}
 }
 

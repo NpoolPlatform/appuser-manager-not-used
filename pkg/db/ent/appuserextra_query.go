@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppUserExtraQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserExtra
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (aueq *AppUserExtraQuery) Clone() *AppUserExtraQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppUserExtra.Query().
-//		GroupBy(appuserextra.FieldAppID).
+//		GroupBy(appuserextra.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (aueq *AppUserExtraQuery) GroupBy(field string, fields ...string) *AppUserE
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppUserExtra.Query().
-//		Select(appuserextra.FieldAppID).
+//		Select(appuserextra.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (aueq *AppUserExtraQuery) Select(fields ...string) *AppUserExtraSelect {
@@ -306,6 +308,12 @@ func (aueq *AppUserExtraQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		aueq.sql = prev
+	}
+	if appuserextra.Policy == nil {
+		return errors.New("ent: uninitialized appuserextra.Policy (forgotten import ent/runtime?)")
+	}
+	if err := appuserextra.Policy.EvalQuery(ctx, aueq); err != nil {
+		return err
 	}
 	return nil
 }
@@ -327,6 +335,9 @@ func (aueq *AppUserExtraQuery) sqlAll(ctx context.Context) ([]*AppUserExtra, err
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(aueq.modifiers) > 0 {
+		_spec.Modifiers = aueq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, aueq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -338,6 +349,9 @@ func (aueq *AppUserExtraQuery) sqlAll(ctx context.Context) ([]*AppUserExtra, err
 
 func (aueq *AppUserExtraQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := aueq.querySpec()
+	if len(aueq.modifiers) > 0 {
+		_spec.Modifiers = aueq.modifiers
+	}
 	_spec.Node.Columns = aueq.fields
 	if len(aueq.fields) > 0 {
 		_spec.Unique = aueq.unique != nil && *aueq.unique
@@ -416,6 +430,9 @@ func (aueq *AppUserExtraQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if aueq.unique != nil && *aueq.unique {
 		selector.Distinct()
 	}
+	for _, m := range aueq.modifiers {
+		m(selector)
+	}
 	for _, p := range aueq.predicates {
 		p(selector)
 	}
@@ -431,6 +448,32 @@ func (aueq *AppUserExtraQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (aueq *AppUserExtraQuery) ForUpdate(opts ...sql.LockOption) *AppUserExtraQuery {
+	if aueq.driver.Dialect() == dialect.Postgres {
+		aueq.Unique(false)
+	}
+	aueq.modifiers = append(aueq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return aueq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (aueq *AppUserExtraQuery) ForShare(opts ...sql.LockOption) *AppUserExtraQuery {
+	if aueq.driver.Dialect() == dialect.Postgres {
+		aueq.Unique(false)
+	}
+	aueq.modifiers = append(aueq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return aueq
 }
 
 // AppUserExtraGroupBy is the group-by builder for AppUserExtra entities.

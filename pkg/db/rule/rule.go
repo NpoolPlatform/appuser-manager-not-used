@@ -9,7 +9,7 @@ import (
 
 func FilterTimeRule() privacy.QueryMutationRule {
 	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
-		f.Where(entql.FieldEQ("delete_at", 0))
+		f.Where(entql.FieldEQ("deleted_at", 0))
 		return privacy.Skip
 	})
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type BanAppQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.BanApp
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (baq *BanAppQuery) Clone() *BanAppQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.BanApp.Query().
-//		GroupBy(banapp.FieldAppID).
+//		GroupBy(banapp.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (baq *BanAppQuery) GroupBy(field string, fields ...string) *BanAppGroupBy {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.BanApp.Query().
-//		Select(banapp.FieldAppID).
+//		Select(banapp.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (baq *BanAppQuery) Select(fields ...string) *BanAppSelect {
@@ -306,6 +308,12 @@ func (baq *BanAppQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		baq.sql = prev
+	}
+	if banapp.Policy == nil {
+		return errors.New("ent: uninitialized banapp.Policy (forgotten import ent/runtime?)")
+	}
+	if err := banapp.Policy.EvalQuery(ctx, baq); err != nil {
+		return err
 	}
 	return nil
 }
@@ -327,6 +335,9 @@ func (baq *BanAppQuery) sqlAll(ctx context.Context) ([]*BanApp, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(baq.modifiers) > 0 {
+		_spec.Modifiers = baq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, baq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -338,6 +349,9 @@ func (baq *BanAppQuery) sqlAll(ctx context.Context) ([]*BanApp, error) {
 
 func (baq *BanAppQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := baq.querySpec()
+	if len(baq.modifiers) > 0 {
+		_spec.Modifiers = baq.modifiers
+	}
 	_spec.Node.Columns = baq.fields
 	if len(baq.fields) > 0 {
 		_spec.Unique = baq.unique != nil && *baq.unique
@@ -416,6 +430,9 @@ func (baq *BanAppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if baq.unique != nil && *baq.unique {
 		selector.Distinct()
 	}
+	for _, m := range baq.modifiers {
+		m(selector)
+	}
 	for _, p := range baq.predicates {
 		p(selector)
 	}
@@ -431,6 +448,32 @@ func (baq *BanAppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (baq *BanAppQuery) ForUpdate(opts ...sql.LockOption) *BanAppQuery {
+	if baq.driver.Dialect() == dialect.Postgres {
+		baq.Unique(false)
+	}
+	baq.modifiers = append(baq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return baq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (baq *BanAppQuery) ForShare(opts ...sql.LockOption) *BanAppQuery {
+	if baq.driver.Dialect() == dialect.Postgres {
+		baq.Unique(false)
+	}
+	baq.modifiers = append(baq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return baq
 }
 
 // BanAppGroupBy is the group-by builder for BanApp entities.

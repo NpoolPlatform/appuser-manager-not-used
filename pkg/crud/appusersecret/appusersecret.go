@@ -92,7 +92,7 @@ func CreateRevert(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*n
 	_, err = cli.
 		AppUserSecret.
 		Update().
-		SetDeleteAt(uint32(time.Now().Unix())).
+		SetDeletedAt(uint32(time.Now().Unix())).
 		Where(
 			appusersecret.AppID(uuid.MustParse(in.GetInfo().GetAppID())),
 			appusersecret.UserID(uuid.MustParse(in.GetInfo().GetUserID())),

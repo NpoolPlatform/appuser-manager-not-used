@@ -16,6 +16,12 @@ type App struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// CreatedBy holds the value of the "created_by" field.
 	CreatedBy uuid.UUID `json:"created_by,omitempty"`
 	// Name holds the value of the "name" field.
@@ -24,12 +30,6 @@ type App struct {
 	Logo string `json:"logo,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -37,7 +37,7 @@ func (*App) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case app.FieldCreateAt, app.FieldUpdateAt, app.FieldDeleteAt:
+		case app.FieldCreatedAt, app.FieldUpdatedAt, app.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case app.FieldName, app.FieldLogo, app.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -64,6 +64,24 @@ func (a *App) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				a.ID = *value
 			}
+		case app.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				a.CreatedAt = uint32(value.Int64)
+			}
+		case app.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				a.UpdatedAt = uint32(value.Int64)
+			}
+		case app.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				a.DeletedAt = uint32(value.Int64)
+			}
 		case app.FieldCreatedBy:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
@@ -87,24 +105,6 @@ func (a *App) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				a.Description = value.String
-			}
-		case app.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				a.CreateAt = uint32(value.Int64)
-			}
-		case app.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				a.UpdateAt = uint32(value.Int64)
-			}
-		case app.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				a.DeleteAt = uint32(value.Int64)
 			}
 		}
 	}
@@ -134,6 +134,12 @@ func (a *App) String() string {
 	var builder strings.Builder
 	builder.WriteString("App(")
 	builder.WriteString(fmt.Sprintf("id=%v", a.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", a.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", a.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", a.DeletedAt))
 	builder.WriteString(", created_by=")
 	builder.WriteString(fmt.Sprintf("%v", a.CreatedBy))
 	builder.WriteString(", name=")
@@ -142,12 +148,6 @@ func (a *App) String() string {
 	builder.WriteString(a.Logo)
 	builder.WriteString(", description=")
 	builder.WriteString(a.Description)
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", a.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", a.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", a.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

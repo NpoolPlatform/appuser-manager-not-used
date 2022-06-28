@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppUserThirdPartyQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserThirdParty
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (autpq *AppUserThirdPartyQuery) Clone() *AppUserThirdPartyQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppUserThirdParty.Query().
-//		GroupBy(appuserthirdparty.FieldCreateAt).
+//		GroupBy(appuserthirdparty.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (autpq *AppUserThirdPartyQuery) GroupBy(field string, fields ...string) *Ap
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppUserThirdParty.Query().
-//		Select(appuserthirdparty.FieldCreateAt).
+//		Select(appuserthirdparty.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (autpq *AppUserThirdPartyQuery) Select(fields ...string) *AppUserThirdPartySelect {
@@ -333,6 +335,9 @@ func (autpq *AppUserThirdPartyQuery) sqlAll(ctx context.Context) ([]*AppUserThir
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(autpq.modifiers) > 0 {
+		_spec.Modifiers = autpq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, autpq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -344,6 +349,9 @@ func (autpq *AppUserThirdPartyQuery) sqlAll(ctx context.Context) ([]*AppUserThir
 
 func (autpq *AppUserThirdPartyQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := autpq.querySpec()
+	if len(autpq.modifiers) > 0 {
+		_spec.Modifiers = autpq.modifiers
+	}
 	_spec.Node.Columns = autpq.fields
 	if len(autpq.fields) > 0 {
 		_spec.Unique = autpq.unique != nil && *autpq.unique
@@ -422,6 +430,9 @@ func (autpq *AppUserThirdPartyQuery) sqlQuery(ctx context.Context) *sql.Selector
 	if autpq.unique != nil && *autpq.unique {
 		selector.Distinct()
 	}
+	for _, m := range autpq.modifiers {
+		m(selector)
+	}
 	for _, p := range autpq.predicates {
 		p(selector)
 	}
@@ -437,6 +448,32 @@ func (autpq *AppUserThirdPartyQuery) sqlQuery(ctx context.Context) *sql.Selector
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (autpq *AppUserThirdPartyQuery) ForUpdate(opts ...sql.LockOption) *AppUserThirdPartyQuery {
+	if autpq.driver.Dialect() == dialect.Postgres {
+		autpq.Unique(false)
+	}
+	autpq.modifiers = append(autpq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return autpq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (autpq *AppUserThirdPartyQuery) ForShare(opts ...sql.LockOption) *AppUserThirdPartyQuery {
+	if autpq.driver.Dialect() == dialect.Postgres {
+		autpq.Unique(false)
+	}
+	autpq.modifiers = append(autpq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return autpq
 }
 
 // AppUserThirdPartyGroupBy is the group-by builder for AppUserThirdParty entities.

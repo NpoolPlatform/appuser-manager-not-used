@@ -144,7 +144,6 @@ func Get(ctx context.Context, in *npool.GetAppUserExtraRequest) (*npool.GetAppUs
 		Where(
 			appuserextra.And(
 				appuserextra.ID(id),
-				appuserextra.DeleteAt(0),
 			),
 		).
 		All(ctx)

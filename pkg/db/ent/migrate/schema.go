@@ -11,13 +11,13 @@ var (
 	// AppsColumns holds the columns for the "apps" table.
 	AppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "created_by", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "logo", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppsTable holds the schema information for the "apps" table.
 	AppsTable = &schema.Table{
@@ -28,6 +28,9 @@ var (
 	// AppControlsColumns holds the columns for the "app_controls" table.
 	AppControlsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID, Unique: true},
 		{Name: "signup_methods", Type: field.TypeJSON},
 		{Name: "extern_signin_methods", Type: field.TypeJSON},
@@ -35,9 +38,6 @@ var (
 		{Name: "kyc_enable", Type: field.TypeBool},
 		{Name: "signin_verify_enable", Type: field.TypeBool},
 		{Name: "invitation_code_must", Type: field.TypeBool},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppControlsTable holds the schema information for the "app_controls" table.
 	AppControlsTable = &schema.Table{
@@ -48,14 +48,14 @@ var (
 	// AppRolesColumns holds the columns for the "app_roles" table.
 	AppRolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "created_by", Type: field.TypeUUID},
 		{Name: "role", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "default", Type: field.TypeBool},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppRolesTable holds the schema information for the "app_roles" table.
 	AppRolesTable = &schema.Table{
@@ -66,16 +66,16 @@ var (
 			{
 				Name:    "approle_app_id_role",
 				Unique:  true,
-				Columns: []*schema.Column{AppRolesColumns[4], AppRolesColumns[2]},
+				Columns: []*schema.Column{AppRolesColumns[7], AppRolesColumns[5]},
 			},
 		},
 	}
 	// AppRoleUsersColumns holds the columns for the "app_role_users" table.
 	AppRoleUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "role_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
@@ -89,9 +89,9 @@ var (
 	// AppUsersColumns holds the columns for the "app_users" table.
 	AppUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "email_address", Type: field.TypeString},
 		{Name: "phone_no", Type: field.TypeString},
@@ -118,13 +118,13 @@ var (
 	// AppUserControlsColumns holds the columns for the "app_user_controls" table.
 	AppUserControlsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool},
 		{Name: "google_authentication_verified", Type: field.TypeBool},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{
@@ -135,13 +135,16 @@ var (
 			{
 				Name:    "appusercontrol_app_id_user_id",
 				Unique:  true,
-				Columns: []*schema.Column{AppUserControlsColumns[1], AppUserControlsColumns[2]},
+				Columns: []*schema.Column{AppUserControlsColumns[4], AppUserControlsColumns[5]},
 			},
 		},
 	}
 	// AppUserExtrasColumns holds the columns for the "app_user_extras" table.
 	AppUserExtrasColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "username", Type: field.TypeString},
@@ -155,9 +158,6 @@ var (
 		{Name: "avatar", Type: field.TypeString},
 		{Name: "organization", Type: field.TypeString},
 		{Name: "id_number", Type: field.TypeString},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// AppUserExtrasTable holds the schema information for the "app_user_extras" table.
 	AppUserExtrasTable = &schema.Table{
@@ -168,16 +168,16 @@ var (
 			{
 				Name:    "appuserextra_app_id_user_id",
 				Unique:  true,
-				Columns: []*schema.Column{AppUserExtrasColumns[1], AppUserExtrasColumns[2]},
+				Columns: []*schema.Column{AppUserExtrasColumns[4], AppUserExtrasColumns[5]},
 			},
 		},
 	}
 	// AppUserSecretsColumns holds the columns for the "app_user_secrets" table.
 	AppUserSecretsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "password_hash", Type: field.TypeString},
@@ -200,9 +200,9 @@ var (
 	// AppUserThirdPartiesColumns holds the columns for the "app_user_third_parties" table.
 	AppUserThirdPartiesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "third_party_user_id", Type: field.TypeString},
@@ -219,11 +219,11 @@ var (
 	// BanAppsColumns holds the columns for the "ban_apps" table.
 	BanAppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "message", Type: field.TypeString},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// BanAppsTable holds the schema information for the "ban_apps" table.
 	BanAppsTable = &schema.Table{
@@ -234,12 +234,12 @@ var (
 	// BanAppUsersColumns holds the columns for the "ban_app_users" table.
 	BanAppUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "message", Type: field.TypeString},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-		{Name: "delete_at", Type: field.TypeUint32},
 	}
 	// BanAppUsersTable holds the schema information for the "ban_app_users" table.
 	BanAppUsersTable = &schema.Table{

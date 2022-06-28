@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppControlQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppControl
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (acq *AppControlQuery) Clone() *AppControlQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppControl.Query().
-//		GroupBy(appcontrol.FieldAppID).
+//		GroupBy(appcontrol.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (acq *AppControlQuery) GroupBy(field string, fields ...string) *AppControlG
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppControl.Query().
-//		Select(appcontrol.FieldAppID).
+//		Select(appcontrol.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (acq *AppControlQuery) Select(fields ...string) *AppControlSelect {
@@ -306,6 +308,12 @@ func (acq *AppControlQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		acq.sql = prev
+	}
+	if appcontrol.Policy == nil {
+		return errors.New("ent: uninitialized appcontrol.Policy (forgotten import ent/runtime?)")
+	}
+	if err := appcontrol.Policy.EvalQuery(ctx, acq); err != nil {
+		return err
 	}
 	return nil
 }
@@ -327,6 +335,9 @@ func (acq *AppControlQuery) sqlAll(ctx context.Context) ([]*AppControl, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(acq.modifiers) > 0 {
+		_spec.Modifiers = acq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, acq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -338,6 +349,9 @@ func (acq *AppControlQuery) sqlAll(ctx context.Context) ([]*AppControl, error) {
 
 func (acq *AppControlQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := acq.querySpec()
+	if len(acq.modifiers) > 0 {
+		_spec.Modifiers = acq.modifiers
+	}
 	_spec.Node.Columns = acq.fields
 	if len(acq.fields) > 0 {
 		_spec.Unique = acq.unique != nil && *acq.unique
@@ -416,6 +430,9 @@ func (acq *AppControlQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if acq.unique != nil && *acq.unique {
 		selector.Distinct()
 	}
+	for _, m := range acq.modifiers {
+		m(selector)
+	}
 	for _, p := range acq.predicates {
 		p(selector)
 	}
@@ -431,6 +448,32 @@ func (acq *AppControlQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (acq *AppControlQuery) ForUpdate(opts ...sql.LockOption) *AppControlQuery {
+	if acq.driver.Dialect() == dialect.Postgres {
+		acq.Unique(false)
+	}
+	acq.modifiers = append(acq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return acq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (acq *AppControlQuery) ForShare(opts ...sql.LockOption) *AppControlQuery {
+	if acq.driver.Dialect() == dialect.Postgres {
+		acq.Unique(false)
+	}
+	acq.modifiers = append(acq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return acq
 }
 
 // AppControlGroupBy is the group-by builder for AppControl entities.

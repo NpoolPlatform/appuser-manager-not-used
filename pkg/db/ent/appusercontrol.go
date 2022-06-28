@@ -16,6 +16,12 @@ type AppUserControl struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -24,12 +30,6 @@ type AppUserControl struct {
 	SigninVerifyByGoogleAuthentication bool `json:"signin_verify_by_google_authentication,omitempty"`
 	// GoogleAuthenticationVerified holds the value of the "google_authentication_verified" field.
 	GoogleAuthenticationVerified bool `json:"google_authentication_verified,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -39,7 +39,7 @@ func (*AppUserControl) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appusercontrol.FieldSigninVerifyByGoogleAuthentication, appusercontrol.FieldGoogleAuthenticationVerified:
 			values[i] = new(sql.NullBool)
-		case appusercontrol.FieldCreateAt, appusercontrol.FieldUpdateAt, appusercontrol.FieldDeleteAt:
+		case appusercontrol.FieldCreatedAt, appusercontrol.FieldUpdatedAt, appusercontrol.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case appusercontrol.FieldID, appusercontrol.FieldAppID, appusercontrol.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -64,6 +64,24 @@ func (auc *AppUserControl) assignValues(columns []string, values []interface{}) 
 			} else if value != nil {
 				auc.ID = *value
 			}
+		case appusercontrol.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				auc.CreatedAt = uint32(value.Int64)
+			}
+		case appusercontrol.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				auc.UpdatedAt = uint32(value.Int64)
+			}
+		case appusercontrol.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				auc.DeletedAt = uint32(value.Int64)
+			}
 		case appusercontrol.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
@@ -87,24 +105,6 @@ func (auc *AppUserControl) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field google_authentication_verified", values[i])
 			} else if value.Valid {
 				auc.GoogleAuthenticationVerified = value.Bool
-			}
-		case appusercontrol.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				auc.CreateAt = uint32(value.Int64)
-			}
-		case appusercontrol.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				auc.UpdateAt = uint32(value.Int64)
-			}
-		case appusercontrol.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				auc.DeleteAt = uint32(value.Int64)
 			}
 		}
 	}
@@ -134,6 +134,12 @@ func (auc *AppUserControl) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppUserControl(")
 	builder.WriteString(fmt.Sprintf("id=%v", auc.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", auc.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", auc.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", auc.DeletedAt))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", auc.AppID))
 	builder.WriteString(", user_id=")
@@ -142,12 +148,6 @@ func (auc *AppUserControl) String() string {
 	builder.WriteString(fmt.Sprintf("%v", auc.SigninVerifyByGoogleAuthentication))
 	builder.WriteString(", google_authentication_verified=")
 	builder.WriteString(fmt.Sprintf("%v", auc.GoogleAuthenticationVerified))
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", auc.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", auc.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", auc.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

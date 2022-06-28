@@ -120,7 +120,6 @@ func Get(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleRes
 		Where(
 			approle.And(
 				approle.ID(id),
-				approle.DeleteAt(0),
 			),
 		).
 		All(ctx)

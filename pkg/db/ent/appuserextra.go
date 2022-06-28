@@ -17,6 +17,12 @@ type AppUserExtra struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -43,12 +49,6 @@ type AppUserExtra struct {
 	Organization string `json:"organization,omitempty"`
 	// IDNumber holds the value of the "id_number" field.
 	IDNumber string `json:"id_number,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -58,7 +58,7 @@ func (*AppUserExtra) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appuserextra.FieldAddressFields:
 			values[i] = new([]byte)
-		case appuserextra.FieldAge, appuserextra.FieldBirthday, appuserextra.FieldCreateAt, appuserextra.FieldUpdateAt, appuserextra.FieldDeleteAt:
+		case appuserextra.FieldCreatedAt, appuserextra.FieldUpdatedAt, appuserextra.FieldDeletedAt, appuserextra.FieldAge, appuserextra.FieldBirthday:
 			values[i] = new(sql.NullInt64)
 		case appuserextra.FieldUsername, appuserextra.FieldFirstName, appuserextra.FieldLastName, appuserextra.FieldGender, appuserextra.FieldPostalCode, appuserextra.FieldAvatar, appuserextra.FieldOrganization, appuserextra.FieldIDNumber:
 			values[i] = new(sql.NullString)
@@ -84,6 +84,24 @@ func (aue *AppUserExtra) assignValues(columns []string, values []interface{}) er
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				aue.ID = *value
+			}
+		case appuserextra.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				aue.CreatedAt = uint32(value.Int64)
+			}
+		case appuserextra.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				aue.UpdatedAt = uint32(value.Int64)
+			}
+		case appuserextra.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				aue.DeletedAt = uint32(value.Int64)
 			}
 		case appuserextra.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -165,24 +183,6 @@ func (aue *AppUserExtra) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				aue.IDNumber = value.String
 			}
-		case appuserextra.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				aue.CreateAt = uint32(value.Int64)
-			}
-		case appuserextra.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				aue.UpdateAt = uint32(value.Int64)
-			}
-		case appuserextra.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				aue.DeleteAt = uint32(value.Int64)
-			}
 		}
 	}
 	return nil
@@ -211,6 +211,12 @@ func (aue *AppUserExtra) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppUserExtra(")
 	builder.WriteString(fmt.Sprintf("id=%v", aue.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", aue.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", aue.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", aue.DeletedAt))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", aue.AppID))
 	builder.WriteString(", user_id=")
@@ -237,12 +243,6 @@ func (aue *AppUserExtra) String() string {
 	builder.WriteString(aue.Organization)
 	builder.WriteString(", id_number=")
 	builder.WriteString(aue.IDNumber)
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", aue.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", aue.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", aue.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -83,7 +83,6 @@ func Get(ctx context.Context, in *npool.GetBanAppUserRequest) (*npool.GetBanAppU
 		Where(
 			banappuser.And(
 				banappuser.ID(id),
-				banappuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
@@ -122,7 +121,6 @@ func GetByAppUser(ctx context.Context, in *npool.GetBanAppUserByAppUserRequest) 
 		Where(
 			banappuser.And(
 				banappuser.AppID(appID),
-				banappuser.DeleteAt(0),
 			),
 		).
 		All(ctx)
@@ -190,7 +188,7 @@ func Delete(ctx context.Context, in *npool.DeleteBanAppUserRequest) (*npool.Dele
 	info, err := cli.
 		BanAppUser.
 		UpdateOneID(id).
-		SetDeleteAt(uint32(time.Now().Unix())).
+		SetDeletedAt(uint32(time.Now().Unix())).
 		Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("fail delete ban app user: %v", err)

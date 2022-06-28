@@ -27,4 +27,16 @@ const (
 
 	CreateAppUserWithSecret       = "CreateAppUserWithSecret"
 	CreateAppUserWithSecretRevert = "CreateAppUserWithSecretRevert"
+
+	FieldID             = "ID"
+	AppFieldCreatedBy   = "CreatedBy"
+	AppFieldName        = "Name"
+	AppFieldLogo        = "Logo"
+	AppFieldDescription = "Description"
+
+	AppRoleFieldAppID       = "AppID"
+	AppRoleFieldCreatedBy   = "CreatedBy"
+	AppRoleFieldRole        = "Role"
+	AppRoleFieldDescription = "Description"
+	AppRoleFieldDefault     = "Default"
 )

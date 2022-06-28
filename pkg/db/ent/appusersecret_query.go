@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppUserSecretQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserSecret
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (ausq *AppUserSecretQuery) Clone() *AppUserSecretQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppUserSecret.Query().
-//		GroupBy(appusersecret.FieldCreateAt).
+//		GroupBy(appusersecret.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (ausq *AppUserSecretQuery) GroupBy(field string, fields ...string) *AppUser
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppUserSecret.Query().
-//		Select(appusersecret.FieldCreateAt).
+//		Select(appusersecret.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (ausq *AppUserSecretQuery) Select(fields ...string) *AppUserSecretSelect {
@@ -333,6 +335,9 @@ func (ausq *AppUserSecretQuery) sqlAll(ctx context.Context) ([]*AppUserSecret, e
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(ausq.modifiers) > 0 {
+		_spec.Modifiers = ausq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, ausq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -344,6 +349,9 @@ func (ausq *AppUserSecretQuery) sqlAll(ctx context.Context) ([]*AppUserSecret, e
 
 func (ausq *AppUserSecretQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := ausq.querySpec()
+	if len(ausq.modifiers) > 0 {
+		_spec.Modifiers = ausq.modifiers
+	}
 	_spec.Node.Columns = ausq.fields
 	if len(ausq.fields) > 0 {
 		_spec.Unique = ausq.unique != nil && *ausq.unique
@@ -422,6 +430,9 @@ func (ausq *AppUserSecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if ausq.unique != nil && *ausq.unique {
 		selector.Distinct()
 	}
+	for _, m := range ausq.modifiers {
+		m(selector)
+	}
 	for _, p := range ausq.predicates {
 		p(selector)
 	}
@@ -437,6 +448,32 @@ func (ausq *AppUserSecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (ausq *AppUserSecretQuery) ForUpdate(opts ...sql.LockOption) *AppUserSecretQuery {
+	if ausq.driver.Dialect() == dialect.Postgres {
+		ausq.Unique(false)
+	}
+	ausq.modifiers = append(ausq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return ausq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (ausq *AppUserSecretQuery) ForShare(opts ...sql.LockOption) *AppUserSecretQuery {
+	if ausq.driver.Dialect() == dialect.Postgres {
+		ausq.Unique(false)
+	}
+	ausq.modifiers = append(ausq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return ausq
 }
 
 // AppUserSecretGroupBy is the group-by builder for AppUserSecret entities.
