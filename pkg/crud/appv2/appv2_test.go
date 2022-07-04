@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
+
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
@@ -26,23 +28,38 @@ func init() {
 	}
 }
 
-var appRes = npool.AppRes{
-	ID:          uuid.New().String(),
-	CreatedBy:   uuid.New().String(),
+var entApp = ent.App{
+	ID:          uuid.New(),
+	CreatedBy:   uuid.New(),
 	Name:        uuid.New().String(),
 	Description: uuid.New().String(),
 	Logo:        uuid.New().String(),
 }
 
-var appInfo = npool.App{
-	ID:          &appRes.ID,
-	CreatedBy:   &appRes.CreatedBy,
-	Name:        &appRes.Name,
-	Description: &appRes.Description,
-	Logo:        &appRes.Logo,
-}
+var (
+	id        = entApp.ID.String()
+	createdBy = entApp.CreatedBy.String()
+	appInfo   = npool.App{
+		ID:          &id,
+		CreatedBy:   &createdBy,
+		Name:        &entApp.Name,
+		Description: &entApp.Description,
+		Logo:        &entApp.Logo,
+	}
+)
 
-var info *npool.AppRes
+var info *ent.App
+
+func rowToObject(row *ent.App) *ent.App {
+	return &ent.App{
+		ID:          row.ID,
+		CreatedBy:   row.CreatedBy,
+		Name:        row.Name,
+		Logo:        row.Logo,
+		Description: row.Description,
+		CreatedAt:   row.CreatedAt,
+	}
+}
 
 func Create(t *testing.T) {
 	schema, err := New(context.Background(), nil)
@@ -51,39 +68,42 @@ func Create(t *testing.T) {
 	info, err = schema.Create(context.Background(), &appInfo)
 	if assert.Nil(t, err) {
 		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
-			appRes.ID = info.GetID()
-			appRes.CreateAt = info.GetCreateAt()
+			entApp.ID = info.ID
+			entApp.CreatedAt = info.CreatedAt
 		}
-		assert.Equal(t, info, &appRes)
+		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 
 func CreateBulk(t *testing.T) {
-	appRes := []npool.AppRes{
+	entApp := []ent.App{
 		{
-			ID:          uuid.New().String(),
-			CreatedBy:   uuid.New().String(),
+			ID:          uuid.New(),
+			CreatedBy:   uuid.New(),
 			Name:        uuid.New().String(),
 			Description: uuid.New().String(),
 			Logo:        uuid.New().String(),
 		},
 		{
-			ID:          uuid.New().String(),
-			CreatedBy:   uuid.New().String(),
+			ID:          uuid.New(),
+			CreatedBy:   uuid.New(),
 			Name:        uuid.New().String(),
 			Description: uuid.New().String(),
 			Logo:        uuid.New().String(),
 		},
 	}
+
 	apps := []*npool.App{}
-	for key := range appRes {
+	for key := range entApp {
+		id := entApp[key].ID.String()
+		createdBy := entApp[key].CreatedBy.String()
 		apps = append(apps, &npool.App{
-			ID:          &appRes[key].ID,
-			CreatedBy:   &appRes[key].CreatedBy,
-			Name:        &appRes[key].Name,
-			Logo:        &appRes[key].Logo,
-			Description: &appRes[key].Description,
-			CreateAt:    &appRes[key].CreateAt,
+			ID:          &id,
+			CreatedBy:   &createdBy,
+			Name:        &entApp[key].Name,
+			Logo:        &entApp[key].Logo,
+			Description: &entApp[key].Description,
+			CreatedAt:   &entApp[key].CreatedAt,
 		})
 	}
 	schema, err := New(context.Background(), nil)
@@ -103,7 +123,7 @@ func Update(t *testing.T) {
 
 	info, err = schema.Update(context.Background(), &appInfo)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appRes)
+		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 
@@ -111,9 +131,9 @@ func Row(t *testing.T) {
 	schema, err := New(context.Background(), nil)
 	assert.Nil(t, err)
 
-	info, err := schema.Row(context.Background(), uuid.MustParse(info.ID))
+	info, err := schema.Row(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appRes)
+		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 
@@ -123,13 +143,13 @@ func Rows(t *testing.T) {
 	infos, total, err := schema.Rows(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
-				Value: info.GetID(),
+				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, 1)
-		assert.Equal(t, infos[0], &appRes)
+		assert.Equal(t, rowToObject(infos[0]), &entApp)
 	}
 }
 
@@ -140,12 +160,12 @@ func RowOnly(t *testing.T) {
 	info, err = schema.RowOnly(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
-				Value: info.GetID(),
+				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appRes)
+		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 
@@ -156,7 +176,7 @@ func Count(t *testing.T) {
 	count, err := schema.Count(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
-				Value: info.GetID(),
+				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
 		},
@@ -169,7 +189,7 @@ func Count(t *testing.T) {
 func Exist(t *testing.T) {
 	schema, err := New(context.Background(), nil)
 	assert.Nil(t, err)
-	exist, err := schema.Exist(context.Background(), uuid.MustParse(info.ID))
+	exist, err := schema.Exist(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, exist, true)
 	}
@@ -182,7 +202,7 @@ func ExistConds(t *testing.T) {
 	exist, err := schema.ExistConds(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
-				Value: info.GetID(),
+				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
 		},
@@ -196,9 +216,9 @@ func Delete(t *testing.T) {
 	schema, err := New(context.Background(), nil)
 	assert.Nil(t, err)
 
-	info, err = schema.Delete(context.Background(), uuid.MustParse(info.ID))
+	info, err = schema.Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appRes)
+		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 

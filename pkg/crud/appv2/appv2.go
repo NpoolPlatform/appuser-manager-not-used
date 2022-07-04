@@ -30,18 +30,7 @@ func New(ctx context.Context, tx *ent.Tx) (*App, error) {
 	}, nil
 }
 
-func (s *App) rowToObject(row *ent.App) *npool.AppRes {
-	return &npool.AppRes{
-		ID:          row.ID.String(),
-		CreatedBy:   row.CreatedBy.String(),
-		Name:        row.Name,
-		Logo:        row.Logo,
-		Description: row.Description,
-		CreateAt:    row.CreatedAt,
-	}
-}
-
-func (s *App) Create(ctx context.Context, in *npool.App) (*npool.AppRes, error) {
+func (s *App) Create(ctx context.Context, in *npool.App) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
@@ -70,10 +59,10 @@ func (s *App) Create(ctx context.Context, in *npool.App) (*npool.AppRes, error) 
 		return nil, err
 	}
 
-	return s.rowToObject(info), nil
+	return info, nil
 }
 
-func (s *App) CreateBulk(ctx context.Context, in []*npool.App) ([]*npool.AppRes, error) {
+func (s *App) CreateBulk(ctx context.Context, in []*npool.App) ([]*ent.App, error) {
 	rows := []*ent.App{}
 	var err error
 	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
@@ -103,16 +92,10 @@ func (s *App) CreateBulk(ctx context.Context, in []*npool.App) ([]*npool.AppRes,
 		logger.Sugar().Errorf("fail create apps:  %v", err)
 		return nil, err
 	}
-
-	infos := []*npool.AppRes{}
-	for _, row := range rows {
-		infos = append(infos, s.rowToObject(row))
-	}
-
-	return infos, nil
+	return rows, nil
 }
 
-func (s *App) Update(ctx context.Context, in *npool.App) (*npool.AppRes, error) {
+func (s *App) Update(ctx context.Context, in *npool.App) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
@@ -135,10 +118,10 @@ func (s *App) Update(ctx context.Context, in *npool.App) (*npool.AppRes, error) 
 		return nil, err
 	}
 
-	return s.rowToObject(info), nil
+	return info, nil
 }
 
-func (s *App) Row(ctx context.Context, id uuid.UUID) (*npool.AppRes, error) {
+func (s *App) Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
 	var err error
 	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
@@ -150,7 +133,7 @@ func (s *App) Row(ctx context.Context, id uuid.UUID) (*npool.AppRes, error) {
 		return nil, err
 	}
 
-	return s.rowToObject(info), nil
+	return info, nil
 }
 
 //nolint
@@ -161,12 +144,6 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.ID(id))
-		case cruder.LT:
-			stm.Where(app.IDLT(id))
-		case cruder.GT:
-			stm.Where(app.IDGT(id))
-		case cruder.LIKE:
-			stm.Where(app.IDLTE(id))
 		case cruder.IN:
 			stm.Where(app.IDIn(id))
 		default:
@@ -179,12 +156,6 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 		switch conds.GetCreatedBy().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.CreatedBy(createdBy))
-		case cruder.LT:
-			stm.Where(app.CreatedByLT(createdBy))
-		case cruder.GT:
-			stm.Where(app.CreatedByGT(createdBy))
-		case cruder.LIKE:
-			stm.Where(app.CreatedByLTE(createdBy))
 		case cruder.IN:
 			stm.Where(app.CreatedByIn(createdBy))
 		default:
@@ -196,12 +167,6 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 		switch conds.GetName().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.Name(conds.GetName().GetValue()))
-		case cruder.LT:
-			stm.Where(app.NameLT(conds.GetName().GetValue()))
-		case cruder.GT:
-			stm.Where(app.NameGT(conds.GetName().GetValue()))
-		case cruder.LIKE:
-			stm.Where(app.NameLTE(conds.GetName().GetValue()))
 		case cruder.IN:
 			stm.Where(app.NameIn(conds.GetName().GetValue()))
 		default:
@@ -213,12 +178,6 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 		switch conds.GetLogo().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.Logo(conds.GetLogo().GetValue()))
-		case cruder.LT:
-			stm.Where(app.LogoLT(conds.GetLogo().GetValue()))
-		case cruder.GT:
-			stm.Where(app.LogoGT(conds.GetLogo().GetValue()))
-		case cruder.LIKE:
-			stm.Where(app.LogoLTE(conds.GetLogo().GetValue()))
 		case cruder.IN:
 			stm.Where(app.LogoIn(conds.GetLogo().GetValue()))
 		default:
@@ -230,12 +189,6 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 		switch conds.GetDescription().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.Description(conds.GetDescription().GetValue()))
-		case cruder.LT:
-			stm.Where(app.DescriptionLT(conds.GetDescription().GetValue()))
-		case cruder.GT:
-			stm.Where(app.DescriptionGT(conds.GetDescription().GetValue()))
-		case cruder.LIKE:
-			stm.Where(app.DescriptionLTE(conds.GetDescription().GetValue()))
 		case cruder.IN:
 			stm.Where(app.DescriptionIn(conds.GetDescription().GetValue()))
 		default:
@@ -246,7 +199,7 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 	return stm, nil
 }
 
-func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*npool.AppRes, int, error) {
+func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.App, int, error) {
 	rows := []*ent.App{}
 	var total int
 	err := db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
@@ -277,15 +230,10 @@ func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) (
 		logger.Sugar().Errorf("fail get app: %v", err)
 		return nil, 0, err
 	}
-
-	infos := []*npool.AppRes{}
-	for _, row := range rows {
-		infos = append(infos, s.rowToObject(row))
-	}
-	return infos, total, nil
+	return rows, total, nil
 }
 
-func (s *App) RowOnly(ctx context.Context, conds *npool.Conds) (*npool.AppRes, error) {
+func (s *App) RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
 	var info *ent.App
 
 	err := db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
@@ -308,7 +256,7 @@ func (s *App) RowOnly(ctx context.Context, conds *npool.Conds) (*npool.AppRes, e
 		return nil, err
 	}
 
-	return s.rowToObject(info), nil
+	return info, nil
 }
 
 func (s *App) Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
@@ -380,7 +328,7 @@ func (s *App) ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) 
 	return exist, nil
 }
 
-func (s *App) Delete(ctx context.Context, id uuid.UUID) (*npool.AppRes, error) {
+func (s *App) Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
@@ -395,5 +343,5 @@ func (s *App) Delete(ctx context.Context, id uuid.UUID) (*npool.AppRes, error) {
 		return nil, err
 	}
 
-	return s.rowToObject(info), nil
+	return info, nil
 }

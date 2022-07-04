@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
+
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appv2"
-	entapp "github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -35,6 +35,17 @@ func checkInfo(info *npool.App) error {
 	return nil
 }
 
+func rowToObject(row *ent.App) *npool.AppRes {
+	return &npool.AppRes{
+		ID:          row.ID.String(),
+		CreatedBy:   row.CreatedBy.String(),
+		Name:        row.Name,
+		Logo:        row.Logo,
+		Description: row.Description,
+		CreateAt:    row.CreatedAt,
+	}
+}
+
 func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
 	err := checkInfo(in.GetInfo())
 	if err != nil {
@@ -54,7 +65,7 @@ func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest
 	}
 
 	return &npool.CreateAppResponse{
-		Info: info,
+		Info: rowToObject(info),
 	}, nil
 }
 
@@ -72,12 +83,15 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos, err := schema.CreateBulk(ctx, in.GetInfos())
+	rows, err := schema.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
 		logger.Sugar().Errorf("fail create Apps: %v", err)
 		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
-
+	infos := []*npool.AppRes{}
+	for _, val := range rows {
+		infos = append(infos, rowToObject(val))
+	}
 	return &npool.CreateAppsResponse{
 		Infos: infos,
 	}, nil
@@ -102,31 +116,8 @@ func (s *Server) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest) (*
 	}
 
 	return &npool.UpdateAppResponse{
-		Info: info,
+		Info: rowToObject(info),
 	}, nil
-}
-
-func AppFieldsToFields(fields cruder.FilterFields) (cruder.Fields, error) {
-	newFields := cruder.NewFields()
-	for k, v := range fields {
-		switch k {
-		case entapp.FieldID:
-			fallthrough //nolint
-		case entapp.FieldCreatedBy:
-			fallthrough
-		case entapp.FieldName:
-			fallthrough //nolint
-		case entapp.FieldDescription:
-			fallthrough //nolint
-		case entapp.FieldLogo:
-			newFields.WithField(k, v.GetNullValue())
-			newFields.WithField(k, v.GetNumberValue())
-			newFields.WithField(k, v.GetBoolValue())
-		default:
-			return nil, fmt.Errorf("invalid App field")
-		}
-	}
-	return newFields, nil
 }
 
 func (s *AppService) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
@@ -148,7 +139,7 @@ func (s *AppService) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*np
 	}
 
 	return &npool.GetAppResponse{
-		Info: info,
+		Info: rowToObject(info),
 	}, nil
 }
 
@@ -166,7 +157,7 @@ func (s *Server) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) 
 	}
 
 	return &npool.GetAppOnlyResponse{
-		Info: info,
+		Info: rowToObject(info),
 	}, nil
 }
 
@@ -177,12 +168,15 @@ func (s *AppService) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos, total, err := schema.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
+	rows, total, err := schema.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get Apps: %v", err)
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
-
+	infos := []*npool.AppRes{}
+	for _, val := range rows {
+		infos = append(infos, rowToObject(val))
+	}
 	return &npool.GetAppsResponse{
 		Infos: infos,
 		Total: uint32(total),
@@ -208,7 +202,7 @@ func (s *Server) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*np
 	}
 
 	return &npool.ExistAppResponse{
-		Result: exist,
+		Info: exist,
 	}, nil
 }
 
@@ -226,7 +220,7 @@ func (s *Server) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppCondsReq
 	}
 
 	return &npool.ExistAppCondsResponse{
-		Result: exist,
+		Info: exist,
 	}, nil
 }
 
@@ -244,7 +238,7 @@ func (s *Server) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest) (*
 	}
 
 	return &npool.CountAppsResponse{
-		Result: total,
+		Info: total,
 	}, nil
 }
 
@@ -267,6 +261,6 @@ func (s *Server) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*
 	}
 
 	return &npool.DeleteAppResponse{
-		Info: info,
+		Info: rowToObject(info),
 	}, nil
 }
