@@ -17,6 +17,9 @@ spec:
       - name: appuser-manager
         image: uhub.service.ucloud.cn/entropypool/appuser-manager:latest
         imagePullPolicy: Always
+        volumeMounts:
+          - name: service-config
+            mountPath: /app
         env:
         - name: ENV_ENVIRONMENT_TARGET
           valueFrom:
@@ -37,7 +40,13 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-
+      volumes:
+        - name: service-config
+          configMap:
+            name: appuser-manager-config
+            items:
+              - key: service-conf
+                path: AppUserManager.viper.yaml
 ---
 apiVersion: v1
 kind: Service
@@ -55,5 +64,8 @@ spec:
   - name: prometheus
     port: 50232
     targetPort: 50232
+  - name: prometheus
+    port: 50282
+    targetPort: 50282
   selector:
     app: appuser-manager

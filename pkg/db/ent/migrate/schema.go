@@ -16,8 +16,8 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "created_by", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "logo", Type: field.TypeString},
-		{Name: "description", Type: field.TypeString},
+		{Name: "logo", Type: field.TypeString, Default: ""},
+		{Name: "description", Type: field.TypeString, Default: ""},
 	}
 	// AppsTable holds the schema information for the "apps" table.
 	AppsTable = &schema.Table{

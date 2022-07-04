@@ -101,9 +101,25 @@ func (au *AppUpdate) SetLogo(s string) *AppUpdate {
 	return au
 }
 
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (au *AppUpdate) SetNillableLogo(s *string) *AppUpdate {
+	if s != nil {
+		au.SetLogo(*s)
+	}
+	return au
+}
+
 // SetDescription sets the "description" field.
 func (au *AppUpdate) SetDescription(s string) *AppUpdate {
 	au.mutation.SetDescription(s)
+	return au
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (au *AppUpdate) SetNillableDescription(s *string) *AppUpdate {
+	if s != nil {
+		au.SetDescription(*s)
+	}
 	return au
 }
 
@@ -361,9 +377,25 @@ func (auo *AppUpdateOne) SetLogo(s string) *AppUpdateOne {
 	return auo
 }
 
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableLogo(s *string) *AppUpdateOne {
+	if s != nil {
+		auo.SetLogo(*s)
+	}
+	return auo
+}
+
 // SetDescription sets the "description" field.
 func (auo *AppUpdateOne) SetDescription(s string) *AppUpdateOne {
 	auo.mutation.SetDescription(s)
+	return auo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableDescription(s *string) *AppUpdateOne {
+	if s != nil {
+		auo.SetDescription(*s)
+	}
 	return auo
 }
 

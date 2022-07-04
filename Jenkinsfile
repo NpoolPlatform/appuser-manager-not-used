@@ -15,19 +15,6 @@ pipeline {
 
     stage('Prepare') {
       steps {
-        // Get linter and other build tools.
-        sh 'go get golang.org/x/lint/golint'
-        sh 'go install golang.org/x/lint/golint'
-        sh 'go get github.com/tebeka/go2xunit'
-        sh 'go install github.com/tebeka/go2xunit'
-        sh 'go get github.com/t-yuki/gocover-cobertura'
-        sh 'go install github.com/t-yuki/gocover-cobertura'
-
-        // Get dependencies
-        sh 'go get golang.org/x/image/tiff/lzw'
-        sh 'go install golang.org/x/image/tiff/lzw'
-        sh 'go get github.com/boombuler/barcode'
-        sh 'go install github.com/boombuler/barcode'
         sh 'make deps'
       }
     }
@@ -316,7 +303,7 @@ pipeline {
         expression { TARGET_ENV ==~ /.*development.*/ }
       }
       steps {
-        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/appuser-manager/k8s/01-appuser-manager.yaml'
+        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/appuser-manager/k8s/02-appuser-manager.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
@@ -333,8 +320,8 @@ pipeline {
 
           git reset --hard
           git checkout $tag
-          sed -i "s/appuser-manager:latest/appuser-manager:$tag/g" cmd/appuser-manager/k8s/01-appuser-manager.yaml
-          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/appuser-manager/k8s/01-appuser-manager.yaml
+          sed -i "s/appuser-manager:latest/appuser-manager:$tag/g" cmd/appuser-manager/k8s/02-appuser-manager.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/appuser-manager/k8s/02-appuser-manager.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -358,8 +345,8 @@ pipeline {
 
           git reset --hard
           git checkout $tag
-          sed -i "s/appuser-manager:latest/appuser-manager:$tag/g" cmd/appuser-manager/k8s/01-appuser-manager.yaml
-          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/appuser-manager/k8s/01-appuser-manager.yaml
+          sed -i "s/appuser-manager:latest/appuser-manager:$tag/g" cmd/appuser-manager/k8s/02-appuser-manager.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/appuser-manager/k8s/02-appuser-manager.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }

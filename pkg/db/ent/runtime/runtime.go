@@ -55,6 +55,14 @@ func init() {
 	appDescDeletedAt := appMixinFields0[2].Descriptor()
 	// app.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	app.DefaultDeletedAt = appDescDeletedAt.Default.(func() uint32)
+	// appDescLogo is the schema descriptor for logo field.
+	appDescLogo := appFields[3].Descriptor()
+	// app.DefaultLogo holds the default value on creation for the logo field.
+	app.DefaultLogo = appDescLogo.Default.(string)
+	// appDescDescription is the schema descriptor for description field.
+	appDescDescription := appFields[4].Descriptor()
+	// app.DefaultDescription holds the default value on creation for the description field.
+	app.DefaultDescription = appDescDescription.Default.(string)
 	// appDescID is the schema descriptor for id field.
 	appDescID := appFields[0].Descriptor()
 	// app.DefaultID holds the default value on creation for the id field.

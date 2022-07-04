@@ -83,9 +83,25 @@ func (ac *AppCreate) SetLogo(s string) *AppCreate {
 	return ac
 }
 
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (ac *AppCreate) SetNillableLogo(s *string) *AppCreate {
+	if s != nil {
+		ac.SetLogo(*s)
+	}
+	return ac
+}
+
 // SetDescription sets the "description" field.
 func (ac *AppCreate) SetDescription(s string) *AppCreate {
 	ac.mutation.SetDescription(s)
+	return ac
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (ac *AppCreate) SetNillableDescription(s *string) *AppCreate {
+	if s != nil {
+		ac.SetDescription(*s)
+	}
 	return ac
 }
 
@@ -196,6 +212,14 @@ func (ac *AppCreate) defaults() error {
 		}
 		v := app.DefaultDeletedAt()
 		ac.mutation.SetDeletedAt(v)
+	}
+	if _, ok := ac.mutation.Logo(); !ok {
+		v := app.DefaultLogo
+		ac.mutation.SetLogo(v)
+	}
+	if _, ok := ac.mutation.Description(); !ok {
+		v := app.DefaultDescription
+		ac.mutation.SetDescription(v)
 	}
 	if _, ok := ac.mutation.ID(); !ok {
 		if app.DefaultID == nil {
