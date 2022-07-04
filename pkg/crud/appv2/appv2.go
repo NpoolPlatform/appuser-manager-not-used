@@ -3,6 +3,8 @@ package appv2
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
@@ -10,7 +12,6 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/app"
 	"github.com/google/uuid"
-	"time"
 )
 
 type App struct {

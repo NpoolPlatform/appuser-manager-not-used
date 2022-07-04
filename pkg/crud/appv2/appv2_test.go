@@ -3,10 +3,11 @@ package appv2
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/app"
@@ -32,6 +33,7 @@ var appRes = npool.AppRes{
 	Description: uuid.New().String(),
 	Logo:        uuid.New().String(),
 }
+
 var appInfo = npool.App{
 	ID:          &appRes.ID,
 	CreatedBy:   &appRes.CreatedBy,
