@@ -58,7 +58,7 @@ func WithTx(ctx context.Context, tx *ent.Tx, fn func(ctx context.Context) error)
 	return nil
 }
 
-func Do(ctx context.Context, fn func(ctx context.Context, cli *ent.Client) error) error {
+func WithClient(ctx context.Context, fn func(ctx context.Context, cli *ent.Client) error) error {
 	cli, err := Client()
 	if err != nil {
 		return fmt.Errorf("fail get db client: %v", err)

@@ -34,8 +34,8 @@ func (s *App) Create(ctx context.Context, in *npool.App) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		c := s.Tx.App.Create()
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		c := cli.App.Create()
 		if in.ID != nil {
 			c.SetID(uuid.MustParse(in.GetID()))
 		}
@@ -99,8 +99,8 @@ func (s *App) Update(ctx context.Context, in *npool.App) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		u := s.Tx.App.UpdateOneID(uuid.MustParse(in.GetID()))
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		u := cli.App.UpdateOneID(uuid.MustParse(in.GetID()))
 		if in.Name != nil {
 			u.SetName(in.GetName())
 		}
@@ -124,7 +124,7 @@ func (s *App) Update(ctx context.Context, in *npool.App) (*ent.App, error) {
 func (s *App) Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
 	var err error
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = s.Tx.App.Query().Where(app.ID(id)).Only(_ctx)
 		return err
 	})
@@ -137,8 +137,8 @@ func (s *App) Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 }
 
 //nolint
-func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
-	stm := s.Tx.App.Query()
+func (s *App) setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
+	stm := cli.App.Query()
 	if conds.ID != nil {
 		id := uuid.MustParse(conds.GetID().GetValue())
 		switch conds.GetID().GetOp() {
@@ -202,8 +202,8 @@ func (s *App) setQueryConds(conds *npool.Conds) (*ent.AppQuery, error) {
 func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.App, int, error) {
 	rows := []*ent.App{}
 	var total int
-	err := db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		stm, err := s.setQueryConds(conds)
+	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm, err := s.setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -236,8 +236,8 @@ func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) (
 func (s *App) RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
 	var info *ent.App
 
-	err := db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		stm, err := s.setQueryConds(conds)
+	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm, err := s.setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -263,8 +263,8 @@ func (s *App) Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	var err error
 	var total int
 
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		stm, err := s.setQueryConds(conds)
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm, err := s.setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -289,7 +289,7 @@ func (s *App) Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	var err error
 	exist := false
 
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		exist, err = s.Tx.App.Query().Where(app.ID(id)).Exist(_ctx)
 		return err
 	})
@@ -305,8 +305,8 @@ func (s *App) ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) 
 	var err error
 	exist := false
 
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		stm, err := s.setQueryConds(conds)
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		stm, err := s.setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -332,8 +332,8 @@ func (s *App) Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
-		info, err = s.Tx.App.UpdateOneID(id).
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		info, err = cli.App.UpdateOneID(id).
 			SetDeletedAt(uint32(time.Now().Unix())).
 			Save(_ctx)
 		return err
