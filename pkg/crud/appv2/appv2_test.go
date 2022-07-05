@@ -61,11 +61,9 @@ func rowToObject(row *ent.App) *ent.App {
 	}
 }
 
-func Create(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	info, err = schema.Create(context.Background(), &appInfo)
+func create(t *testing.T) {
+	var err error
+	info, err = Create(context.Background(), &appInfo)
 	if assert.Nil(t, err) {
 		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
 			entApp.ID = info.ID
@@ -75,7 +73,7 @@ func Create(t *testing.T) {
 	}
 }
 
-func CreateBulk(t *testing.T) {
+func createBulk(t *testing.T) {
 	entApp := []ent.App{
 		{
 			ID:          uuid.New(),
@@ -106,10 +104,7 @@ func CreateBulk(t *testing.T) {
 			CreatedAt:   &entApp[key].CreatedAt,
 		})
 	}
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	infos, err := schema.CreateBulk(context.Background(), apps)
+	infos, err := CreateBulk(context.Background(), apps)
 	if assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 2)
 		assert.NotEqual(t, infos[0].ID, uuid.UUID{}.String())
@@ -117,30 +112,24 @@ func CreateBulk(t *testing.T) {
 	}
 }
 
-func Update(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	info, err = schema.Update(context.Background(), &appInfo)
+func update(t *testing.T) {
+	var err error
+	info, err = Update(context.Background(), &appInfo)
 	if assert.Nil(t, err) {
 		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 
-func Row(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	info, err := schema.Row(context.Background(), info.ID)
+func row(t *testing.T) {
+	var err error
+	info, err = Row(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, rowToObject(info), &entApp)
 	}
 }
 
-func Rows(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-	infos, total, err := schema.Rows(context.Background(),
+func rows(t *testing.T) {
+	infos, total, err := Rows(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
 				Value: info.ID.String(),
@@ -153,11 +142,9 @@ func Rows(t *testing.T) {
 	}
 }
 
-func RowOnly(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	info, err = schema.RowOnly(context.Background(),
+func rowOnly(t *testing.T) {
+	var err error
+	info, err = RowOnly(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
 				Value: info.ID.String(),
@@ -169,11 +156,8 @@ func RowOnly(t *testing.T) {
 	}
 }
 
-func Count(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	count, err := schema.Count(context.Background(),
+func count(t *testing.T) {
+	count, err := Count(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
 				Value: info.ID.String(),
@@ -186,20 +170,15 @@ func Count(t *testing.T) {
 	}
 }
 
-func Exist(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-	exist, err := schema.Exist(context.Background(), info.ID)
+func exist(t *testing.T) {
+	exist, err := Exist(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, exist, true)
 	}
 }
 
-func ExistConds(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	exist, err := schema.ExistConds(context.Background(),
+func existConds(t *testing.T) {
+	exist, err := ExistConds(context.Background(),
 		&npool.Conds{
 			ID: &npool.IDVal{
 				Value: info.ID.String(),
@@ -212,11 +191,8 @@ func ExistConds(t *testing.T) {
 	}
 }
 
-func Delete(t *testing.T) {
-	schema, err := New(context.Background(), nil)
-	assert.Nil(t, err)
-
-	info, err = schema.Delete(context.Background(), info.ID)
+func delete(t *testing.T) {
+	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, rowToObject(info), &entApp)
 	}
@@ -226,14 +202,14 @@ func TestMainOrder(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
-	t.Run("create", Create)
-	t.Run("createBulk", CreateBulk)
-	t.Run("row", Row)
-	t.Run("rows", Rows)
-	t.Run("rowOnly", RowOnly)
-	t.Run("update", Update)
-	t.Run("exist", Exist)
-	t.Run("existConds", ExistConds)
-	t.Run("delete", Delete)
-	t.Run("count", Count)
+	t.Run("create", create)
+	t.Run("createBulk", createBulk)
+	t.Run("row", row)
+	t.Run("rows", rows)
+	t.Run("rowOnly", rowOnly)
+	t.Run("update", update)
+	t.Run("exist", exist)
+	t.Run("existConds", existConds)
+	t.Run("delete", delete)
+	t.Run("count", count)
 }

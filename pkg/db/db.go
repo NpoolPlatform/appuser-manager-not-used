@@ -37,8 +37,17 @@ func Client() (*ent.Client, error) {
 	return client()
 }
 
-func WithTx(ctx context.Context, tx *ent.Tx, fn func(ctx context.Context) error) error {
+func WithTx(ctx context.Context, fn func(ctx context.Context, tx *ent.Tx) error) error {
 	succ := false
+	cli, err := Client()
+	if err != nil {
+		return err
+	}
+	tx, err := cli.Tx(ctx)
+	if err != nil {
+		return fmt.Errorf("fail get client transaction: %v", err)
+	}
+
 	defer func() {
 		if !succ {
 			err := tx.Rollback()
@@ -48,7 +57,7 @@ func WithTx(ctx context.Context, tx *ent.Tx, fn func(ctx context.Context) error)
 			}
 		}
 	}()
-	if err := fn(ctx); err != nil {
+	if err := fn(ctx, tx); err != nil {
 		return err
 	}
 	if err := tx.Commit(); err != nil {
@@ -68,29 +77,4 @@ func WithClient(ctx context.Context, fn func(ctx context.Context, cli *ent.Clien
 		return err
 	}
 	return nil
-}
-
-type Entity struct {
-	Tx *ent.Tx
-}
-
-func NewEntity(ctx context.Context, _tx *ent.Tx) (*Entity, error) {
-	if _tx != nil {
-		return &Entity{
-			Tx: _tx,
-		}, nil
-	}
-
-	cli, err := Client()
-	if err != nil {
-		return nil, fmt.Errorf("fail get db client: %v", err)
-	}
-	_tx, err = cli.Tx(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("fail get client transaction: %v", err)
-	}
-
-	return &Entity{
-		Tx: _tx,
-	}, nil
 }

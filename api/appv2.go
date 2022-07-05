@@ -6,10 +6,8 @@ package api
 import (
 	"context"
 	"fmt"
-
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
-
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appv2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -52,13 +50,7 @@ func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest
 		return &npool.CreateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	info, err := schema.Create(ctx, in.GetInfo())
+	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
 		logger.Sugar().Errorf("fail create app: %v", err)
 		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -77,13 +69,7 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 		}
 	}
 
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	rows, err := schema.CreateBulk(ctx, in.GetInfos())
+	rows, err := crud.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
 		logger.Sugar().Errorf("fail create Apps: %v", err)
 		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -103,13 +89,7 @@ func (s *Server) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest) (*
 		return &npool.UpdateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.UpdateAppResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	info, err := schema.Update(ctx, in.GetInfo())
+	info, err := crud.Update(ctx, in.GetInfo())
 	if err != nil {
 		logger.Sugar().Errorf("fail update app: %v", err)
 		return &npool.UpdateAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -126,13 +106,7 @@ func (s *AppService) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*np
 		return &npool.GetAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.GetAppResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	info, err := schema.Row(ctx, id)
+	info, err := crud.Row(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("fail get App: %v", err)
 		return &npool.GetAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -144,13 +118,7 @@ func (s *AppService) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*np
 }
 
 func (s *Server) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) (*npool.GetAppOnlyResponse, error) {
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.GetAppOnlyResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	info, err := schema.RowOnly(ctx, in.GetConds())
+	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get Apps: %v", err)
 		return &npool.GetAppOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -162,13 +130,7 @@ func (s *Server) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) 
 }
 
 func (s *AppService) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	rows, total, err := schema.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
+	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get Apps: %v", err)
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -188,14 +150,7 @@ func (s *Server) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*np
 	if err != nil {
 		return &npool.ExistAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.ExistAppResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	exist, err := schema.Exist(ctx, id)
+	exist, err := crud.Exist(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("fail check App: %v", err)
 		return &npool.ExistAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -207,13 +162,7 @@ func (s *Server) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*np
 }
 
 func (s *Server) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppCondsRequest) (*npool.ExistAppCondsResponse, error) {
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.ExistAppCondsResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	exist, err := schema.ExistConds(ctx, in.GetConds())
+	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check App: %v", err)
 		return &npool.ExistAppCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -225,13 +174,7 @@ func (s *Server) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppCondsReq
 }
 
 func (s *Server) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest) (*npool.CountAppsResponse, error) {
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.CountAppsResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	total, err := schema.Count(ctx, in.GetConds())
+	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count Apps: %v", err)
 		return &npool.CountAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -247,14 +190,7 @@ func (s *Server) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*
 	if err != nil {
 		return &npool.DeleteAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
-	schema, err := crud.New(ctx, nil)
-	if err != nil {
-		logger.Sugar().Errorf("fail create schema entity: %v", err)
-		return &npool.DeleteAppResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	info, err := schema.Delete(ctx, id)
+	info, err := crud.Delete(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("fail delete App: %v", err)
 		return &npool.DeleteAppResponse{}, status.Error(codes.Internal, err.Error())

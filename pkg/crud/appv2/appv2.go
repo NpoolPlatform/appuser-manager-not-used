@@ -14,23 +14,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type App struct {
-	*db.Entity
-}
-
-func New(ctx context.Context, tx *ent.Tx) (*App, error) {
-	e, err := db.NewEntity(ctx, tx)
-	if err != nil {
-		logger.Sugar().Errorf("fail create entity:  %v", err)
-		return nil, err
-	}
-
-	return &App{
-		Entity: e,
-	}, nil
-}
-
-func (s *App) Create(ctx context.Context, in *npool.App) (*ent.App, error) {
+func Create(ctx context.Context, in *npool.App) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
@@ -62,13 +46,13 @@ func (s *App) Create(ctx context.Context, in *npool.App) (*ent.App, error) {
 	return info, nil
 }
 
-func (s *App) CreateBulk(ctx context.Context, in []*npool.App) ([]*ent.App, error) {
+func CreateBulk(ctx context.Context, in []*npool.App) ([]*ent.App, error) {
 	rows := []*ent.App{}
 	var err error
-	err = db.WithTx(ctx, s.Tx, func(_ctx context.Context) error {
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
-			bulk[i] = s.Tx.App.Create()
+			bulk[i] = tx.App.Create()
 			if info.ID != nil {
 				bulk[i].SetID(uuid.MustParse(info.GetID()))
 			}
@@ -85,7 +69,7 @@ func (s *App) CreateBulk(ctx context.Context, in []*npool.App) ([]*ent.App, erro
 				bulk[i].SetDescription(info.GetDescription())
 			}
 		}
-		rows, err = s.Tx.App.CreateBulk(bulk...).Save(_ctx)
+		rows, err = tx.App.CreateBulk(bulk...).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -95,7 +79,7 @@ func (s *App) CreateBulk(ctx context.Context, in []*npool.App) ([]*ent.App, erro
 	return rows, nil
 }
 
-func (s *App) Update(ctx context.Context, in *npool.App) (*ent.App, error) {
+func Update(ctx context.Context, in *npool.App) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
@@ -121,11 +105,11 @@ func (s *App) Update(ctx context.Context, in *npool.App) (*ent.App, error) {
 	return info, nil
 }
 
-func (s *App) Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
+func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
 	var err error
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = s.Tx.App.Query().Where(app.ID(id)).Only(_ctx)
+		info, err = cli.App.Query().Where(app.ID(id)).Only(_ctx)
 		return err
 	})
 	if err != nil {
@@ -137,7 +121,7 @@ func (s *App) Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 }
 
 //nolint
-func (s *App) setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
+func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 	stm := cli.App.Query()
 	if conds.ID != nil {
 		id := uuid.MustParse(conds.GetID().GetValue())
@@ -199,11 +183,11 @@ func (s *App) setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery,
 	return stm, nil
 }
 
-func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.App, int, error) {
+func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.App, int, error) {
 	rows := []*ent.App{}
 	var total int
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := s.setQueryConds(conds, cli)
+		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -233,11 +217,11 @@ func (s *App) Rows(ctx context.Context, conds *npool.Conds, offset, limit int) (
 	return rows, total, nil
 }
 
-func (s *App) RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
+func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
 	var info *ent.App
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := s.setQueryConds(conds, cli)
+		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -259,12 +243,12 @@ func (s *App) RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error)
 	return info, nil
 }
 
-func (s *App) Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
+func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	var err error
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := s.setQueryConds(conds, cli)
+		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -285,12 +269,12 @@ func (s *App) Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	return uint32(total), nil
 }
 
-func (s *App) Exist(ctx context.Context, id uuid.UUID) (bool, error) {
+func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	var err error
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = s.Tx.App.Query().Where(app.ID(id)).Exist(_ctx)
+		exist, err = cli.App.Query().Where(app.ID(id)).Exist(_ctx)
 		return err
 	})
 	if err != nil {
@@ -301,12 +285,12 @@ func (s *App) Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	return exist, nil
 }
 
-func (s *App) ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	var err error
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := s.setQueryConds(conds, cli)
+		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			logger.Sugar().Errorf("fail construct stm: %v", err)
 			return err
@@ -328,7 +312,7 @@ func (s *App) ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) 
 	return exist, nil
 }
 
-func (s *App) Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
+func Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
 	var err error
 
