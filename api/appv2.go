@@ -65,6 +65,13 @@ func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest
 }
 
 func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) (*npool.CreateAppsResponse, error) {
+	if len(in.GetInfos()) == 0 {
+		return &npool.CreateAppsResponse{},
+			status.Error(codes.InvalidArgument,
+				"Batah create resource must more than 1",
+			)
+	}
+
 	dup := make(map[string]struct{})
 	for _, info := range in.GetInfos() {
 		err := checkInfo(info)
