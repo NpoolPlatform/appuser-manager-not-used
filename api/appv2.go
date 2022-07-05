@@ -86,6 +86,8 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 					info.GetName(),
 				)
 		}
+
+		dup[info.GetName()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
