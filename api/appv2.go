@@ -5,7 +5,7 @@ package api
 
 import (
 	"context"
-	"fmt"
+
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appv2"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
@@ -19,17 +19,20 @@ import (
 
 func checkInfo(info *npool.App) error {
 	if _, err := uuid.Parse(info.GetCreatedBy()); err != nil {
-		logger.Sugar().Error("create by is invalid")
-		return fmt.Errorf("create by is invalid")
+		logger.Sugar().Error("CreatedBy is invalid")
+		return status.Error(codes.InvalidArgument, "CreatedBy is invalid")
 	}
+
 	if info.Name == nil {
-		logger.Sugar().Error("name is empty")
-		return fmt.Errorf("name empty")
+		logger.Sugar().Error("Name is empty")
+		return status.Error(codes.InvalidArgument, "NameX is empty")
 	}
+
 	if info.GetLogo() == "" {
-		logger.Sugar().Error("logo is empty")
-		return fmt.Errorf("logo empty")
+		logger.Sugar().Error("Logo is empty")
+		return status.Error(codes.InvalidArgument, "Logo is empty")
 	}
+
 	return nil
 }
 
@@ -47,7 +50,7 @@ func rowToObject(row *ent.App) *npool.AppRes {
 func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
 	err := checkInfo(in.GetInfo())
 	if err != nil {
-		return &npool.CreateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		return &npool.CreateAppResponse{}, err
 	}
 
 	info, err := crud.Create(ctx, in.GetInfo())
@@ -62,10 +65,19 @@ func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest
 }
 
 func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) (*npool.CreateAppsResponse, error) {
+	dup := make(map[string]struct{})
 	for _, info := range in.GetInfos() {
 		err := checkInfo(info)
 		if err != nil {
-			return &npool.CreateAppsResponse{}, status.Error(codes.InvalidArgument, err.Error())
+			return &npool.CreateAppsResponse{}, err
+		}
+
+		if _, ok := dup[info.GetName()]; ok {
+			return &npool.CreateAppsResponse{},
+				status.Errorf(codes.AlreadyExists,
+					"Name: %v duplicate create",
+					info.GetName(),
+				)
 		}
 	}
 
@@ -74,10 +86,12 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 		logger.Sugar().Errorf("fail create Apps: %v", err)
 		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
-	infos := []*npool.AppRes{}
+
+	infos := make([]*npool.AppRes, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, rowToObject(val))
 	}
+
 	return &npool.CreateAppsResponse{
 		Infos: infos,
 	}, nil
@@ -135,10 +149,12 @@ func (s *AppService) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*
 		logger.Sugar().Errorf("fail get Apps: %v", err)
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
-	infos := []*npool.AppRes{}
+
+	infos := make([]*npool.AppRes, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, rowToObject(val))
 	}
+
 	return &npool.GetAppsResponse{
 		Infos: infos,
 		Total: uint32(total),
@@ -150,6 +166,7 @@ func (s *Server) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*np
 	if err != nil {
 		return &npool.ExistAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	exist, err := crud.Exist(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("fail check App: %v", err)
@@ -190,6 +207,7 @@ func (s *Server) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*
 	if err != nil {
 		return &npool.DeleteAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	info, err := crud.Delete(ctx, id)
 	if err != nil {
 		logger.Sugar().Errorf("fail delete App: %v", err)
