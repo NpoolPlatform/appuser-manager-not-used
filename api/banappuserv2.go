@@ -76,7 +76,7 @@ func (s *Server) CreateBanAppUsersV2(ctx context.Context, in *npool.CreateBanApp
 					info.GetUserID(),
 				)
 		}
-
+		dupUserID[info.GetUserID()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())

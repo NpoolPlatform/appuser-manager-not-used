@@ -71,7 +71,7 @@ func (s *Server) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanAppsReq
 					info.GetAppID(),
 				)
 		}
-
+		dupAppID[info.GetAppID()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())

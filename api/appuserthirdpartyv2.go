@@ -88,6 +88,7 @@ func (s *Server) CreateAppUserThirdPartysV2(ctx context.Context, in *npool.Creat
 				)
 		}
 
+		dupThirdPartyUserID[info.GetThirdPartyUserID()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())

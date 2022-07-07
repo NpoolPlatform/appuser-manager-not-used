@@ -87,6 +87,7 @@ func (s *Server) CreateAppUserExtrasV2(ctx context.Context, in *npool.CreateAppU
 				)
 		}
 
+		dupIDNumber[info.GetIDNumber()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())

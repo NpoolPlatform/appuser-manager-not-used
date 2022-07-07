@@ -79,7 +79,7 @@ func (s *Server) CreateAppUsersV2(ctx context.Context, in *npool.CreateAppUsersR
 					info.GetEmailAddress(),
 				)
 		}
-
+		dupEmailAddress[info.GetEmailAddress()] = struct{}{}
 		if _, ok := dupPhoneNo[info.GetPhoneNo()]; ok {
 			return &npool.CreateAppUsersResponse{},
 				status.Errorf(codes.AlreadyExists,
@@ -87,7 +87,7 @@ func (s *Server) CreateAppUsersV2(ctx context.Context, in *npool.CreateAppUsersR
 					info.GetPhoneNo(),
 				)
 		}
-
+		dupPhoneNo[info.GetPhoneNo()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
