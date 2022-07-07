@@ -25,7 +25,7 @@ func checkAppInfo(info *npool.App) error {
 
 	if info.Name == nil {
 		logger.Sugar().Error("Name is empty")
-		return status.Error(codes.InvalidArgument, "NameX is empty")
+		return status.Error(codes.InvalidArgument, "Name is empty")
 	}
 
 	if info.GetLogo() == "" {
@@ -86,6 +86,8 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 					info.GetName(),
 				)
 		}
+
+		dup[info.GetName()] = struct{}{}
 	}
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
