@@ -52,7 +52,7 @@ func appRoleRowToObject(row *ent.AppRole) *npool.AppRoleRes {
 	}
 }
 
-func (s *Server) CreateAppRoleV2(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {
+func (s *AppRoleServer) CreateAppRoleV2(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {
 	err := checkAppRoleInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppRoleResponse{}, err
@@ -69,7 +69,7 @@ func (s *Server) CreateAppRoleV2(ctx context.Context, in *npool.CreateAppRoleReq
 	}, nil
 }
 
-func (s *Server) CreateAppRolesV2(ctx context.Context, in *npool.CreateAppRolesRequest) (*npool.CreateAppRolesResponse, error) {
+func (s *AppRoleServer) CreateAppRolesV2(ctx context.Context, in *npool.CreateAppRolesRequest) (*npool.CreateAppRolesResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppRolesResponse{},
 			status.Error(codes.InvalidArgument,
@@ -93,7 +93,7 @@ func (s *Server) CreateAppRolesV2(ctx context.Context, in *npool.CreateAppRolesR
 	}, nil
 }
 
-func (s *Server) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateAppRoleResponse, error) {
+func (s *AppRoleServer) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateAppRoleResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("app role id is invalid")
 		return &npool.UpdateAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -110,7 +110,7 @@ func (s *Server) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateAppRoleReq
 	}, nil
 }
 
-func (s *Server) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleResponse, error) {
+func (s *AppRoleServer) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -127,7 +127,7 @@ func (s *Server) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRequest) 
 	}, nil
 }
 
-func (s *Server) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRoleOnlyRequest) (*npool.GetAppRoleOnlyResponse, error) {
+func (s *AppRoleServer) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRoleOnlyRequest) (*npool.GetAppRoleOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get app roles: %v", err)
@@ -139,7 +139,7 @@ func (s *Server) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRoleOnlyR
 	}, nil
 }
 
-func (s *Server) GetAppRolesV2(ctx context.Context, in *npool.GetAppRolesRequest) (*npool.GetAppRolesResponse, error) {
+func (s *AppRoleServer) GetAppRolesV2(ctx context.Context, in *npool.GetAppRolesRequest) (*npool.GetAppRolesResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get app roles: %v", err)
@@ -157,7 +157,7 @@ func (s *Server) GetAppRolesV2(ctx context.Context, in *npool.GetAppRolesRequest
 	}, nil
 }
 
-func (s *Server) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRoleRequest) (*npool.ExistAppRoleResponse, error) {
+func (s *AppRoleServer) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRoleRequest) (*npool.ExistAppRoleResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -174,7 +174,7 @@ func (s *Server) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRoleReque
 	}, nil
 }
 
-func (s *Server) ExistAppRoleCondsV2(ctx context.Context, in *npool.ExistAppRoleCondsRequest) (*npool.ExistAppRoleCondsResponse, error) {
+func (s *AppRoleServer) ExistAppRoleCondsV2(ctx context.Context, in *npool.ExistAppRoleCondsRequest) (*npool.ExistAppRoleCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check app role: %v", err)
@@ -186,7 +186,7 @@ func (s *Server) ExistAppRoleCondsV2(ctx context.Context, in *npool.ExistAppRole
 	}, nil
 }
 
-func (s *Server) CountAppRolesV2(ctx context.Context, in *npool.CountAppRolesRequest) (*npool.CountAppRolesResponse, error) {
+func (s *AppRoleServer) CountAppRolesV2(ctx context.Context, in *npool.CountAppRolesRequest) (*npool.CountAppRolesResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count app role : %v", err)
@@ -198,7 +198,7 @@ func (s *Server) CountAppRolesV2(ctx context.Context, in *npool.CountAppRolesReq
 	}, nil
 }
 
-func (s *Server) DeleteAppRoleV2(ctx context.Context, in *npool.DeleteAppRoleRequest) (*npool.DeleteAppRoleResponse, error) {
+func (s *AppRoleServer) DeleteAppRoleV2(ctx context.Context, in *npool.DeleteAppRoleRequest) (*npool.DeleteAppRoleResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())

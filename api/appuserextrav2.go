@@ -48,7 +48,7 @@ func appUserExtraRowToObject(row *ent.AppUserExtra) *npool.AppUserExtraRes {
 	}
 }
 
-func (s *Server) CreateAppUserExtraV2(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.CreateAppUserExtraResponse, error) {
+func (s *AppUserExtraServer) CreateAppUserExtraV2(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.CreateAppUserExtraResponse, error) {
 	err := checkAppUserExtraInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserExtraResponse{}, err
@@ -65,7 +65,7 @@ func (s *Server) CreateAppUserExtraV2(ctx context.Context, in *npool.CreateAppUs
 	}, nil
 }
 
-func (s *Server) CreateAppUserExtrasV2(ctx context.Context, in *npool.CreateAppUserExtrasRequest) (*npool.CreateAppUserExtrasResponse, error) {
+func (s *AppUserExtraServer) CreateAppUserExtrasV2(ctx context.Context, in *npool.CreateAppUserExtrasRequest) (*npool.CreateAppUserExtrasResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppUserExtrasResponse{},
 			status.Error(codes.InvalidArgument,
@@ -106,7 +106,7 @@ func (s *Server) CreateAppUserExtrasV2(ctx context.Context, in *npool.CreateAppU
 	}, nil
 }
 
-func (s *Server) UpdateAppUserExtraV2(ctx context.Context, in *npool.UpdateAppUserExtraRequest) (*npool.UpdateAppUserExtraResponse, error) {
+func (s *AppUserExtraServer) UpdateAppUserExtraV2(ctx context.Context, in *npool.UpdateAppUserExtraRequest) (*npool.UpdateAppUserExtraResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserExtra id is invalid")
 		return &npool.UpdateAppUserExtraResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -123,7 +123,7 @@ func (s *Server) UpdateAppUserExtraV2(ctx context.Context, in *npool.UpdateAppUs
 	}, nil
 }
 
-func (s *Server) GetAppUserExtraV2(ctx context.Context, in *npool.GetAppUserExtraRequest) (*npool.GetAppUserExtraResponse, error) {
+func (s *AppUserExtraServer) GetAppUserExtraV2(ctx context.Context, in *npool.GetAppUserExtraRequest) (*npool.GetAppUserExtraResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppUserExtraResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -140,7 +140,7 @@ func (s *Server) GetAppUserExtraV2(ctx context.Context, in *npool.GetAppUserExtr
 	}, nil
 }
 
-func (s *Server) GetAppUserExtraOnlyV2(ctx context.Context, in *npool.GetAppUserExtraOnlyRequest) (*npool.GetAppUserExtraOnlyResponse, error) {
+func (s *AppUserExtraServer) GetAppUserExtraOnlyV2(ctx context.Context, in *npool.GetAppUserExtraOnlyRequest) (*npool.GetAppUserExtraOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserExtras: %v", err)
@@ -152,7 +152,7 @@ func (s *Server) GetAppUserExtraOnlyV2(ctx context.Context, in *npool.GetAppUser
 	}, nil
 }
 
-func (s *Server) GetAppUserExtrasV2(ctx context.Context, in *npool.GetAppUserExtrasRequest) (*npool.GetAppUserExtrasResponse, error) {
+func (s *AppUserExtraServer) GetAppUserExtrasV2(ctx context.Context, in *npool.GetAppUserExtrasRequest) (*npool.GetAppUserExtrasResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserExtras: %v", err)
@@ -170,7 +170,7 @@ func (s *Server) GetAppUserExtrasV2(ctx context.Context, in *npool.GetAppUserExt
 	}, nil
 }
 
-func (s *Server) ExistAppUserExtraV2(ctx context.Context, in *npool.ExistAppUserExtraRequest) (*npool.ExistAppUserExtraResponse, error) {
+func (s *AppUserExtraServer) ExistAppUserExtraV2(ctx context.Context, in *npool.ExistAppUserExtraRequest) (*npool.ExistAppUserExtraResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppUserExtraResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -187,7 +187,7 @@ func (s *Server) ExistAppUserExtraV2(ctx context.Context, in *npool.ExistAppUser
 	}, nil
 }
 
-func (s *Server) ExistAppUserExtraCondsV2(ctx context.Context, in *npool.ExistAppUserExtraCondsRequest) (*npool.ExistAppUserExtraCondsResponse, error) {
+func (s *AppUserExtraServer) ExistAppUserExtraCondsV2(ctx context.Context, in *npool.ExistAppUserExtraCondsRequest) (*npool.ExistAppUserExtraCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserExtra: %v", err)
@@ -199,7 +199,7 @@ func (s *Server) ExistAppUserExtraCondsV2(ctx context.Context, in *npool.ExistAp
 	}, nil
 }
 
-func (s *Server) CountAppUserExtrasV2(ctx context.Context, in *npool.CountAppUserExtrasRequest) (*npool.CountAppUserExtrasResponse, error) {
+func (s *AppUserExtraServer) CountAppUserExtrasV2(ctx context.Context, in *npool.CountAppUserExtrasRequest) (*npool.CountAppUserExtrasResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserExtra: %v", err)
@@ -211,7 +211,7 @@ func (s *Server) CountAppUserExtrasV2(ctx context.Context, in *npool.CountAppUse
 	}, nil
 }
 
-func (s *Server) DeleteAppUserExtraV2(ctx context.Context, in *npool.DeleteAppUserExtraRequest) (*npool.DeleteAppUserExtraResponse, error) {
+func (s *AppUserExtraServer) DeleteAppUserExtraV2(ctx context.Context, in *npool.DeleteAppUserExtraRequest) (*npool.DeleteAppUserExtraResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppUserExtraResponse{}, status.Error(codes.InvalidArgument, err.Error())

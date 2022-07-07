@@ -39,7 +39,7 @@ func appUserRowToObject(row *ent.AppUser) *npool.AppUserRes {
 	}
 }
 
-func (s *Server) CreateAppUserV2(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateAppUserResponse, error) {
+func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateAppUserResponse, error) {
 	err := checkAppUserInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserResponse{}, err
@@ -56,7 +56,7 @@ func (s *Server) CreateAppUserV2(ctx context.Context, in *npool.CreateAppUserReq
 	}, nil
 }
 
-func (s *Server) CreateAppUsersV2(ctx context.Context, in *npool.CreateAppUsersRequest) (*npool.CreateAppUsersResponse, error) {
+func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAppUsersRequest) (*npool.CreateAppUsersResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppUsersResponse{},
 			status.Error(codes.InvalidArgument,
@@ -106,7 +106,7 @@ func (s *Server) CreateAppUsersV2(ctx context.Context, in *npool.CreateAppUsersR
 	}, nil
 }
 
-func (s *Server) UpdateAppUserV2(ctx context.Context, in *npool.UpdateAppUserRequest) (*npool.UpdateAppUserResponse, error) {
+func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateAppUserRequest) (*npool.UpdateAppUserResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUser id is invalid")
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -131,7 +131,7 @@ func (s *Server) UpdateAppUserV2(ctx context.Context, in *npool.UpdateAppUserReq
 	}, nil
 }
 
-func (s *Server) GetAppUserV2(ctx context.Context, in *npool.GetAppUserRequest) (*npool.GetAppUserResponse, error) {
+func (s *AppUserServer) GetAppUserV2(ctx context.Context, in *npool.GetAppUserRequest) (*npool.GetAppUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -148,7 +148,7 @@ func (s *Server) GetAppUserV2(ctx context.Context, in *npool.GetAppUserRequest) 
 	}, nil
 }
 
-func (s *Server) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUserOnlyRequest) (*npool.GetAppUserOnlyResponse, error) {
+func (s *AppUserServer) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUserOnlyRequest) (*npool.GetAppUserOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUsers: %v", err)
@@ -160,7 +160,7 @@ func (s *Server) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUserOnlyR
 	}, nil
 }
 
-func (s *Server) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsersRequest) (*npool.GetAppUsersResponse, error) {
+func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsersRequest) (*npool.GetAppUsersResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUsers: %v", err)
@@ -178,7 +178,7 @@ func (s *Server) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsersRequest
 	}, nil
 }
 
-func (s *Server) ExistAppUserV2(ctx context.Context, in *npool.ExistAppUserRequest) (*npool.ExistAppUserResponse, error) {
+func (s *AppUserServer) ExistAppUserV2(ctx context.Context, in *npool.ExistAppUserRequest) (*npool.ExistAppUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -195,7 +195,7 @@ func (s *Server) ExistAppUserV2(ctx context.Context, in *npool.ExistAppUserReque
 	}, nil
 }
 
-func (s *Server) ExistAppUserCondsV2(ctx context.Context, in *npool.ExistAppUserCondsRequest) (*npool.ExistAppUserCondsResponse, error) {
+func (s *AppUserServer) ExistAppUserCondsV2(ctx context.Context, in *npool.ExistAppUserCondsRequest) (*npool.ExistAppUserCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUser: %v", err)
@@ -207,7 +207,7 @@ func (s *Server) ExistAppUserCondsV2(ctx context.Context, in *npool.ExistAppUser
 	}, nil
 }
 
-func (s *Server) CountAppUsersV2(ctx context.Context, in *npool.CountAppUsersRequest) (*npool.CountAppUsersResponse, error) {
+func (s *AppUserServer) CountAppUsersV2(ctx context.Context, in *npool.CountAppUsersRequest) (*npool.CountAppUsersResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUser: %v", err)
@@ -219,7 +219,7 @@ func (s *Server) CountAppUsersV2(ctx context.Context, in *npool.CountAppUsersReq
 	}, nil
 }
 
-func (s *Server) DeleteAppUserV2(ctx context.Context, in *npool.DeleteAppUserRequest) (*npool.DeleteAppUserResponse, error) {
+func (s *AppUserServer) DeleteAppUserV2(ctx context.Context, in *npool.DeleteAppUserRequest) (*npool.DeleteAppUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())

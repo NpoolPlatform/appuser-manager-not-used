@@ -49,7 +49,7 @@ func appUserThirdPartyRowToObject(row *ent.AppUserThirdParty) *npool.AppUserThir
 	}
 }
 
-func (s *Server) CreateAppUserThirdPartyV2(ctx context.Context, in *npool.CreateAppUserThirdPartyRequest) (*npool.CreateAppUserThirdPartyResponse, error) {
+func (s *AppUserThirdPartyServer) CreateAppUserThirdPartyV2(ctx context.Context, in *npool.CreateAppUserThirdPartyRequest) (*npool.CreateAppUserThirdPartyResponse, error) {
 	err := checkAppUserThirdPartyInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserThirdPartyResponse{}, err
@@ -66,7 +66,7 @@ func (s *Server) CreateAppUserThirdPartyV2(ctx context.Context, in *npool.Create
 	}, nil
 }
 
-func (s *Server) CreateAppUserThirdPartysV2(ctx context.Context, in *npool.CreateAppUserThirdPartysRequest) (*npool.CreateAppUserThirdPartysResponse, error) {
+func (s *AppUserThirdPartyServer) CreateAppUserThirdPartysV2(ctx context.Context, in *npool.CreateAppUserThirdPartysRequest) (*npool.CreateAppUserThirdPartysResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppUserThirdPartysResponse{},
 			status.Error(codes.InvalidArgument,
@@ -107,7 +107,7 @@ func (s *Server) CreateAppUserThirdPartysV2(ctx context.Context, in *npool.Creat
 	}, nil
 }
 
-func (s *Server) UpdateAppUserThirdPartyV2(ctx context.Context, in *npool.UpdateAppUserThirdPartyRequest) (*npool.UpdateAppUserThirdPartyResponse, error) {
+func (s *AppUserThirdPartyServer) UpdateAppUserThirdPartyV2(ctx context.Context, in *npool.UpdateAppUserThirdPartyRequest) (*npool.UpdateAppUserThirdPartyResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserThirdParty id is invalid")
 		return &npool.UpdateAppUserThirdPartyResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -124,7 +124,7 @@ func (s *Server) UpdateAppUserThirdPartyV2(ctx context.Context, in *npool.Update
 	}, nil
 }
 
-func (s *Server) GetAppUserThirdPartyV2(ctx context.Context, in *npool.GetAppUserThirdPartyRequest) (*npool.GetAppUserThirdPartyResponse, error) {
+func (s *AppUserThirdPartyServer) GetAppUserThirdPartyV2(ctx context.Context, in *npool.GetAppUserThirdPartyRequest) (*npool.GetAppUserThirdPartyResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppUserThirdPartyResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -141,7 +141,7 @@ func (s *Server) GetAppUserThirdPartyV2(ctx context.Context, in *npool.GetAppUse
 	}, nil
 }
 
-func (s *Server) GetAppUserThirdPartyOnlyV2(ctx context.Context, in *npool.GetAppUserThirdPartyOnlyRequest) (*npool.GetAppUserThirdPartyOnlyResponse, error) {
+func (s *AppUserThirdPartyServer) GetAppUserThirdPartyOnlyV2(ctx context.Context, in *npool.GetAppUserThirdPartyOnlyRequest) (*npool.GetAppUserThirdPartyOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserThirdPartys: %v", err)
@@ -153,7 +153,7 @@ func (s *Server) GetAppUserThirdPartyOnlyV2(ctx context.Context, in *npool.GetAp
 	}, nil
 }
 
-func (s *Server) GetAppUserThirdPartysV2(ctx context.Context, in *npool.GetAppUserThirdPartysRequest) (*npool.GetAppUserThirdPartysResponse, error) {
+func (s *AppUserThirdPartyServer) GetAppUserThirdPartysV2(ctx context.Context, in *npool.GetAppUserThirdPartysRequest) (*npool.GetAppUserThirdPartysResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserThirdPartys: %v", err)
@@ -171,7 +171,7 @@ func (s *Server) GetAppUserThirdPartysV2(ctx context.Context, in *npool.GetAppUs
 	}, nil
 }
 
-func (s *Server) ExistAppUserThirdPartyV2(ctx context.Context, in *npool.ExistAppUserThirdPartyRequest) (*npool.ExistAppUserThirdPartyResponse, error) {
+func (s *AppUserThirdPartyServer) ExistAppUserThirdPartyV2(ctx context.Context, in *npool.ExistAppUserThirdPartyRequest) (*npool.ExistAppUserThirdPartyResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppUserThirdPartyResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -188,7 +188,7 @@ func (s *Server) ExistAppUserThirdPartyV2(ctx context.Context, in *npool.ExistAp
 	}, nil
 }
 
-func (s *Server) ExistAppUserThirdPartyCondsV2(ctx context.Context, in *npool.ExistAppUserThirdPartyCondsRequest) (*npool.ExistAppUserThirdPartyCondsResponse, error) {
+func (s *AppUserThirdPartyServer) ExistAppUserThirdPartyCondsV2(ctx context.Context, in *npool.ExistAppUserThirdPartyCondsRequest) (*npool.ExistAppUserThirdPartyCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserThirdParty: %v", err)
@@ -200,7 +200,7 @@ func (s *Server) ExistAppUserThirdPartyCondsV2(ctx context.Context, in *npool.Ex
 	}, nil
 }
 
-func (s *Server) CountAppUserThirdPartysV2(ctx context.Context, in *npool.CountAppUserThirdPartysRequest) (*npool.CountAppUserThirdPartysResponse, error) {
+func (s *AppUserThirdPartyServer) CountAppUserThirdPartysV2(ctx context.Context, in *npool.CountAppUserThirdPartysRequest) (*npool.CountAppUserThirdPartysResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserThirdParty: %v", err)
@@ -212,7 +212,7 @@ func (s *Server) CountAppUserThirdPartysV2(ctx context.Context, in *npool.CountA
 	}, nil
 }
 
-func (s *Server) DeleteAppUserThirdPartyV2(ctx context.Context, in *npool.DeleteAppUserThirdPartyRequest) (*npool.DeleteAppUserThirdPartyResponse, error) {
+func (s *AppUserThirdPartyServer) DeleteAppUserThirdPartyV2(ctx context.Context, in *npool.DeleteAppUserThirdPartyRequest) (*npool.DeleteAppUserThirdPartyResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppUserThirdPartyResponse{}, status.Error(codes.InvalidArgument, err.Error())

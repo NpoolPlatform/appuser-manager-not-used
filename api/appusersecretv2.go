@@ -44,7 +44,7 @@ func appUserSecretRowToObject(row *ent.AppUserSecret) *npool.AppUserSecretRes {
 	}
 }
 
-func (s *Server) CreateAppUserSecretV2(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
+func (s *AppUserSecretServer) CreateAppUserSecretV2(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
 	err := checkAppUserSecretInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserSecretResponse{}, err
@@ -61,7 +61,7 @@ func (s *Server) CreateAppUserSecretV2(ctx context.Context, in *npool.CreateAppU
 	}, nil
 }
 
-func (s *Server) CreateAppUserSecretsV2(ctx context.Context, in *npool.CreateAppUserSecretsRequest) (*npool.CreateAppUserSecretsResponse, error) {
+func (s *AppUserSecretServer) CreateAppUserSecretsV2(ctx context.Context, in *npool.CreateAppUserSecretsRequest) (*npool.CreateAppUserSecretsResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppUserSecretsResponse{},
 			status.Error(codes.InvalidArgument,
@@ -91,7 +91,7 @@ func (s *Server) CreateAppUserSecretsV2(ctx context.Context, in *npool.CreateApp
 	}, nil
 }
 
-func (s *Server) UpdateAppUserSecretV2(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
+func (s *AppUserSecretServer) UpdateAppUserSecretV2(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserSecret id is invalid")
 		return &npool.UpdateAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -108,7 +108,7 @@ func (s *Server) UpdateAppUserSecretV2(ctx context.Context, in *npool.UpdateAppU
 	}, nil
 }
 
-func (s *Server) GetAppUserSecretV2(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppUserSecretResponse, error) {
+func (s *AppUserSecretServer) GetAppUserSecretV2(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppUserSecretResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -125,7 +125,7 @@ func (s *Server) GetAppUserSecretV2(ctx context.Context, in *npool.GetAppUserSec
 	}, nil
 }
 
-func (s *Server) GetAppUserSecretOnlyV2(ctx context.Context, in *npool.GetAppUserSecretOnlyRequest) (*npool.GetAppUserSecretOnlyResponse, error) {
+func (s *AppUserSecretServer) GetAppUserSecretOnlyV2(ctx context.Context, in *npool.GetAppUserSecretOnlyRequest) (*npool.GetAppUserSecretOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecrets: %v", err)
@@ -137,7 +137,7 @@ func (s *Server) GetAppUserSecretOnlyV2(ctx context.Context, in *npool.GetAppUse
 	}, nil
 }
 
-func (s *Server) GetAppUserSecretsV2(ctx context.Context, in *npool.GetAppUserSecretsRequest) (*npool.GetAppUserSecretsResponse, error) {
+func (s *AppUserSecretServer) GetAppUserSecretsV2(ctx context.Context, in *npool.GetAppUserSecretsRequest) (*npool.GetAppUserSecretsResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecrets: %v", err)
@@ -155,7 +155,7 @@ func (s *Server) GetAppUserSecretsV2(ctx context.Context, in *npool.GetAppUserSe
 	}, nil
 }
 
-func (s *Server) ExistAppUserSecretV2(ctx context.Context, in *npool.ExistAppUserSecretRequest) (*npool.ExistAppUserSecretResponse, error) {
+func (s *AppUserSecretServer) ExistAppUserSecretV2(ctx context.Context, in *npool.ExistAppUserSecretRequest) (*npool.ExistAppUserSecretResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -172,7 +172,7 @@ func (s *Server) ExistAppUserSecretV2(ctx context.Context, in *npool.ExistAppUse
 	}, nil
 }
 
-func (s *Server) ExistAppUserSecretCondsV2(ctx context.Context, in *npool.ExistAppUserSecretCondsRequest) (*npool.ExistAppUserSecretCondsResponse, error) {
+func (s *AppUserSecretServer) ExistAppUserSecretCondsV2(ctx context.Context, in *npool.ExistAppUserSecretCondsRequest) (*npool.ExistAppUserSecretCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserSecret: %v", err)
@@ -184,7 +184,7 @@ func (s *Server) ExistAppUserSecretCondsV2(ctx context.Context, in *npool.ExistA
 	}, nil
 }
 
-func (s *Server) CountAppUserSecretsV2(ctx context.Context, in *npool.CountAppUserSecretsRequest) (*npool.CountAppUserSecretsResponse, error) {
+func (s *AppUserSecretServer) CountAppUserSecretsV2(ctx context.Context, in *npool.CountAppUserSecretsRequest) (*npool.CountAppUserSecretsResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserSecret: %v", err)
@@ -196,7 +196,7 @@ func (s *Server) CountAppUserSecretsV2(ctx context.Context, in *npool.CountAppUs
 	}, nil
 }
 
-func (s *Server) DeleteAppUserSecretV2(ctx context.Context, in *npool.DeleteAppUserSecretRequest) (*npool.DeleteAppUserSecretResponse, error) {
+func (s *AppUserSecretServer) DeleteAppUserSecretV2(ctx context.Context, in *npool.DeleteAppUserSecretRequest) (*npool.DeleteAppUserSecretResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())

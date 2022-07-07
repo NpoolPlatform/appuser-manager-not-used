@@ -38,7 +38,7 @@ func banAppUserRowToObject(row *ent.BanAppUser) *npool.BanAppUserRes {
 	}
 }
 
-func (s *Server) CreateBanAppUserV2(ctx context.Context, in *npool.CreateBanAppUserRequest) (*npool.CreateBanAppUserResponse, error) {
+func (s *BanAppUserServer) CreateBanAppUserV2(ctx context.Context, in *npool.CreateBanAppUserRequest) (*npool.CreateBanAppUserResponse, error) {
 	err := checkBanAppUserInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateBanAppUserResponse{}, err
@@ -55,7 +55,7 @@ func (s *Server) CreateBanAppUserV2(ctx context.Context, in *npool.CreateBanAppU
 	}, nil
 }
 
-func (s *Server) CreateBanAppUsersV2(ctx context.Context, in *npool.CreateBanAppUsersRequest) (*npool.CreateBanAppUsersResponse, error) {
+func (s *BanAppUserServer) CreateBanAppUsersV2(ctx context.Context, in *npool.CreateBanAppUsersRequest) (*npool.CreateBanAppUsersResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateBanAppUsersResponse{},
 			status.Error(codes.InvalidArgument,
@@ -95,7 +95,7 @@ func (s *Server) CreateBanAppUsersV2(ctx context.Context, in *npool.CreateBanApp
 	}, nil
 }
 
-func (s *Server) UpdateBanAppUserV2(ctx context.Context, in *npool.UpdateBanAppUserRequest) (*npool.UpdateBanAppUserResponse, error) {
+func (s *BanAppUserServer) UpdateBanAppUserV2(ctx context.Context, in *npool.UpdateBanAppUserRequest) (*npool.UpdateBanAppUserResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("BanAppUser id is invalid")
 		return &npool.UpdateBanAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -112,7 +112,7 @@ func (s *Server) UpdateBanAppUserV2(ctx context.Context, in *npool.UpdateBanAppU
 	}, nil
 }
 
-func (s *Server) GetBanAppUserV2(ctx context.Context, in *npool.GetBanAppUserRequest) (*npool.GetBanAppUserResponse, error) {
+func (s *BanAppUserServer) GetBanAppUserV2(ctx context.Context, in *npool.GetBanAppUserRequest) (*npool.GetBanAppUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetBanAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -129,7 +129,7 @@ func (s *Server) GetBanAppUserV2(ctx context.Context, in *npool.GetBanAppUserReq
 	}, nil
 }
 
-func (s *Server) GetBanAppUserOnlyV2(ctx context.Context, in *npool.GetBanAppUserOnlyRequest) (*npool.GetBanAppUserOnlyResponse, error) {
+func (s *BanAppUserServer) GetBanAppUserOnlyV2(ctx context.Context, in *npool.GetBanAppUserOnlyRequest) (*npool.GetBanAppUserOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanAppUsers: %v", err)
@@ -141,7 +141,7 @@ func (s *Server) GetBanAppUserOnlyV2(ctx context.Context, in *npool.GetBanAppUse
 	}, nil
 }
 
-func (s *Server) GetBanAppUsersV2(ctx context.Context, in *npool.GetBanAppUsersRequest) (*npool.GetBanAppUsersResponse, error) {
+func (s *BanAppUserServer) GetBanAppUsersV2(ctx context.Context, in *npool.GetBanAppUsersRequest) (*npool.GetBanAppUsersResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanAppUsers: %v", err)
@@ -159,7 +159,7 @@ func (s *Server) GetBanAppUsersV2(ctx context.Context, in *npool.GetBanAppUsersR
 	}, nil
 }
 
-func (s *Server) ExistBanAppUserV2(ctx context.Context, in *npool.ExistBanAppUserRequest) (*npool.ExistBanAppUserResponse, error) {
+func (s *BanAppUserServer) ExistBanAppUserV2(ctx context.Context, in *npool.ExistBanAppUserRequest) (*npool.ExistBanAppUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistBanAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -176,7 +176,7 @@ func (s *Server) ExistBanAppUserV2(ctx context.Context, in *npool.ExistBanAppUse
 	}, nil
 }
 
-func (s *Server) ExistBanAppUserCondsV2(ctx context.Context, in *npool.ExistBanAppUserCondsRequest) (*npool.ExistBanAppUserCondsResponse, error) {
+func (s *BanAppUserServer) ExistBanAppUserCondsV2(ctx context.Context, in *npool.ExistBanAppUserCondsRequest) (*npool.ExistBanAppUserCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check BanAppUser: %v", err)
@@ -188,7 +188,7 @@ func (s *Server) ExistBanAppUserCondsV2(ctx context.Context, in *npool.ExistBanA
 	}, nil
 }
 
-func (s *Server) CountBanAppUsersV2(ctx context.Context, in *npool.CountBanAppUsersRequest) (*npool.CountBanAppUsersResponse, error) {
+func (s *BanAppUserServer) CountBanAppUsersV2(ctx context.Context, in *npool.CountBanAppUsersRequest) (*npool.CountBanAppUsersResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count BanAppUser: %v", err)
@@ -200,7 +200,7 @@ func (s *Server) CountBanAppUsersV2(ctx context.Context, in *npool.CountBanAppUs
 	}, nil
 }
 
-func (s *Server) DeleteBanAppUserV2(ctx context.Context, in *npool.DeleteBanAppUserRequest) (*npool.DeleteBanAppUserResponse, error) {
+func (s *BanAppUserServer) DeleteBanAppUserV2(ctx context.Context, in *npool.DeleteBanAppUserRequest) (*npool.DeleteBanAppUserResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteBanAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())

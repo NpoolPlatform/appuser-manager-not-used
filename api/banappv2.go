@@ -33,7 +33,7 @@ func banAppRowToObject(row *ent.BanApp) *npool.BanAppRes {
 	}
 }
 
-func (s *Server) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
+func (s *BanAppServer) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
 	err := checkBanAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateBanAppResponse{}, err
@@ -50,7 +50,7 @@ func (s *Server) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAppReque
 	}, nil
 }
 
-func (s *Server) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanAppsRequest) (*npool.CreateBanAppsResponse, error) {
+func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanAppsRequest) (*npool.CreateBanAppsResponse, error) {
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateBanAppsResponse{},
 			status.Error(codes.InvalidArgument,
@@ -90,7 +90,7 @@ func (s *Server) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanAppsReq
 	}, nil
 }
 
-func (s *Server) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBanAppResponse, error) {
+func (s *BanAppServer) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBanAppResponse, error) {
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("BanApp id is invalid")
 		return &npool.UpdateBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -107,7 +107,7 @@ func (s *Server) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAppReque
 	}, nil
 }
 
-func (s *Server) GetBanAppV2(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppResponse, error) {
+func (s *BanAppServer) GetBanAppV2(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -124,7 +124,7 @@ func (s *Server) GetBanAppV2(ctx context.Context, in *npool.GetBanAppRequest) (*
 	}, nil
 }
 
-func (s *Server) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppOnlyRequest) (*npool.GetBanAppOnlyResponse, error) {
+func (s *BanAppServer) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppOnlyRequest) (*npool.GetBanAppOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanApps: %v", err)
@@ -136,7 +136,7 @@ func (s *Server) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppOnlyReq
 	}, nil
 }
 
-func (s *Server) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsRequest) (*npool.GetBanAppsResponse, error) {
+func (s *BanAppServer) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsRequest) (*npool.GetBanAppsResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanApps: %v", err)
@@ -154,7 +154,7 @@ func (s *Server) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsRequest) 
 	}, nil
 }
 
-func (s *Server) ExistBanAppV2(ctx context.Context, in *npool.ExistBanAppRequest) (*npool.ExistBanAppResponse, error) {
+func (s *BanAppServer) ExistBanAppV2(ctx context.Context, in *npool.ExistBanAppRequest) (*npool.ExistBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -171,7 +171,7 @@ func (s *Server) ExistBanAppV2(ctx context.Context, in *npool.ExistBanAppRequest
 	}, nil
 }
 
-func (s *Server) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBanAppCondsRequest) (*npool.ExistBanAppCondsResponse, error) {
+func (s *BanAppServer) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBanAppCondsRequest) (*npool.ExistBanAppCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail check BanApp: %v", err)
@@ -183,7 +183,7 @@ func (s *Server) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBanAppCo
 	}, nil
 }
 
-func (s *Server) CountBanAppsV2(ctx context.Context, in *npool.CountBanAppsRequest) (*npool.CountBanAppsResponse, error) {
+func (s *BanAppServer) CountBanAppsV2(ctx context.Context, in *npool.CountBanAppsRequest) (*npool.CountBanAppsResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
 		logger.Sugar().Errorf("fail count BanApp: %v", err)
@@ -195,7 +195,7 @@ func (s *Server) CountBanAppsV2(ctx context.Context, in *npool.CountBanAppsReque
 	}, nil
 }
 
-func (s *Server) DeleteBanAppV2(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
+func (s *BanAppServer) DeleteBanAppV2(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
