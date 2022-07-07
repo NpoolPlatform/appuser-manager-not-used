@@ -53,7 +53,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "created_by", Type: field.TypeUUID},
 		{Name: "role", Type: field.TypeString},
-		{Name: "description", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString, Default: ""},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "default", Type: field.TypeBool},
 	}
@@ -93,8 +93,8 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "email_address", Type: field.TypeString},
-		{Name: "phone_no", Type: field.TypeString},
+		{Name: "email_address", Type: field.TypeString, Default: ""},
+		{Name: "phone_no", Type: field.TypeString, Default: ""},
 		{Name: "import_from_app", Type: field.TypeUUID},
 	}
 	// AppUsersTable holds the schema information for the "app_users" table.
@@ -147,17 +147,17 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "username", Type: field.TypeString},
-		{Name: "first_name", Type: field.TypeString},
-		{Name: "last_name", Type: field.TypeString},
+		{Name: "username", Type: field.TypeString, Default: ""},
+		{Name: "first_name", Type: field.TypeString, Default: ""},
+		{Name: "last_name", Type: field.TypeString, Default: ""},
 		{Name: "address_fields", Type: field.TypeJSON},
-		{Name: "gender", Type: field.TypeString},
-		{Name: "postal_code", Type: field.TypeString},
-		{Name: "age", Type: field.TypeUint32},
-		{Name: "birthday", Type: field.TypeUint32},
-		{Name: "avatar", Type: field.TypeString},
-		{Name: "organization", Type: field.TypeString},
-		{Name: "id_number", Type: field.TypeString},
+		{Name: "gender", Type: field.TypeString, Default: ""},
+		{Name: "postal_code", Type: field.TypeString, Default: ""},
+		{Name: "age", Type: field.TypeUint32, Default: 0},
+		{Name: "birthday", Type: field.TypeUint32, Default: 0},
+		{Name: "avatar", Type: field.TypeString, Default: ""},
+		{Name: "organization", Type: field.TypeString, Default: ""},
+		{Name: "id_number", Type: field.TypeString, Default: ""},
 	}
 	// AppUserExtrasTable holds the schema information for the "app_user_extras" table.
 	AppUserExtrasTable = &schema.Table{
@@ -207,8 +207,8 @@ var (
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "third_party_user_id", Type: field.TypeString},
 		{Name: "third_party_id", Type: field.TypeString},
-		{Name: "third_party_username", Type: field.TypeString},
-		{Name: "third_party_user_avatar", Type: field.TypeString, Size: 1024},
+		{Name: "third_party_username", Type: field.TypeString, Default: ""},
+		{Name: "third_party_user_avatar", Type: field.TypeString, Size: 1024, Default: ""},
 	}
 	// AppUserThirdPartiesTable holds the schema information for the "app_user_third_parties" table.
 	AppUserThirdPartiesTable = &schema.Table{
@@ -223,7 +223,7 @@ var (
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "message", Type: field.TypeString},
+		{Name: "message", Type: field.TypeString, Default: ""},
 	}
 	// BanAppsTable holds the schema information for the "ban_apps" table.
 	BanAppsTable = &schema.Table{
@@ -239,7 +239,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "message", Type: field.TypeString},
+		{Name: "message", Type: field.TypeString, Default: ""},
 	}
 	// BanAppUsersTable holds the schema information for the "ban_app_users" table.
 	BanAppUsersTable = &schema.Table{

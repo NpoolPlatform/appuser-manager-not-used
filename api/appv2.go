@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkInfo(info *npool.App) error {
+func checkAppInfo(info *npool.App) error {
 	if _, err := uuid.Parse(info.GetCreatedBy()); err != nil {
 		logger.Sugar().Error("CreatedBy is invalid")
 		return status.Error(codes.InvalidArgument, "CreatedBy is invalid")
@@ -36,19 +36,19 @@ func checkInfo(info *npool.App) error {
 	return nil
 }
 
-func rowToObject(row *ent.App) *npool.AppRes {
+func appRowToObject(row *ent.App) *npool.AppRes {
 	return &npool.AppRes{
 		ID:          row.ID.String(),
 		CreatedBy:   row.CreatedBy.String(),
 		Name:        row.Name,
 		Logo:        row.Logo,
 		Description: row.Description,
-		CreateAt:    row.CreatedAt,
+		CreatedAt:   row.CreatedAt,
 	}
 }
 
-func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
-	err := checkInfo(in.GetInfo())
+func (s *Server) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
+	err := checkAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppResponse{}, err
 	}
@@ -60,7 +60,7 @@ func (s *AppService) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest
 	}
 
 	return &npool.CreateAppResponse{
-		Info: rowToObject(info),
+		Info: appRowToObject(info),
 	}, nil
 }
 
@@ -74,7 +74,7 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 
 	dup := make(map[string]struct{})
 	for _, info := range in.GetInfos() {
-		err := checkInfo(info)
+		err := checkAppInfo(info)
 		if err != nil {
 			return &npool.CreateAppsResponse{}, err
 		}
@@ -96,7 +96,7 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 
 	infos := make([]*npool.AppRes, 0, len(rows))
 	for _, val := range rows {
-		infos = append(infos, rowToObject(val))
+		infos = append(infos, appRowToObject(val))
 	}
 
 	return &npool.CreateAppsResponse{
@@ -117,11 +117,11 @@ func (s *Server) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest) (*
 	}
 
 	return &npool.UpdateAppResponse{
-		Info: rowToObject(info),
+		Info: appRowToObject(info),
 	}, nil
 }
 
-func (s *AppService) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
+func (s *Server) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -134,7 +134,7 @@ func (s *AppService) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*np
 	}
 
 	return &npool.GetAppResponse{
-		Info: rowToObject(info),
+		Info: appRowToObject(info),
 	}, nil
 }
 
@@ -146,11 +146,11 @@ func (s *Server) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) 
 	}
 
 	return &npool.GetAppOnlyResponse{
-		Info: rowToObject(info),
+		Info: appRowToObject(info),
 	}, nil
 }
 
-func (s *AppService) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
+func (s *Server) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
 		logger.Sugar().Errorf("fail get Apps: %v", err)
@@ -159,7 +159,7 @@ func (s *AppService) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*
 
 	infos := make([]*npool.AppRes, 0, len(rows))
 	for _, val := range rows {
-		infos = append(infos, rowToObject(val))
+		infos = append(infos, appRowToObject(val))
 	}
 
 	return &npool.GetAppsResponse{
@@ -222,6 +222,6 @@ func (s *Server) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*
 	}
 
 	return &npool.DeleteAppResponse{
-		Info: rowToObject(info),
+		Info: appRowToObject(info),
 	}, nil
 }

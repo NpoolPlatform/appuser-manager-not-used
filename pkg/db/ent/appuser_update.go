@@ -95,9 +95,25 @@ func (auu *AppUserUpdate) SetEmailAddress(s string) *AppUserUpdate {
 	return auu
 }
 
+// SetNillableEmailAddress sets the "email_address" field if the given value is not nil.
+func (auu *AppUserUpdate) SetNillableEmailAddress(s *string) *AppUserUpdate {
+	if s != nil {
+		auu.SetEmailAddress(*s)
+	}
+	return auu
+}
+
 // SetPhoneNo sets the "phone_no" field.
 func (auu *AppUserUpdate) SetPhoneNo(s string) *AppUserUpdate {
 	auu.mutation.SetPhoneNo(s)
+	return auu
+}
+
+// SetNillablePhoneNo sets the "phone_no" field if the given value is not nil.
+func (auu *AppUserUpdate) SetNillablePhoneNo(s *string) *AppUserUpdate {
+	if s != nil {
+		auu.SetPhoneNo(*s)
+	}
 	return auu
 }
 
@@ -355,9 +371,25 @@ func (auuo *AppUserUpdateOne) SetEmailAddress(s string) *AppUserUpdateOne {
 	return auuo
 }
 
+// SetNillableEmailAddress sets the "email_address" field if the given value is not nil.
+func (auuo *AppUserUpdateOne) SetNillableEmailAddress(s *string) *AppUserUpdateOne {
+	if s != nil {
+		auuo.SetEmailAddress(*s)
+	}
+	return auuo
+}
+
 // SetPhoneNo sets the "phone_no" field.
 func (auuo *AppUserUpdateOne) SetPhoneNo(s string) *AppUserUpdateOne {
 	auuo.mutation.SetPhoneNo(s)
+	return auuo
+}
+
+// SetNillablePhoneNo sets the "phone_no" field if the given value is not nil.
+func (auuo *AppUserUpdateOne) SetNillablePhoneNo(s *string) *AppUserUpdateOne {
+	if s != nil {
+		auuo.SetPhoneNo(*s)
+	}
 	return auuo
 }
 

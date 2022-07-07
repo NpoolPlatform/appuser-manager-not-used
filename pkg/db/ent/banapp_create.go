@@ -77,6 +77,14 @@ func (bac *BanAppCreate) SetMessage(s string) *BanAppCreate {
 	return bac
 }
 
+// SetNillableMessage sets the "message" field if the given value is not nil.
+func (bac *BanAppCreate) SetNillableMessage(s *string) *BanAppCreate {
+	if s != nil {
+		bac.SetMessage(*s)
+	}
+	return bac
+}
+
 // SetID sets the "id" field.
 func (bac *BanAppCreate) SetID(u uuid.UUID) *BanAppCreate {
 	bac.mutation.SetID(u)
@@ -184,6 +192,10 @@ func (bac *BanAppCreate) defaults() error {
 		}
 		v := banapp.DefaultDeletedAt()
 		bac.mutation.SetDeletedAt(v)
+	}
+	if _, ok := bac.mutation.Message(); !ok {
+		v := banapp.DefaultMessage
+		bac.mutation.SetMessage(v)
 	}
 	if _, ok := bac.mutation.ID(); !ok {
 		if banapp.DefaultID == nil {

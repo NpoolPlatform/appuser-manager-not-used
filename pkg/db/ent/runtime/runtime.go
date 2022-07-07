@@ -127,6 +127,10 @@ func init() {
 	approleDescDeletedAt := approleMixinFields0[2].Descriptor()
 	// approle.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	approle.DefaultDeletedAt = approleDescDeletedAt.Default.(func() uint32)
+	// approleDescDescription is the schema descriptor for description field.
+	approleDescDescription := approleFields[3].Descriptor()
+	// approle.DefaultDescription holds the default value on creation for the description field.
+	approle.DefaultDescription = approleDescDescription.Default.(string)
 	// approleDescID is the schema descriptor for id field.
 	approleDescID := approleFields[0].Descriptor()
 	// approle.DefaultID holds the default value on creation for the id field.
@@ -191,6 +195,14 @@ func init() {
 	appuserDescDeletedAt := appuserMixinFields0[2].Descriptor()
 	// appuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appuser.DefaultDeletedAt = appuserDescDeletedAt.Default.(func() uint32)
+	// appuserDescEmailAddress is the schema descriptor for email_address field.
+	appuserDescEmailAddress := appuserFields[2].Descriptor()
+	// appuser.DefaultEmailAddress holds the default value on creation for the email_address field.
+	appuser.DefaultEmailAddress = appuserDescEmailAddress.Default.(string)
+	// appuserDescPhoneNo is the schema descriptor for phone_no field.
+	appuserDescPhoneNo := appuserFields[3].Descriptor()
+	// appuser.DefaultPhoneNo holds the default value on creation for the phone_no field.
+	appuser.DefaultPhoneNo = appuserDescPhoneNo.Default.(string)
 	// appuserDescID is the schema descriptor for id field.
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.
@@ -255,6 +267,50 @@ func init() {
 	appuserextraDescDeletedAt := appuserextraMixinFields0[2].Descriptor()
 	// appuserextra.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appuserextra.DefaultDeletedAt = appuserextraDescDeletedAt.Default.(func() uint32)
+	// appuserextraDescUsername is the schema descriptor for username field.
+	appuserextraDescUsername := appuserextraFields[3].Descriptor()
+	// appuserextra.DefaultUsername holds the default value on creation for the username field.
+	appuserextra.DefaultUsername = appuserextraDescUsername.Default.(string)
+	// appuserextraDescFirstName is the schema descriptor for first_name field.
+	appuserextraDescFirstName := appuserextraFields[4].Descriptor()
+	// appuserextra.DefaultFirstName holds the default value on creation for the first_name field.
+	appuserextra.DefaultFirstName = appuserextraDescFirstName.Default.(string)
+	// appuserextraDescLastName is the schema descriptor for last_name field.
+	appuserextraDescLastName := appuserextraFields[5].Descriptor()
+	// appuserextra.DefaultLastName holds the default value on creation for the last_name field.
+	appuserextra.DefaultLastName = appuserextraDescLastName.Default.(string)
+	// appuserextraDescAddressFields is the schema descriptor for address_fields field.
+	appuserextraDescAddressFields := appuserextraFields[6].Descriptor()
+	// appuserextra.DefaultAddressFields holds the default value on creation for the address_fields field.
+	appuserextra.DefaultAddressFields = appuserextraDescAddressFields.Default.([]string)
+	// appuserextraDescGender is the schema descriptor for gender field.
+	appuserextraDescGender := appuserextraFields[7].Descriptor()
+	// appuserextra.DefaultGender holds the default value on creation for the gender field.
+	appuserextra.DefaultGender = appuserextraDescGender.Default.(string)
+	// appuserextraDescPostalCode is the schema descriptor for postal_code field.
+	appuserextraDescPostalCode := appuserextraFields[8].Descriptor()
+	// appuserextra.DefaultPostalCode holds the default value on creation for the postal_code field.
+	appuserextra.DefaultPostalCode = appuserextraDescPostalCode.Default.(string)
+	// appuserextraDescAge is the schema descriptor for age field.
+	appuserextraDescAge := appuserextraFields[9].Descriptor()
+	// appuserextra.DefaultAge holds the default value on creation for the age field.
+	appuserextra.DefaultAge = appuserextraDescAge.Default.(uint32)
+	// appuserextraDescBirthday is the schema descriptor for birthday field.
+	appuserextraDescBirthday := appuserextraFields[10].Descriptor()
+	// appuserextra.DefaultBirthday holds the default value on creation for the birthday field.
+	appuserextra.DefaultBirthday = appuserextraDescBirthday.Default.(uint32)
+	// appuserextraDescAvatar is the schema descriptor for avatar field.
+	appuserextraDescAvatar := appuserextraFields[11].Descriptor()
+	// appuserextra.DefaultAvatar holds the default value on creation for the avatar field.
+	appuserextra.DefaultAvatar = appuserextraDescAvatar.Default.(string)
+	// appuserextraDescOrganization is the schema descriptor for organization field.
+	appuserextraDescOrganization := appuserextraFields[12].Descriptor()
+	// appuserextra.DefaultOrganization holds the default value on creation for the organization field.
+	appuserextra.DefaultOrganization = appuserextraDescOrganization.Default.(string)
+	// appuserextraDescIDNumber is the schema descriptor for id_number field.
+	appuserextraDescIDNumber := appuserextraFields[13].Descriptor()
+	// appuserextra.DefaultIDNumber holds the default value on creation for the id_number field.
+	appuserextra.DefaultIDNumber = appuserextraDescIDNumber.Default.(string)
 	// appuserextraDescID is the schema descriptor for id field.
 	appuserextraDescID := appuserextraFields[0].Descriptor()
 	// appuserextra.DefaultID holds the default value on creation for the id field.
@@ -319,8 +375,14 @@ func init() {
 	appuserthirdpartyDescDeletedAt := appuserthirdpartyMixinFields0[2].Descriptor()
 	// appuserthirdparty.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appuserthirdparty.DefaultDeletedAt = appuserthirdpartyDescDeletedAt.Default.(func() uint32)
+	// appuserthirdpartyDescThirdPartyUsername is the schema descriptor for third_party_username field.
+	appuserthirdpartyDescThirdPartyUsername := appuserthirdpartyFields[5].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyUsername holds the default value on creation for the third_party_username field.
+	appuserthirdparty.DefaultThirdPartyUsername = appuserthirdpartyDescThirdPartyUsername.Default.(string)
 	// appuserthirdpartyDescThirdPartyUserAvatar is the schema descriptor for third_party_user_avatar field.
 	appuserthirdpartyDescThirdPartyUserAvatar := appuserthirdpartyFields[6].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyUserAvatar holds the default value on creation for the third_party_user_avatar field.
+	appuserthirdparty.DefaultThirdPartyUserAvatar = appuserthirdpartyDescThirdPartyUserAvatar.Default.(string)
 	// appuserthirdparty.ThirdPartyUserAvatarValidator is a validator for the "third_party_user_avatar" field. It is called by the builders before save.
 	appuserthirdparty.ThirdPartyUserAvatarValidator = appuserthirdpartyDescThirdPartyUserAvatar.Validators[0].(func(string) error)
 	// appuserthirdpartyDescID is the schema descriptor for id field.
@@ -355,6 +417,10 @@ func init() {
 	banappDescDeletedAt := banappMixinFields0[2].Descriptor()
 	// banapp.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	banapp.DefaultDeletedAt = banappDescDeletedAt.Default.(func() uint32)
+	// banappDescMessage is the schema descriptor for message field.
+	banappDescMessage := banappFields[2].Descriptor()
+	// banapp.DefaultMessage holds the default value on creation for the message field.
+	banapp.DefaultMessage = banappDescMessage.Default.(string)
 	// banappDescID is the schema descriptor for id field.
 	banappDescID := banappFields[0].Descriptor()
 	// banapp.DefaultID holds the default value on creation for the id field.
@@ -387,6 +453,10 @@ func init() {
 	banappuserDescDeletedAt := banappuserMixinFields0[2].Descriptor()
 	// banappuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	banappuser.DefaultDeletedAt = banappuserDescDeletedAt.Default.(func() uint32)
+	// banappuserDescMessage is the schema descriptor for message field.
+	banappuserDescMessage := banappuserFields[3].Descriptor()
+	// banappuser.DefaultMessage holds the default value on creation for the message field.
+	banappuser.DefaultMessage = banappuserDescMessage.Default.(string)
 	// banappuserDescID is the schema descriptor for id field.
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.

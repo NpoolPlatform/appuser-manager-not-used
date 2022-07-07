@@ -26,7 +26,8 @@ func (BanApp) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
-		field.String("message"),
+		field.String("message").
+			Default(""),
 	}
 }
 

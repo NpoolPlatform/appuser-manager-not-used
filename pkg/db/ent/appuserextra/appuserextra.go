@@ -96,6 +96,28 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultUsername holds the default value on creation for the "username" field.
+	DefaultUsername string
+	// DefaultFirstName holds the default value on creation for the "first_name" field.
+	DefaultFirstName string
+	// DefaultLastName holds the default value on creation for the "last_name" field.
+	DefaultLastName string
+	// DefaultAddressFields holds the default value on creation for the "address_fields" field.
+	DefaultAddressFields []string
+	// DefaultGender holds the default value on creation for the "gender" field.
+	DefaultGender string
+	// DefaultPostalCode holds the default value on creation for the "postal_code" field.
+	DefaultPostalCode string
+	// DefaultAge holds the default value on creation for the "age" field.
+	DefaultAge uint32
+	// DefaultBirthday holds the default value on creation for the "birthday" field.
+	DefaultBirthday uint32
+	// DefaultAvatar holds the default value on creation for the "avatar" field.
+	DefaultAvatar string
+	// DefaultOrganization holds the default value on creation for the "organization" field.
+	DefaultOrganization string
+	// DefaultIDNumber holds the default value on creation for the "id_number" field.
+	DefaultIDNumber string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

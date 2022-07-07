@@ -51,7 +51,6 @@ linters:
     - unused
     - varcheck
     - whitespace
-    - gocognit
 linters-settings:
   godox:
     keywords:

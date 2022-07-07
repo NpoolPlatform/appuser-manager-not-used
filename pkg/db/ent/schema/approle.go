@@ -28,7 +28,8 @@ func (AppRole) Fields() []ent.Field {
 			Unique(),
 		field.UUID("created_by", uuid.UUID{}),
 		field.String("role"),
-		field.String("description"),
+		field.String("description").
+			Default(""),
 		field.UUID("app_id", uuid.UUID{}),
 		field.Bool("default"),
 	}

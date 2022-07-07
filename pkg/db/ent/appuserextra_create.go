@@ -83,15 +83,39 @@ func (auec *AppUserExtraCreate) SetUsername(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableUsername(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetUsername(*s)
+	}
+	return auec
+}
+
 // SetFirstName sets the "first_name" field.
 func (auec *AppUserExtraCreate) SetFirstName(s string) *AppUserExtraCreate {
 	auec.mutation.SetFirstName(s)
 	return auec
 }
 
+// SetNillableFirstName sets the "first_name" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableFirstName(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetFirstName(*s)
+	}
+	return auec
+}
+
 // SetLastName sets the "last_name" field.
 func (auec *AppUserExtraCreate) SetLastName(s string) *AppUserExtraCreate {
 	auec.mutation.SetLastName(s)
+	return auec
+}
+
+// SetNillableLastName sets the "last_name" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableLastName(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetLastName(*s)
+	}
 	return auec
 }
 
@@ -107,9 +131,25 @@ func (auec *AppUserExtraCreate) SetGender(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableGender(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetGender(*s)
+	}
+	return auec
+}
+
 // SetPostalCode sets the "postal_code" field.
 func (auec *AppUserExtraCreate) SetPostalCode(s string) *AppUserExtraCreate {
 	auec.mutation.SetPostalCode(s)
+	return auec
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillablePostalCode(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetPostalCode(*s)
+	}
 	return auec
 }
 
@@ -119,9 +159,25 @@ func (auec *AppUserExtraCreate) SetAge(u uint32) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableAge(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetAge(*u)
+	}
+	return auec
+}
+
 // SetBirthday sets the "birthday" field.
 func (auec *AppUserExtraCreate) SetBirthday(u uint32) *AppUserExtraCreate {
 	auec.mutation.SetBirthday(u)
+	return auec
+}
+
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableBirthday(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetBirthday(*u)
+	}
 	return auec
 }
 
@@ -131,15 +187,39 @@ func (auec *AppUserExtraCreate) SetAvatar(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableAvatar(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetAvatar(*s)
+	}
+	return auec
+}
+
 // SetOrganization sets the "organization" field.
 func (auec *AppUserExtraCreate) SetOrganization(s string) *AppUserExtraCreate {
 	auec.mutation.SetOrganization(s)
 	return auec
 }
 
+// SetNillableOrganization sets the "organization" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableOrganization(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetOrganization(*s)
+	}
+	return auec
+}
+
 // SetIDNumber sets the "id_number" field.
 func (auec *AppUserExtraCreate) SetIDNumber(s string) *AppUserExtraCreate {
 	auec.mutation.SetIDNumber(s)
+	return auec
+}
+
+// SetNillableIDNumber sets the "id_number" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableIDNumber(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetIDNumber(*s)
+	}
 	return auec
 }
 
@@ -250,6 +330,50 @@ func (auec *AppUserExtraCreate) defaults() error {
 		}
 		v := appuserextra.DefaultDeletedAt()
 		auec.mutation.SetDeletedAt(v)
+	}
+	if _, ok := auec.mutation.Username(); !ok {
+		v := appuserextra.DefaultUsername
+		auec.mutation.SetUsername(v)
+	}
+	if _, ok := auec.mutation.FirstName(); !ok {
+		v := appuserextra.DefaultFirstName
+		auec.mutation.SetFirstName(v)
+	}
+	if _, ok := auec.mutation.LastName(); !ok {
+		v := appuserextra.DefaultLastName
+		auec.mutation.SetLastName(v)
+	}
+	if _, ok := auec.mutation.AddressFields(); !ok {
+		v := appuserextra.DefaultAddressFields
+		auec.mutation.SetAddressFields(v)
+	}
+	if _, ok := auec.mutation.Gender(); !ok {
+		v := appuserextra.DefaultGender
+		auec.mutation.SetGender(v)
+	}
+	if _, ok := auec.mutation.PostalCode(); !ok {
+		v := appuserextra.DefaultPostalCode
+		auec.mutation.SetPostalCode(v)
+	}
+	if _, ok := auec.mutation.Age(); !ok {
+		v := appuserextra.DefaultAge
+		auec.mutation.SetAge(v)
+	}
+	if _, ok := auec.mutation.Birthday(); !ok {
+		v := appuserextra.DefaultBirthday
+		auec.mutation.SetBirthday(v)
+	}
+	if _, ok := auec.mutation.Avatar(); !ok {
+		v := appuserextra.DefaultAvatar
+		auec.mutation.SetAvatar(v)
+	}
+	if _, ok := auec.mutation.Organization(); !ok {
+		v := appuserextra.DefaultOrganization
+		auec.mutation.SetOrganization(v)
+	}
+	if _, ok := auec.mutation.IDNumber(); !ok {
+		v := appuserextra.DefaultIDNumber
+		auec.mutation.SetIDNumber(v)
 	}
 	if _, ok := auec.mutation.ID(); !ok {
 		if appuserextra.DefaultID == nil {

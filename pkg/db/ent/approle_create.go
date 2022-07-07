@@ -83,6 +83,14 @@ func (arc *AppRoleCreate) SetDescription(s string) *AppRoleCreate {
 	return arc
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (arc *AppRoleCreate) SetNillableDescription(s *string) *AppRoleCreate {
+	if s != nil {
+		arc.SetDescription(*s)
+	}
+	return arc
+}
+
 // SetAppID sets the "app_id" field.
 func (arc *AppRoleCreate) SetAppID(u uuid.UUID) *AppRoleCreate {
 	arc.mutation.SetAppID(u)
@@ -202,6 +210,10 @@ func (arc *AppRoleCreate) defaults() error {
 		}
 		v := approle.DefaultDeletedAt()
 		arc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := arc.mutation.Description(); !ok {
+		v := approle.DefaultDescription
+		arc.mutation.SetDescription(v)
 	}
 	if _, ok := arc.mutation.ID(); !ok {
 		if approle.DefaultID == nil {

@@ -77,9 +77,25 @@ func (auc *AppUserCreate) SetEmailAddress(s string) *AppUserCreate {
 	return auc
 }
 
+// SetNillableEmailAddress sets the "email_address" field if the given value is not nil.
+func (auc *AppUserCreate) SetNillableEmailAddress(s *string) *AppUserCreate {
+	if s != nil {
+		auc.SetEmailAddress(*s)
+	}
+	return auc
+}
+
 // SetPhoneNo sets the "phone_no" field.
 func (auc *AppUserCreate) SetPhoneNo(s string) *AppUserCreate {
 	auc.mutation.SetPhoneNo(s)
+	return auc
+}
+
+// SetNillablePhoneNo sets the "phone_no" field if the given value is not nil.
+func (auc *AppUserCreate) SetNillablePhoneNo(s *string) *AppUserCreate {
+	if s != nil {
+		auc.SetPhoneNo(*s)
+	}
 	return auc
 }
 
@@ -196,6 +212,14 @@ func (auc *AppUserCreate) defaults() error {
 		}
 		v := appuser.DefaultDeletedAt()
 		auc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := auc.mutation.EmailAddress(); !ok {
+		v := appuser.DefaultEmailAddress
+		auc.mutation.SetEmailAddress(v)
+	}
+	if _, ok := auc.mutation.PhoneNo(); !ok {
+		v := appuser.DefaultPhoneNo
+		auc.mutation.SetPhoneNo(v)
 	}
 	if _, ok := auc.mutation.ID(); !ok {
 		if appuser.DefaultID == nil {

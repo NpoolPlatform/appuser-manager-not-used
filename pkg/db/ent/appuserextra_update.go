@@ -101,15 +101,39 @@ func (aueu *AppUserExtraUpdate) SetUsername(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableUsername(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetUsername(*s)
+	}
+	return aueu
+}
+
 // SetFirstName sets the "first_name" field.
 func (aueu *AppUserExtraUpdate) SetFirstName(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetFirstName(s)
 	return aueu
 }
 
+// SetNillableFirstName sets the "first_name" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableFirstName(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetFirstName(*s)
+	}
+	return aueu
+}
+
 // SetLastName sets the "last_name" field.
 func (aueu *AppUserExtraUpdate) SetLastName(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetLastName(s)
+	return aueu
+}
+
+// SetNillableLastName sets the "last_name" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableLastName(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetLastName(*s)
+	}
 	return aueu
 }
 
@@ -125,9 +149,25 @@ func (aueu *AppUserExtraUpdate) SetGender(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableGender(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetGender(*s)
+	}
+	return aueu
+}
+
 // SetPostalCode sets the "postal_code" field.
 func (aueu *AppUserExtraUpdate) SetPostalCode(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetPostalCode(s)
+	return aueu
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillablePostalCode(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetPostalCode(*s)
+	}
 	return aueu
 }
 
@@ -135,6 +175,14 @@ func (aueu *AppUserExtraUpdate) SetPostalCode(s string) *AppUserExtraUpdate {
 func (aueu *AppUserExtraUpdate) SetAge(u uint32) *AppUserExtraUpdate {
 	aueu.mutation.ResetAge()
 	aueu.mutation.SetAge(u)
+	return aueu
+}
+
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableAge(u *uint32) *AppUserExtraUpdate {
+	if u != nil {
+		aueu.SetAge(*u)
+	}
 	return aueu
 }
 
@@ -151,6 +199,14 @@ func (aueu *AppUserExtraUpdate) SetBirthday(u uint32) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableBirthday(u *uint32) *AppUserExtraUpdate {
+	if u != nil {
+		aueu.SetBirthday(*u)
+	}
+	return aueu
+}
+
 // AddBirthday adds u to the "birthday" field.
 func (aueu *AppUserExtraUpdate) AddBirthday(u int32) *AppUserExtraUpdate {
 	aueu.mutation.AddBirthday(u)
@@ -163,15 +219,39 @@ func (aueu *AppUserExtraUpdate) SetAvatar(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableAvatar(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetAvatar(*s)
+	}
+	return aueu
+}
+
 // SetOrganization sets the "organization" field.
 func (aueu *AppUserExtraUpdate) SetOrganization(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetOrganization(s)
 	return aueu
 }
 
+// SetNillableOrganization sets the "organization" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableOrganization(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetOrganization(*s)
+	}
+	return aueu
+}
+
 // SetIDNumber sets the "id_number" field.
 func (aueu *AppUserExtraUpdate) SetIDNumber(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetIDNumber(s)
+	return aueu
+}
+
+// SetNillableIDNumber sets the "id_number" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableIDNumber(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetIDNumber(*s)
+	}
 	return aueu
 }
 
@@ -506,15 +586,39 @@ func (aueuo *AppUserExtraUpdateOne) SetUsername(s string) *AppUserExtraUpdateOne
 	return aueuo
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableUsername(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetUsername(*s)
+	}
+	return aueuo
+}
+
 // SetFirstName sets the "first_name" field.
 func (aueuo *AppUserExtraUpdateOne) SetFirstName(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetFirstName(s)
 	return aueuo
 }
 
+// SetNillableFirstName sets the "first_name" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableFirstName(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetFirstName(*s)
+	}
+	return aueuo
+}
+
 // SetLastName sets the "last_name" field.
 func (aueuo *AppUserExtraUpdateOne) SetLastName(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetLastName(s)
+	return aueuo
+}
+
+// SetNillableLastName sets the "last_name" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableLastName(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetLastName(*s)
+	}
 	return aueuo
 }
 
@@ -530,9 +634,25 @@ func (aueuo *AppUserExtraUpdateOne) SetGender(s string) *AppUserExtraUpdateOne {
 	return aueuo
 }
 
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableGender(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetGender(*s)
+	}
+	return aueuo
+}
+
 // SetPostalCode sets the "postal_code" field.
 func (aueuo *AppUserExtraUpdateOne) SetPostalCode(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetPostalCode(s)
+	return aueuo
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillablePostalCode(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetPostalCode(*s)
+	}
 	return aueuo
 }
 
@@ -540,6 +660,14 @@ func (aueuo *AppUserExtraUpdateOne) SetPostalCode(s string) *AppUserExtraUpdateO
 func (aueuo *AppUserExtraUpdateOne) SetAge(u uint32) *AppUserExtraUpdateOne {
 	aueuo.mutation.ResetAge()
 	aueuo.mutation.SetAge(u)
+	return aueuo
+}
+
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableAge(u *uint32) *AppUserExtraUpdateOne {
+	if u != nil {
+		aueuo.SetAge(*u)
+	}
 	return aueuo
 }
 
@@ -556,6 +684,14 @@ func (aueuo *AppUserExtraUpdateOne) SetBirthday(u uint32) *AppUserExtraUpdateOne
 	return aueuo
 }
 
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableBirthday(u *uint32) *AppUserExtraUpdateOne {
+	if u != nil {
+		aueuo.SetBirthday(*u)
+	}
+	return aueuo
+}
+
 // AddBirthday adds u to the "birthday" field.
 func (aueuo *AppUserExtraUpdateOne) AddBirthday(u int32) *AppUserExtraUpdateOne {
 	aueuo.mutation.AddBirthday(u)
@@ -568,15 +704,39 @@ func (aueuo *AppUserExtraUpdateOne) SetAvatar(s string) *AppUserExtraUpdateOne {
 	return aueuo
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableAvatar(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetAvatar(*s)
+	}
+	return aueuo
+}
+
 // SetOrganization sets the "organization" field.
 func (aueuo *AppUserExtraUpdateOne) SetOrganization(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetOrganization(s)
 	return aueuo
 }
 
+// SetNillableOrganization sets the "organization" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableOrganization(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetOrganization(*s)
+	}
+	return aueuo
+}
+
 // SetIDNumber sets the "id_number" field.
 func (aueuo *AppUserExtraUpdateOne) SetIDNumber(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetIDNumber(s)
+	return aueuo
+}
+
+// SetNillableIDNumber sets the "id_number" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableIDNumber(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetIDNumber(*s)
+	}
 	return aueuo
 }
 

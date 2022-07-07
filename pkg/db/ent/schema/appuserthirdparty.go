@@ -28,8 +28,10 @@ func (AppUserThirdParty) Fields() []ent.Field {
 		field.UUID("user_id", uuid.UUID{}),
 		field.String("third_party_user_id"),
 		field.String("third_party_id"),
-		field.String("third_party_username"),
-		field.String("third_party_user_avatar").MaxLen(1024),
+		field.String("third_party_username").
+			Default(""),
+		field.String("third_party_user_avatar").
+			Default("").MaxLen(1024),
 	}
 }
 

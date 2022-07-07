@@ -101,6 +101,14 @@ func (aru *AppRoleUpdate) SetDescription(s string) *AppRoleUpdate {
 	return aru
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableDescription(s *string) *AppRoleUpdate {
+	if s != nil {
+		aru.SetDescription(*s)
+	}
+	return aru
+}
+
 // SetAppID sets the "app_id" field.
 func (aru *AppRoleUpdate) SetAppID(u uuid.UUID) *AppRoleUpdate {
 	aru.mutation.SetAppID(u)
@@ -371,6 +379,14 @@ func (aruo *AppRoleUpdateOne) SetRole(s string) *AppRoleUpdateOne {
 // SetDescription sets the "description" field.
 func (aruo *AppRoleUpdateOne) SetDescription(s string) *AppRoleUpdateOne {
 	aruo.mutation.SetDescription(s)
+	return aruo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableDescription(s *string) *AppRoleUpdateOne {
+	if s != nil {
+		aruo.SetDescription(*s)
+	}
 	return aruo
 }
 

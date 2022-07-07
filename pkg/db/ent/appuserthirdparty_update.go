@@ -113,9 +113,25 @@ func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUsername(s string) *AppUserTh
 	return autpu
 }
 
+// SetNillableThirdPartyUsername sets the "third_party_username" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUsername(s *string) *AppUserThirdPartyUpdate {
+	if s != nil {
+		autpu.SetThirdPartyUsername(*s)
+	}
+	return autpu
+}
+
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
 func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyUpdate {
 	autpu.mutation.SetThirdPartyUserAvatar(s)
+	return autpu
+}
+
+// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyUpdate {
+	if s != nil {
+		autpu.SetThirdPartyUserAvatar(*s)
+	}
 	return autpu
 }
 
@@ -415,9 +431,25 @@ func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUsername(s string) *AppUs
 	return autpuo
 }
 
+// SetNillableThirdPartyUsername sets the "third_party_username" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUsername(s *string) *AppUserThirdPartyUpdateOne {
+	if s != nil {
+		autpuo.SetThirdPartyUsername(*s)
+	}
+	return autpuo
+}
+
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
 func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyUpdateOne {
 	autpuo.mutation.SetThirdPartyUserAvatar(s)
+	return autpuo
+}
+
+// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyUpdateOne {
+	if s != nil {
+		autpuo.SetThirdPartyUserAvatar(*s)
+	}
 	return autpuo
 }
 

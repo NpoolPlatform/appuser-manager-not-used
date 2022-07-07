@@ -95,9 +95,25 @@ func (autpc *AppUserThirdPartyCreate) SetThirdPartyUsername(s string) *AppUserTh
 	return autpc
 }
 
+// SetNillableThirdPartyUsername sets the "third_party_username" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUsername(s *string) *AppUserThirdPartyCreate {
+	if s != nil {
+		autpc.SetThirdPartyUsername(*s)
+	}
+	return autpc
+}
+
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
 func (autpc *AppUserThirdPartyCreate) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyCreate {
 	autpc.mutation.SetThirdPartyUserAvatar(s)
+	return autpc
+}
+
+// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyCreate {
+	if s != nil {
+		autpc.SetThirdPartyUserAvatar(*s)
+	}
 	return autpc
 }
 
@@ -208,6 +224,14 @@ func (autpc *AppUserThirdPartyCreate) defaults() error {
 		}
 		v := appuserthirdparty.DefaultDeletedAt()
 		autpc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := autpc.mutation.ThirdPartyUsername(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyUsername
+		autpc.mutation.SetThirdPartyUsername(v)
+	}
+	if _, ok := autpc.mutation.ThirdPartyUserAvatar(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyUserAvatar
+		autpc.mutation.SetThirdPartyUserAvatar(v)
 	}
 	if _, ok := autpc.mutation.ID(); !ok {
 		if appuserthirdparty.DefaultID == nil {

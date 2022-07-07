@@ -101,6 +101,14 @@ func (bauu *BanAppUserUpdate) SetMessage(s string) *BanAppUserUpdate {
 	return bauu
 }
 
+// SetNillableMessage sets the "message" field if the given value is not nil.
+func (bauu *BanAppUserUpdate) SetNillableMessage(s *string) *BanAppUserUpdate {
+	if s != nil {
+		bauu.SetMessage(*s)
+	}
+	return bauu
+}
+
 // Mutation returns the BanAppUserMutation object of the builder.
 func (bauu *BanAppUserUpdate) Mutation() *BanAppUserMutation {
 	return bauu.mutation
@@ -345,6 +353,14 @@ func (bauuo *BanAppUserUpdateOne) SetUserID(u uuid.UUID) *BanAppUserUpdateOne {
 // SetMessage sets the "message" field.
 func (bauuo *BanAppUserUpdateOne) SetMessage(s string) *BanAppUserUpdateOne {
 	bauuo.mutation.SetMessage(s)
+	return bauuo
+}
+
+// SetNillableMessage sets the "message" field if the given value is not nil.
+func (bauuo *BanAppUserUpdateOne) SetNillableMessage(s *string) *BanAppUserUpdateOne {
+	if s != nil {
+		bauuo.SetMessage(*s)
+	}
 	return bauuo
 }
 

@@ -83,6 +83,14 @@ func (bauc *BanAppUserCreate) SetMessage(s string) *BanAppUserCreate {
 	return bauc
 }
 
+// SetNillableMessage sets the "message" field if the given value is not nil.
+func (bauc *BanAppUserCreate) SetNillableMessage(s *string) *BanAppUserCreate {
+	if s != nil {
+		bauc.SetMessage(*s)
+	}
+	return bauc
+}
+
 // SetID sets the "id" field.
 func (bauc *BanAppUserCreate) SetID(u uuid.UUID) *BanAppUserCreate {
 	bauc.mutation.SetID(u)
@@ -190,6 +198,10 @@ func (bauc *BanAppUserCreate) defaults() error {
 		}
 		v := banappuser.DefaultDeletedAt()
 		bauc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := bauc.mutation.Message(); !ok {
+		v := banappuser.DefaultMessage
+		bauc.mutation.SetMessage(v)
 	}
 	if _, ok := bauc.mutation.ID(); !ok {
 		if banappuser.DefaultID == nil {

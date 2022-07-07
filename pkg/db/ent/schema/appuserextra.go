@@ -28,17 +28,28 @@ func (AppUserExtra) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
-		field.String("username"),
-		field.String("first_name"),
-		field.String("last_name"),
-		field.JSON("address_fields", []string{}),
-		field.String("gender"),
-		field.String("postal_code"),
-		field.Uint32("age"),
-		field.Uint32("birthday"),
-		field.String("avatar"),
-		field.String("organization"),
-		field.String("id_number"),
+		field.String("username").
+			Default(""),
+		field.String("first_name").
+			Default(""),
+		field.String("last_name").
+			Default(""),
+		field.JSON("address_fields", []string{}).
+			Default([]string{}),
+		field.String("gender").
+			Default(""),
+		field.String("postal_code").
+			Default(""),
+		field.Uint32("age").
+			Default(0),
+		field.Uint32("birthday").
+			Default(0),
+		field.String("avatar").
+			Default(""),
+		field.String("organization").
+			Default(""),
+		field.String("id_number").
+			Default(""),
 	}
 }
 

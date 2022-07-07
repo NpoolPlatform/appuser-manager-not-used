@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 	"testing"
@@ -20,6 +21,7 @@ func TestVersion(t *testing.T) {
 	resp, err := cli.R().
 		Post("http://localhost:50230/version")
 	if assert.Nil(t, err) {
+		fmt.Println(resp)
 		assert.Equal(t, 200, resp.StatusCode())
 		// we should compare body, but we cannot do here
 		// ver, err := version.GetVersion()
