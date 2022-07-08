@@ -11,7 +11,8 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	val "github.com/NpoolPlatform/message/npool"
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/app"
 
 	"github.com/google/uuid"
@@ -39,7 +40,7 @@ var entApp = ent.App{
 var (
 	id        = entApp.ID.String()
 	createdBy = entApp.CreatedBy.String()
-	appInfo   = npool.App{
+	appInfo   = npool.AppReq{
 		ID:          &id,
 		CreatedBy:   &createdBy,
 		Name:        &entApp.Name,
@@ -91,11 +92,11 @@ func createBulk(t *testing.T) {
 		},
 	}
 
-	apps := []*npool.App{}
+	apps := []*npool.AppReq{}
 	for key := range entApp {
 		id := entApp[key].ID.String()
 		createdBy := entApp[key].CreatedBy.String()
-		apps = append(apps, &npool.App{
+		apps = append(apps, &npool.AppReq{
 			ID:          &id,
 			CreatedBy:   &createdBy,
 			Name:        &entApp[key].Name,
@@ -131,7 +132,7 @@ func row(t *testing.T) {
 func rows(t *testing.T) {
 	infos, total, err := Rows(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -146,7 +147,7 @@ func rowOnly(t *testing.T) {
 	var err error
 	info, err = RowOnly(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -159,7 +160,7 @@ func rowOnly(t *testing.T) {
 func count(t *testing.T) {
 	count, err := Count(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -180,7 +181,7 @@ func exist(t *testing.T) {
 func existConds(t *testing.T) {
 	exist, err := ExistConds(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},

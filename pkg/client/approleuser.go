@@ -30,7 +30,7 @@ func doAppRoleUser(ctx context.Context, fn func(_ctx context.Context, cli npool.
 	return fn(_ctx, cli)
 }
 
-func CreateAppRoleUserV2(ctx context.Context, in *npool.AppRoleUser) (*npool.AppRoleUserRes, error) {
+func CreateAppRoleUserV2(ctx context.Context, in *npool.AppRoleUserReq) (*npool.AppRoleUser, error) {
 	info, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppRoleUserV2(ctx, &npool.CreateAppRoleUserRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateAppRoleUserV2(ctx context.Context, in *npool.AppRoleUser) (*npool.App
 	if err != nil {
 		return nil, fmt.Errorf("fail create app role user: %v", err)
 	}
-	return info.(*npool.AppRoleUserRes), nil
+	return info.(*npool.AppRoleUser), nil
 }
 
-func CreateAppRoleUsersV2(ctx context.Context, in []*npool.AppRoleUser) ([]*npool.AppRoleUserRes, error) {
+func CreateAppRoleUsersV2(ctx context.Context, in []*npool.AppRoleUserReq) ([]*npool.AppRoleUser, error) {
 	infos, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppRoleUsersV2(ctx, &npool.CreateAppRoleUsersRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateAppRoleUsersV2(ctx context.Context, in []*npool.AppRoleUser) ([]*npoo
 	if err != nil {
 		return nil, fmt.Errorf("fail create app role users: %v", err)
 	}
-	return infos.([]*npool.AppRoleUserRes), nil
+	return infos.([]*npool.AppRoleUser), nil
 }
 
-func UpdateAppRoleUserV2(ctx context.Context, in *npool.AppRoleUser) (*npool.AppRoleUserRes, error) {
+func UpdateAppRoleUserV2(ctx context.Context, in *npool.AppRoleUserReq) (*npool.AppRoleUser, error) {
 	info, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppRoleUserV2(ctx, &npool.UpdateAppRoleUserRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateAppRoleUserV2(ctx context.Context, in *npool.AppRoleUser) (*npool.App
 	if err != nil {
 		return nil, fmt.Errorf("fail update app role user: %v", err)
 	}
-	return info.(*npool.AppRoleUserRes), nil
+	return info.(*npool.AppRoleUser), nil
 }
 
-func GetAppRoleUserV2(ctx context.Context, id string) (*npool.AppRoleUserRes, error) {
+func GetAppRoleUserV2(ctx context.Context, id string) (*npool.AppRoleUser, error) {
 	info, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRoleUserV2(ctx, &npool.GetAppRoleUserRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetAppRoleUserV2(ctx context.Context, id string) (*npool.AppRoleUserRes, er
 	if err != nil {
 		return nil, fmt.Errorf("fail get app role user: %v", err)
 	}
-	return info.(*npool.AppRoleUserRes), nil
+	return info.(*npool.AppRoleUser), nil
 }
 
-func GetAppRoleUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRoleUserRes, error) {
+func GetAppRoleUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRoleUser, error) {
 	info, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRoleUserOnlyV2(ctx, &npool.GetAppRoleUserOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetAppRoleUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRo
 	if err != nil {
 		return nil, fmt.Errorf("fail get app role user: %v", err)
 	}
-	return info.(*npool.AppRoleUserRes), nil
+	return info.(*npool.AppRoleUser), nil
 }
 
-func GetAppRoleUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRoleUserRes, error) {
+func GetAppRoleUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRoleUser, error) {
 	infos, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRoleUsersV2(ctx, &npool.GetAppRoleUsersRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetAppRoleUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRol
 	if err != nil {
 		return nil, fmt.Errorf("fail get app role user: %v", err)
 	}
-	return infos.([]*npool.AppRoleUserRes), nil
+	return infos.([]*npool.AppRoleUser), nil
 }
 
 func ExistAppRoleUserV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountAppRoleUsersV2(ctx context.Context, conds *npool.Conds) (uint32, error
 	return infos.(uint32), nil
 }
 
-func DeleteAppRoleUserV2(ctx context.Context, id string) (*npool.AppRoleUserRes, error) {
+func DeleteAppRoleUserV2(ctx context.Context, id string) (*npool.AppRoleUser, error) {
 	infos, err := doAppRoleUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleUserClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppRoleUserV2(ctx, &npool.DeleteAppRoleUserRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteAppRoleUserV2(ctx context.Context, id string) (*npool.AppRoleUserRes,
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app role user: %v", err)
 	}
-	return infos.(*npool.AppRoleUserRes), nil
+	return infos.(*npool.AppRoleUser), nil
 }

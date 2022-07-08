@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppUserInfo(info *npool.AppUser) error {
+func checkAppUserInfo(info *npool.AppUserReq) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Error("AppID is invalid")
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -29,8 +29,8 @@ func checkAppUserInfo(info *npool.AppUser) error {
 	return nil
 }
 
-func appUserRowToObject(row *ent.AppUser) *npool.AppUserRes {
-	return &npool.AppUserRes{
+func appUserRowToObject(row *ent.AppUser) *npool.AppUser {
+	return &npool.AppUser{
 		ID:            row.ID.String(),
 		AppID:         row.AppID.String(),
 		EmailAddress:  row.EmailAddress,
@@ -96,7 +96,7 @@ func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAp
 		return &npool.CreateAppUsersResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserRes, 0, len(rows))
+	infos := make([]*npool.AppUser, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserRowToObject(val))
 	}
@@ -167,7 +167,7 @@ func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsers
 		return &npool.GetAppUsersResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserRes, 0, len(rows))
+	infos := make([]*npool.AppUser, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserRowToObject(val))
 	}

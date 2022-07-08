@@ -30,7 +30,7 @@ func doApp(ctx context.Context, fn func(_ctx context.Context, cli npool.AppUserM
 	return fn(_ctx, cli)
 }
 
-func CreateAppV2(ctx context.Context, in *npool.App) (*npool.AppRes, error) {
+func CreateAppV2(ctx context.Context, in *npool.AppReq) (*npool.App, error) {
 	info, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppV2(ctx, &npool.CreateAppRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateAppV2(ctx context.Context, in *npool.App) (*npool.AppRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail create app: %v", err)
 	}
-	return info.(*npool.AppRes), nil
+	return info.(*npool.App), nil
 }
 
-func CreateAppsV2(ctx context.Context, in []*npool.App) ([]*npool.AppRes, error) {
+func CreateAppsV2(ctx context.Context, in []*npool.AppReq) ([]*npool.App, error) {
 	infos, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppsV2(ctx, &npool.CreateAppsRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateAppsV2(ctx context.Context, in []*npool.App) ([]*npool.AppRes, error)
 	if err != nil {
 		return nil, fmt.Errorf("fail create apps: %v", err)
 	}
-	return infos.([]*npool.AppRes), nil
+	return infos.([]*npool.App), nil
 }
 
-func UpdateAppV2(ctx context.Context, in *npool.App) (*npool.AppRes, error) {
+func UpdateAppV2(ctx context.Context, in *npool.AppReq) (*npool.App, error) {
 	info, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppV2(ctx, &npool.UpdateAppRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateAppV2(ctx context.Context, in *npool.App) (*npool.AppRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail update app: %v", err)
 	}
-	return info.(*npool.AppRes), nil
+	return info.(*npool.App), nil
 }
 
-func GetAppV2(ctx context.Context, id string) (*npool.AppRes, error) {
+func GetAppV2(ctx context.Context, id string) (*npool.App, error) {
 	info, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.GetAppV2(ctx, &npool.GetAppRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetAppV2(ctx context.Context, id string) (*npool.AppRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail get app: %v", err)
 	}
-	return info.(*npool.AppRes), nil
+	return info.(*npool.App), nil
 }
 
-func GetAppOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRes, error) {
+func GetAppOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.App, error) {
 	info, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.GetAppOnlyV2(ctx, &npool.GetAppOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetAppOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRes, error
 	if err != nil {
 		return nil, fmt.Errorf("fail get app: %v", err)
 	}
-	return info.(*npool.AppRes), nil
+	return info.(*npool.App), nil
 }
 
-func GetAppsV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRes, error) {
+func GetAppsV2(ctx context.Context, conds *npool.Conds) ([]*npool.App, error) {
 	infos, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.GetAppsV2(ctx, &npool.GetAppsRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetAppsV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRes, error)
 	if err != nil {
 		return nil, fmt.Errorf("fail get apps: %v", err)
 	}
-	return infos.([]*npool.AppRes), nil
+	return infos.([]*npool.App), nil
 }
 
 func ExistAppV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountAppsV2(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	return infos.(uint32), nil
 }
 
-func DeleteAppV2(ctx context.Context, id string) (*npool.AppRes, error) {
+func DeleteAppV2(ctx context.Context, id string) (*npool.App, error) {
 	infos, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppV2(ctx, &npool.DeleteAppRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteAppV2(ctx context.Context, id string) (*npool.AppRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app: %v", err)
 	}
-	return infos.(*npool.AppRes), nil
+	return infos.(*npool.App), nil
 }

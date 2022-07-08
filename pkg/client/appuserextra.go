@@ -30,7 +30,7 @@ func doAppUserExtra(ctx context.Context, fn func(_ctx context.Context, cli npool
 	return fn(_ctx, cli)
 }
 
-func CreateAppUserExtraV2(ctx context.Context, in *npool.AppUserExtra) (*npool.AppUserExtraRes, error) {
+func CreateAppUserExtraV2(ctx context.Context, in *npool.AppUserExtraReq) (*npool.AppUserExtra, error) {
 	info, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserExtraV2(ctx, &npool.CreateAppUserExtraRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateAppUserExtraV2(ctx context.Context, in *npool.AppUserExtra) (*npool.A
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user extra: %v", err)
 	}
-	return info.(*npool.AppUserExtraRes), nil
+	return info.(*npool.AppUserExtra), nil
 }
 
-func CreateAppUserExtrasV2(ctx context.Context, in []*npool.AppUserExtra) ([]*npool.AppUserExtraRes, error) {
+func CreateAppUserExtrasV2(ctx context.Context, in []*npool.AppUserExtraReq) ([]*npool.AppUserExtra, error) {
 	infos, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserExtrasV2(ctx, &npool.CreateAppUserExtrasRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateAppUserExtrasV2(ctx context.Context, in []*npool.AppUserExtra) ([]*np
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user extras: %v", err)
 	}
-	return infos.([]*npool.AppUserExtraRes), nil
+	return infos.([]*npool.AppUserExtra), nil
 }
 
-func UpdateAppUserExtraV2(ctx context.Context, in *npool.AppUserExtra) (*npool.AppUserExtraRes, error) {
+func UpdateAppUserExtraV2(ctx context.Context, in *npool.AppUserExtraReq) (*npool.AppUserExtra, error) {
 	info, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUserExtraV2(ctx, &npool.UpdateAppUserExtraRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateAppUserExtraV2(ctx context.Context, in *npool.AppUserExtra) (*npool.A
 	if err != nil {
 		return nil, fmt.Errorf("fail update app user extra: %v", err)
 	}
-	return info.(*npool.AppUserExtraRes), nil
+	return info.(*npool.AppUserExtra), nil
 }
 
-func GetAppUserExtraV2(ctx context.Context, id string) (*npool.AppUserExtraRes, error) {
+func GetAppUserExtraV2(ctx context.Context, id string) (*npool.AppUserExtra, error) {
 	info, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserExtraV2(ctx, &npool.GetAppUserExtraRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetAppUserExtraV2(ctx context.Context, id string) (*npool.AppUserExtraRes, 
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user extra: %v", err)
 	}
-	return info.(*npool.AppUserExtraRes), nil
+	return info.(*npool.AppUserExtra), nil
 }
 
-func GetAppUserExtraOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserExtraRes, error) {
+func GetAppUserExtraOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserExtra, error) {
 	info, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserExtraOnlyV2(ctx, &npool.GetAppUserExtraOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetAppUserExtraOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppU
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user extra: %v", err)
 	}
-	return info.(*npool.AppUserExtraRes), nil
+	return info.(*npool.AppUserExtra), nil
 }
 
-func GetAppUserExtrasV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserExtraRes, error) {
+func GetAppUserExtrasV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserExtra, error) {
 	infos, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserExtrasV2(ctx, &npool.GetAppUserExtrasRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetAppUserExtrasV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUs
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user extra: %v", err)
 	}
-	return infos.([]*npool.AppUserExtraRes), nil
+	return infos.([]*npool.AppUserExtra), nil
 }
 
 func ExistAppUserExtraV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountAppUserExtrasV2(ctx context.Context, conds *npool.Conds) (uint32, erro
 	return infos.(uint32), nil
 }
 
-func DeleteAppUserExtraV2(ctx context.Context, id string) (*npool.AppUserExtraRes, error) {
+func DeleteAppUserExtraV2(ctx context.Context, id string) (*npool.AppUserExtra, error) {
 	infos, err := doAppUserExtra(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserExtraClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUserExtraV2(ctx, &npool.DeleteAppUserExtraRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteAppUserExtraV2(ctx context.Context, id string) (*npool.AppUserExtraRe
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app user extra: %v", err)
 	}
-	return infos.(*npool.AppUserExtraRes), nil
+	return infos.(*npool.AppUserExtra), nil
 }

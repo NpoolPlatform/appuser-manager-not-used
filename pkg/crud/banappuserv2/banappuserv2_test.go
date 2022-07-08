@@ -7,11 +7,13 @@ import (
 	"strconv"
 	"testing"
 
+	val "github.com/NpoolPlatform/message/npool"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/banappuser"
 
 	"github.com/google/uuid"
@@ -40,7 +42,7 @@ var (
 	userID = entBanAppUser.UserID.String()
 	id     = entBanAppUser.ID.String()
 
-	banappuserInfo = npool.BanAppUser{
+	banappuserInfo = npool.BanAppUserReq{
 		AppID:   &appID,
 		UserID:  &userID,
 		Message: &entBanAppUser.Message,
@@ -86,13 +88,13 @@ func createBulk(t *testing.T) {
 		},
 	}
 
-	banappusers := []*npool.BanAppUser{}
+	banappusers := []*npool.BanAppUserReq{}
 	for key := range entBanAppUser {
 		appID := entBanAppUser[key].AppID.String()
 		userID := entBanAppUser[key].UserID.String()
 		id := entBanAppUser[key].ID.String()
 
-		banappusers = append(banappusers, &npool.BanAppUser{
+		banappusers = append(banappusers, &npool.BanAppUserReq{
 			AppID:   &appID,
 			UserID:  &userID,
 			Message: &entBanAppUser[key].Message,
@@ -126,7 +128,7 @@ func row(t *testing.T) {
 func rows(t *testing.T) {
 	infos, total, err := Rows(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -141,7 +143,7 @@ func rowOnly(t *testing.T) {
 	var err error
 	info, err = RowOnly(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -154,7 +156,7 @@ func rowOnly(t *testing.T) {
 func count(t *testing.T) {
 	count, err := Count(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -175,7 +177,7 @@ func exist(t *testing.T) {
 func existConds(t *testing.T) {
 	exist, err := ExistConds(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},

@@ -30,7 +30,7 @@ func doAppUserThirdParty(ctx context.Context, fn func(_ctx context.Context, cli 
 	return fn(_ctx, cli)
 }
 
-func CreateAppUserThirdPartyV2(ctx context.Context, in *npool.AppUserThirdParty) (*npool.AppUserThirdPartyRes, error) {
+func CreateAppUserThirdPartyV2(ctx context.Context, in *npool.AppUserThirdPartyReq) (*npool.AppUserThirdParty, error) {
 	info, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserThirdPartyV2(ctx, &npool.CreateAppUserThirdPartyRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateAppUserThirdPartyV2(ctx context.Context, in *npool.AppUserThirdParty)
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user third party: %v", err)
 	}
-	return info.(*npool.AppUserThirdPartyRes), nil
+	return info.(*npool.AppUserThirdParty), nil
 }
 
-func CreateAppUserThirdPartysV2(ctx context.Context, in []*npool.AppUserThirdParty) ([]*npool.AppUserThirdPartyRes, error) {
+func CreateAppUserThirdPartysV2(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*npool.AppUserThirdParty, error) {
 	infos, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserThirdPartysV2(ctx, &npool.CreateAppUserThirdPartysRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateAppUserThirdPartysV2(ctx context.Context, in []*npool.AppUserThirdPar
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user third partys: %v", err)
 	}
-	return infos.([]*npool.AppUserThirdPartyRes), nil
+	return infos.([]*npool.AppUserThirdParty), nil
 }
 
-func UpdateAppUserThirdPartyV2(ctx context.Context, in *npool.AppUserThirdParty) (*npool.AppUserThirdPartyRes, error) {
+func UpdateAppUserThirdPartyV2(ctx context.Context, in *npool.AppUserThirdPartyReq) (*npool.AppUserThirdParty, error) {
 	info, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUserThirdPartyV2(ctx, &npool.UpdateAppUserThirdPartyRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateAppUserThirdPartyV2(ctx context.Context, in *npool.AppUserThirdParty)
 	if err != nil {
 		return nil, fmt.Errorf("fail update app user third party: %v", err)
 	}
-	return info.(*npool.AppUserThirdPartyRes), nil
+	return info.(*npool.AppUserThirdParty), nil
 }
 
-func GetAppUserThirdPartyV2(ctx context.Context, id string) (*npool.AppUserThirdPartyRes, error) {
+func GetAppUserThirdPartyV2(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {
 	info, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdPartyV2(ctx, &npool.GetAppUserThirdPartyRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetAppUserThirdPartyV2(ctx context.Context, id string) (*npool.AppUserThird
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user third party: %v", err)
 	}
-	return info.(*npool.AppUserThirdPartyRes), nil
+	return info.(*npool.AppUserThirdParty), nil
 }
 
-func GetAppUserThirdPartyOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserThirdPartyRes, error) {
+func GetAppUserThirdPartyOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserThirdParty, error) {
 	info, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdPartyOnlyV2(ctx, &npool.GetAppUserThirdPartyOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetAppUserThirdPartyOnlyV2(ctx context.Context, conds *npool.Conds) (*npool
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user third party: %v", err)
 	}
-	return info.(*npool.AppUserThirdPartyRes), nil
+	return info.(*npool.AppUserThirdParty), nil
 }
 
-func GetAppUserThirdPartysV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserThirdPartyRes, error) {
+func GetAppUserThirdPartysV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserThirdParty, error) {
 	infos, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdPartysV2(ctx, &npool.GetAppUserThirdPartysRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetAppUserThirdPartysV2(ctx context.Context, conds *npool.Conds) ([]*npool.
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user third party: %v", err)
 	}
-	return infos.([]*npool.AppUserThirdPartyRes), nil
+	return infos.([]*npool.AppUserThirdParty), nil
 }
 
 func ExistAppUserThirdPartyV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountAppUserThirdPartysV2(ctx context.Context, conds *npool.Conds) (uint32,
 	return infos.(uint32), nil
 }
 
-func DeleteAppUserThirdPartyV2(ctx context.Context, id string) (*npool.AppUserThirdPartyRes, error) {
+func DeleteAppUserThirdPartyV2(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {
 	infos, err := doAppUserThirdParty(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserThirdPartyClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUserThirdPartyV2(ctx, &npool.DeleteAppUserThirdPartyRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteAppUserThirdPartyV2(ctx context.Context, id string) (*npool.AppUserTh
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app user third party: %v", err)
 	}
-	return infos.(*npool.AppUserThirdPartyRes), nil
+	return infos.(*npool.AppUserThirdParty), nil
 }

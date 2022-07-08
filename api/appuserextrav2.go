@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppUserExtraInfo(info *npool.AppUserExtra) error {
+func checkAppUserExtraInfo(info *npool.AppUserExtraReq) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Error("AppID is invalid")
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -29,8 +29,8 @@ func checkAppUserExtraInfo(info *npool.AppUserExtra) error {
 	return nil
 }
 
-func appUserExtraRowToObject(row *ent.AppUserExtra) *npool.AppUserExtraRes {
-	return &npool.AppUserExtraRes{
+func appUserExtraRowToObject(row *ent.AppUserExtra) *npool.AppUserExtra {
+	return &npool.AppUserExtra{
 		PostalCode:    row.PostalCode,
 		Avatar:        row.Avatar,
 		Organization:  row.Organization,
@@ -96,7 +96,7 @@ func (s *AppUserExtraServer) CreateAppUserExtrasV2(ctx context.Context, in *npoo
 		return &npool.CreateAppUserExtrasResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserExtraRes, 0, len(rows))
+	infos := make([]*npool.AppUserExtra, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserExtraRowToObject(val))
 	}
@@ -159,7 +159,7 @@ func (s *AppUserExtraServer) GetAppUserExtrasV2(ctx context.Context, in *npool.G
 		return &npool.GetAppUserExtrasResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserExtraRes, 0, len(rows))
+	infos := make([]*npool.AppUserExtra, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserExtraRowToObject(val))
 	}

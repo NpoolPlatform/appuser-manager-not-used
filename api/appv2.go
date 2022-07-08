@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppInfo(info *npool.App) error {
+func checkAppInfo(info *npool.AppReq) error {
 	if _, err := uuid.Parse(info.GetCreatedBy()); err != nil {
 		logger.Sugar().Error("CreatedBy is invalid")
 		return status.Error(codes.InvalidArgument, "CreatedBy is invalid")
@@ -36,8 +36,8 @@ func checkAppInfo(info *npool.App) error {
 	return nil
 }
 
-func appRowToObject(row *ent.App) *npool.AppRes {
-	return &npool.AppRes{
+func appRowToObject(row *ent.App) *npool.App {
+	return &npool.App{
 		ID:          row.ID.String(),
 		CreatedBy:   row.CreatedBy.String(),
 		Name:        row.Name,
@@ -96,7 +96,7 @@ func (s *AppServer) CreateAppsV2(ctx context.Context, in *npool.CreateAppsReques
 		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppRes, 0, len(rows))
+	infos := make([]*npool.App, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appRowToObject(val))
 	}
@@ -159,7 +159,7 @@ func (s *AppServer) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*n
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppRes, 0, len(rows))
+	infos := make([]*npool.App, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appRowToObject(val))
 	}

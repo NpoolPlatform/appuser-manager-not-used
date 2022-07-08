@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppRoleInfo(info *npool.AppRole) error {
+func checkAppRoleInfo(info *npool.AppRoleReq) error {
 	if _, err := uuid.Parse(info.GetCreatedBy()); err != nil {
 		logger.Sugar().Error("CreatedBy is invalid")
 		return status.Error(codes.InvalidArgument, "CreatedBy is invalid")
@@ -41,8 +41,8 @@ func checkAppRoleInfo(info *npool.AppRole) error {
 	return nil
 }
 
-func appRoleRowToObject(row *ent.AppRole) *npool.AppRoleRes {
-	return &npool.AppRoleRes{
+func appRoleRowToObject(row *ent.AppRole) *npool.AppRole {
+	return &npool.AppRole{
 		ID:          row.ID.String(),
 		AppID:       row.AppID.String(),
 		CreatedBy:   row.CreatedBy.String(),
@@ -83,7 +83,7 @@ func (s *AppRoleServer) CreateAppRolesV2(ctx context.Context, in *npool.CreateAp
 		return &npool.CreateAppRolesResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppRoleRes, 0, len(rows))
+	infos := make([]*npool.AppRole, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appRoleRowToObject(val))
 	}
@@ -146,7 +146,7 @@ func (s *AppRoleServer) GetAppRolesV2(ctx context.Context, in *npool.GetAppRoles
 		return &npool.GetAppRolesResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppRoleRes, 0, len(rows))
+	infos := make([]*npool.AppRole, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appRoleRowToObject(val))
 	}
@@ -206,7 +206,7 @@ func (s *AppRoleServer) DeleteAppRoleV2(ctx context.Context, in *npool.DeleteApp
 
 	info, err := crud.Delete(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail delete AppRole: %v", err)
+		logger.Sugar().Errorf("fail delete app role: %v", err)
 		return &npool.DeleteAppRoleResponse{}, status.Error(codes.Internal, err.Error())
 	}
 

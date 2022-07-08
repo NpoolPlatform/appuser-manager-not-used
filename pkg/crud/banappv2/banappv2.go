@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func Create(ctx context.Context, in *npool.BanApp) (*ent.BanApp, error) {
+func Create(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 	var info *ent.BanApp
 	var err error
 
@@ -38,7 +38,7 @@ func Create(ctx context.Context, in *npool.BanApp) (*ent.BanApp, error) {
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.BanApp) ([]*ent.BanApp, error) {
+func CreateBulk(ctx context.Context, in []*npool.BanAppReq) ([]*ent.BanApp, error) {
 	rows := []*ent.BanApp{}
 	var err error
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
@@ -64,7 +64,7 @@ func CreateBulk(ctx context.Context, in []*npool.BanApp) ([]*ent.BanApp, error) 
 	return rows, nil
 }
 
-func Update(ctx context.Context, in *npool.BanApp) (*ent.BanApp, error) {
+func Update(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 	var info *ent.BanApp
 	var err error
 

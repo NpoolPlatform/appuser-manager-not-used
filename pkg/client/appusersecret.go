@@ -30,7 +30,7 @@ func doAppUserSecret(ctx context.Context, fn func(_ctx context.Context, cli npoo
 	return fn(_ctx, cli)
 }
 
-func CreateAppUserSecretV2(ctx context.Context, in *npool.AppUserSecret) (*npool.AppUserSecretRes, error) {
+func CreateAppUserSecretV2(ctx context.Context, in *npool.AppUserSecretReq) (*npool.AppUserSecret, error) {
 	info, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserSecretV2(ctx, &npool.CreateAppUserSecretRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateAppUserSecretV2(ctx context.Context, in *npool.AppUserSecret) (*npool
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user secret: %v", err)
 	}
-	return info.(*npool.AppUserSecretRes), nil
+	return info.(*npool.AppUserSecret), nil
 }
 
-func CreateAppUserSecretsV2(ctx context.Context, in []*npool.AppUserSecret) ([]*npool.AppUserSecretRes, error) {
+func CreateAppUserSecretsV2(ctx context.Context, in []*npool.AppUserSecretReq) ([]*npool.AppUserSecret, error) {
 	infos, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserSecretsV2(ctx, &npool.CreateAppUserSecretsRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateAppUserSecretsV2(ctx context.Context, in []*npool.AppUserSecret) ([]*
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user secrets: %v", err)
 	}
-	return infos.([]*npool.AppUserSecretRes), nil
+	return infos.([]*npool.AppUserSecret), nil
 }
 
-func UpdateAppUserSecretV2(ctx context.Context, in *npool.AppUserSecret) (*npool.AppUserSecretRes, error) {
+func UpdateAppUserSecretV2(ctx context.Context, in *npool.AppUserSecretReq) (*npool.AppUserSecret, error) {
 	info, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUserSecretV2(ctx, &npool.UpdateAppUserSecretRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateAppUserSecretV2(ctx context.Context, in *npool.AppUserSecret) (*npool
 	if err != nil {
 		return nil, fmt.Errorf("fail update app user secret: %v", err)
 	}
-	return info.(*npool.AppUserSecretRes), nil
+	return info.(*npool.AppUserSecret), nil
 }
 
-func GetAppUserSecretV2(ctx context.Context, id string) (*npool.AppUserSecretRes, error) {
+func GetAppUserSecretV2(ctx context.Context, id string) (*npool.AppUserSecret, error) {
 	info, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserSecretV2(ctx, &npool.GetAppUserSecretRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetAppUserSecretV2(ctx context.Context, id string) (*npool.AppUserSecretRes
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user secret: %v", err)
 	}
-	return info.(*npool.AppUserSecretRes), nil
+	return info.(*npool.AppUserSecret), nil
 }
 
-func GetAppUserSecretOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserSecretRes, error) {
+func GetAppUserSecretOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserSecret, error) {
 	info, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserSecretOnlyV2(ctx, &npool.GetAppUserSecretOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetAppUserSecretOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.App
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user secret: %v", err)
 	}
-	return info.(*npool.AppUserSecretRes), nil
+	return info.(*npool.AppUserSecret), nil
 }
 
-func GetAppUserSecretsV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserSecretRes, error) {
+func GetAppUserSecretsV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserSecret, error) {
 	infos, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserSecretsV2(ctx, &npool.GetAppUserSecretsRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetAppUserSecretsV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppU
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user secret: %v", err)
 	}
-	return infos.([]*npool.AppUserSecretRes), nil
+	return infos.([]*npool.AppUserSecret), nil
 }
 
 func ExistAppUserSecretV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountAppUserSecretsV2(ctx context.Context, conds *npool.Conds) (uint32, err
 	return infos.(uint32), nil
 }
 
-func DeleteAppUserSecretV2(ctx context.Context, id string) (*npool.AppUserSecretRes, error) {
+func DeleteAppUserSecretV2(ctx context.Context, id string) (*npool.AppUserSecret, error) {
 	infos, err := doAppUserSecret(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserSecretClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUserSecretV2(ctx, &npool.DeleteAppUserSecretRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteAppUserSecretV2(ctx context.Context, id string) (*npool.AppUserSecret
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app user secret: %v", err)
 	}
-	return infos.(*npool.AppUserSecretRes), nil
+	return infos.(*npool.AppUserSecret), nil
 }

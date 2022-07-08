@@ -15,7 +15,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func Create(ctx context.Context, in *npool.AppRole) (*ent.AppRole, error) {
+func Create(ctx context.Context, in *npool.AppRoleReq) (*ent.AppRole, error) {
 	var info *ent.AppRole
 	var err error
 
@@ -49,7 +49,7 @@ func Create(ctx context.Context, in *npool.AppRole) (*ent.AppRole, error) {
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.AppRole) ([]*ent.AppRole, error) {
+func CreateBulk(ctx context.Context, in []*npool.AppRoleReq) ([]*ent.AppRole, error) {
 	rows := []*ent.AppRole{}
 	var err error
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
@@ -84,7 +84,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppRole) ([]*ent.AppRole, error
 	return rows, nil
 }
 
-func Update(ctx context.Context, in *npool.AppRole) (*ent.AppRole, error) {
+func Update(ctx context.Context, in *npool.AppRoleReq) (*ent.AppRole, error) {
 	var info *ent.AppRole
 	var err error
 

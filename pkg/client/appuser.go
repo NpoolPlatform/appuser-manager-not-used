@@ -30,7 +30,7 @@ func doAppUser(ctx context.Context, fn func(_ctx context.Context, cli npool.AppU
 	return fn(_ctx, cli)
 }
 
-func CreateAppUserV2(ctx context.Context, in *npool.AppUser) (*npool.AppUserRes, error) {
+func CreateAppUserV2(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, error) {
 	info, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserV2(ctx, &npool.CreateAppUserRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateAppUserV2(ctx context.Context, in *npool.AppUser) (*npool.AppUserRes,
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user: %v", err)
 	}
-	return info.(*npool.AppUserRes), nil
+	return info.(*npool.AppUser), nil
 }
 
-func CreateAppUsersV2(ctx context.Context, in []*npool.AppUser) ([]*npool.AppUserRes, error) {
+func CreateAppUsersV2(ctx context.Context, in []*npool.AppUserReq) ([]*npool.AppUser, error) {
 	infos, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUsersV2(ctx, &npool.CreateAppUsersRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateAppUsersV2(ctx context.Context, in []*npool.AppUser) ([]*npool.AppUse
 	if err != nil {
 		return nil, fmt.Errorf("fail create app users: %v", err)
 	}
-	return infos.([]*npool.AppUserRes), nil
+	return infos.([]*npool.AppUser), nil
 }
 
-func UpdateAppUserV2(ctx context.Context, in *npool.AppUser) (*npool.AppUserRes, error) {
+func UpdateAppUserV2(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, error) {
 	info, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUserV2(ctx, &npool.UpdateAppUserRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateAppUserV2(ctx context.Context, in *npool.AppUser) (*npool.AppUserRes,
 	if err != nil {
 		return nil, fmt.Errorf("fail update app user: %v", err)
 	}
-	return info.(*npool.AppUserRes), nil
+	return info.(*npool.AppUser), nil
 }
 
-func GetAppUserV2(ctx context.Context, id string) (*npool.AppUserRes, error) {
+func GetAppUserV2(ctx context.Context, id string) (*npool.AppUser, error) {
 	info, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserV2(ctx, &npool.GetAppUserRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetAppUserV2(ctx context.Context, id string) (*npool.AppUserRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user: %v", err)
 	}
-	return info.(*npool.AppUserRes), nil
+	return info.(*npool.AppUser), nil
 }
 
-func GetAppUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserRes, error) {
+func GetAppUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUser, error) {
 	info, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserOnlyV2(ctx, &npool.GetAppUserOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetAppUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppUserRe
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user: %v", err)
 	}
-	return info.(*npool.AppUserRes), nil
+	return info.(*npool.AppUser), nil
 }
 
-func GetAppUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserRes, error) {
+func GetAppUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUser, error) {
 	infos, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUsersV2(ctx, &npool.GetAppUsersRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetAppUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppUserRes
 	if err != nil {
 		return nil, fmt.Errorf("fail get app user: %v", err)
 	}
-	return infos.([]*npool.AppUserRes), nil
+	return infos.([]*npool.AppUser), nil
 }
 
 func ExistAppUserV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountAppUsersV2(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	return infos.(uint32), nil
 }
 
-func DeleteAppUserV2(ctx context.Context, id string) (*npool.AppUserRes, error) {
+func DeleteAppUserV2(ctx context.Context, id string) (*npool.AppUser, error) {
 	infos, err := doAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppUserClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUserV2(ctx, &npool.DeleteAppUserRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteAppUserV2(ctx context.Context, id string) (*npool.AppUserRes, error) 
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app user: %v", err)
 	}
-	return infos.(*npool.AppUserRes), nil
+	return infos.(*npool.AppUser), nil
 }

@@ -30,7 +30,7 @@ func doBanAppUser(ctx context.Context, fn func(_ctx context.Context, cli npool.A
 	return fn(_ctx, cli)
 }
 
-func CreateBanAppUserV2(ctx context.Context, in *npool.BanAppUser) (*npool.BanAppUserRes, error) {
+func CreateBanAppUserV2(ctx context.Context, in *npool.BanAppUserReq) (*npool.BanAppUser, error) {
 	info, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.CreateBanAppUserV2(ctx, &npool.CreateBanAppUserRequest{
 			Info: in,
@@ -43,10 +43,10 @@ func CreateBanAppUserV2(ctx context.Context, in *npool.BanAppUser) (*npool.BanAp
 	if err != nil {
 		return nil, fmt.Errorf("fail create ban app user: %v", err)
 	}
-	return info.(*npool.BanAppUserRes), nil
+	return info.(*npool.BanAppUser), nil
 }
 
-func CreateBanAppUsersV2(ctx context.Context, in []*npool.BanAppUser) ([]*npool.BanAppUserRes, error) {
+func CreateBanAppUsersV2(ctx context.Context, in []*npool.BanAppUserReq) ([]*npool.BanAppUser, error) {
 	infos, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.CreateBanAppUsersV2(ctx, &npool.CreateBanAppUsersRequest{
 			Infos: in,
@@ -59,10 +59,10 @@ func CreateBanAppUsersV2(ctx context.Context, in []*npool.BanAppUser) ([]*npool.
 	if err != nil {
 		return nil, fmt.Errorf("fail create ban app users: %v", err)
 	}
-	return infos.([]*npool.BanAppUserRes), nil
+	return infos.([]*npool.BanAppUser), nil
 }
 
-func UpdateBanAppUserV2(ctx context.Context, in *npool.BanAppUser) (*npool.BanAppUserRes, error) {
+func UpdateBanAppUserV2(ctx context.Context, in *npool.BanAppUserReq) (*npool.BanAppUser, error) {
 	info, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.UpdateBanAppUserV2(ctx, &npool.UpdateBanAppUserRequest{
 			Info: in,
@@ -75,10 +75,10 @@ func UpdateBanAppUserV2(ctx context.Context, in *npool.BanAppUser) (*npool.BanAp
 	if err != nil {
 		return nil, fmt.Errorf("fail update ban app user: %v", err)
 	}
-	return info.(*npool.BanAppUserRes), nil
+	return info.(*npool.BanAppUser), nil
 }
 
-func GetBanAppUserV2(ctx context.Context, id string) (*npool.BanAppUserRes, error) {
+func GetBanAppUserV2(ctx context.Context, id string) (*npool.BanAppUser, error) {
 	info, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.GetBanAppUserV2(ctx, &npool.GetBanAppUserRequest{
 			ID: id,
@@ -91,10 +91,10 @@ func GetBanAppUserV2(ctx context.Context, id string) (*npool.BanAppUserRes, erro
 	if err != nil {
 		return nil, fmt.Errorf("fail get ban app user: %v", err)
 	}
-	return info.(*npool.BanAppUserRes), nil
+	return info.(*npool.BanAppUser), nil
 }
 
-func GetBanAppUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.BanAppUserRes, error) {
+func GetBanAppUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.BanAppUser, error) {
 	info, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.GetBanAppUserOnlyV2(ctx, &npool.GetBanAppUserOnlyRequest{
 			Conds: conds,
@@ -107,10 +107,10 @@ func GetBanAppUserOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.BanApp
 	if err != nil {
 		return nil, fmt.Errorf("fail get ban app user: %v", err)
 	}
-	return info.(*npool.BanAppUserRes), nil
+	return info.(*npool.BanAppUser), nil
 }
 
-func GetBanAppUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.BanAppUserRes, error) {
+func GetBanAppUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.BanAppUser, error) {
 	infos, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.GetBanAppUsersV2(ctx, &npool.GetBanAppUsersRequest{
 			Conds: conds,
@@ -123,7 +123,7 @@ func GetBanAppUsersV2(ctx context.Context, conds *npool.Conds) ([]*npool.BanAppU
 	if err != nil {
 		return nil, fmt.Errorf("fail get ban app user: %v", err)
 	}
-	return infos.([]*npool.BanAppUserRes), nil
+	return infos.([]*npool.BanAppUser), nil
 }
 
 func ExistBanAppUserV2(ctx context.Context, id string) (bool, error) {
@@ -174,7 +174,7 @@ func CountBanAppUsersV2(ctx context.Context, conds *npool.Conds) (uint32, error)
 	return infos.(uint32), nil
 }
 
-func DeleteBanAppUserV2(ctx context.Context, id string) (*npool.BanAppUserRes, error) {
+func DeleteBanAppUserV2(ctx context.Context, id string) (*npool.BanAppUser, error) {
 	infos, err := doBanAppUser(ctx, func(_ctx context.Context, cli npool.AppUserManagerBanAppUserClient) (cruder.Any, error) {
 		resp, err := cli.DeleteBanAppUserV2(ctx, &npool.DeleteBanAppUserRequest{
 			ID: id,
@@ -187,5 +187,5 @@ func DeleteBanAppUserV2(ctx context.Context, id string) (*npool.BanAppUserRes, e
 	if err != nil {
 		return nil, fmt.Errorf("fail delete ban app user: %v", err)
 	}
-	return infos.(*npool.BanAppUserRes), nil
+	return infos.(*npool.BanAppUser), nil
 }

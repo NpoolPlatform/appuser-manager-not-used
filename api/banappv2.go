@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkBanAppInfo(info *npool.BanApp) error {
+func checkBanAppInfo(info *npool.BanAppReq) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Error("AppID is invalid")
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -25,8 +25,8 @@ func checkBanAppInfo(info *npool.BanApp) error {
 	return nil
 }
 
-func banAppRowToObject(row *ent.BanApp) *npool.BanAppRes {
-	return &npool.BanAppRes{
+func banAppRowToObject(row *ent.BanApp) *npool.BanApp {
+	return &npool.BanApp{
 		ID:      row.ID.String(),
 		AppID:   row.AppID.String(),
 		Message: row.Message,
@@ -80,7 +80,7 @@ func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanA
 		return &npool.CreateBanAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.BanAppRes, 0, len(rows))
+	infos := make([]*npool.BanApp, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, banAppRowToObject(val))
 	}
@@ -143,7 +143,7 @@ func (s *BanAppServer) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsReq
 		return &npool.GetBanAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.BanAppRes, 0, len(rows))
+	infos := make([]*npool.BanApp, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, banAppRowToObject(val))
 	}

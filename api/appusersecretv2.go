@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppUserSecretInfo(info *npool.AppUserSecret) error {
+func checkAppUserSecretInfo(info *npool.AppUserSecretReq) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Error("AppID is invalid")
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -33,8 +33,8 @@ func checkAppUserSecretInfo(info *npool.AppUserSecret) error {
 	return nil
 }
 
-func appUserSecretRowToObject(row *ent.AppUserSecret) *npool.AppUserSecretRes {
-	return &npool.AppUserSecretRes{
+func appUserSecretRowToObject(row *ent.AppUserSecret) *npool.AppUserSecret {
+	return &npool.AppUserSecret{
 		Salt:         row.Salt,
 		GoogleSecret: row.GoogleSecret,
 		ID:           row.ID.String(),
@@ -81,7 +81,7 @@ func (s *AppUserSecretServer) CreateAppUserSecretsV2(ctx context.Context, in *np
 		return &npool.CreateAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserSecretRes, 0, len(rows))
+	infos := make([]*npool.AppUserSecret, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserSecretRowToObject(val))
 	}
@@ -144,7 +144,7 @@ func (s *AppUserSecretServer) GetAppUserSecretsV2(ctx context.Context, in *npool
 		return &npool.GetAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserSecretRes, 0, len(rows))
+	infos := make([]*npool.AppUserSecret, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserSecretRowToObject(val))
 	}

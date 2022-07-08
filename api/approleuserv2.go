@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppRoleUserInfo(info *npool.AppRoleUser) error {
+func checkAppRoleUserInfo(info *npool.AppRoleUserReq) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Error("AppID is invalid")
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -33,8 +33,8 @@ func checkAppRoleUserInfo(info *npool.AppRoleUser) error {
 	return nil
 }
 
-func appRoleUserRowToObject(row *ent.AppRoleUser) *npool.AppRoleUserRes {
-	return &npool.AppRoleUserRes{
+func appRoleUserRowToObject(row *ent.AppRoleUser) *npool.AppRoleUser {
+	return &npool.AppRoleUser{
 		AppID:  row.AppID.String(),
 		RoleID: row.RoleID.String(),
 		UserID: row.UserID.String(),
@@ -50,7 +50,7 @@ func (s *AppRoleUserServer) CreateAppRoleUserV2(ctx context.Context, in *npool.C
 
 	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
-		logger.Sugar().Errorf("fail create AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail create app role user: %v", err)
 		return &npool.CreateAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -75,11 +75,11 @@ func (s *AppRoleUserServer) CreateAppRoleUsersV2(ctx context.Context, in *npool.
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
-		logger.Sugar().Errorf("fail create AppRoleUsers: %v", err)
+		logger.Sugar().Errorf("fail create app role user: %v", err)
 		return &npool.CreateAppRoleUsersResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppRoleUserRes, 0, len(rows))
+	infos := make([]*npool.AppRoleUser, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appRoleUserRowToObject(val))
 	}
@@ -97,7 +97,7 @@ func (s *AppRoleUserServer) UpdateAppRoleUserV2(ctx context.Context, in *npool.U
 
 	info, err := crud.Update(ctx, in.GetInfo())
 	if err != nil {
-		logger.Sugar().Errorf("fail update AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail update app role user: %v", err)
 		return &npool.UpdateAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -114,7 +114,7 @@ func (s *AppRoleUserServer) GetAppRoleUserV2(ctx context.Context, in *npool.GetA
 
 	info, err := crud.Row(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail get AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail get app role user: %v", err)
 		return &npool.GetAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -126,7 +126,7 @@ func (s *AppRoleUserServer) GetAppRoleUserV2(ctx context.Context, in *npool.GetA
 func (s *AppRoleUserServer) GetAppRoleUserOnlyV2(ctx context.Context, in *npool.GetAppRoleUserOnlyRequest) (*npool.GetAppRoleUserOnlyResponse, error) {
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
-		logger.Sugar().Errorf("fail get AppRoleUsers: %v", err)
+		logger.Sugar().Errorf("fail get app role users: %v", err)
 		return &npool.GetAppRoleUserOnlyResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -138,11 +138,11 @@ func (s *AppRoleUserServer) GetAppRoleUserOnlyV2(ctx context.Context, in *npool.
 func (s *AppRoleUserServer) GetAppRoleUsersV2(ctx context.Context, in *npool.GetAppRoleUsersRequest) (*npool.GetAppRoleUsersResponse, error) {
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
-		logger.Sugar().Errorf("fail get AppRoleUsers: %v", err)
+		logger.Sugar().Errorf("fail get app role users: %v", err)
 		return &npool.GetAppRoleUsersResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppRoleUserRes, 0, len(rows))
+	infos := make([]*npool.AppRoleUser, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appRoleUserRowToObject(val))
 	}
@@ -161,7 +161,7 @@ func (s *AppRoleUserServer) ExistAppRoleUserV2(ctx context.Context, in *npool.Ex
 
 	exist, err := crud.Exist(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail check AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail check app role user: %v", err)
 		return &npool.ExistAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -173,7 +173,7 @@ func (s *AppRoleUserServer) ExistAppRoleUserV2(ctx context.Context, in *npool.Ex
 func (s *AppRoleUserServer) ExistAppRoleUserCondsV2(ctx context.Context, in *npool.ExistAppRoleUserCondsRequest) (*npool.ExistAppRoleUserCondsResponse, error) {
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
-		logger.Sugar().Errorf("fail check AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail check app role user: %v", err)
 		return &npool.ExistAppRoleUserCondsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -185,7 +185,7 @@ func (s *AppRoleUserServer) ExistAppRoleUserCondsV2(ctx context.Context, in *npo
 func (s *AppRoleUserServer) CountAppRoleUsersV2(ctx context.Context, in *npool.CountAppRoleUsersRequest) (*npool.CountAppRoleUsersResponse, error) {
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
-		logger.Sugar().Errorf("fail count AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail count app role user: %v", err)
 		return &npool.CountAppRoleUsersResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -202,7 +202,7 @@ func (s *AppRoleUserServer) DeleteAppRoleUserV2(ctx context.Context, in *npool.D
 
 	info, err := crud.Delete(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail delete AppRoleUser: %v", err)
+		logger.Sugar().Errorf("fail delete app role user: %v", err)
 		return &npool.DeleteAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
 	}
 

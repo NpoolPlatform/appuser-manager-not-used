@@ -7,11 +7,13 @@ import (
 	"strconv"
 	"testing"
 
+	val "github.com/NpoolPlatform/message/npool"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/approleuser"
 
 	"github.com/google/uuid"
@@ -41,7 +43,7 @@ var (
 	roleID = entAppRoleUser.RoleID.String()
 	userID = entAppRoleUser.UserID.String()
 
-	approleuserInfo = npool.AppRoleUser{
+	approleuserInfo = npool.AppRoleUserReq{
 		ID:     &id,
 		AppID:  &appID,
 		RoleID: &roleID,
@@ -86,14 +88,14 @@ func createBulk(t *testing.T) {
 			ID:     uuid.New(),
 		},
 	}
-	approleusers := []*npool.AppRoleUser{}
+	approleusers := []*npool.AppRoleUserReq{}
 	for key := range entAppRoleUser {
 		id := entAppRoleUser[key].ID.String()
 		appID := entAppRoleUser[key].AppID.String()
 		roleID := entAppRoleUser[key].RoleID.String()
 		userID := entAppRoleUser[key].UserID.String()
 
-		approleusers = append(approleusers, &npool.AppRoleUser{
+		approleusers = append(approleusers, &npool.AppRoleUserReq{
 			ID:     &id,
 			AppID:  &appID,
 			RoleID: &roleID,
@@ -127,7 +129,7 @@ func row(t *testing.T) {
 func rows(t *testing.T) {
 	infos, total, err := Rows(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -142,7 +144,7 @@ func rowOnly(t *testing.T) {
 	var err error
 	info, err = RowOnly(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -155,7 +157,7 @@ func rowOnly(t *testing.T) {
 func count(t *testing.T) {
 	count, err := Count(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -176,7 +178,7 @@ func exist(t *testing.T) {
 func existConds(t *testing.T) {
 	exist, err := ExistConds(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},

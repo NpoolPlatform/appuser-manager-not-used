@@ -7,11 +7,13 @@ import (
 	"strconv"
 	"testing"
 
+	val "github.com/NpoolPlatform/message/npool"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/appuserthirdparty"
 
 	"github.com/google/uuid"
@@ -43,7 +45,7 @@ var (
 	id     = entAppUserThirdParty.ID.String()
 	appID  = entAppUserThirdParty.AppID.String()
 
-	appuserthirdpartyInfo = npool.AppUserThirdParty{
+	appuserthirdpartyInfo = npool.AppUserThirdPartyReq{
 		UserID:               &userID,
 		ThirdPartyUserID:     &entAppUserThirdParty.ThirdPartyUserID,
 		ThirdPartyID:         &entAppUserThirdParty.ThirdPartyID,
@@ -101,13 +103,13 @@ func createBulk(t *testing.T) {
 		},
 	}
 
-	appuserthirdpartys := []*npool.AppUserThirdParty{}
+	appuserthirdpartys := []*npool.AppUserThirdPartyReq{}
 	for key := range entAppUserThirdParty {
 		userID := entAppUserThirdParty[key].UserID.String()
 		id := entAppUserThirdParty[key].ID.String()
 		appID := entAppUserThirdParty[key].AppID.String()
 
-		appuserthirdpartys = append(appuserthirdpartys, &npool.AppUserThirdParty{
+		appuserthirdpartys = append(appuserthirdpartys, &npool.AppUserThirdPartyReq{
 			UserID:               &userID,
 			ThirdPartyUserID:     &entAppUserThirdParty[key].ThirdPartyUserID,
 			ThirdPartyID:         &entAppUserThirdParty[key].ThirdPartyID,
@@ -144,7 +146,7 @@ func row(t *testing.T) {
 func rows(t *testing.T) {
 	infos, total, err := Rows(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -159,7 +161,7 @@ func rowOnly(t *testing.T) {
 	var err error
 	info, err = RowOnly(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -172,7 +174,7 @@ func rowOnly(t *testing.T) {
 func count(t *testing.T) {
 	count, err := Count(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},
@@ -193,7 +195,7 @@ func exist(t *testing.T) {
 func existConds(t *testing.T) {
 	exist, err := ExistConds(context.Background(),
 		&npool.Conds{
-			ID: &npool.IDVal{
+			ID: &val.StringVal{
 				Value: info.ID.String(),
 				Op:    cruder.EQ,
 			},

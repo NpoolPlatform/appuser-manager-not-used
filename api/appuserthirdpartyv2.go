@@ -17,7 +17,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func checkAppUserThirdPartyInfo(info *npool.AppUserThirdParty) error {
+func checkAppUserThirdPartyInfo(info *npool.AppUserThirdPartyReq) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Error("AppID is invalid")
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -37,8 +37,8 @@ func checkAppUserThirdPartyInfo(info *npool.AppUserThirdParty) error {
 	return nil
 }
 
-func appUserThirdPartyRowToObject(row *ent.AppUserThirdParty) *npool.AppUserThirdPartyRes {
-	return &npool.AppUserThirdPartyRes{
+func appUserThirdPartyRowToObject(row *ent.AppUserThirdParty) *npool.AppUserThirdParty {
+	return &npool.AppUserThirdParty{
 		UserID:               row.UserID.String(),
 		ThirdPartyUserID:     row.ThirdPartyUserID,
 		ThirdPartyID:         row.ThirdPartyID,
@@ -97,7 +97,7 @@ func (s *AppUserThirdPartyServer) CreateAppUserThirdPartysV2(ctx context.Context
 		return &npool.CreateAppUserThirdPartysResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserThirdPartyRes, 0, len(rows))
+	infos := make([]*npool.AppUserThirdParty, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserThirdPartyRowToObject(val))
 	}
@@ -160,7 +160,7 @@ func (s *AppUserThirdPartyServer) GetAppUserThirdPartysV2(ctx context.Context, i
 		return &npool.GetAppUserThirdPartysResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.AppUserThirdPartyRes, 0, len(rows))
+	infos := make([]*npool.AppUserThirdParty, 0, len(rows))
 	for _, val := range rows {
 		infos = append(infos, appUserThirdPartyRowToObject(val))
 	}
