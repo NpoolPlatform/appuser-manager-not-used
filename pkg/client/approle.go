@@ -1,3 +1,4 @@
+//nolint:dupl
 package client
 
 import (
@@ -19,7 +20,7 @@ func doAppRole(ctx context.Context, fn func(_ctx context.Context, cli npool.AppU
 
 	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
 	if err != nil {
-		return nil, fmt.Errorf("fail get app user connection: %v", err)
+		return nil, fmt.Errorf("fail get app role connection: %v", err)
 	}
 
 	defer conn.Close()
@@ -35,12 +36,12 @@ func CreateAppRoleV2(ctx context.Context, in *npool.AppRole) (*npool.AppRoleRes,
 			Info: in,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail create app user: %v", err)
+			return nil, fmt.Errorf("fail create app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail create app user: %v", err)
+		return nil, fmt.Errorf("fail create app role: %v", err)
 	}
 	return info.(*npool.AppRoleRes), nil
 }
@@ -51,12 +52,12 @@ func CreateAppRolesV2(ctx context.Context, in []*npool.AppRole) ([]*npool.AppRol
 			Infos: in,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail create app users: %v", err)
+			return nil, fmt.Errorf("fail create app roles: %v", err)
 		}
 		return resp.GetInfos(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail create app users: %v", err)
+		return nil, fmt.Errorf("fail create app roles: %v", err)
 	}
 	return infos.([]*npool.AppRoleRes), nil
 }
@@ -67,12 +68,12 @@ func UpdateAppRoleV2(ctx context.Context, in *npool.AppRole) (*npool.AppRoleRes,
 			Info: in,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail update app user: %v", err)
+			return nil, fmt.Errorf("fail update app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail update app user: %v", err)
+		return nil, fmt.Errorf("fail update app role: %v", err)
 	}
 	return info.(*npool.AppRoleRes), nil
 }
@@ -83,12 +84,12 @@ func GetAppRoleV2(ctx context.Context, id string) (*npool.AppRoleRes, error) {
 			ID: id,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app user: %v", err)
+			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get app user: %v", err)
+		return nil, fmt.Errorf("fail get app role: %v", err)
 	}
 	return info.(*npool.AppRoleRes), nil
 }
@@ -99,12 +100,12 @@ func GetAppRoleOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRoleRe
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app user: %v", err)
+			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get app user: %v", err)
+		return nil, fmt.Errorf("fail get app role: %v", err)
 	}
 	return info.(*npool.AppRoleRes), nil
 }
@@ -115,12 +116,12 @@ func GetAppRolesV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRoleRes
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app user: %v", err)
+			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
 		return resp.GetInfos(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get app user: %v", err)
+		return nil, fmt.Errorf("fail get app role: %v", err)
 	}
 	return infos.([]*npool.AppRoleRes), nil
 }
@@ -131,12 +132,12 @@ func ExistAppRoleV2(ctx context.Context, id string) (bool, error) {
 			ID: id,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app user: %v", err)
+			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return false, fmt.Errorf("fail get app user: %v", err)
+		return false, fmt.Errorf("fail get app role: %v", err)
 	}
 	return infos.(bool), nil
 }
@@ -147,12 +148,12 @@ func ExistAppRoleCondsV2(ctx context.Context, conds *npool.Conds) (bool, error) 
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app user: %v", err)
+			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return false, fmt.Errorf("fail get app user: %v", err)
+		return false, fmt.Errorf("fail get app role: %v", err)
 	}
 	return infos.(bool), nil
 }
@@ -163,12 +164,12 @@ func CountAppRolesV2(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail count app user: %v", err)
+			return nil, fmt.Errorf("fail count app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return 0, fmt.Errorf("fail count app user: %v", err)
+		return 0, fmt.Errorf("fail count app role: %v", err)
 	}
 	return infos.(uint32), nil
 }
@@ -179,12 +180,12 @@ func DeleteAppRoleV2(ctx context.Context, id string) (*npool.AppRoleRes, error) 
 			ID: id,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail delete app user: %v", err)
+			return nil, fmt.Errorf("fail delete app role: %v", err)
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail delete app user: %v", err)
+		return nil, fmt.Errorf("fail delete app role: %v", err)
 	}
 	return infos.(*npool.AppRoleRes), nil
 }
