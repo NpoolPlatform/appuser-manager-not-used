@@ -6,14 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
+
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthirdpartyv2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
-
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthirdpartyv2"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -55,39 +54,6 @@ func appUserThirdPartyRowToObject(row *ent.AppUserThirdParty) *npool.AppUserThir
 	}
 }
 
-func AppUserThirdPartySpanAttributes(span trace.Span, in *npool.AppUserThirdPartyReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("UserID", in.GetUserID()),
-		attribute.String("ThirdPartyUserID", in.GetThirdPartyUserID()),
-		attribute.String("ThirdPartyID", in.GetThirdPartyID()),
-		attribute.String("ThirdPartyUsername", in.GetThirdPartyUsername()),
-		attribute.String("ThirdPartyUserAvatar", in.GetThirdPartyUserAvatar()),
-		attribute.String("ID", in.GetID()),
-		attribute.String("AppID", in.GetAppID()),
-	)
-	return span
-}
-
-func AppUserThirdPartyCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("UserID.Op", in.GetUserID().GetOp()),
-		attribute.String("UserID.Val", in.GetUserID().GetValue()),
-		attribute.String("ThirdPartyUserID.Op", in.GetThirdPartyUserID().GetOp()),
-		attribute.String("ThirdPartyUserID.Val", in.GetThirdPartyUserID().GetValue()),
-		attribute.String("ThirdPartyID.Op", in.GetThirdPartyID().GetOp()),
-		attribute.String("ThirdPartyID.Val", in.GetThirdPartyID().GetValue()),
-		attribute.String("ThirdPartyUsername.Op", in.GetThirdPartyUsername().GetOp()),
-		attribute.String("ThirdPartyUsername.Val", in.GetThirdPartyUsername().GetValue()),
-		attribute.String("ThirdPartyUserAvatar.Op", in.GetThirdPartyUserAvatar().GetOp()),
-		attribute.String("ThirdPartyUserAvatar.Val", in.GetThirdPartyUserAvatar().GetValue()),
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("AppID.Op", in.GetAppID().GetOp()),
-		attribute.String("AppID.Val", in.GetAppID().GetValue()),
-	)
-	return span
-}
-
 func (s *AppUserThirdPartyServer) CreateAppUserThirdPartyV2(ctx context.Context, in *npool.CreateAppUserThirdPartyRequest) (*npool.CreateAppUserThirdPartyResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserThirdPartyV2")
 	defer span.End()
@@ -98,7 +64,7 @@ func (s *AppUserThirdPartyServer) CreateAppUserThirdPartyV2(ctx context.Context,
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserThirdPartySpanAttributes(span, in.GetInfo())
+	span = crud.AppUserThirdPartySpanAttributes(span, in.GetInfo())
 	err = checkAppUserThirdPartyInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserThirdPartyResponse{}, err
@@ -185,7 +151,7 @@ func (s *AppUserThirdPartyServer) UpdateAppUserThirdPartyV2(ctx context.Context,
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserThirdPartySpanAttributes(span, in.GetInfo())
+	span = crud.AppUserThirdPartySpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserThirdParty id is invalid")
 		return &npool.UpdateAppUserThirdPartyResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -236,7 +202,7 @@ func (s *AppUserThirdPartyServer) GetAppUserThirdPartyV2(ctx context.Context, in
 func (s *AppUserThirdPartyServer) GetAppUserThirdPartyOnlyV2(ctx context.Context, in *npool.GetAppUserThirdPartyOnlyRequest) (*npool.GetAppUserThirdPartyOnlyResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserThirdPartyOnlyV2")
 	defer span.End()
-	span = AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -260,7 +226,7 @@ func (s *AppUserThirdPartyServer) GetAppUserThirdPartysV2(ctx context.Context, i
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -324,7 +290,7 @@ func (s *AppUserThirdPartyServer) ExistAppUserThirdPartyCondsV2(ctx context.Cont
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -348,7 +314,7 @@ func (s *AppUserThirdPartyServer) CountAppUserThirdPartysV2(ctx context.Context,
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

@@ -6,14 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
+
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserv2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
-
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserv2"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -45,33 +44,6 @@ func appUserRowToObject(row *ent.AppUser) *npool.AppUser {
 	}
 }
 
-func AppUserSpanAttributes(span trace.Span, in *npool.AppUserReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("PhoneNo", in.GetPhoneNo()),
-		attribute.String("ImportFromApp", in.GetImportFromApp()),
-		attribute.String("ID", in.GetID()),
-		attribute.String("AppID", in.GetAppID()),
-		attribute.String("EmailAddress", in.GetEmailAddress()),
-	)
-	return span
-}
-
-func AppUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("PhoneNo.Op", in.GetPhoneNo().GetOp()),
-		attribute.String("PhoneNo.Val", in.GetPhoneNo().GetValue()),
-		attribute.String("ImportFromApp.Op", in.GetImportFromApp().GetOp()),
-		attribute.String("ImportFromApp.Val", in.GetImportFromApp().GetValue()),
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("AppID.Op", in.GetAppID().GetOp()),
-		attribute.String("AppID.Val", in.GetAppID().GetValue()),
-		attribute.String("EmailAddress.Op", in.GetEmailAddress().GetOp()),
-		attribute.String("EmailAddress.Val", in.GetEmailAddress().GetValue()),
-	)
-	return span
-}
-
 func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateAppUserResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserV2")
 	defer span.End()
@@ -82,7 +54,7 @@ func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateApp
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSpanAttributes(span, in.GetInfo())
+	span = crud.AppUserSpanAttributes(span, in.GetInfo())
 	err = checkAppUserInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserResponse{}, err
@@ -177,7 +149,7 @@ func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateApp
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSpanAttributes(span, in.GetInfo())
+	span = crud.AppUserSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUser id is invalid")
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -243,7 +215,7 @@ func (s *AppUserServer) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUs
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -267,7 +239,7 @@ func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsers
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -331,7 +303,7 @@ func (s *AppUserServer) ExistAppUserCondsV2(ctx context.Context, in *npool.Exist
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -355,7 +327,7 @@ func (s *AppUserServer) CountAppUsersV2(ctx context.Context, in *npool.CountAppU
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

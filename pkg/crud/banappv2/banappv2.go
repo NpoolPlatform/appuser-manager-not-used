@@ -3,12 +3,13 @@ package banappv2
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/api"
+	"time"
+
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"time"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -17,6 +18,27 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/banapp"
 	"github.com/google/uuid"
 )
+
+func BanAppSpanAttributes(span trace.Span, in *npool.BanAppReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+		attribute.String("Message", in.GetMessage()),
+	)
+	return span
+}
+
+func BanAppCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+		attribute.String("Message.Op", in.GetMessage().GetOp()),
+		attribute.String("Message.Val", in.GetMessage().GetValue()),
+	)
+	return span
+}
 
 func Create(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 	var info *ent.BanApp
@@ -29,7 +51,7 @@ func Create(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.BanAppSpanAttributes(span, in)
+	span = BanAppSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.BanApp.Create()
@@ -107,7 +129,7 @@ func Update(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.BanAppSpanAttributes(span, in)
+	span = BanAppSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.BanApp.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -191,7 +213,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ba
 			span.RecordError(err)
 		}
 	}()
-	span = api.BanAppCondsSpanAttributes(span, conds)
+	span = BanAppCondsSpanAttributes(span, conds)
 	span.SetAttributes(
 		attribute.Int("Offset", offset),
 		attribute.Int("Limit", limit),
@@ -236,7 +258,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.BanApp, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.BanAppCondsSpanAttributes(span, conds)
+	span = BanAppCondsSpanAttributes(span, conds)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
@@ -267,7 +289,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.BanAppCondsSpanAttributes(span, conds)
+	span = BanAppCondsSpanAttributes(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -325,7 +347,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.BanAppCondsSpanAttributes(span, conds)
+	span = BanAppCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

@@ -3,12 +3,13 @@ package appuserv2
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/api"
+	"time"
+
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"time"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -17,6 +18,33 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/appuser"
 	"github.com/google/uuid"
 )
+
+func AppUserSpanAttributes(span trace.Span, in *npool.AppUserReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("PhoneNo", in.GetPhoneNo()),
+		attribute.String("ImportFromApp", in.GetImportFromApp()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+		attribute.String("EmailAddress", in.GetEmailAddress()),
+	)
+	return span
+}
+
+func AppUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("PhoneNo.Op", in.GetPhoneNo().GetOp()),
+		attribute.String("PhoneNo.Val", in.GetPhoneNo().GetValue()),
+		attribute.String("ImportFromApp.Op", in.GetImportFromApp().GetOp()),
+		attribute.String("ImportFromApp.Val", in.GetImportFromApp().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+		attribute.String("EmailAddress.Op", in.GetEmailAddress().GetOp()),
+		attribute.String("EmailAddress.Val", in.GetEmailAddress().GetValue()),
+	)
+	return span
+}
 
 func Create(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	var info *ent.AppUser
@@ -29,7 +57,7 @@ func Create(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSpanAttributes(span, in)
+	span = AppUserSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.AppUser.Create()
@@ -121,7 +149,7 @@ func Update(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSpanAttributes(span, in)
+	span = AppUserSpanAttributes(span, in)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppUser.UpdateOneID(uuid.MustParse(in.GetID()))
 		if in.EmailAddress != nil {
@@ -244,7 +272,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserCondsSpanAttributes(span, conds)
+	span = AppUserCondsSpanAttributes(span, conds)
 	span.SetAttributes(
 		attribute.Int("Offset", offset),
 		attribute.Int("Limit", limit),
@@ -289,7 +317,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUser, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserCondsSpanAttributes(span, conds)
+	span = AppUserCondsSpanAttributes(span, conds)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
@@ -320,7 +348,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserCondsSpanAttributes(span, conds)
+	span = AppUserCondsSpanAttributes(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -378,7 +406,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserCondsSpanAttributes(span, conds)
+	span = AppUserCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

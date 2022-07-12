@@ -3,12 +3,13 @@ package appuserthirdpartyv2
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/api"
+	"time"
+
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"time"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -17,6 +18,39 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/appuserthirdparty"
 	"github.com/google/uuid"
 )
+
+func AppUserThirdPartySpanAttributes(span trace.Span, in *npool.AppUserThirdPartyReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("UserID", in.GetUserID()),
+		attribute.String("ThirdPartyUserID", in.GetThirdPartyUserID()),
+		attribute.String("ThirdPartyID", in.GetThirdPartyID()),
+		attribute.String("ThirdPartyUsername", in.GetThirdPartyUsername()),
+		attribute.String("ThirdPartyUserAvatar", in.GetThirdPartyUserAvatar()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+	)
+	return span
+}
+
+func AppUserThirdPartyCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("UserID.Op", in.GetUserID().GetOp()),
+		attribute.String("UserID.Val", in.GetUserID().GetValue()),
+		attribute.String("ThirdPartyUserID.Op", in.GetThirdPartyUserID().GetOp()),
+		attribute.String("ThirdPartyUserID.Val", in.GetThirdPartyUserID().GetValue()),
+		attribute.String("ThirdPartyID.Op", in.GetThirdPartyID().GetOp()),
+		attribute.String("ThirdPartyID.Val", in.GetThirdPartyID().GetValue()),
+		attribute.String("ThirdPartyUsername.Op", in.GetThirdPartyUsername().GetOp()),
+		attribute.String("ThirdPartyUsername.Val", in.GetThirdPartyUsername().GetValue()),
+		attribute.String("ThirdPartyUserAvatar.Op", in.GetThirdPartyUserAvatar().GetOp()),
+		attribute.String("ThirdPartyUserAvatar.Val", in.GetThirdPartyUserAvatar().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+	)
+	return span
+}
 
 func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserThirdParty, error) {
 	var info *ent.AppUserThirdParty
@@ -29,7 +63,7 @@ func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserThirdPartySpanAttributes(span, in)
+	span = AppUserThirdPartySpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.AppUserThirdParty.Create()
@@ -135,7 +169,7 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserThirdPartySpanAttributes(span, in)
+	span = AppUserThirdPartySpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppUserThirdParty.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -259,7 +293,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserThirdPartyCondsSpanAttributes(span, conds)
+	span = AppUserThirdPartyCondsSpanAttributes(span, conds)
 	span.SetAttributes(
 		attribute.Int("Offset", offset),
 		attribute.Int("Limit", limit),
@@ -304,7 +338,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUserThirdParty, e
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserThirdPartyCondsSpanAttributes(span, conds)
+	span = AppUserThirdPartyCondsSpanAttributes(span, conds)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
@@ -335,7 +369,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserThirdPartyCondsSpanAttributes(span, conds)
+	span = AppUserThirdPartyCondsSpanAttributes(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -393,7 +427,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserThirdPartyCondsSpanAttributes(span, conds)
+	span = AppUserThirdPartyCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

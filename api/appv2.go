@@ -6,14 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
+
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appv2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
-
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appv2"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -53,34 +52,6 @@ func appRowToObject(row *ent.App) *npool.App {
 	}
 }
 
-func AppSpanAttributes(span trace.Span, in *npool.AppReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("Description", in.GetDescription()),
-		attribute.String("ID", in.GetID()),
-		attribute.String("CreatedBy", in.GetID()),
-		attribute.String("Name", in.GetCreatedBy()),
-		attribute.String("Logo", in.GetName()),
-		attribute.Int("CreatedAt", int(in.GetCreatedAt())),
-	)
-	return span
-}
-
-func AppCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("Description.Op", in.GetDescription().GetOp()),
-		attribute.String("Description.Val", in.GetDescription().GetValue()),
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("CreatedBy.Op", in.GetID().GetOp()),
-		attribute.String("CreatedBy.Val", in.GetID().GetValue()),
-		attribute.String("Name.Op", in.GetCreatedBy().GetOp()),
-		attribute.String("Name.Val", in.GetCreatedBy().GetValue()),
-		attribute.String("Logo.Op", in.GetName().GetOp()),
-		attribute.String("Logo.Val", in.GetName().GetValue()),
-	)
-	return span
-}
-
 func (s *AppServer) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppV2")
 	defer span.End()
@@ -91,7 +62,7 @@ func (s *AppServer) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest)
 			span.RecordError(err)
 		}
 	}()
-	span = AppSpanAttributes(span, in.GetInfo())
+	span = crud.AppSpanAttributes(span, in.GetInfo())
 	err = checkAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppResponse{}, err
@@ -178,7 +149,7 @@ func (s *AppServer) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest)
 			span.RecordError(err)
 		}
 	}()
-	span = AppSpanAttributes(span, in.GetInfo())
+	span = crud.AppSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("app id is invalid")
 		return &npool.UpdateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -236,7 +207,7 @@ func (s *AppServer) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyReques
 			span.RecordError(err)
 		}
 	}()
-	span = AppCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -260,7 +231,7 @@ func (s *AppServer) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*n
 			span.RecordError(err)
 		}
 	}()
-	span = AppCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -324,7 +295,7 @@ func (s *AppServer) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppConds
 			span.RecordError(err)
 		}
 	}()
-	span = AppCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -348,7 +319,7 @@ func (s *AppServer) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest)
 			span.RecordError(err)
 		}
 	}()
-	span = AppCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

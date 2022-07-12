@@ -3,12 +3,13 @@ package appusersecretv2
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/api"
+	"time"
+
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"time"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -17,6 +18,36 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/appusersecret"
 	"github.com/google/uuid"
 )
+
+func AppUserSecretSpanAttributes(span trace.Span, in *npool.AppUserSecretReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("Salt", in.GetSalt()),
+		attribute.String("GoogleSecret", in.GetGoogleSecret()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+		attribute.String("UserID", in.GetUserID()),
+		attribute.String("PasswordHash", in.GetPasswordHash()),
+	)
+	return span
+}
+
+func AppUserSecretCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("Salt.Op", in.GetSalt().GetOp()),
+		attribute.String("Salt.Val", in.GetSalt().GetValue()),
+		attribute.String("GoogleSecret.Op", in.GetGoogleSecret().GetOp()),
+		attribute.String("GoogleSecret.Val", in.GetGoogleSecret().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+		attribute.String("UserID.Op", in.GetUserID().GetOp()),
+		attribute.String("UserID.Val", in.GetUserID().GetValue()),
+		attribute.String("PasswordHash.Op", in.GetPasswordHash().GetOp()),
+		attribute.String("PasswordHash.Val", in.GetPasswordHash().GetValue()),
+	)
+	return span
+}
 
 func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret, error) {
 	var info *ent.AppUserSecret
@@ -29,7 +60,7 @@ func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSecretSpanAttributes(span, in)
+	span = AppUserSecretSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.AppUserSecret.Create()
@@ -128,7 +159,7 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSecretSpanAttributes(span, in)
+	span = AppUserSecretSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppUserSecret.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -231,7 +262,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSecretCondsSpanAttributes(span, conds)
+	span = AppUserSecretCondsSpanAttributes(span, conds)
 	span.SetAttributes(
 		attribute.Int("Offset", offset),
 		attribute.Int("Limit", limit),
@@ -276,7 +307,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUserSecret, error
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSecretCondsSpanAttributes(span, conds)
+	span = AppUserSecretCondsSpanAttributes(span, conds)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
@@ -307,7 +338,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSecretCondsSpanAttributes(span, conds)
+	span = AppUserSecretCondsSpanAttributes(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -365,7 +396,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppUserSecretCondsSpanAttributes(span, conds)
+	span = AppUserSecretCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

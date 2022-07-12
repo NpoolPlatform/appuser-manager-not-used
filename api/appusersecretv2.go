@@ -6,14 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
+
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecretv2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
-
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecretv2"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -50,36 +49,6 @@ func appUserSecretRowToObject(row *ent.AppUserSecret) *npool.AppUserSecret {
 	}
 }
 
-func AppUserSecretSpanAttributes(span trace.Span, in *npool.AppUserSecretReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("Salt", in.GetSalt()),
-		attribute.String("GoogleSecret", in.GetGoogleSecret()),
-		attribute.String("ID", in.GetID()),
-		attribute.String("AppID", in.GetAppID()),
-		attribute.String("UserID", in.GetUserID()),
-		attribute.String("PasswordHash", in.GetPasswordHash()),
-	)
-	return span
-}
-
-func AppUserSecretCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("Salt.Op", in.GetSalt().GetOp()),
-		attribute.String("Salt.Val", in.GetSalt().GetValue()),
-		attribute.String("GoogleSecret.Op", in.GetGoogleSecret().GetOp()),
-		attribute.String("GoogleSecret.Val", in.GetGoogleSecret().GetValue()),
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("AppID.Op", in.GetAppID().GetOp()),
-		attribute.String("AppID.Val", in.GetAppID().GetValue()),
-		attribute.String("UserID.Op", in.GetUserID().GetOp()),
-		attribute.String("UserID.Val", in.GetUserID().GetValue()),
-		attribute.String("PasswordHash.Op", in.GetPasswordHash().GetOp()),
-		attribute.String("PasswordHash.Val", in.GetPasswordHash().GetValue()),
-	)
-	return span
-}
-
 func (s *AppUserSecretServer) CreateAppUserSecretV2(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserSecretV2")
 	defer span.End()
@@ -90,7 +59,7 @@ func (s *AppUserSecretServer) CreateAppUserSecretV2(ctx context.Context, in *npo
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSecretSpanAttributes(span, in.GetInfo())
+	span = crud.AppUserSecretSpanAttributes(span, in.GetInfo())
 	err = checkAppUserSecretInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserSecretResponse{}, err
@@ -166,7 +135,7 @@ func (s *AppUserSecretServer) UpdateAppUserSecretV2(ctx context.Context, in *npo
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSecretSpanAttributes(span, in.GetInfo())
+	span = crud.AppUserSecretSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserSecret id is invalid")
 		return &npool.UpdateAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -224,7 +193,7 @@ func (s *AppUserSecretServer) GetAppUserSecretOnlyV2(ctx context.Context, in *np
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSecretCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -248,7 +217,7 @@ func (s *AppUserSecretServer) GetAppUserSecretsV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSecretCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -312,7 +281,7 @@ func (s *AppUserSecretServer) ExistAppUserSecretCondsV2(ctx context.Context, in 
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSecretCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -336,7 +305,7 @@ func (s *AppUserSecretServer) CountAppUserSecretsV2(ctx context.Context, in *npo
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserSecretCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

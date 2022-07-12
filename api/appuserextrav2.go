@@ -6,14 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
+
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextrav2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
-
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextrav2"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -54,58 +53,6 @@ func appUserExtraRowToObject(row *ent.AppUserExtra) *npool.AppUserExtra {
 	}
 }
 
-func AppUserExtraSpanAttributes(span trace.Span, in *npool.AppUserExtraReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("ID", in.GetID()),
-		attribute.String("AppID", in.GetAppID()),
-		attribute.String("UserID", in.GetUserID()),
-		attribute.StringSlice("AddressFields", in.GetAddressFields()),
-		attribute.String("Username", in.GetUsername()),
-		attribute.Int("Age", int(in.GetAge())),
-		attribute.String("Avatar", in.GetAvatar()),
-		attribute.Int("Birthday", int(in.GetBirthday())),
-		attribute.String("FirstName", in.GetFirstName()),
-		attribute.String("Gender", in.GetGender()),
-		attribute.String("IDNumber", in.GetIDNumber()),
-		attribute.String("LastName", in.GetLastName()),
-		attribute.String("Organization", in.GetOrganization()),
-		attribute.String("PostalCode", in.GetPostalCode()),
-	)
-	return span
-}
-
-func AppUserExtraCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("AppID.Op", in.GetAppID().GetOp()),
-		attribute.String("AppID.Val", in.GetAppID().GetValue()),
-		attribute.String("UserID.Op", in.GetUserID().GetOp()),
-		attribute.String("UserID.Val", in.GetUserID().GetValue()),
-		attribute.String("Username.Op", in.GetUsername().GetOp()),
-		attribute.String("Username.Val", in.GetUsername().GetValue()),
-		attribute.String("Age.Op", in.GetAge().GetOp()),
-		attribute.Int("Age.Val", int(in.GetAge().GetValue())),
-		attribute.String("Avatar.Op", in.GetAvatar().GetOp()),
-		attribute.String("Avatar.Val", in.GetAvatar().GetValue()),
-		attribute.String("Birthday.Op", in.GetBirthday().GetOp()),
-		attribute.Int("Birthday.Val", int(in.GetBirthday().GetValue())),
-		attribute.String("FirstName.Op", in.GetFirstName().GetOp()),
-		attribute.String("FirstName.Val", in.GetFirstName().GetValue()),
-		attribute.String("Gender.Op", in.GetGender().GetOp()),
-		attribute.String("Gender.Val", in.GetGender().GetValue()),
-		attribute.String("IDNumber.Op", in.GetIDNumber().GetOp()),
-		attribute.String("IDNumber.Val", in.GetIDNumber().GetValue()),
-		attribute.String("LastName.Op", in.GetLastName().GetOp()),
-		attribute.String("LastName.Val", in.GetLastName().GetValue()),
-		attribute.String("Organization.Op", in.GetOrganization().GetOp()),
-		attribute.String("Organization.Val", in.GetOrganization().GetValue()),
-		attribute.String("PostalCode.Op", in.GetPostalCode().GetOp()),
-		attribute.String("PostalCode.Val", in.GetPostalCode().GetValue()),
-	)
-	return span
-}
-
 func (s *AppUserExtraServer) CreateAppUserExtraV2(ctx context.Context, in *npool.CreateAppUserExtraRequest) (*npool.CreateAppUserExtraResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserExtraV2")
 	defer span.End()
@@ -116,7 +63,7 @@ func (s *AppUserExtraServer) CreateAppUserExtraV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserExtraSpanAttributes(span, in.GetInfo())
+	span = crud.AppUserExtraSpanAttributes(span, in.GetInfo())
 	err = checkAppUserExtraInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserExtraResponse{}, err
@@ -210,7 +157,7 @@ func (s *AppUserExtraServer) UpdateAppUserExtraV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserExtraSpanAttributes(span, in.GetInfo())
+	span = crud.AppUserExtraSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserExtra id is invalid")
 		return &npool.UpdateAppUserExtraResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -268,7 +215,7 @@ func (s *AppUserExtraServer) GetAppUserExtraOnlyV2(ctx context.Context, in *npoo
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -292,7 +239,7 @@ func (s *AppUserExtraServer) GetAppUserExtrasV2(ctx context.Context, in *npool.G
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -356,7 +303,7 @@ func (s *AppUserExtraServer) ExistAppUserExtraCondsV2(ctx context.Context, in *n
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -380,7 +327,7 @@ func (s *AppUserExtraServer) CountAppUserExtrasV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

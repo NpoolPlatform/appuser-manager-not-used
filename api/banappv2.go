@@ -6,14 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
+
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappv2"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
-
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappv2"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -39,27 +38,6 @@ func banAppRowToObject(row *ent.BanApp) *npool.BanApp {
 	}
 }
 
-func BanAppSpanAttributes(span trace.Span, in *npool.BanAppReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("ID", in.GetID()),
-		attribute.String("AppID", in.GetAppID()),
-		attribute.String("Message", in.GetMessage()),
-	)
-	return span
-}
-
-func BanAppCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("AppID.Op", in.GetAppID().GetOp()),
-		attribute.String("AppID.Val", in.GetAppID().GetValue()),
-		attribute.String("Message.Op", in.GetMessage().GetOp()),
-		attribute.String("Message.Val", in.GetMessage().GetValue()),
-	)
-	return span
-}
-
 func (s *BanAppServer) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBanAppV2")
 	defer span.End()
@@ -70,7 +48,7 @@ func (s *BanAppServer) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAp
 			span.RecordError(err)
 		}
 	}()
-	span = BanAppSpanAttributes(span, in.GetInfo())
+	span = crud.BanAppSpanAttributes(span, in.GetInfo())
 	err = checkBanAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateBanAppResponse{}, err
@@ -153,7 +131,7 @@ func (s *BanAppServer) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAp
 			span.RecordError(err)
 		}
 	}()
-	span = BanAppSpanAttributes(span, in.GetInfo())
+	span = crud.BanAppSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("BanApp id is invalid")
 		return &npool.UpdateBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -211,7 +189,7 @@ func (s *BanAppServer) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppO
 			span.RecordError(err)
 		}
 	}()
-	span = BanAppCondsSpanAttributes(span, in.GetConds())
+	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -235,7 +213,7 @@ func (s *BanAppServer) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsReq
 			span.RecordError(err)
 		}
 	}()
-	span = BanAppCondsSpanAttributes(span, in.GetConds())
+	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -299,7 +277,7 @@ func (s *BanAppServer) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBa
 			span.RecordError(err)
 		}
 	}()
-	span = BanAppCondsSpanAttributes(span, in.GetConds())
+	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -323,7 +301,7 @@ func (s *BanAppServer) CountBanAppsV2(ctx context.Context, in *npool.CountBanApp
 			span.RecordError(err)
 		}
 	}()
-	span = BanAppCondsSpanAttributes(span, in.GetConds())
+	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

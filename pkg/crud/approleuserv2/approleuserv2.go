@@ -3,13 +3,14 @@ package approleuserv2
 import (
 	"context"
 	"fmt"
+	"time"
+
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"time"
+	"go.opentelemetry.io/otel/trace"
 
-	"github.com/NpoolPlatform/appuser-manager/api"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
@@ -17,6 +18,30 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appusermgrv2/approleuser"
 	"github.com/google/uuid"
 )
+
+func AppRoleUserSpanAttributes(span trace.Span, in *npool.AppRoleUserReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("UserID", in.GetUserID()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+		attribute.String("RoleID", in.GetRoleID()),
+	)
+	return span
+}
+
+func AppRoleUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("UserID.Op", in.GetUserID().GetOp()),
+		attribute.String("UserID.Val", in.GetUserID().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+		attribute.String("RoleID.Op", in.GetRoleID().GetOp()),
+		attribute.String("RoleID.Val", in.GetRoleID().GetValue()),
+	)
+	return span
+}
 
 func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, error) {
 	var info *ent.AppRoleUser
@@ -29,7 +54,7 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppRoleUserSpanAttributes(span, in)
+	span = AppRoleUserSpanAttributes(span, in)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.AppRoleUser.Create()
 		if in.AppID != nil {
@@ -112,7 +137,7 @@ func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppRoleUserSpanAttributes(span, in)
+	span = AppRoleUserSpanAttributes(span, in)
 	var info *ent.AppRoleUser
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppRoleUser.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -236,7 +261,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppRoleUserCondsSpanAttributes(span, conds)
+	span = AppRoleUserCondsSpanAttributes(span, conds)
 	span.SetAttributes(
 		attribute.Int("Offset", offset),
 		attribute.Int("Limit", limit),
@@ -280,7 +305,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) 
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppRoleUserCondsSpanAttributes(span, conds)
+	span = AppRoleUserCondsSpanAttributes(span, conds)
 	var info *ent.AppRoleUser
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -313,7 +338,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppRoleUserCondsSpanAttributes(span, conds)
+	span = AppRoleUserCondsSpanAttributes(span, conds)
 	var total int
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
@@ -370,7 +395,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = api.AppRoleUserCondsSpanAttributes(span, conds)
+	span = AppRoleUserCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
