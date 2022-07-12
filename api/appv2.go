@@ -5,6 +5,12 @@ package api
 
 import (
 	"context"
+	"fmt"
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	scodes "go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appv2"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -47,13 +53,52 @@ func appRowToObject(row *ent.App) *npool.App {
 	}
 }
 
+func appSpanAttributes(span trace.Span, in *npool.AppReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("Description", in.GetDescription()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("CreatedBy", in.GetID()),
+		attribute.String("Name", in.GetCreatedBy()),
+		attribute.String("Logo", in.GetName()),
+		attribute.Int("CreatedAt", int(in.GetCreatedAt())),
+	)
+	return span
+}
+
+func appCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("Description.Op", in.GetDescription().GetOp()),
+		attribute.String("Description.Val", in.GetDescription().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("CreatedBy.Op", in.GetID().GetOp()),
+		attribute.String("CreatedBy.Val", in.GetID().GetValue()),
+		attribute.String("Name.Op", in.GetCreatedBy().GetOp()),
+		attribute.String("Name.Val", in.GetCreatedBy().GetValue()),
+		attribute.String("Logo.Op", in.GetName().GetOp()),
+		attribute.String("Logo.Val", in.GetName().GetValue()),
+	)
+	return span
+}
+
 func (s *AppServer) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
-	err := checkAppInfo(in.GetInfo())
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appSpanAttributes(span, in.GetInfo())
+	err = checkAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppResponse{}, err
 	}
-
+	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
+	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create app: %v", err)
 		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -65,6 +110,15 @@ func (s *AppServer) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest)
 }
 
 func (s *AppServer) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) (*npool.CreateAppsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppsResponse{},
 			status.Error(codes.InvalidArgument,
@@ -73,7 +127,15 @@ func (s *AppServer) CreateAppsV2(ctx context.Context, in *npool.CreateAppsReques
 	}
 
 	dup := make(map[string]struct{})
-	for _, info := range in.GetInfos() {
+	for key, info := range in.GetInfos() {
+		span.SetAttributes(
+			attribute.String("Description"+fmt.Sprintf("%v", key), info.GetDescription()),
+			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("CreatedBy"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("Name"+fmt.Sprintf("%v", key), info.GetCreatedBy()),
+			attribute.String("Logo"+fmt.Sprintf("%v", key), info.GetName()),
+			attribute.Int("CreatedAt"+fmt.Sprintf("%v", key), int(info.GetCreatedAt())),
+		)
 		err := checkAppInfo(info)
 		if err != nil {
 			return &npool.CreateAppsResponse{}, err
@@ -107,12 +169,23 @@ func (s *AppServer) CreateAppsV2(ctx context.Context, in *npool.CreateAppsReques
 }
 
 func (s *AppServer) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("app id is invalid")
 		return &npool.UpdateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
+	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update app: %v", err)
 		return &npool.UpdateAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -124,12 +197,25 @@ func (s *AppServer) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest)
 }
 
 func (s *AppServer) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
+	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get App: %v", err)
 		return &npool.GetAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -141,7 +227,19 @@ func (s *AppServer) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npo
 }
 
 func (s *AppServer) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) (*npool.GetAppOnlyResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppOnlyV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
+	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get Apps: %v", err)
 		return &npool.GetAppOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -153,7 +251,23 @@ func (s *AppServer) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyReques
 }
 
 func (s *AppServer) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appCondsSpanAttributes(span, in.GetConds())
+	span.SetAttributes(
+		attribute.Int("Offset", int(in.GetOffset())),
+		attribute.Int("Limit", int(in.GetLimit())),
+	)
+	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
+	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get Apps: %v", err)
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -171,12 +285,25 @@ func (s *AppServer) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*n
 }
 
 func (s *AppServer) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*npool.ExistAppResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
+	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check App: %v", err)
 		return &npool.ExistAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -188,7 +315,19 @@ func (s *AppServer) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (
 }
 
 func (s *AppServer) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppCondsRequest) (*npool.ExistAppCondsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppCondsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
+	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check App: %v", err)
 		return &npool.ExistAppCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -200,7 +339,19 @@ func (s *AppServer) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppConds
 }
 
 func (s *AppServer) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest) (*npool.CountAppsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
+	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count Apps: %v", err)
 		return &npool.CountAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -212,12 +363,25 @@ func (s *AppServer) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest)
 }
 
 func (s *AppServer) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*npool.DeleteAppResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
+	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete App: %v", err)
 		return &npool.DeleteAppResponse{}, status.Error(codes.Internal, err.Error())

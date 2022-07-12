@@ -5,6 +5,12 @@ package api
 
 import (
 	"context"
+	"fmt"
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	scodes "go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecretv2"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -44,13 +50,54 @@ func appUserSecretRowToObject(row *ent.AppUserSecret) *npool.AppUserSecret {
 	}
 }
 
+func appUserSecretSpanAttributes(span trace.Span, in *npool.AppUserSecretReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("Salt", in.GetSalt()),
+		attribute.String("GoogleSecret", in.GetGoogleSecret()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+		attribute.String("UserID", in.GetUserID()),
+		attribute.String("PasswordHash", in.GetPasswordHash()),
+	)
+	return span
+}
+
+func appUserSecretCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("Salt.Op", in.GetSalt().GetOp()),
+		attribute.String("Salt.Val", in.GetSalt().GetValue()),
+		attribute.String("GoogleSecret.Op", in.GetGoogleSecret().GetOp()),
+		attribute.String("GoogleSecret.Val", in.GetGoogleSecret().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+		attribute.String("UserID.Op", in.GetUserID().GetOp()),
+		attribute.String("UserID.Val", in.GetUserID().GetValue()),
+		attribute.String("PasswordHash.Op", in.GetPasswordHash().GetOp()),
+		attribute.String("PasswordHash.Val", in.GetPasswordHash().GetValue()),
+	)
+	return span
+}
+
 func (s *AppUserSecretServer) CreateAppUserSecretV2(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
-	err := checkAppUserSecretInfo(in.GetInfo())
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserSecretV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSecretSpanAttributes(span, in.GetInfo())
+	err = checkAppUserSecretInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserSecretResponse{}, err
 	}
-
+	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
+	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserSecret: %v", err)
 		return &npool.CreateAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -62,20 +109,38 @@ func (s *AppUserSecretServer) CreateAppUserSecretV2(ctx context.Context, in *npo
 }
 
 func (s *AppUserSecretServer) CreateAppUserSecretsV2(ctx context.Context, in *npool.CreateAppUserSecretsRequest) (*npool.CreateAppUserSecretsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserSecretsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppUserSecretsResponse{},
 			status.Error(codes.InvalidArgument,
 				"Batah create resource must more than 1",
 			)
 	}
-	for _, info := range in.GetInfos() {
-		err := checkAppUserSecretInfo(info)
+	for key, info := range in.GetInfos() {
+		span.SetAttributes(
+			attribute.String("Salt"+fmt.Sprintf("%v", key), info.GetSalt()),
+			attribute.String("GoogleSecret"+fmt.Sprintf("%v", key), info.GetGoogleSecret()),
+			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
+			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
+			attribute.String("PasswordHash"+fmt.Sprintf("%v", key), info.GetPasswordHash()),
+		)
+		err = checkAppUserSecretInfo(info)
 		if err != nil {
 			return &npool.CreateAppUserSecretsResponse{}, err
 		}
 	}
-
+	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
+	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserSecrets: %v", err)
 		return &npool.CreateAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
@@ -92,12 +157,23 @@ func (s *AppUserSecretServer) CreateAppUserSecretsV2(ctx context.Context, in *np
 }
 
 func (s *AppUserSecretServer) UpdateAppUserSecretV2(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppUserSecretV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSecretSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserSecret id is invalid")
 		return &npool.UpdateAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
+	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update AppUserSecret: %v", err)
 		return &npool.UpdateAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -109,12 +185,25 @@ func (s *AppUserSecretServer) UpdateAppUserSecretV2(ctx context.Context, in *npo
 }
 
 func (s *AppUserSecretServer) GetAppUserSecretV2(ctx context.Context, in *npool.GetAppUserSecretRequest) (*npool.GetAppUserSecretResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserSecretV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
+	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecret: %v", err)
 		return &npool.GetAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -126,7 +215,19 @@ func (s *AppUserSecretServer) GetAppUserSecretV2(ctx context.Context, in *npool.
 }
 
 func (s *AppUserSecretServer) GetAppUserSecretOnlyV2(ctx context.Context, in *npool.GetAppUserSecretOnlyRequest) (*npool.GetAppUserSecretOnlyResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserSecretOnlyV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSecretCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
+	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecrets: %v", err)
 		return &npool.GetAppUserSecretOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -138,7 +239,23 @@ func (s *AppUserSecretServer) GetAppUserSecretOnlyV2(ctx context.Context, in *np
 }
 
 func (s *AppUserSecretServer) GetAppUserSecretsV2(ctx context.Context, in *npool.GetAppUserSecretsRequest) (*npool.GetAppUserSecretsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserSecretsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSecretCondsSpanAttributes(span, in.GetConds())
+	span.SetAttributes(
+		attribute.Int("Offset", int(in.GetOffset())),
+		attribute.Int("Limit", int(in.GetLimit())),
+	)
+	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
+	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecrets: %v", err)
 		return &npool.GetAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
@@ -156,12 +273,25 @@ func (s *AppUserSecretServer) GetAppUserSecretsV2(ctx context.Context, in *npool
 }
 
 func (s *AppUserSecretServer) ExistAppUserSecretV2(ctx context.Context, in *npool.ExistAppUserSecretRequest) (*npool.ExistAppUserSecretResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserSecretV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
+	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserSecret: %v", err)
 		return &npool.ExistAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -173,7 +303,19 @@ func (s *AppUserSecretServer) ExistAppUserSecretV2(ctx context.Context, in *npoo
 }
 
 func (s *AppUserSecretServer) ExistAppUserSecretCondsV2(ctx context.Context, in *npool.ExistAppUserSecretCondsRequest) (*npool.ExistAppUserSecretCondsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserSecretCondsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSecretCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
+	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserSecret: %v", err)
 		return &npool.ExistAppUserSecretCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -185,7 +327,19 @@ func (s *AppUserSecretServer) ExistAppUserSecretCondsV2(ctx context.Context, in 
 }
 
 func (s *AppUserSecretServer) CountAppUserSecretsV2(ctx context.Context, in *npool.CountAppUserSecretsRequest) (*npool.CountAppUserSecretsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppUserSecretsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSecretCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
+	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserSecret: %v", err)
 		return &npool.CountAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
@@ -197,12 +351,25 @@ func (s *AppUserSecretServer) CountAppUserSecretsV2(ctx context.Context, in *npo
 }
 
 func (s *AppUserSecretServer) DeleteAppUserSecretV2(ctx context.Context, in *npool.DeleteAppUserSecretRequest) (*npool.DeleteAppUserSecretResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppUserSecretV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppUserSecretResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
+	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete AppUserSecret: %v", err)
 		return &npool.DeleteAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())

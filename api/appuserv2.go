@@ -5,6 +5,12 @@ package api
 
 import (
 	"context"
+	"fmt"
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	scodes "go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserv2"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -39,13 +45,51 @@ func appUserRowToObject(row *ent.AppUser) *npool.AppUser {
 	}
 }
 
+func appUserSpanAttributes(span trace.Span, in *npool.AppUserReq) trace.Span {
+	span.SetAttributes(
+		attribute.String("PhoneNo", in.GetPhoneNo()),
+		attribute.String("ImportFromApp", in.GetImportFromApp()),
+		attribute.String("ID", in.GetID()),
+		attribute.String("AppID", in.GetAppID()),
+		attribute.String("EmailAddress", in.GetEmailAddress()),
+	)
+	return span
+}
+
+func appUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+	span.SetAttributes(
+		attribute.String("PhoneNo.Op", in.GetPhoneNo().GetOp()),
+		attribute.String("PhoneNo.Val", in.GetPhoneNo().GetValue()),
+		attribute.String("ImportFromApp.Op", in.GetImportFromApp().GetOp()),
+		attribute.String("ImportFromApp.Val", in.GetImportFromApp().GetValue()),
+		attribute.String("ID.Op", in.GetID().GetOp()),
+		attribute.String("ID.Val", in.GetID().GetValue()),
+		attribute.String("AppID.Op", in.GetAppID().GetOp()),
+		attribute.String("AppID.Val", in.GetAppID().GetValue()),
+		attribute.String("EmailAddress.Op", in.GetEmailAddress().GetOp()),
+		attribute.String("EmailAddress.Val", in.GetEmailAddress().GetValue()),
+	)
+	return span
+}
+
 func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.CreateAppUserResponse, error) {
-	err := checkAppUserInfo(in.GetInfo())
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSpanAttributes(span, in.GetInfo())
+	err = checkAppUserInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserResponse{}, err
 	}
-
+	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
+	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUser: %v", err)
 		return &npool.CreateAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -57,6 +101,15 @@ func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateApp
 }
 
 func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAppUsersRequest) (*npool.CreateAppUsersResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUsersV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppUsersResponse{},
 			status.Error(codes.InvalidArgument,
@@ -67,7 +120,14 @@ func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAp
 
 	dupPhoneNo := make(map[string]struct{})
 
-	for _, info := range in.GetInfos() {
+	for key, info := range in.GetInfos() {
+		span.SetAttributes(
+			attribute.String("PhoneNo"+fmt.Sprintf("%v", key), info.GetPhoneNo()),
+			attribute.String("ImportFromApp"+fmt.Sprintf("%v", key), info.GetImportFromApp()),
+			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
+			attribute.String("EmailAddress"+fmt.Sprintf("%v", key), info.GetEmailAddress()),
+		)
 		err := checkAppUserInfo(info)
 		if err != nil {
 			return &npool.CreateAppUsersResponse{}, err
@@ -89,8 +149,9 @@ func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAp
 		}
 		dupPhoneNo[info.GetPhoneNo()] = struct{}{}
 	}
-
+	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
+	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUsers: %v", err)
 		return &npool.CreateAppUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -107,6 +168,16 @@ func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAp
 }
 
 func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateAppUserRequest) (*npool.UpdateAppUserResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppUserV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUser id is invalid")
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -119,8 +190,9 @@ func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateApp
 		logger.Sugar().Errorf("AppUser is invalid")
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
+	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update AppUser: %v", err)
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -132,12 +204,25 @@ func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateApp
 }
 
 func (s *AppUserServer) GetAppUserV2(ctx context.Context, in *npool.GetAppUserRequest) (*npool.GetAppUserResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
+	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUser: %v", err)
 		return &npool.GetAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -149,7 +234,19 @@ func (s *AppUserServer) GetAppUserV2(ctx context.Context, in *npool.GetAppUserRe
 }
 
 func (s *AppUserServer) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUserOnlyRequest) (*npool.GetAppUserOnlyResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserOnlyV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
+	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUsers: %v", err)
 		return &npool.GetAppUserOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -161,7 +258,23 @@ func (s *AppUserServer) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUs
 }
 
 func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsersRequest) (*npool.GetAppUsersResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUsersV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span.SetAttributes(
+		attribute.Int("Offset", int(in.GetOffset())),
+		attribute.Int("Limit", int(in.GetLimit())),
+	)
+	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
+	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUsers: %v", err)
 		return &npool.GetAppUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -179,12 +292,25 @@ func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsers
 }
 
 func (s *AppUserServer) ExistAppUserV2(ctx context.Context, in *npool.ExistAppUserRequest) (*npool.ExistAppUserResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
+	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUser: %v", err)
 		return &npool.ExistAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -196,7 +322,19 @@ func (s *AppUserServer) ExistAppUserV2(ctx context.Context, in *npool.ExistAppUs
 }
 
 func (s *AppUserServer) ExistAppUserCondsV2(ctx context.Context, in *npool.ExistAppUserCondsRequest) (*npool.ExistAppUserCondsResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserCondsV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
+	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUser: %v", err)
 		return &npool.ExistAppUserCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -208,7 +346,19 @@ func (s *AppUserServer) ExistAppUserCondsV2(ctx context.Context, in *npool.Exist
 }
 
 func (s *AppUserServer) CountAppUsersV2(ctx context.Context, in *npool.CountAppUsersRequest) (*npool.CountAppUsersResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppUsersV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
+	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUser: %v", err)
 		return &npool.CountAppUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -220,12 +370,25 @@ func (s *AppUserServer) CountAppUsersV2(ctx context.Context, in *npool.CountAppU
 }
 
 func (s *AppUserServer) DeleteAppUserV2(ctx context.Context, in *npool.DeleteAppUserRequest) (*npool.DeleteAppUserResponse, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppUserV2")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", in.GetID()),
+	)
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
+	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
+	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete AppUser: %v", err)
 		return &npool.DeleteAppUserResponse{}, status.Error(codes.Internal, err.Error())

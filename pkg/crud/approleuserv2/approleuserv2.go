@@ -3,6 +3,9 @@ package approleuserv2
 import (
 	"context"
 	"fmt"
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
 	"time"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
@@ -16,7 +19,8 @@ import (
 func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, error) {
 	var info *ent.AppRoleUser
 	var err error
-
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.AppRoleUser.Create()
 		if in.AppID != nil {
@@ -35,6 +39,8 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 		return err
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, err
 	}
 
@@ -42,6 +48,8 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRoleUser, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	rows := []*ent.AppRoleUser{}
 	var err error
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
@@ -65,12 +73,16 @@ func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRole
 		return err
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, err
 	}
 	return rows, nil
 }
 
 func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	var info *ent.AppRoleUser
 	var err error
 
@@ -89,6 +101,8 @@ func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 		return err
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, err
 	}
 
@@ -96,6 +110,9 @@ func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
+
 	var info *ent.AppRoleUser
 	var err error
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -103,6 +120,8 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
 		return err
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, err
 	}
 
@@ -176,6 +195,8 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 }
 
 func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.AppRoleUser, int, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	rows := []*ent.AppRoleUser{}
 	var total int
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -200,12 +221,16 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 		return nil
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, 0, err
 	}
 	return rows, total, nil
 }
 
 func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	var info *ent.AppRoleUser
 
 	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -222,6 +247,8 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) 
 		return nil
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, err
 	}
 
@@ -229,6 +256,8 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) 
 }
 
 func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	var err error
 	var total int
 
@@ -245,6 +274,8 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		return nil
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return 0, err
 	}
 
@@ -252,6 +283,8 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	var err error
 	exist := false
 
@@ -260,6 +293,8 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 		return err
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return false, err
 	}
 
@@ -267,6 +302,8 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 }
 
 func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	var err error
 	exist := false
 
@@ -284,6 +321,8 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 		return nil
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return false, err
 	}
 
@@ -291,6 +330,8 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func Delete(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
 	var info *ent.AppRoleUser
 	var err error
 
@@ -301,6 +342,8 @@ func Delete(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
 		return err
 	})
 	if err != nil {
+		span.SetStatus(codes.Error, "db operation fail")
+		span.RecordError(err)
 		return nil, err
 	}
 
