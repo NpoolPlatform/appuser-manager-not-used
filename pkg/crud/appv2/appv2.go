@@ -3,6 +3,11 @@ package appv2
 import (
 	"context"
 	"fmt"
+	"github.com/NpoolPlatform/appuser-manager/api"
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	"time"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
@@ -16,6 +21,15 @@ import (
 func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	var info *ent.App
 	var err error
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.App.Create()
@@ -45,8 +59,30 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
-	rows := []*ent.App{}
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	for key, info := range in {
+		span.SetAttributes(
+			attribute.String("Description"+fmt.Sprintf("%v", key), info.GetDescription()),
+			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("CreatedBy"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("Name"+fmt.Sprintf("%v", key), info.GetCreatedBy()),
+			attribute.String("Logo"+fmt.Sprintf("%v", key), info.GetName()),
+			attribute.Int("CreatedAt"+fmt.Sprintf("%v", key), int(info.GetCreatedAt())),
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	rows := []*ent.App{}
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
@@ -78,7 +114,16 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 
 func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	var info *ent.App
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.App.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -103,7 +148,18 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.App.Query().Where(app.ID(id)).Only(_ctx)
 		return err
@@ -174,9 +230,23 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 }
 
 func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.App, int, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppCondsSpanAttributes(span, conds)
+	span.SetAttributes(
+		attribute.Int("Offset", offset),
+		attribute.Int("Limit", limit),
+	)
 	rows := []*ent.App{}
 	var total int
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			return err
@@ -205,8 +275,17 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 
 func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
 	var info *ent.App
-
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppCondsSpanAttributes(span, conds)
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			return err
@@ -227,7 +306,16 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
 }
 
 func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Count")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppCondsSpanAttributes(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -250,7 +338,18 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Exist")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -265,7 +364,16 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 }
 
 func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistConds")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -290,7 +398,18 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 
 func Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	var info *ent.App
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.App.UpdateOneID(id).

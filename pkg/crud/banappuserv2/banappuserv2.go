@@ -3,6 +3,11 @@ package banappuserv2
 import (
 	"context"
 	"fmt"
+	"github.com/NpoolPlatform/appuser-manager/api"
+	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	"time"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
@@ -16,6 +21,15 @@ import (
 func Create(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, error) {
 	var info *ent.BanAppUser
 	var err error
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	defer span.End()
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.BanAppUserSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.BanAppUser.Create()
@@ -42,8 +56,27 @@ func Create(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, erro
 }
 
 func CreateBulk(ctx context.Context, in []*npool.BanAppUserReq) ([]*ent.BanAppUser, error) {
-	rows := []*ent.BanAppUser{}
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	for key, info := range in {
+		span.SetAttributes(
+			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
+			attribute.String("Message"+fmt.Sprintf("%v", key), info.GetMessage()),
+			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetID()),
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+	rows := []*ent.BanAppUser{}
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.BanAppUserCreate, len(in))
 		for i, info := range in {
@@ -72,7 +105,16 @@ func CreateBulk(ctx context.Context, in []*npool.BanAppUserReq) ([]*ent.BanAppUs
 
 func Update(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, error) {
 	var info *ent.BanAppUser
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.BanAppUserSpanAttributes(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.BanAppUser.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -91,7 +133,18 @@ func Update(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, erro
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 	var info *ent.BanAppUser
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.BanAppUser.Query().Where(banappuser.ID(id)).Only(_ctx)
 		return err
@@ -149,9 +202,23 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.BanAppUserQuery, e
 }
 
 func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.BanAppUser, int, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.BanAppUserCondsSpanAttributes(span, conds)
+	span.SetAttributes(
+		attribute.Int("Offset", offset),
+		attribute.Int("Limit", limit),
+	)
 	rows := []*ent.BanAppUser{}
 	var total int
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			return err
@@ -180,8 +247,17 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ba
 
 func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.BanAppUser, error) {
 	var info *ent.BanAppUser
-
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
+	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.BanAppUserCondsSpanAttributes(span, conds)
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			return err
@@ -202,7 +278,16 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.BanAppUser, error) {
 }
 
 func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Count")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.BanAppUserCondsSpanAttributes(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -225,7 +310,18 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Exist")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -240,7 +336,16 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 }
 
 func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistConds")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.BanAppUserCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -265,7 +370,18 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 
 func Delete(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 	var info *ent.BanAppUser
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
+	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.BanAppUser.UpdateOneID(id).

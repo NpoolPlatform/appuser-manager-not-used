@@ -58,7 +58,7 @@ func appRoleRowToObject(row *ent.AppRole) *npool.AppRole {
 	}
 }
 
-func appRoleSpanAttributes(span trace.Span, in *npool.AppRoleReq) trace.Span {
+func AppRoleSpanAttributes(span trace.Span, in *npool.AppRoleReq) trace.Span {
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 		attribute.String("AppID", in.GetAppID()),
@@ -70,7 +70,7 @@ func appRoleSpanAttributes(span trace.Span, in *npool.AppRoleReq) trace.Span {
 	return span
 }
 
-func appRoleCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+func AppRoleCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
 	span.SetAttributes(
 		attribute.String("ID.Op", in.GetID().GetOp()),
 		attribute.String("ID.Val", in.GetID().GetValue()),
@@ -96,7 +96,7 @@ func (s *AppRoleServer) CreateAppRoleV2(ctx context.Context, in *npool.CreateApp
 			span.RecordError(err)
 		}
 	}()
-	span = appRoleSpanAttributes(span, in.GetInfo())
+	span = AppRoleSpanAttributes(span, in.GetInfo())
 	err = checkAppRoleInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppRoleResponse{}, err
@@ -172,7 +172,7 @@ func (s *AppRoleServer) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateApp
 			span.RecordError(err)
 		}
 	}()
-	span = appRoleSpanAttributes(span, in.GetInfo())
+	span = AppRoleSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("app role id is invalid")
 		return &npool.UpdateAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -230,7 +230,7 @@ func (s *AppRoleServer) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRo
 			span.RecordError(err)
 		}
 	}()
-	span = appRoleCondsSpanAttributes(span, in.GetConds())
+	span = AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -254,7 +254,7 @@ func (s *AppRoleServer) GetAppRolesV2(ctx context.Context, in *npool.GetAppRoles
 			span.RecordError(err)
 		}
 	}()
-	span = appRoleCondsSpanAttributes(span, in.GetConds())
+	span = AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Limit", int(in.GetLimit())),
 		attribute.Int("Offset", int(in.GetOffset())),
@@ -318,7 +318,7 @@ func (s *AppRoleServer) ExistAppRoleCondsV2(ctx context.Context, in *npool.Exist
 			span.RecordError(err)
 		}
 	}()
-	span = appRoleCondsSpanAttributes(span, in.GetConds())
+	span = AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -342,7 +342,7 @@ func (s *AppRoleServer) CountAppRolesV2(ctx context.Context, in *npool.CountAppR
 			span.RecordError(err)
 		}
 	}()
-	span = appRoleCondsSpanAttributes(span, in.GetConds())
+	span = AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

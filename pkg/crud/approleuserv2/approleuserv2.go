@@ -5,9 +5,11 @@ import (
 	"fmt"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"time"
 
+	"github.com/NpoolPlatform/appuser-manager/api"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
@@ -21,6 +23,13 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 	var err error
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
 	defer span.End()
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppRoleUserSpanAttributes(span, in)
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.AppRoleUser.Create()
 		if in.AppID != nil {
@@ -39,8 +48,6 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 		return err
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -48,10 +55,27 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRoleUser, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
 	defer span.End()
-	rows := []*ent.AppRoleUser{}
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	for key, info := range in {
+		span.SetAttributes(
+			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
+			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
+			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
+			attribute.String("RoleID"+fmt.Sprintf("%v", key), info.GetRoleID()),
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+	rows := []*ent.AppRoleUser{}
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppRoleUserCreate, len(in))
 		for i, info := range in {
@@ -73,19 +97,23 @@ func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRole
 		return err
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, err
 	}
 	return rows, nil
 }
 
 func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
 	defer span.End()
-	var info *ent.AppRoleUser
 	var err error
-
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppRoleUserSpanAttributes(span, in)
+	var info *ent.AppRoleUser
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppRoleUser.UpdateOneID(uuid.MustParse(in.GetID()))
 		if in.AppID != nil {
@@ -101,8 +129,6 @@ func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 		return err
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -110,18 +136,24 @@ func Update(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
 	defer span.End()
-
-	var info *ent.AppRoleUser
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
+	var info *ent.AppRoleUser
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.AppRoleUser.Query().Where(approleuser.ID(id)).Only(_ctx)
 		return err
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -195,11 +227,23 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 }
 
 func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.AppRoleUser, int, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
 	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppRoleUserCondsSpanAttributes(span, conds)
+	span.SetAttributes(
+		attribute.Int("Offset", offset),
+		attribute.Int("Limit", limit),
+	)
 	rows := []*ent.AppRoleUser{}
 	var total int
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			return err
@@ -221,19 +265,25 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 		return nil
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, 0, err
 	}
 	return rows, total, nil
 }
 
 func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
 	defer span.End()
+	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppRoleUserCondsSpanAttributes(span, conds)
 	var info *ent.AppRoleUser
 
-	err := db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
 			return err
@@ -247,8 +297,6 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) 
 		return nil
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -256,11 +304,17 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppRoleUser, error) 
 }
 
 func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Count")
 	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppRoleUserCondsSpanAttributes(span, conds)
 	var total int
-
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
@@ -274,8 +328,6 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		return nil
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return 0, err
 	}
 
@@ -283,9 +335,18 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Exist")
 	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -293,8 +354,6 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 		return err
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return false, err
 	}
 
@@ -302,9 +361,16 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 }
 
 func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistConds")
 	defer span.End()
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span = api.AppRoleUserCondsSpanAttributes(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -321,8 +387,6 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 		return nil
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return false, err
 	}
 
@@ -330,10 +394,19 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func Delete(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
 	defer span.End()
-	var info *ent.AppRoleUser
 	var err error
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+	span.SetAttributes(
+		attribute.String("ID", id.String()),
+	)
+	var info *ent.AppRoleUser
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.AppRoleUser.UpdateOneID(id).
@@ -342,8 +415,6 @@ func Delete(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
 		return err
 	})
 	if err != nil {
-		span.SetStatus(codes.Error, "db operation fail")
-		span.RecordError(err)
 		return nil, err
 	}
 

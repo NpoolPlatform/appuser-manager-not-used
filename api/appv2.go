@@ -53,7 +53,7 @@ func appRowToObject(row *ent.App) *npool.App {
 	}
 }
 
-func appSpanAttributes(span trace.Span, in *npool.AppReq) trace.Span {
+func AppSpanAttributes(span trace.Span, in *npool.AppReq) trace.Span {
 	span.SetAttributes(
 		attribute.String("Description", in.GetDescription()),
 		attribute.String("ID", in.GetID()),
@@ -65,7 +65,7 @@ func appSpanAttributes(span trace.Span, in *npool.AppReq) trace.Span {
 	return span
 }
 
-func appCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+func AppCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
 	span.SetAttributes(
 		attribute.String("Description.Op", in.GetDescription().GetOp()),
 		attribute.String("Description.Val", in.GetDescription().GetValue()),
@@ -91,7 +91,7 @@ func (s *AppServer) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest)
 			span.RecordError(err)
 		}
 	}()
-	span = appSpanAttributes(span, in.GetInfo())
+	span = AppSpanAttributes(span, in.GetInfo())
 	err = checkAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppResponse{}, err
@@ -178,7 +178,7 @@ func (s *AppServer) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest)
 			span.RecordError(err)
 		}
 	}()
-	span = appSpanAttributes(span, in.GetInfo())
+	span = AppSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("app id is invalid")
 		return &npool.UpdateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -236,7 +236,7 @@ func (s *AppServer) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyReques
 			span.RecordError(err)
 		}
 	}()
-	span = appCondsSpanAttributes(span, in.GetConds())
+	span = AppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -260,7 +260,7 @@ func (s *AppServer) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*n
 			span.RecordError(err)
 		}
 	}()
-	span = appCondsSpanAttributes(span, in.GetConds())
+	span = AppCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -324,7 +324,7 @@ func (s *AppServer) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppConds
 			span.RecordError(err)
 		}
 	}()
-	span = appCondsSpanAttributes(span, in.GetConds())
+	span = AppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -348,7 +348,7 @@ func (s *AppServer) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest)
 			span.RecordError(err)
 		}
 	}()
-	span = appCondsSpanAttributes(span, in.GetConds())
+	span = AppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

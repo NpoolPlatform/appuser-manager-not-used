@@ -45,7 +45,7 @@ func appUserRowToObject(row *ent.AppUser) *npool.AppUser {
 	}
 }
 
-func appUserSpanAttributes(span trace.Span, in *npool.AppUserReq) trace.Span {
+func AppUserSpanAttributes(span trace.Span, in *npool.AppUserReq) trace.Span {
 	span.SetAttributes(
 		attribute.String("PhoneNo", in.GetPhoneNo()),
 		attribute.String("ImportFromApp", in.GetImportFromApp()),
@@ -56,7 +56,7 @@ func appUserSpanAttributes(span trace.Span, in *npool.AppUserReq) trace.Span {
 	return span
 }
 
-func appUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+func AppUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
 	span.SetAttributes(
 		attribute.String("PhoneNo.Op", in.GetPhoneNo().GetOp()),
 		attribute.String("PhoneNo.Val", in.GetPhoneNo().GetValue()),
@@ -82,7 +82,7 @@ func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateApp
 			span.RecordError(err)
 		}
 	}()
-	span = appUserSpanAttributes(span, in.GetInfo())
+	span = AppUserSpanAttributes(span, in.GetInfo())
 	err = checkAppUserInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserResponse{}, err
@@ -177,7 +177,7 @@ func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateApp
 			span.RecordError(err)
 		}
 	}()
-	span = appUserSpanAttributes(span, in.GetInfo())
+	span = AppUserSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUser id is invalid")
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -243,7 +243,7 @@ func (s *AppUserServer) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUs
 			span.RecordError(err)
 		}
 	}()
-	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span = AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -267,7 +267,7 @@ func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsers
 			span.RecordError(err)
 		}
 	}()
-	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span = AppUserCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -331,7 +331,7 @@ func (s *AppUserServer) ExistAppUserCondsV2(ctx context.Context, in *npool.Exist
 			span.RecordError(err)
 		}
 	}()
-	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span = AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -355,7 +355,7 @@ func (s *AppUserServer) CountAppUsersV2(ctx context.Context, in *npool.CountAppU
 			span.RecordError(err)
 		}
 	}()
-	span = appUserCondsSpanAttributes(span, in.GetConds())
+	span = AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

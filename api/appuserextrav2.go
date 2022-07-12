@@ -54,7 +54,7 @@ func appUserExtraRowToObject(row *ent.AppUserExtra) *npool.AppUserExtra {
 	}
 }
 
-func appUserExtraSpanAttributes(span trace.Span, in *npool.AppUserExtraReq) trace.Span {
+func AppUserExtraSpanAttributes(span trace.Span, in *npool.AppUserExtraReq) trace.Span {
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 		attribute.String("AppID", in.GetAppID()),
@@ -74,7 +74,7 @@ func appUserExtraSpanAttributes(span trace.Span, in *npool.AppUserExtraReq) trac
 	return span
 }
 
-func appUserExtraCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+func AppUserExtraCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
 	span.SetAttributes(
 		attribute.String("ID.Op", in.GetID().GetOp()),
 		attribute.String("ID.Val", in.GetID().GetValue()),
@@ -116,7 +116,7 @@ func (s *AppUserExtraServer) CreateAppUserExtraV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = appUserExtraSpanAttributes(span, in.GetInfo())
+	span = AppUserExtraSpanAttributes(span, in.GetInfo())
 	err = checkAppUserExtraInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppUserExtraResponse{}, err
@@ -210,7 +210,7 @@ func (s *AppUserExtraServer) UpdateAppUserExtraV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = appUserExtraSpanAttributes(span, in.GetInfo())
+	span = AppUserExtraSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("AppUserExtra id is invalid")
 		return &npool.UpdateAppUserExtraResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -268,7 +268,7 @@ func (s *AppUserExtraServer) GetAppUserExtraOnlyV2(ctx context.Context, in *npoo
 			span.RecordError(err)
 		}
 	}()
-	span = appUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -292,7 +292,7 @@ func (s *AppUserExtraServer) GetAppUserExtrasV2(ctx context.Context, in *npool.G
 			span.RecordError(err)
 		}
 	}()
-	span = appUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -356,7 +356,7 @@ func (s *AppUserExtraServer) ExistAppUserExtraCondsV2(ctx context.Context, in *n
 			span.RecordError(err)
 		}
 	}()
-	span = appUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -380,7 +380,7 @@ func (s *AppUserExtraServer) CountAppUserExtrasV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = appUserExtraCondsSpanAttributes(span, in.GetConds())
+	span = AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")

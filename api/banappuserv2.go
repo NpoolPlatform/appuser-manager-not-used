@@ -44,7 +44,7 @@ func banAppUserRowToObject(row *ent.BanAppUser) *npool.BanAppUser {
 	}
 }
 
-func banAppUserSpanAttributes(span trace.Span, in *npool.BanAppUserReq) trace.Span {
+func BanAppUserSpanAttributes(span trace.Span, in *npool.BanAppUserReq) trace.Span {
 	span.SetAttributes(
 		attribute.String("UserID", in.GetUserID()),
 		attribute.String("Message", in.GetMessage()),
@@ -54,7 +54,7 @@ func banAppUserSpanAttributes(span trace.Span, in *npool.BanAppUserReq) trace.Sp
 	return span
 }
 
-func banAppUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
+func BanAppUserCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
 	span.SetAttributes(
 		attribute.String("UserID.Op", in.GetUserID().GetOp()),
 		attribute.String("UserID.Val", in.GetUserID().GetValue()),
@@ -78,7 +78,7 @@ func (s *BanAppUserServer) CreateBanAppUserV2(ctx context.Context, in *npool.Cre
 			span.RecordError(err)
 		}
 	}()
-	span = banAppUserSpanAttributes(span, in.GetInfo())
+	span = BanAppUserSpanAttributes(span, in.GetInfo())
 	err = checkBanAppUserInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateBanAppUserResponse{}, err
@@ -162,7 +162,7 @@ func (s *BanAppUserServer) UpdateBanAppUserV2(ctx context.Context, in *npool.Upd
 			span.RecordError(err)
 		}
 	}()
-	span = banAppUserSpanAttributes(span, in.GetInfo())
+	span = BanAppUserSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("BanAppUser id is invalid")
 		return &npool.UpdateBanAppUserResponse{}, status.Error(codes.InvalidArgument, err.Error())
@@ -220,7 +220,7 @@ func (s *BanAppUserServer) GetBanAppUserOnlyV2(ctx context.Context, in *npool.Ge
 			span.RecordError(err)
 		}
 	}()
-	span = banAppUserCondsSpanAttributes(span, in.GetConds())
+	span = BanAppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	span.AddEvent("call crud RowOnly done")
@@ -244,7 +244,7 @@ func (s *BanAppUserServer) GetBanAppUsersV2(ctx context.Context, in *npool.GetBa
 			span.RecordError(err)
 		}
 	}()
-	span = banAppUserCondsSpanAttributes(span, in.GetConds())
+	span = BanAppUserCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
@@ -308,7 +308,7 @@ func (s *BanAppUserServer) ExistBanAppUserCondsV2(ctx context.Context, in *npool
 			span.RecordError(err)
 		}
 	}()
-	span = banAppUserCondsSpanAttributes(span, in.GetConds())
+	span = BanAppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	span.AddEvent("call crud ExistConds done")
@@ -332,7 +332,7 @@ func (s *BanAppUserServer) CountBanAppUsersV2(ctx context.Context, in *npool.Cou
 			span.RecordError(err)
 		}
 	}()
-	span = banAppUserCondsSpanAttributes(span, in.GetConds())
+	span = BanAppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	span.AddEvent("call crud Count done")
