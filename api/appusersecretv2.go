@@ -66,7 +66,6 @@ func (s *AppUserSecretServer) CreateAppUserSecretV2(ctx context.Context, in *npo
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserSecret: %v", err)
 		return &npool.CreateAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -109,7 +108,6 @@ func (s *AppUserSecretServer) CreateAppUserSecretsV2(ctx context.Context, in *np
 	}
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
-	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserSecrets: %v", err)
 		return &npool.CreateAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
@@ -142,7 +140,6 @@ func (s *AppUserSecretServer) UpdateAppUserSecretV2(ctx context.Context, in *npo
 	}
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update AppUserSecret: %v", err)
 		return &npool.UpdateAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -172,7 +169,6 @@ func (s *AppUserSecretServer) GetAppUserSecretV2(ctx context.Context, in *npool.
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecret: %v", err)
 		return &npool.GetAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -196,7 +192,6 @@ func (s *AppUserSecretServer) GetAppUserSecretOnlyV2(ctx context.Context, in *np
 	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecrets: %v", err)
 		return &npool.GetAppUserSecretOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -224,7 +219,6 @@ func (s *AppUserSecretServer) GetAppUserSecretsV2(ctx context.Context, in *npool
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserSecrets: %v", err)
 		return &npool.GetAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
@@ -260,7 +254,6 @@ func (s *AppUserSecretServer) ExistAppUserSecretV2(ctx context.Context, in *npoo
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserSecret: %v", err)
 		return &npool.ExistAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())
@@ -284,7 +277,6 @@ func (s *AppUserSecretServer) ExistAppUserSecretCondsV2(ctx context.Context, in 
 	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserSecret: %v", err)
 		return &npool.ExistAppUserSecretCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -308,7 +300,6 @@ func (s *AppUserSecretServer) CountAppUserSecretsV2(ctx context.Context, in *npo
 	span = crud.AppUserSecretCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserSecret: %v", err)
 		return &npool.CountAppUserSecretsResponse{}, status.Error(codes.Internal, err.Error())
@@ -338,7 +329,6 @@ func (s *AppUserSecretServer) DeleteAppUserSecretV2(ctx context.Context, in *npo
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete AppUserSecret: %v", err)
 		return &npool.DeleteAppUserSecretResponse{}, status.Error(codes.Internal, err.Error())

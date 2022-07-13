@@ -61,7 +61,6 @@ func (s *AppUserServer) CreateAppUserV2(ctx context.Context, in *npool.CreateApp
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUser: %v", err)
 		return &npool.CreateAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -123,7 +122,6 @@ func (s *AppUserServer) CreateAppUsersV2(ctx context.Context, in *npool.CreateAp
 	}
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
-	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUsers: %v", err)
 		return &npool.CreateAppUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -164,7 +162,6 @@ func (s *AppUserServer) UpdateAppUserV2(ctx context.Context, in *npool.UpdateApp
 	}
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update AppUser: %v", err)
 		return &npool.UpdateAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -194,7 +191,6 @@ func (s *AppUserServer) GetAppUserV2(ctx context.Context, in *npool.GetAppUserRe
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUser: %v", err)
 		return &npool.GetAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -218,7 +214,6 @@ func (s *AppUserServer) GetAppUserOnlyV2(ctx context.Context, in *npool.GetAppUs
 	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUsers: %v", err)
 		return &npool.GetAppUserOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -246,7 +241,6 @@ func (s *AppUserServer) GetAppUsersV2(ctx context.Context, in *npool.GetAppUsers
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUsers: %v", err)
 		return &npool.GetAppUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -282,7 +276,6 @@ func (s *AppUserServer) ExistAppUserV2(ctx context.Context, in *npool.ExistAppUs
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUser: %v", err)
 		return &npool.ExistAppUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -306,7 +299,6 @@ func (s *AppUserServer) ExistAppUserCondsV2(ctx context.Context, in *npool.Exist
 	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUser: %v", err)
 		return &npool.ExistAppUserCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -330,7 +322,6 @@ func (s *AppUserServer) CountAppUsersV2(ctx context.Context, in *npool.CountAppU
 	span = crud.AppUserCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUser: %v", err)
 		return &npool.CountAppUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -360,7 +351,6 @@ func (s *AppUserServer) DeleteAppUserV2(ctx context.Context, in *npool.DeleteApp
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete AppUser: %v", err)
 		return &npool.DeleteAppUserResponse{}, status.Error(codes.Internal, err.Error())

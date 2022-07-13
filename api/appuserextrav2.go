@@ -70,7 +70,6 @@ func (s *AppUserExtraServer) CreateAppUserExtraV2(ctx context.Context, in *npool
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserExtra: %v", err)
 		return &npool.CreateAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
@@ -164,7 +163,6 @@ func (s *AppUserExtraServer) UpdateAppUserExtraV2(ctx context.Context, in *npool
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update AppUserExtra: %v", err)
 		return &npool.UpdateAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
@@ -194,7 +192,6 @@ func (s *AppUserExtraServer) GetAppUserExtraV2(ctx context.Context, in *npool.Ge
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserExtra: %v", err)
 		return &npool.GetAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
@@ -218,7 +215,6 @@ func (s *AppUserExtraServer) GetAppUserExtraOnlyV2(ctx context.Context, in *npoo
 	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserExtras: %v", err)
 		return &npool.GetAppUserExtraOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -246,7 +242,6 @@ func (s *AppUserExtraServer) GetAppUserExtrasV2(ctx context.Context, in *npool.G
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserExtras: %v", err)
 		return &npool.GetAppUserExtrasResponse{}, status.Error(codes.Internal, err.Error())
@@ -282,7 +277,6 @@ func (s *AppUserExtraServer) ExistAppUserExtraV2(ctx context.Context, in *npool.
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserExtra: %v", err)
 		return &npool.ExistAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())
@@ -306,7 +300,6 @@ func (s *AppUserExtraServer) ExistAppUserExtraCondsV2(ctx context.Context, in *n
 	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserExtra: %v", err)
 		return &npool.ExistAppUserExtraCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -330,7 +323,6 @@ func (s *AppUserExtraServer) CountAppUserExtrasV2(ctx context.Context, in *npool
 	span = crud.AppUserExtraCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserExtra: %v", err)
 		return &npool.CountAppUserExtrasResponse{}, status.Error(codes.Internal, err.Error())
@@ -360,7 +352,6 @@ func (s *AppUserExtraServer) DeleteAppUserExtraV2(ctx context.Context, in *npool
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete AppUserExtra: %v", err)
 		return &npool.DeleteAppUserExtraResponse{}, status.Error(codes.Internal, err.Error())

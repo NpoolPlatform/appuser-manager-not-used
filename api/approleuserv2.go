@@ -64,7 +64,6 @@ func (s *AppRoleUserServer) CreateAppRoleUserV2(ctx context.Context, in *npool.C
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create app role user: %v", err)
 		return &npool.CreateAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -105,7 +104,6 @@ func (s *AppRoleUserServer) CreateAppRoleUsersV2(ctx context.Context, in *npool.
 	}
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
-	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create app role user: %v", err)
 		return &npool.CreateAppRoleUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -138,7 +136,6 @@ func (s *AppRoleUserServer) UpdateAppRoleUserV2(ctx context.Context, in *npool.U
 	}
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update app role user: %v", err)
 		return &npool.UpdateAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -168,7 +165,6 @@ func (s *AppRoleUserServer) GetAppRoleUserV2(ctx context.Context, in *npool.GetA
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get app role user: %v", err)
 		return &npool.GetAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -192,7 +188,6 @@ func (s *AppRoleUserServer) GetAppRoleUserOnlyV2(ctx context.Context, in *npool.
 	span = crud.AppRoleUserCondsSpanAttributes(span, in.Conds)
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get app role users: %v", err)
 		return &npool.GetAppRoleUserOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -220,7 +215,6 @@ func (s *AppRoleUserServer) GetAppRoleUsersV2(ctx context.Context, in *npool.Get
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get app role users: %v", err)
 		return &npool.GetAppRoleUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -256,7 +250,6 @@ func (s *AppRoleUserServer) ExistAppRoleUserV2(ctx context.Context, in *npool.Ex
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check app role user: %v", err)
 		return &npool.ExistAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())
@@ -280,7 +273,6 @@ func (s *AppRoleUserServer) ExistAppRoleUserCondsV2(ctx context.Context, in *npo
 	span = crud.AppRoleUserCondsSpanAttributes(span, in.Conds)
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check app role user: %v", err)
 		return &npool.ExistAppRoleUserCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -304,7 +296,6 @@ func (s *AppRoleUserServer) CountAppRoleUsersV2(ctx context.Context, in *npool.C
 	span = crud.AppRoleUserCondsSpanAttributes(span, in.Conds)
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count app role user: %v", err)
 		return &npool.CountAppRoleUsersResponse{}, status.Error(codes.Internal, err.Error())
@@ -334,7 +325,6 @@ func (s *AppRoleUserServer) DeleteAppRoleUserV2(ctx context.Context, in *npool.D
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete app role user: %v", err)
 		return &npool.DeleteAppRoleUserResponse{}, status.Error(codes.Internal, err.Error())

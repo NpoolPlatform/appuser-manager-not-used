@@ -74,7 +74,6 @@ func (s *AppRoleServer) CreateAppRoleV2(ctx context.Context, in *npool.CreateApp
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create app role: %v", err)
 		return &npool.CreateAppRoleResponse{}, status.Error(codes.Internal, err.Error())
@@ -117,7 +116,6 @@ func (s *AppRoleServer) CreateAppRolesV2(ctx context.Context, in *npool.CreateAp
 	}
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
-	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create app roles: %v", err)
 		return &npool.CreateAppRolesResponse{}, status.Error(codes.Internal, err.Error())
@@ -150,7 +148,6 @@ func (s *AppRoleServer) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateApp
 	}
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update app role: %v", err)
 		return &npool.UpdateAppRoleResponse{}, status.Error(codes.Internal, err.Error())
@@ -180,7 +177,6 @@ func (s *AppRoleServer) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRe
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get app role: %v", err)
 		return &npool.GetAppRoleResponse{}, status.Error(codes.Internal, err.Error())
@@ -204,7 +200,6 @@ func (s *AppRoleServer) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRo
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get app roles: %v", err)
 		return &npool.GetAppRoleOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -232,7 +227,6 @@ func (s *AppRoleServer) GetAppRolesV2(ctx context.Context, in *npool.GetAppRoles
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get app roles: %v", err)
 		return &npool.GetAppRolesResponse{}, status.Error(codes.Internal, err.Error())
@@ -268,7 +262,6 @@ func (s *AppRoleServer) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRo
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check app role: %v", err)
 		return &npool.ExistAppRoleResponse{}, status.Error(codes.Internal, err.Error())
@@ -292,7 +285,6 @@ func (s *AppRoleServer) ExistAppRoleCondsV2(ctx context.Context, in *npool.Exist
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check app role: %v", err)
 		return &npool.ExistAppRoleCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -316,7 +308,6 @@ func (s *AppRoleServer) CountAppRolesV2(ctx context.Context, in *npool.CountAppR
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count app role : %v", err)
 		return &npool.CountAppRolesResponse{}, status.Error(codes.Internal, err.Error())
@@ -346,7 +337,6 @@ func (s *AppRoleServer) DeleteAppRoleV2(ctx context.Context, in *npool.DeleteApp
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete app role: %v", err)
 		return &npool.DeleteAppRoleResponse{}, status.Error(codes.Internal, err.Error())

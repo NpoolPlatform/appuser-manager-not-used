@@ -71,7 +71,6 @@ func (s *AppUserThirdPartyServer) CreateAppUserThirdPartyV2(ctx context.Context,
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserThirdParty: %v", err)
 		return &npool.CreateAppUserThirdPartyResponse{}, status.Error(codes.Internal, err.Error())
@@ -126,7 +125,6 @@ func (s *AppUserThirdPartyServer) CreateAppUserThirdPartysV2(ctx context.Context
 	}
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
-	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create AppUserThirdPartys: %v", err)
 		return &npool.CreateAppUserThirdPartysResponse{}, status.Error(codes.Internal, err.Error())
@@ -158,7 +156,6 @@ func (s *AppUserThirdPartyServer) UpdateAppUserThirdPartyV2(ctx context.Context,
 	}
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update AppUserThirdParty: %v", err)
 		return &npool.UpdateAppUserThirdPartyResponse{}, status.Error(codes.Internal, err.Error())
@@ -188,7 +185,6 @@ func (s *AppUserThirdPartyServer) GetAppUserThirdPartyV2(ctx context.Context, in
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserThirdParty: %v", err)
 		return &npool.GetAppUserThirdPartyResponse{}, status.Error(codes.Internal, err.Error())
@@ -205,7 +201,6 @@ func (s *AppUserThirdPartyServer) GetAppUserThirdPartyOnlyV2(ctx context.Context
 	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserThirdPartys: %v", err)
 		return &npool.GetAppUserThirdPartyOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -233,7 +228,6 @@ func (s *AppUserThirdPartyServer) GetAppUserThirdPartysV2(ctx context.Context, i
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get AppUserThirdPartys: %v", err)
 		return &npool.GetAppUserThirdPartysResponse{}, status.Error(codes.Internal, err.Error())
@@ -269,7 +263,6 @@ func (s *AppUserThirdPartyServer) ExistAppUserThirdPartyV2(ctx context.Context, 
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserThirdParty: %v", err)
 		return &npool.ExistAppUserThirdPartyResponse{}, status.Error(codes.Internal, err.Error())
@@ -293,7 +286,6 @@ func (s *AppUserThirdPartyServer) ExistAppUserThirdPartyCondsV2(ctx context.Cont
 	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check AppUserThirdParty: %v", err)
 		return &npool.ExistAppUserThirdPartyCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -317,7 +309,6 @@ func (s *AppUserThirdPartyServer) CountAppUserThirdPartysV2(ctx context.Context,
 	span = crud.AppUserThirdPartyCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count AppUserThirdParty: %v", err)
 		return &npool.CountAppUserThirdPartysResponse{}, status.Error(codes.Internal, err.Error())
@@ -347,7 +338,6 @@ func (s *AppUserThirdPartyServer) DeleteAppUserThirdPartyV2(ctx context.Context,
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete AppUserThirdParty: %v", err)
 		return &npool.DeleteAppUserThirdPartyResponse{}, status.Error(codes.Internal, err.Error())

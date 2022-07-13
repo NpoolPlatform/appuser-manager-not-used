@@ -55,7 +55,6 @@ func (s *BanAppServer) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAp
 	}
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
-	span.AddEvent("call crud Create done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create BanApp: %v", err)
 		return &npool.CreateBanAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -105,7 +104,6 @@ func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanA
 	}
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
-	span.AddEvent("call crud CreateBulk done")
 	if err != nil {
 		logger.Sugar().Errorf("fail create BanApps: %v", err)
 		return &npool.CreateBanAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -138,7 +136,6 @@ func (s *BanAppServer) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAp
 	}
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
-	span.AddEvent("call crud Update done")
 	if err != nil {
 		logger.Sugar().Errorf("fail update BanApp: %v", err)
 		return &npool.UpdateBanAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -168,7 +165,6 @@ func (s *BanAppServer) GetBanAppV2(ctx context.Context, in *npool.GetBanAppReque
 	}
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
-	span.AddEvent("call crud Row done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanApp: %v", err)
 		return &npool.GetBanAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -192,7 +188,6 @@ func (s *BanAppServer) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppO
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
-	span.AddEvent("call crud RowOnly done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanApps: %v", err)
 		return &npool.GetBanAppOnlyResponse{}, status.Error(codes.Internal, err.Error())
@@ -220,7 +215,6 @@ func (s *BanAppServer) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsReq
 	)
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
-	span.AddEvent("call crud Rows done")
 	if err != nil {
 		logger.Sugar().Errorf("fail get BanApps: %v", err)
 		return &npool.GetBanAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -256,7 +250,6 @@ func (s *BanAppServer) ExistBanAppV2(ctx context.Context, in *npool.ExistBanAppR
 	}
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
-	span.AddEvent("call crud Exist done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check BanApp: %v", err)
 		return &npool.ExistBanAppResponse{}, status.Error(codes.Internal, err.Error())
@@ -280,7 +273,6 @@ func (s *BanAppServer) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBa
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
-	span.AddEvent("call crud ExistConds done")
 	if err != nil {
 		logger.Sugar().Errorf("fail check BanApp: %v", err)
 		return &npool.ExistBanAppCondsResponse{}, status.Error(codes.Internal, err.Error())
@@ -304,7 +296,6 @@ func (s *BanAppServer) CountBanAppsV2(ctx context.Context, in *npool.CountBanApp
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
-	span.AddEvent("call crud Count done")
 	if err != nil {
 		logger.Sugar().Errorf("fail count BanApp: %v", err)
 		return &npool.CountBanAppsResponse{}, status.Error(codes.Internal, err.Error())
@@ -334,7 +325,6 @@ func (s *BanAppServer) DeleteBanAppV2(ctx context.Context, in *npool.DeleteBanAp
 	}
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
-	span.AddEvent("call crud Delete done")
 	if err != nil {
 		logger.Sugar().Errorf("fail delete BanApp: %v", err)
 		return &npool.DeleteBanAppResponse{}, status.Error(codes.Internal, err.Error())
