@@ -38,6 +38,16 @@ spec:
       http: *http_rules
     - host: api.ohhash.com
       http: *http_rules
+    - host: api.ohhash-production.npool.top
+      http: *http_rules
+    - host: api.japan-procyon-production.npool.top
+      http: *http_rules
+    - host: api.jh-testing.npool.top
+      http: *http_rules
+    - host: api.jh-development.npool.top
+      http: *http_rules
+    - host: api.singapore-testing.npool.top
+      http: *http_rules
 
 ---
 
@@ -128,4 +138,14 @@ spec:
     - host: api.xpool.top
       http: *http_rules
     - host: api.ohhash.com
+      http: *http_rules
+    - host: api.ohhash-production.npool.top
+      http: *http_rules
+    - host: api.japan-procyon-production.npool.top
+      http: *http_rules
+    - host: api.jh-testing.npool.top
+      http: *http_rules
+    - host: api.jh-development.npool.top
+      http: *http_rules
+    - host: api.singapore-testing.npool.top
       http: *http_rules
