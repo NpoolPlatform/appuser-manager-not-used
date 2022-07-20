@@ -476,6 +476,12 @@ func (aueq *AppUserExtraQuery) ForShare(opts ...sql.LockOption) *AppUserExtraQue
 	return aueq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aueq *AppUserExtraQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserExtraSelect {
+	aueq.modifiers = append(aueq.modifiers, modifiers...)
+	return aueq.Select()
+}
+
 // AppUserExtraGroupBy is the group-by builder for AppUserExtra entities.
 type AppUserExtraGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (aues *AppUserExtraSelect) sqlScan(ctx context.Context, v interface{}) erro
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aues *AppUserExtraSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserExtraSelect {
+	aues.modifiers = append(aues.modifiers, modifiers...)
+	return aues
 }

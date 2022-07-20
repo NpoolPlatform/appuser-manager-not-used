@@ -476,6 +476,12 @@ func (aq *AppQuery) ForShare(opts ...sql.LockOption) *AppQuery {
 	return aq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aq *AppQuery) Modify(modifiers ...func(s *sql.Selector)) *AppSelect {
+	aq.modifiers = append(aq.modifiers, modifiers...)
+	return aq.Select()
+}
+
 // AppGroupBy is the group-by builder for App entities.
 type AppGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (as *AppSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (as *AppSelect) Modify(modifiers ...func(s *sql.Selector)) *AppSelect {
+	as.modifiers = append(as.modifiers, modifiers...)
+	return as
 }

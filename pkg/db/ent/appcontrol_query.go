@@ -476,6 +476,12 @@ func (acq *AppControlQuery) ForShare(opts ...sql.LockOption) *AppControlQuery {
 	return acq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (acq *AppControlQuery) Modify(modifiers ...func(s *sql.Selector)) *AppControlSelect {
+	acq.modifiers = append(acq.modifiers, modifiers...)
+	return acq.Select()
+}
+
 // AppControlGroupBy is the group-by builder for AppControl entities.
 type AppControlGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (acs *AppControlSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (acs *AppControlSelect) Modify(modifiers ...func(s *sql.Selector)) *AppControlSelect {
+	acs.modifiers = append(acs.modifiers, modifiers...)
+	return acs
 }

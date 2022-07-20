@@ -110,20 +110,24 @@ func GetAppOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.App, error) {
 	return info.(*npool.App), nil
 }
 
-func GetAppsV2(ctx context.Context, conds *npool.Conds) ([]*npool.App, error) {
+func GetAppsV2(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.App, uint32, error) {
+	var total uint32
 	infos, err := doApp(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppClient) (cruder.Any, error) {
 		resp, err := cli.GetAppsV2(ctx, &npool.GetAppsRequest{
-			Conds: conds,
+			Conds:  conds,
+			Limit:  limit,
+			Offset: offset,
 		})
 		if err != nil {
 			return nil, fmt.Errorf("fail get apps: %v", err)
 		}
+		total = resp.GetTotal()
 		return resp.GetInfos(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get apps: %v", err)
+		return nil, 0, fmt.Errorf("fail get apps: %v", err)
 	}
-	return infos.([]*npool.App), nil
+	return infos.([]*npool.App), total, nil
 }
 
 func ExistAppV2(ctx context.Context, id string) (bool, error) {

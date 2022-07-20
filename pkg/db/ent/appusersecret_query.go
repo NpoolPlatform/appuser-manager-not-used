@@ -476,6 +476,12 @@ func (ausq *AppUserSecretQuery) ForShare(opts ...sql.LockOption) *AppUserSecretQ
 	return ausq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (ausq *AppUserSecretQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserSecretSelect {
+	ausq.modifiers = append(ausq.modifiers, modifiers...)
+	return ausq.Select()
+}
+
 // AppUserSecretGroupBy is the group-by builder for AppUserSecret entities.
 type AppUserSecretGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (auss *AppUserSecretSelect) sqlScan(ctx context.Context, v interface{}) err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (auss *AppUserSecretSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserSecretSelect {
+	auss.modifiers = append(auss.modifiers, modifiers...)
+	return auss
 }

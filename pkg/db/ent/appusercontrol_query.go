@@ -476,6 +476,12 @@ func (aucq *AppUserControlQuery) ForShare(opts ...sql.LockOption) *AppUserContro
 	return aucq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aucq *AppUserControlQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserControlSelect {
+	aucq.modifiers = append(aucq.modifiers, modifiers...)
+	return aucq.Select()
+}
+
 // AppUserControlGroupBy is the group-by builder for AppUserControl entities.
 type AppUserControlGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (aucs *AppUserControlSelect) sqlScan(ctx context.Context, v interface{}) er
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aucs *AppUserControlSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserControlSelect {
+	aucs.modifiers = append(aucs.modifiers, modifiers...)
+	return aucs
 }

@@ -476,6 +476,12 @@ func (baq *BanAppQuery) ForShare(opts ...sql.LockOption) *BanAppQuery {
 	return baq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (baq *BanAppQuery) Modify(modifiers ...func(s *sql.Selector)) *BanAppSelect {
+	baq.modifiers = append(baq.modifiers, modifiers...)
+	return baq.Select()
+}
+
 // BanAppGroupBy is the group-by builder for BanApp entities.
 type BanAppGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (bas *BanAppSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (bas *BanAppSelect) Modify(modifiers ...func(s *sql.Selector)) *BanAppSelect {
+	bas.modifiers = append(bas.modifiers, modifiers...)
+	return bas
 }

@@ -476,6 +476,12 @@ func (aruq *AppRoleUserQuery) ForShare(opts ...sql.LockOption) *AppRoleUserQuery
 	return aruq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aruq *AppRoleUserQuery) Modify(modifiers ...func(s *sql.Selector)) *AppRoleUserSelect {
+	aruq.modifiers = append(aruq.modifiers, modifiers...)
+	return aruq.Select()
+}
+
 // AppRoleUserGroupBy is the group-by builder for AppRoleUser entities.
 type AppRoleUserGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (arus *AppRoleUserSelect) sqlScan(ctx context.Context, v interface{}) error
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (arus *AppRoleUserSelect) Modify(modifiers ...func(s *sql.Selector)) *AppRoleUserSelect {
+	arus.modifiers = append(arus.modifiers, modifiers...)
+	return arus
 }

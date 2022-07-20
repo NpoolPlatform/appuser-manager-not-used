@@ -476,6 +476,12 @@ func (arq *AppRoleQuery) ForShare(opts ...sql.LockOption) *AppRoleQuery {
 	return arq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (arq *AppRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *AppRoleSelect {
+	arq.modifiers = append(arq.modifiers, modifiers...)
+	return arq.Select()
+}
+
 // AppRoleGroupBy is the group-by builder for AppRole entities.
 type AppRoleGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (ars *AppRoleSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (ars *AppRoleSelect) Modify(modifiers ...func(s *sql.Selector)) *AppRoleSelect {
+	ars.modifiers = append(ars.modifiers, modifiers...)
+	return ars
 }

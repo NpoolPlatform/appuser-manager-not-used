@@ -476,6 +476,12 @@ func (autpq *AppUserThirdPartyQuery) ForShare(opts ...sql.LockOption) *AppUserTh
 	return autpq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (autpq *AppUserThirdPartyQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserThirdPartySelect {
+	autpq.modifiers = append(autpq.modifiers, modifiers...)
+	return autpq.Select()
+}
+
 // AppUserThirdPartyGroupBy is the group-by builder for AppUserThirdParty entities.
 type AppUserThirdPartyGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (autps *AppUserThirdPartySelect) sqlScan(ctx context.Context, v interface{}
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (autps *AppUserThirdPartySelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserThirdPartySelect {
+	autps.modifiers = append(autps.modifiers, modifiers...)
+	return autps
 }

@@ -215,7 +215,7 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		}
 	}
 	if conds.CreatedBy != nil {
-		createdBy := uuid.MustParse(conds.GetID().GetValue())
+		createdBy := uuid.MustParse(conds.GetCreatedBy().GetValue())
 		switch conds.GetCreatedBy().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.CreatedBy(createdBy))

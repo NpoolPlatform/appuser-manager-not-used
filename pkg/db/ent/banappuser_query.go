@@ -476,6 +476,12 @@ func (bauq *BanAppUserQuery) ForShare(opts ...sql.LockOption) *BanAppUserQuery {
 	return bauq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (bauq *BanAppUserQuery) Modify(modifiers ...func(s *sql.Selector)) *BanAppUserSelect {
+	bauq.modifiers = append(bauq.modifiers, modifiers...)
+	return bauq.Select()
+}
+
 // BanAppUserGroupBy is the group-by builder for BanAppUser entities.
 type BanAppUserGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (baus *BanAppUserSelect) sqlScan(ctx context.Context, v interface{}) error 
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (baus *BanAppUserSelect) Modify(modifiers ...func(s *sql.Selector)) *BanAppUserSelect {
+	baus.modifiers = append(baus.modifiers, modifiers...)
+	return baus
 }
