@@ -3,7 +3,6 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/index"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
@@ -32,17 +31,5 @@ func (AppUser) Fields() []ent.Field {
 		field.String("phone_no").
 			Default(""),
 		field.UUID("import_from_app", uuid.UUID{}),
-	}
-}
-
-// Edges of the AppUser.
-func (AppUser) Edges() []ent.Edge {
-	return nil
-}
-
-func (AppUser) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("app_id", "email_address"),
-		index.Fields("app_id", "phone_no"),
 	}
 }

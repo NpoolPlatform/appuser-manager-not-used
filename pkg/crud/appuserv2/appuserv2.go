@@ -203,7 +203,7 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 			stm.Where(appuser.ID(id))
 
 		case cruder.IN:
-			stm.Where(appuser.ID(id))
+			stm.Where(appuser.IDIn(id))
 
 		default:
 			return nil, fmt.Errorf("invalid appuser field")

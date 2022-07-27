@@ -589,6 +589,20 @@ func UserIDLTE(v uuid.UUID) predicate.AppRoleUser {
 	})
 }
 
+// UserIDIsNil applies the IsNil predicate on the "user_id" field.
+func UserIDIsNil() predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUserID)))
+	})
+}
+
+// UserIDNotNil applies the NotNil predicate on the "user_id" field.
+func UserIDNotNil() predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUserID)))
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.AppRoleUser) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {

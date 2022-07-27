@@ -110,20 +110,25 @@ func GetAppRoleOnlyV2(ctx context.Context, conds *npool.Conds) (*npool.AppRole, 
 	return info.(*npool.AppRole), nil
 }
 
-func GetAppRolesV2(ctx context.Context, conds *npool.Conds) ([]*npool.AppRole, error) {
+func GetAppRolesV2(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppRole, uint32, error) {
+	var total uint32
+
 	infos, err := doAppRole(ctx, func(_ctx context.Context, cli npool.AppUserManagerAppRoleClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRolesV2(ctx, &npool.GetAppRolesRequest{
-			Conds: conds,
+			Conds:  conds,
+			Offset: offset,
+			Limit:  limit,
 		})
 		if err != nil {
 			return nil, fmt.Errorf("fail get app role: %v", err)
 		}
+		total = resp.GetTotal()
 		return resp.GetInfos(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get app role: %v", err)
+		return nil, total, fmt.Errorf("fail get app role: %v", err)
 	}
-	return infos.([]*npool.AppRole), nil
+	return infos.([]*npool.AppRole), total, nil
 }
 
 func ExistAppRoleV2(ctx context.Context, id string) (bool, error) {

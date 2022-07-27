@@ -39,20 +39,24 @@ func banAppRowToObject(row *ent.BanApp) *npool.BanApp {
 }
 
 func (s *BanAppServer) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAppRequest) (*npool.CreateBanAppResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBanAppV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.BanAppSpanAttributes(span, in.GetInfo())
+
 	err = checkBanAppInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateBanAppResponse{}, err
 	}
+
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
@@ -66,15 +70,17 @@ func (s *BanAppServer) CreateBanAppV2(ctx context.Context, in *npool.CreateBanAp
 }
 
 func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanAppsRequest) (*npool.CreateBanAppsResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBanAppsV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateBanAppsResponse{},
 			status.Error(codes.InvalidArgument,
@@ -85,14 +91,16 @@ func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanA
 
 	for key, info := range in.GetInfos() {
 		span.SetAttributes(
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("Message"+fmt.Sprintf("%v", key), info.GetMessage()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("Message.%v", key), info.GetMessage()),
 		)
+
 		err := checkBanAppInfo(info)
 		if err != nil {
 			return &npool.CreateBanAppsResponse{}, err
 		}
+
 		if _, ok := dupAppID[info.GetAppID()]; ok {
 			return &npool.CreateBanAppsResponse{},
 				status.Errorf(codes.AlreadyExists,
@@ -102,6 +110,7 @@ func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanA
 		}
 		dupAppID[info.GetAppID()] = struct{}{}
 	}
+
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
@@ -120,20 +129,24 @@ func (s *BanAppServer) CreateBanAppsV2(ctx context.Context, in *npool.CreateBanA
 }
 
 func (s *BanAppServer) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAppRequest) (*npool.UpdateBanAppResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateBanAppV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.BanAppSpanAttributes(span, in.GetInfo())
+
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("BanApp id is invalid")
 		return &npool.UpdateBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
 	if err != nil {
@@ -147,22 +160,26 @@ func (s *BanAppServer) UpdateBanAppV2(ctx context.Context, in *npool.UpdateBanAp
 }
 
 func (s *BanAppServer) GetBanAppV2(ctx context.Context, in *npool.GetBanAppRequest) (*npool.GetBanAppResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetBanAppV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 	)
+
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
 	if err != nil {
@@ -176,16 +193,19 @@ func (s *BanAppServer) GetBanAppV2(ctx context.Context, in *npool.GetBanAppReque
 }
 
 func (s *BanAppServer) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppOnlyRequest) (*npool.GetBanAppOnlyResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetBanAppOnlyV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
+
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
@@ -199,20 +219,24 @@ func (s *BanAppServer) GetBanAppOnlyV2(ctx context.Context, in *npool.GetBanAppO
 }
 
 func (s *BanAppServer) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsRequest) (*npool.GetBanAppsResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetBanAppsV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
+
 	span.SetAttributes(
 		attribute.Int("Offset", int(in.GetOffset())),
 		attribute.Int("Limit", int(in.GetLimit())),
 	)
+
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
@@ -232,22 +256,26 @@ func (s *BanAppServer) GetBanAppsV2(ctx context.Context, in *npool.GetBanAppsReq
 }
 
 func (s *BanAppServer) ExistBanAppV2(ctx context.Context, in *npool.ExistBanAppRequest) (*npool.ExistBanAppResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistBanAppV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 	)
+
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
 	if err != nil {
@@ -261,16 +289,19 @@ func (s *BanAppServer) ExistBanAppV2(ctx context.Context, in *npool.ExistBanAppR
 }
 
 func (s *BanAppServer) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBanAppCondsRequest) (*npool.ExistBanAppCondsResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistBanAppCondsV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
+
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
@@ -284,16 +315,19 @@ func (s *BanAppServer) ExistBanAppCondsV2(ctx context.Context, in *npool.ExistBa
 }
 
 func (s *BanAppServer) CountBanAppsV2(ctx context.Context, in *npool.CountBanAppsRequest) (*npool.CountBanAppsResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountBanAppsV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.BanAppCondsSpanAttributes(span, in.GetConds())
+
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
@@ -307,22 +341,26 @@ func (s *BanAppServer) CountBanAppsV2(ctx context.Context, in *npool.CountBanApp
 }
 
 func (s *BanAppServer) DeleteBanAppV2(ctx context.Context, in *npool.DeleteBanAppRequest) (*npool.DeleteBanAppResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteBanAppV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 	)
+
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteBanAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
 	if err != nil {

@@ -27,11 +27,6 @@ func (AppRoleUser) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("role_id", uuid.UUID{}),
-		field.UUID("user_id", uuid.UUID{}),
+		field.UUID("user_id", uuid.UUID{}).Optional(),
 	}
-}
-
-// Edges of the AppRoleUser.
-func (AppRoleUser) Edges() []ent.Edge {
-	return nil
 }

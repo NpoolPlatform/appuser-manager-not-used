@@ -101,6 +101,20 @@ func (aruu *AppRoleUserUpdate) SetUserID(u uuid.UUID) *AppRoleUserUpdate {
 	return aruu
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (aruu *AppRoleUserUpdate) SetNillableUserID(u *uuid.UUID) *AppRoleUserUpdate {
+	if u != nil {
+		aruu.SetUserID(*u)
+	}
+	return aruu
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (aruu *AppRoleUserUpdate) ClearUserID() *AppRoleUserUpdate {
+	aruu.mutation.ClearUserID()
+	return aruu
+}
+
 // Mutation returns the AppRoleUserMutation object of the builder.
 func (aruu *AppRoleUserUpdate) Mutation() *AppRoleUserMutation {
 	return aruu.mutation
@@ -256,6 +270,12 @@ func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approleuser.FieldUserID,
 		})
 	}
+	if aruu.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approleuser.FieldUserID,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, aruu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{approleuser.Label}
@@ -345,6 +365,20 @@ func (aruuo *AppRoleUserUpdateOne) SetRoleID(u uuid.UUID) *AppRoleUserUpdateOne 
 // SetUserID sets the "user_id" field.
 func (aruuo *AppRoleUserUpdateOne) SetUserID(u uuid.UUID) *AppRoleUserUpdateOne {
 	aruuo.mutation.SetUserID(u)
+	return aruuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (aruuo *AppRoleUserUpdateOne) SetNillableUserID(u *uuid.UUID) *AppRoleUserUpdateOne {
+	if u != nil {
+		aruuo.SetUserID(*u)
+	}
+	return aruuo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (aruuo *AppRoleUserUpdateOne) ClearUserID() *AppRoleUserUpdateOne {
+	aruuo.mutation.ClearUserID()
 	return aruuo
 }
 
@@ -524,6 +558,12 @@ func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleU
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: approleuser.FieldUserID,
+		})
+	}
+	if aruuo.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: approleuser.FieldUserID,
 		})
 	}

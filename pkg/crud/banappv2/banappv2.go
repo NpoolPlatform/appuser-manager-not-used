@@ -55,9 +55,6 @@ func Create(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.BanApp.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
 		if in.AppID != nil {
 			c.SetAppID(uuid.MustParse(in.GetAppID()))
 		}
@@ -99,9 +96,6 @@ func CreateBulk(ctx context.Context, in []*npool.BanAppReq) ([]*ent.BanApp, erro
 		bulk := make([]*ent.BanAppCreate, len(in))
 		for i, info := range in {
 			bulk[i] = tx.BanApp.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
 			if info.AppID != nil {
 				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
 			}

@@ -2888,9 +2888,22 @@ func (m *AppRoleUserMutation) OldUserID(ctx context.Context) (v uuid.UUID, err e
 	return oldValue.UserID, nil
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (m *AppRoleUserMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[approleuser.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *AppRoleUserMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[approleuser.FieldUserID]
+	return ok
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *AppRoleUserMutation) ResetUserID() {
 	m.user_id = nil
+	delete(m.clearedFields, approleuser.FieldUserID)
 }
 
 // Where appends a list predicates to the AppRoleUserMutation builder.
@@ -3091,7 +3104,11 @@ func (m *AppRoleUserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppRoleUserMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(approleuser.FieldUserID) {
+		fields = append(fields, approleuser.FieldUserID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3104,6 +3121,11 @@ func (m *AppRoleUserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppRoleUserMutation) ClearField(name string) error {
+	switch name {
+	case approleuser.FieldUserID:
+		m.ClearUserID()
+		return nil
+	}
 	return fmt.Errorf("unknown AppRoleUser nullable field %s", name)
 }
 

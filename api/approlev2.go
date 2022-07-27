@@ -58,20 +58,23 @@ func appRoleRowToObject(row *ent.AppRole) *npool.AppRole {
 }
 
 func (s *AppRoleServer) CreateAppRoleV2(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppRoleV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.AppRoleSpanAttributes(span, in.GetInfo())
 	err = checkAppRoleInfo(in.GetInfo())
 	if err != nil {
 		return &npool.CreateAppRoleResponse{}, err
 	}
+
 	span.AddEvent("call crud Create")
 	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
@@ -85,35 +88,39 @@ func (s *AppRoleServer) CreateAppRoleV2(ctx context.Context, in *npool.CreateApp
 }
 
 func (s *AppRoleServer) CreateAppRolesV2(ctx context.Context, in *npool.CreateAppRolesRequest) (*npool.CreateAppRolesResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppRolesV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateAppRolesResponse{},
 			status.Error(codes.InvalidArgument,
 				"Batah create resource must more than 1",
 			)
 	}
+
 	for key, info := range in.GetInfos() {
 		span.SetAttributes(
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("Role"+fmt.Sprintf("%v", key), info.GetRole()),
-			attribute.String("Description"+fmt.Sprintf("%v", key), info.GetDescription()),
-			attribute.String("CreatedBy"+fmt.Sprintf("%v", key), info.GetCreatedBy()),
-			attribute.Bool("Default"+fmt.Sprintf("%v", key), info.GetDefault()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("Role.%v", key), info.GetRole()),
+			attribute.String(fmt.Sprintf("Description.%v", key), info.GetDescription()),
+			attribute.String(fmt.Sprintf("CreatedBy.%v", key), info.GetCreatedBy()),
+			attribute.Bool(fmt.Sprintf("Default.%v", key), info.GetDefault()),
 		)
 		err = checkAppRoleInfo(info)
 		if err != nil {
 			return &npool.CreateAppRolesResponse{}, err
 		}
 	}
+
 	span.AddEvent("call crud CreateBulk")
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
@@ -132,20 +139,23 @@ func (s *AppRoleServer) CreateAppRolesV2(ctx context.Context, in *npool.CreateAp
 }
 
 func (s *AppRoleServer) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateAppRoleRequest) (*npool.UpdateAppRoleResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppRoleV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.AppRoleSpanAttributes(span, in.GetInfo())
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
 		logger.Sugar().Errorf("app role id is invalid")
 		return &npool.UpdateAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Update")
 	info, err := crud.Update(ctx, in.GetInfo())
 	if err != nil {
@@ -159,9 +169,10 @@ func (s *AppRoleServer) UpdateAppRoleV2(ctx context.Context, in *npool.UpdateApp
 }
 
 func (s *AppRoleServer) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRequest) (*npool.GetAppRoleResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppRoleV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
@@ -171,10 +182,12 @@ func (s *AppRoleServer) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRe
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 	)
+
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.GetAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Row")
 	info, err := crud.Row(ctx, id)
 	if err != nil {
@@ -188,9 +201,10 @@ func (s *AppRoleServer) GetAppRoleV2(ctx context.Context, in *npool.GetAppRoleRe
 }
 
 func (s *AppRoleServer) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRoleOnlyRequest) (*npool.GetAppRoleOnlyResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppRoleOnlyV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
@@ -198,6 +212,7 @@ func (s *AppRoleServer) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRo
 		}
 	}()
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
+
 	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
@@ -211,20 +226,23 @@ func (s *AppRoleServer) GetAppRoleOnlyV2(ctx context.Context, in *npool.GetAppRo
 }
 
 func (s *AppRoleServer) GetAppRolesV2(ctx context.Context, in *npool.GetAppRolesRequest) (*npool.GetAppRolesResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppRolesV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.SetAttributes(
 		attribute.Int("Limit", int(in.GetLimit())),
 		attribute.Int("Offset", int(in.GetOffset())),
 	)
+
 	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
@@ -244,9 +262,10 @@ func (s *AppRoleServer) GetAppRolesV2(ctx context.Context, in *npool.GetAppRoles
 }
 
 func (s *AppRoleServer) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRoleRequest) (*npool.ExistAppRoleResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppRoleV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
@@ -256,10 +275,12 @@ func (s *AppRoleServer) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRo
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 	)
+
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.ExistAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Exist")
 	exist, err := crud.Exist(ctx, id)
 	if err != nil {
@@ -273,15 +294,17 @@ func (s *AppRoleServer) ExistAppRoleV2(ctx context.Context, in *npool.ExistAppRo
 }
 
 func (s *AppRoleServer) ExistAppRoleCondsV2(ctx context.Context, in *npool.ExistAppRoleCondsRequest) (*npool.ExistAppRoleCondsResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppRoleCondsV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
@@ -296,15 +319,17 @@ func (s *AppRoleServer) ExistAppRoleCondsV2(ctx context.Context, in *npool.Exist
 }
 
 func (s *AppRoleServer) CountAppRolesV2(ctx context.Context, in *npool.CountAppRolesRequest) (*npool.CountAppRolesResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppRolesV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span = crud.AppRoleCondsSpanAttributes(span, in.GetConds())
 	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
@@ -319,22 +344,26 @@ func (s *AppRoleServer) CountAppRolesV2(ctx context.Context, in *npool.CountAppR
 }
 
 func (s *AppRoleServer) DeleteAppRoleV2(ctx context.Context, in *npool.DeleteAppRoleRequest) (*npool.DeleteAppRoleResponse, error) {
+	var err error
+
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppRoleV2")
 	defer span.End()
-	var err error
 	defer func() {
 		if err != nil {
 			span.SetStatus(scodes.Error, err.Error())
 			span.RecordError(err)
 		}
 	}()
+
 	span.SetAttributes(
 		attribute.String("ID", in.GetID()),
 	)
+
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
 		return &npool.DeleteAppRoleResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	span.AddEvent("call crud Delete")
 	info, err := crud.Delete(ctx, id)
 	if err != nil {

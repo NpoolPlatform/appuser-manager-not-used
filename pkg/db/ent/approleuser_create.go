@@ -83,6 +83,14 @@ func (aruc *AppRoleUserCreate) SetUserID(u uuid.UUID) *AppRoleUserCreate {
 	return aruc
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (aruc *AppRoleUserCreate) SetNillableUserID(u *uuid.UUID) *AppRoleUserCreate {
+	if u != nil {
+		aruc.SetUserID(*u)
+	}
+	return aruc
+}
+
 // SetID sets the "id" field.
 func (aruc *AppRoleUserCreate) SetID(u uuid.UUID) *AppRoleUserCreate {
 	aruc.mutation.SetID(u)
@@ -217,9 +225,6 @@ func (aruc *AppRoleUserCreate) check() error {
 	}
 	if _, ok := aruc.mutation.RoleID(); !ok {
 		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "AppRoleUser.role_id"`)}
-	}
-	if _, ok := aruc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppRoleUser.user_id"`)}
 	}
 	return nil
 }
@@ -450,6 +455,12 @@ func (u *AppRoleUserUpsert) UpdateUserID() *AppRoleUserUpsert {
 	return u
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppRoleUserUpsert) ClearUserID() *AppRoleUserUpsert {
+	u.SetNull(approleuser.FieldUserID)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -602,6 +613,13 @@ func (u *AppRoleUserUpsertOne) SetUserID(v uuid.UUID) *AppRoleUserUpsertOne {
 func (u *AppRoleUserUpsertOne) UpdateUserID() *AppRoleUserUpsertOne {
 	return u.Update(func(s *AppRoleUserUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppRoleUserUpsertOne) ClearUserID() *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -923,6 +941,13 @@ func (u *AppRoleUserUpsertBulk) SetUserID(v uuid.UUID) *AppRoleUserUpsertBulk {
 func (u *AppRoleUserUpsertBulk) UpdateUserID() *AppRoleUserUpsertBulk {
 	return u.Update(func(s *AppRoleUserUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppRoleUserUpsertBulk) ClearUserID() *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.ClearUserID()
 	})
 }
 

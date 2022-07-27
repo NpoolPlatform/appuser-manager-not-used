@@ -78,7 +78,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "role_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
 	}
 	// AppRoleUsersTable holds the schema information for the "app_role_users" table.
 	AppRoleUsersTable = &schema.Table{
@@ -102,18 +102,6 @@ var (
 		Name:       "app_users",
 		Columns:    AppUsersColumns,
 		PrimaryKey: []*schema.Column{AppUsersColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "appuser_app_id_email_address",
-				Unique:  false,
-				Columns: []*schema.Column{AppUsersColumns[4], AppUsersColumns[5]},
-			},
-			{
-				Name:    "appuser_app_id_phone_no",
-				Unique:  false,
-				Columns: []*schema.Column{AppUsersColumns[4], AppUsersColumns[6]},
-			},
-		},
 	}
 	// AppUserControlsColumns holds the columns for the "app_user_controls" table.
 	AppUserControlsColumns = []*schema.Column{
