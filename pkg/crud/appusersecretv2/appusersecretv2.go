@@ -105,12 +105,12 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUs
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("Salt"+fmt.Sprintf("%v", key), info.GetSalt()),
-			attribute.String("GoogleSecret"+fmt.Sprintf("%v", key), info.GetGoogleSecret()),
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
-			attribute.String("PasswordHash"+fmt.Sprintf("%v", key), info.GetPasswordHash()),
+			attribute.String(fmt.Sprintf("Salt.%v", key), info.GetSalt()),
+			attribute.String(fmt.Sprintf("GoogleSecret.%v", key), info.GetGoogleSecret()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("UserID.%v", key), info.GetUserID()),
+			attribute.String(fmt.Sprintf("PasswordHash.%v", key), info.GetPasswordHash()),
 		)
 		if err != nil {
 			return nil, err
@@ -215,10 +215,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusersecret.ID(id))
-
-		case cruder.IN:
-			stm.Where(appusersecret.ID(id))
-
 		default:
 			return nil, fmt.Errorf("invalid appusersecret field")
 		}
@@ -228,10 +224,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusersecret.AppID(appID))
-
-		case cruder.IN:
-			stm.Where(appusersecret.AppID(appID))
-
 		default:
 			return nil, fmt.Errorf("invalid appusersecret field")
 		}
@@ -241,10 +233,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusersecret.UserID(userID))
-
-		case cruder.IN:
-			stm.Where(appusersecret.UserID(userID))
-
 		default:
 			return nil, fmt.Errorf("invalid appusersecret field")
 		}

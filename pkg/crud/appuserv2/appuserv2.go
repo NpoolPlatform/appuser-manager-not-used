@@ -99,11 +99,11 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserReq) ([]*ent.AppUser, er
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("PhoneNo"+fmt.Sprintf("%v", key), info.GetPhoneNo()),
-			attribute.String("ImportFromApp"+fmt.Sprintf("%v", key), info.GetImportFromApp()),
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("EmailAddress"+fmt.Sprintf("%v", key), info.GetEmailAddress()),
+			attribute.String(fmt.Sprintf("PhoneNo.%v", key), info.GetPhoneNo()),
+			attribute.String(fmt.Sprintf("ImportFromApp.%v", key), info.GetImportFromApp()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("EmailAddress.%v", key), info.GetEmailAddress()),
 		)
 		if err != nil {
 			return nil, err
@@ -201,10 +201,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuser.ID(id))
-
-		case cruder.IN:
-			stm.Where(appuser.IDIn(id))
-
 		default:
 			return nil, fmt.Errorf("invalid appuser field")
 		}
@@ -226,10 +222,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		switch conds.GetEmailAddress().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuser.EmailAddress(conds.GetEmailAddress().GetValue()))
-
-		case cruder.IN:
-			stm.Where(appuser.EmailAddress(conds.GetEmailAddress().GetValue()))
-
 		default:
 			return nil, fmt.Errorf("invalid appuser field")
 		}
@@ -238,10 +230,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		switch conds.GetPhoneNo().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuser.PhoneNo(conds.GetPhoneNo().GetValue()))
-
-		case cruder.IN:
-			stm.Where(appuser.PhoneNo(conds.GetPhoneNo().GetValue()))
-
 		default:
 			return nil, fmt.Errorf("invalid appuser field")
 		}
@@ -251,10 +239,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		switch conds.GetImportFromApp().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuser.ImportFromApp(importFromApp))
-
-		case cruder.IN:
-			stm.Where(appuser.ImportFromApp(importFromApp))
-
 		default:
 			return nil, fmt.Errorf("invalid appuser field")
 		}

@@ -111,13 +111,13 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.A
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
-			attribute.String("ThirdPartyUserID"+fmt.Sprintf("%v", key), info.GetThirdPartyUserID()),
-			attribute.String("ThirdPartyID"+fmt.Sprintf("%v", key), info.GetThirdPartyID()),
-			attribute.String("ThirdPartyUsername"+fmt.Sprintf("%v", key), info.GetThirdPartyUsername()),
-			attribute.String("ThirdPartyUserAvatar"+fmt.Sprintf("%v", key), info.GetThirdPartyUserAvatar()),
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("UserID.%v", key), info.GetUserID()),
+			attribute.String(fmt.Sprintf("ThirdPartyUserID.%v", key), info.GetThirdPartyUserID()),
+			attribute.String(fmt.Sprintf("ThirdPartyID.%v", key), info.GetThirdPartyID()),
+			attribute.String(fmt.Sprintf("ThirdPartyUsername.%v", key), info.GetThirdPartyUsername()),
+			attribute.String(fmt.Sprintf("ThirdPartyUserAvatar.%v", key), info.GetThirdPartyUserAvatar()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
 		)
 		if err != nil {
 			return nil, err
@@ -223,9 +223,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQ
 		case cruder.EQ:
 			stm.Where(appuserthirdparty.ID(id))
 
-		case cruder.IN:
-			stm.Where(appuserthirdparty.ID(id))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserthirdparty field")
 		}
@@ -235,10 +232,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQ
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserthirdparty.AppID(appID))
-
-		case cruder.IN:
-			stm.Where(appuserthirdparty.AppID(appID))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserthirdparty field")
 		}
@@ -248,10 +241,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQ
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserthirdparty.UserID(userID))
-
-		case cruder.IN:
-			stm.Where(appuserthirdparty.UserID(userID))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserthirdparty field")
 		}
@@ -260,10 +249,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQ
 		switch conds.GetThirdPartyUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserthirdparty.ThirdPartyUserID(conds.GetThirdPartyUserID().GetValue()))
-
-		case cruder.IN:
-			stm.Where(appuserthirdparty.ThirdPartyUserID(conds.GetThirdPartyUserID().GetValue()))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserthirdparty field")
 		}
@@ -272,10 +257,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQ
 		switch conds.GetThirdPartyID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserthirdparty.ThirdPartyID(conds.GetThirdPartyID().GetValue()))
-
-		case cruder.IN:
-			stm.Where(appuserthirdparty.ThirdPartyID(conds.GetThirdPartyID().GetValue()))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserthirdparty field")
 		}

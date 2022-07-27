@@ -84,9 +84,9 @@ func CreateBulk(ctx context.Context, in []*npool.BanAppReq) ([]*ent.BanApp, erro
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("Message"+fmt.Sprintf("%v", key), info.GetMessage()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("Message.%v", key), info.GetMessage()),
 		)
 		if err != nil {
 			return nil, err
@@ -173,10 +173,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.BanAppQuery, error
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(banapp.ID(id))
-
-		case cruder.IN:
-			stm.Where(banapp.ID(id))
-
 		default:
 			return nil, fmt.Errorf("invalid banapp field")
 		}
@@ -186,10 +182,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.BanAppQuery, error
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(banapp.AppID(appID))
-
-		case cruder.IN:
-			stm.Where(banapp.AppID(appID))
-
 		default:
 			return nil, fmt.Errorf("invalid banapp field")
 		}

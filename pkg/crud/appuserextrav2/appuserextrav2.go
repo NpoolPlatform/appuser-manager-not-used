@@ -150,20 +150,20 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserExtraReq) ([]*ent.AppUse
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
-			attribute.StringSlice("AddressFields"+fmt.Sprintf("%v", key), info.GetAddressFields()),
-			attribute.String("Username"+fmt.Sprintf("%v", key), info.GetUsername()),
-			attribute.Int("Age"+fmt.Sprintf("%v", key), int(info.GetAge())),
-			attribute.String("Avatar"+fmt.Sprintf("%v", key), info.GetAvatar()),
-			attribute.Int("Birthday"+fmt.Sprintf("%v", key), int(info.GetBirthday())),
-			attribute.String("FirstName"+fmt.Sprintf("%v", key), info.GetFirstName()),
-			attribute.String("Gender"+fmt.Sprintf("%v", key), info.GetGender()),
-			attribute.String("IDNumber"+fmt.Sprintf("%v", key), info.GetIDNumber()),
-			attribute.String("LastName"+fmt.Sprintf("%v", key), info.GetLastName()),
-			attribute.String("Organization"+fmt.Sprintf("%v", key), info.GetOrganization()),
-			attribute.String("PostalCode"+fmt.Sprintf("%v", key), info.GetPostalCode()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("UserID.%v", key), info.GetUserID()),
+			attribute.StringSlice(fmt.Sprintf("AddressFields.%v", key), info.GetAddressFields()),
+			attribute.String(fmt.Sprintf("Username.%v", key), info.GetUsername()),
+			attribute.Int(fmt.Sprintf("Age.%v", key), int(info.GetAge())),
+			attribute.String(fmt.Sprintf("Avatar.%v", key), info.GetAvatar()),
+			attribute.Int(fmt.Sprintf("Birthday.%v", key), int(info.GetBirthday())),
+			attribute.String(fmt.Sprintf("FirstName.%v", key), info.GetFirstName()),
+			attribute.String(fmt.Sprintf("Gender.%v", key), info.GetGender()),
+			attribute.String(fmt.Sprintf("IDNumber.%v", key), info.GetIDNumber()),
+			attribute.String(fmt.Sprintf("LastName.%v", key), info.GetLastName()),
+			attribute.String(fmt.Sprintf("Organization.%v", key), info.GetOrganization()),
+			attribute.String(fmt.Sprintf("PostalCode.%v", key), info.GetPostalCode()),
 		)
 		if err != nil {
 			return nil, err
@@ -286,9 +286,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 		case cruder.EQ:
 			stm.Where(appuserextra.ID(id))
 
-		case cruder.IN:
-			stm.Where(appuserextra.ID(id))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserextra field")
 		}
@@ -297,9 +294,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 		appID := uuid.MustParse(conds.GetAppID().GetValue())
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(appuserextra.AppID(appID))
-
-		case cruder.IN:
 			stm.Where(appuserextra.AppID(appID))
 
 		default:
@@ -312,9 +306,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 		case cruder.EQ:
 			stm.Where(appuserextra.UserID(userID))
 
-		case cruder.IN:
-			stm.Where(appuserextra.UserID(userID))
-
 		default:
 			return nil, fmt.Errorf("invalid appuserextra field")
 		}
@@ -322,9 +313,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 	if conds.IDNumber != nil {
 		switch conds.GetIDNumber().GetOp() {
 		case cruder.EQ:
-			stm.Where(appuserextra.IDNumber(conds.GetIDNumber().GetValue()))
-
-		case cruder.IN:
 			stm.Where(appuserextra.IDNumber(conds.GetIDNumber().GetValue()))
 
 		default:

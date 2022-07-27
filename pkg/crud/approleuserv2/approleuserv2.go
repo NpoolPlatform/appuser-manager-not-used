@@ -91,10 +91,10 @@ func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRole
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("UserID"+fmt.Sprintf("%v", key), info.GetUserID()),
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("RoleID"+fmt.Sprintf("%v", key), info.GetRoleID()),
+			attribute.String(fmt.Sprintf("UserID.%v", key), info.GetUserID()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("RoleID.%v", key), info.GetRoleID()),
 		)
 		if err != nil {
 			return nil, err
@@ -189,15 +189,10 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, error) {
 	stm := cli.AppRoleUser.Query()
 	if conds.ID != nil {
-
 		id := uuid.MustParse(conds.GetID().GetValue())
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.ID(id))
-
-		case cruder.IN:
-			stm.Where(approleuser.ID(id))
-
 		default:
 			return nil, fmt.Errorf("invalid approleuser field")
 		}
@@ -208,9 +203,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 		appID := uuid.MustParse(conds.GetAppID().GetValue())
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(approleuser.AppID(appID))
-
-		case cruder.IN:
 			stm.Where(approleuser.AppID(appID))
 
 		default:
@@ -224,10 +216,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 		switch conds.GetRoleID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.RoleID(roleID))
-
-		case cruder.IN:
-			stm.Where(approleuser.RoleID(roleID))
-
 		default:
 			return nil, fmt.Errorf("invalid approleuser field")
 		}
@@ -239,10 +227,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.UserID(userID))
-
-		case cruder.IN:
-			stm.Where(approleuser.UserID(userID))
-
 		default:
 			return nil, fmt.Errorf("invalid approleuser field")
 		}

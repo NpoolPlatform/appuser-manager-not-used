@@ -105,12 +105,12 @@ func CreateBulk(ctx context.Context, in []*npool.AppRoleReq) ([]*ent.AppRole, er
 	rows := []*ent.AppRole{}
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("AppID"+fmt.Sprintf("%v", key), info.GetAppID()),
-			attribute.String("Role"+fmt.Sprintf("%v", key), info.GetRole()),
-			attribute.String("Description"+fmt.Sprintf("%v", key), info.GetDescription()),
-			attribute.String("CreatedBy"+fmt.Sprintf("%v", key), info.GetCreatedBy()),
-			attribute.Bool("Default"+fmt.Sprintf("%v", key), info.GetDefault()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("AppID.%v", key), info.GetAppID()),
+			attribute.String(fmt.Sprintf("Role.%v", key), info.GetRole()),
+			attribute.String(fmt.Sprintf("Description.%v", key), info.GetDescription()),
+			attribute.String(fmt.Sprintf("CreatedBy.%v", key), info.GetCreatedBy()),
+			attribute.Bool(fmt.Sprintf("Default.%v", key), info.GetDefault()),
 		)
 		if err != nil {
 			return nil, err
@@ -215,7 +215,15 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 		case cruder.EQ:
 			stm.Where(approle.ID(id))
 		case cruder.IN:
-			stm.Where(approle.IDIn(id))
+			var ids []uuid.UUID
+			for _, val := range conds.GetIDIn().GetValue() {
+				id, err := uuid.Parse(val)
+				if err != nil {
+					return nil, err
+				}
+				ids = append(ids, id)
+			}
+			stm.Where(approle.IDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid app role field")
 		}
@@ -224,8 +232,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approle.AppID(uuid.MustParse(conds.GetAppID().GetValue())))
-		case cruder.IN:
-			stm.Where(approle.AppIDIn(uuid.MustParse(conds.GetAppID().GetValue())))
 		default:
 			return nil, fmt.Errorf("invalid app role field")
 		}
@@ -235,8 +241,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 		switch conds.GetCreatedBy().GetOp() {
 		case cruder.EQ:
 			stm.Where(approle.CreatedBy(createdBy))
-		case cruder.IN:
-			stm.Where(approle.CreatedByIn(createdBy))
 		default:
 			return nil, fmt.Errorf("invalid app role field")
 		}
@@ -246,8 +250,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 		switch conds.GetRole().GetOp() {
 		case cruder.EQ:
 			stm.Where(approle.Role(conds.GetRole().GetValue()))
-		case cruder.IN:
-			stm.Where(approle.RoleIn(conds.GetRole().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid app role field")
 		}
@@ -255,8 +257,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 	if conds.Default != nil {
 		switch conds.GetDefault().GetOp() {
 		case cruder.EQ:
-			stm.Where(approle.Default(conds.GetDefault().GetValue()))
-		case cruder.IN:
 			stm.Where(approle.Default(conds.GetDefault().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid app role field")

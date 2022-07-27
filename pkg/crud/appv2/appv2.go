@@ -99,12 +99,12 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	}()
 	for key, info := range in {
 		span.SetAttributes(
-			attribute.String("Description"+fmt.Sprintf("%v", key), info.GetDescription()),
-			attribute.String("ID"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("CreatedBy"+fmt.Sprintf("%v", key), info.GetID()),
-			attribute.String("Name"+fmt.Sprintf("%v", key), info.GetCreatedBy()),
-			attribute.String("Logo"+fmt.Sprintf("%v", key), info.GetName()),
-			attribute.Int("CreatedAt"+fmt.Sprintf("%v", key), int(info.GetCreatedAt())),
+			attribute.String(fmt.Sprintf("Description.%v", key), info.GetDescription()),
+			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("CreatedBy.%v", key), info.GetID()),
+			attribute.String(fmt.Sprintf("Name.%v", key), info.GetCreatedBy()),
+			attribute.String(fmt.Sprintf("Logo.%v", key), info.GetName()),
+			attribute.Int(fmt.Sprintf("CreatedAt.%v", key), int(info.GetCreatedAt())),
 		)
 		if err != nil {
 			return nil, err
@@ -204,12 +204,19 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 	stm := cli.App.Query()
 	if conds.ID != nil {
-		id := uuid.MustParse(conds.GetID().GetValue())
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(app.ID(id))
+			stm.Where(app.ID(uuid.MustParse(conds.GetID().GetValue())))
 		case cruder.IN:
-			stm.Where(app.IDIn(id))
+			var ids []uuid.UUID
+			for _, val := range conds.GetIDIn().GetValue() {
+				id, err := uuid.Parse(val)
+				if err != nil {
+					return nil, err
+				}
+				ids = append(ids, id)
+			}
+			stm.Where(app.IDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
@@ -219,8 +226,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		switch conds.GetCreatedBy().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.CreatedBy(createdBy))
-		case cruder.IN:
-			stm.Where(app.CreatedByIn(createdBy))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
