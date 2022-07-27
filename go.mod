@@ -107,4 +107,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/NpoolPlatform/message => github.com/NpoolPlatform/message v0.0.0-20220726071515-721ed4de210a
+replace github.com/NpoolPlatform/message => github.com/NpoolPlatform/message v0.0.0-20220726084955-1a083f4eb348
