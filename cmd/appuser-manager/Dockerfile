@@ -1,4 +1,4 @@
-FROM jrei/systemd-centos:7
+FROM uhub.service.ucloud.cn/entropypool/alpine:3.16
 
 WORKDIR /app
 
