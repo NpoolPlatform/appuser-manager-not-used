@@ -6,7 +6,7 @@ metadata:
   annotations:
     "sidecar.jaegertracing.io/inject": "true"
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: appuser-manager
@@ -18,7 +18,7 @@ spec:
       containers:
         - name: appuser-manager
           image: uhub.service.ucloud.cn/entropypool/appuser-manager:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           volumeMounts:
             - name: service-config
               mountPath: /etc/AppUserManager
