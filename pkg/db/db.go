@@ -64,8 +64,8 @@ func alterColumnNames(next schema.Applier) schema.Applier {
 		for _, table := range tables {
 		changeTableColumn:
 			for _, column := range columns {
-				dstColumn := column[0]
-				srcColumn := column[1]
+				dstColumn := column[1]
+				srcColumn := column[0]
 
 				query, args := entsql.
 					Select("datetime_precision").
