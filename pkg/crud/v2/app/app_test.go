@@ -11,7 +11,7 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	testinit "github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit" //nolint
 	val "github.com/NpoolPlatform/message/npool"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/app"
 

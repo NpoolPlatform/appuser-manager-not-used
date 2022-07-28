@@ -83,7 +83,7 @@ func CreateRevert(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npo
 	err = cli.
 		AppRoleUser.
 		Update().
-		SetDeleteAt(uint32(time.Now().Unix())).
+		SetDeletedAt(uint32(time.Now().Unix())).
 		Where(
 			approleuser.AppID(uuid.MustParse(in.GetInfo().GetAppID())),
 			approleuser.UserID(uuid.MustParse(in.GetInfo().GetUserID())),
@@ -275,7 +275,7 @@ func Delete(ctx context.Context, in *npool.DeleteAppRoleUserRequest) (*npool.Del
 	info, err := cli.
 		AppRoleUser.
 		UpdateOneID(id).
-		SetDeleteAt(uint32(time.Now().Unix())).
+		SetDeletedAt(uint32(time.Now().Unix())).
 		Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("fail delete app role user: %v", err)

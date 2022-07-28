@@ -6,6 +6,8 @@ import (
 	"time"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/app"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -19,34 +21,6 @@ import (
 	"github.com/google/uuid"
 )
 
-func AppSpanAttributes(span trace.Span, in *npool.AppReq) trace.Span {
-	span.SetAttributes(
-		attribute.String("Description", in.GetDescription()),
-		attribute.String("ID", in.GetID()),
-		attribute.String("CreatedBy", in.GetID()),
-		attribute.String("Name", in.GetCreatedBy()),
-		attribute.String("Logo", in.GetName()),
-		attribute.Int("CreatedAt", int(in.GetCreatedAt())),
-	)
-	return span
-}
-
-func AppCondsSpanAttributes(span trace.Span, in *npool.Conds) trace.Span {
-	span.SetAttributes(
-		attribute.String("Description.Op", in.GetDescription().GetOp()),
-		attribute.String("Description.Val", in.GetDescription().GetValue()),
-		attribute.String("ID.Op", in.GetID().GetOp()),
-		attribute.String("ID.Val", in.GetID().GetValue()),
-		attribute.String("CreatedBy.Op", in.GetID().GetOp()),
-		attribute.String("CreatedBy.Val", in.GetID().GetValue()),
-		attribute.String("Name.Op", in.GetCreatedBy().GetOp()),
-		attribute.String("Name.Val", in.GetCreatedBy().GetValue()),
-		attribute.String("Logo.Op", in.GetName().GetOp()),
-		attribute.String("Logo.Val", in.GetName().GetValue()),
-	)
-	return span
-}
-
 func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	var info *ent.App
 	var err error
@@ -58,7 +32,8 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 			span.RecordError(err)
 		}
 	}()
-	span = AppSpanAttributes(span, in)
+
+	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		c := cli.App.Create()
@@ -97,21 +72,11 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 			span.RecordError(err)
 		}
 	}()
-	for key, info := range in {
-		span.SetAttributes(
-			attribute.String(fmt.Sprintf("Description.%v", key), info.GetDescription()),
-			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
-			attribute.String(fmt.Sprintf("CreatedBy.%v", key), info.GetID()),
-			attribute.String(fmt.Sprintf("Name.%v", key), info.GetCreatedBy()),
-			attribute.String(fmt.Sprintf("Logo.%v", key), info.GetName()),
-			attribute.Int(fmt.Sprintf("CreatedAt.%v", key), int(info.GetCreatedAt())),
-		)
-		if err != nil {
-			return nil, err
-		}
-	}
+
+	span = tracer.TraceMany(span, in)
 
 	rows := []*ent.App{}
+
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
@@ -138,6 +103,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return rows, nil
 }
 

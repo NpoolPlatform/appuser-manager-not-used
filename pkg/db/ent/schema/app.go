@@ -22,15 +22,27 @@ func (App) Mixin() []ent.Mixin {
 // Fields of the App.
 func (App) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
+		field.
+			UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.UUID("created_by", uuid.UUID{}),
-		field.String("name").
+		field.
+			UUID("created_by", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			String("name").
+			Optional().
 			Unique(),
-		field.String("logo").
+		field.
+			String("logo").
+			Optional().
 			Default(""),
-		field.String("description").
+		field.
+			String("description").
+			Optional().
 			Default(""),
 	}
 }

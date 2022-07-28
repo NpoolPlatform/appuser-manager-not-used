@@ -117,7 +117,7 @@ func Get(ctx context.Context, in *npool.GetAppUserControlRequest) (*npool.GetApp
 		Where(
 			appusercontrol.And(
 				appusercontrol.ID(id),
-				appusercontrol.DeleteAt(0),
+				appusercontrol.DeletedAt(0),
 			),
 		).
 		All(ctx)

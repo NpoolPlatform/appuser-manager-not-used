@@ -29,7 +29,7 @@ func dbRowToAppUser(row *ent.AppUser) *npool.AppUser {
 		EmailAddress:  row.EmailAddress,
 		PhoneNO:       row.PhoneNo,
 		ImportFromApp: row.ImportFromApp.String(),
-		CreateAt:      row.CreateAt,
+		CreateAt:      row.CreatedAt,
 	}
 }
 
@@ -85,7 +85,7 @@ func CreateRevert(ctx context.Context, in *npool.CreateAppUserRequest) (*npool.C
 		return nil, fmt.Errorf("fail get db client: %v", err)
 	}
 	err = cli.
-		AppUser.UpdateOneID(id).SetDeleteAt(uint32(time.Now().Unix())).Exec(ctx)
+		AppUser.UpdateOneID(id).SetDeletedAt(uint32(time.Now().Unix())).Exec(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("fail create app user: %v", err)
 	}

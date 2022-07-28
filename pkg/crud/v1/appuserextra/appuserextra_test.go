@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	testinit "github.com/NpoolPlatform/appuser-manager/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit" //nolint
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 
 	"github.com/google/uuid"

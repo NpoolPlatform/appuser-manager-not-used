@@ -7,9 +7,14 @@ import (
 	"context"
 	"fmt"
 
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/app"
+	tracer "github.com/NpoolPlatform/appuser-manager/pkg/converter/app"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/app"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+
+	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
@@ -22,21 +27,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func appRowToObject(row *ent.App) *npool.App {
-	return &npool.App{
-		ID:          row.ID.String(),
-		CreatedBy:   row.CreatedBy.String(),
-		Name:        row.Name,
-		Logo:        row.Logo,
-		Description: row.Description,
-		CreatedAt:   row.CreatedAt,
-	}
-}
-
-func (s *Server) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
+func (s *Server) CreateApp(ctx context.Context, in *npool.CreateAppRequest) (*npool.CreateAppResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateApp")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -45,29 +39,31 @@ func (s *Server) CreateAppV2(ctx context.Context, in *npool.CreateAppRequest) (*
 		}
 	}()
 
-	span = crud.AppSpanAttributes(span, in.GetInfo())
+	span = tracer.Trace(span, in.GetInfo())
 
-	err = checkAppInfo(in.GetInfo())
+	err = validate(in.GetInfo())
 	if err != nil {
+		logger.Sguar().Errorw("CreateApp", "error", err)
 		return &npool.CreateAppResponse{}, err
 	}
 
-	span.AddEvent("call crud Create")
+	span = commontracer.TraceInvoker(span, "app", "crud", "Create")
+
 	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
-		logger.Sugar().Errorf("fail create app: %v", err)
+		logger.Sguar().Errorw("CreateApp", "error", err)
 		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	return &npool.CreateAppResponse{
-		Info: appRowToObject(info),
+		Info: converter.Ent2Grpc(info),
 	}, nil
 }
 
-func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) (*npool.CreateAppsResponse, error) {
+func (s *Server) CreateApps(ctx context.Context, in *npool.CreateAppsRequest) (*npool.CreateAppsResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppsV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateApps")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -77,58 +73,33 @@ func (s *Server) CreateAppsV2(ctx context.Context, in *npool.CreateAppsRequest) 
 	}()
 
 	if len(in.GetInfos()) == 0 {
-		return &npool.CreateAppsResponse{},
-			status.Error(codes.InvalidArgument,
-				"Batah create resource must more than 1",
-			)
+		logger.Sugar().Errorw("CreateApps", "error", "Infos is empty")
+		return &npool.CreateAppsResponse{}, status.Error(codes.InvalidArgument, "Infos is empty")
 	}
 
-	dup := make(map[string]struct{})
-	for key, info := range in.GetInfos() {
-		span.SetAttributes(
-			attribute.String(fmt.Sprintf("Description.%v", key), info.GetDescription()),
-			attribute.String(fmt.Sprintf("ID.%v", key), info.GetID()),
-			attribute.String(fmt.Sprintf("CreatedBy.%v", key), info.GetID()),
-			attribute.String(fmt.Sprintf("Name.%v", key), info.GetCreatedBy()),
-			attribute.String(fmt.Sprintf("Logo.%v", key), info.GetName()),
-			attribute.Int(fmt.Sprintf("CreatedAt.%v", key), int(info.GetCreatedAt())),
-		)
-		err := checkAppInfo(info)
-		if err != nil {
-			return &npool.CreateAppsResponse{}, err
-		}
-
-		if _, ok := dup[info.GetName()]; ok {
-			return &npool.CreateAppsResponse{},
-				status.Errorf(codes.AlreadyExists,
-					"Name: %v duplicate create",
-					info.GetName(),
-				)
-		}
-
-		dup[info.GetName()] = struct{}{}
+	if err := validateMany(in.GetInfos()); err != nil {
+		logger.Sugar().Errorw("CreateApps", "error", err)
+		return &npool.CreateAppsResponse{}, status.Error(codes.InvalidArgument, "Infos is invalid")
 	}
+
+	span = tracer.TraceMany(span, in.GetInfos())
+	span = commontracer.TraceInvoker(span, "app", "crud", "CreateBulk")
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
-		logger.Sugar().Errorf("fail create Apps: %v", err)
+		logger.Sugar().Errorw("CreateApps", "error", err)
 		return &npool.CreateAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.App, 0, len(rows))
-	for _, val := range rows {
-		infos = append(infos, appRowToObject(val))
-	}
-
 	return &npool.CreateAppsResponse{
-		Infos: infos,
+		Infos: converter.Ent2GrpcMany(rows),
 	}, nil
 }
 
-func (s *Server) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
+func (s *Server) UpdateApp(ctx context.Context, in *npool.UpdateAppRequest) (*npool.UpdateAppResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateApp")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -152,14 +123,14 @@ func (s *Server) UpdateAppV2(ctx context.Context, in *npool.UpdateAppRequest) (*
 	}
 
 	return &npool.UpdateAppResponse{
-		Info: appRowToObject(info),
+		Info: converter.Ent2Grpc(info),
 	}, nil
 }
 
-func (s *Server) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
+func (s *Server) GetApp(ctx context.Context, in *npool.GetAppRequest) (*npool.GetAppResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetApp")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -185,14 +156,14 @@ func (s *Server) GetAppV2(ctx context.Context, in *npool.GetAppRequest) (*npool.
 	}
 
 	return &npool.GetAppResponse{
-		Info: appRowToObject(info),
+		Info: converter.Ent2Grpc(info),
 	}, nil
 }
 
-func (s *Server) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) (*npool.GetAppOnlyResponse, error) {
+func (s *Server) GetAppOnly(ctx context.Context, in *npool.GetAppOnlyRequest) (*npool.GetAppOnlyResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppOnlyV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppOnly")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -211,14 +182,14 @@ func (s *Server) GetAppOnlyV2(ctx context.Context, in *npool.GetAppOnlyRequest) 
 	}
 
 	return &npool.GetAppOnlyResponse{
-		Info: appRowToObject(info),
+		Info: converter.Ent2Grpc(info),
 	}, nil
 }
 
-func (s *Server) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
+func (s *Server) GetApps(ctx context.Context, in *npool.GetAppsRequest) (*npool.GetAppsResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppsV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetApps")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -242,7 +213,7 @@ func (s *Server) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npoo
 
 	infos := make([]*npool.App, 0, len(rows))
 	for _, val := range rows {
-		infos = append(infos, appRowToObject(val))
+		infos = append(infos, converter.Ent2Grpc(val))
 	}
 
 	return &npool.GetAppsResponse{
@@ -251,10 +222,10 @@ func (s *Server) GetAppsV2(ctx context.Context, in *npool.GetAppsRequest) (*npoo
 	}, nil
 }
 
-func (s *Server) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*npool.ExistAppResponse, error) {
+func (s *Server) ExistApp(ctx context.Context, in *npool.ExistAppRequest) (*npool.ExistAppResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistApp")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -284,10 +255,10 @@ func (s *Server) ExistAppV2(ctx context.Context, in *npool.ExistAppRequest) (*np
 	}, nil
 }
 
-func (s *Server) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppCondsRequest) (*npool.ExistAppCondsResponse, error) {
+func (s *Server) ExistAppConds(ctx context.Context, in *npool.ExistAppCondsRequest) (*npool.ExistAppCondsResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppCondsV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppConds")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -310,10 +281,10 @@ func (s *Server) ExistAppCondsV2(ctx context.Context, in *npool.ExistAppCondsReq
 	}, nil
 }
 
-func (s *Server) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest) (*npool.CountAppsResponse, error) {
+func (s *Server) CountApps(ctx context.Context, in *npool.CountAppsRequest) (*npool.CountAppsResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppsV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountApps")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -336,10 +307,10 @@ func (s *Server) CountAppsV2(ctx context.Context, in *npool.CountAppsRequest) (*
 	}, nil
 }
 
-func (s *Server) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*npool.DeleteAppResponse, error) {
+func (s *Server) DeleteApp(ctx context.Context, in *npool.DeleteAppRequest) (*npool.DeleteAppResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppV2")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteApp")
 	defer span.End()
 	defer func() {
 		if err != nil {
@@ -365,6 +336,6 @@ func (s *Server) DeleteAppV2(ctx context.Context, in *npool.DeleteAppRequest) (*
 	}
 
 	return &npool.DeleteAppResponse{
-		Info: appRowToObject(info),
+		Info: (info),
 	}, nil
 }
