@@ -6,12 +6,12 @@ import (
 	"time"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/app"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -79,8 +79,6 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 
 	span = tracer.TraceMany(span, in)
 
-	rows := []*ent.App{}
-
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
@@ -125,7 +123,7 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 		}
 	}()
 
-	span = AppSpanAttributes(span, in)
+	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.App.UpdateOneID(uuid.MustParse(in.GetID()))
@@ -260,11 +258,8 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 		}
 	}()
 
-	span = AppCondsSpanAttributes(span, conds)
-	span.SetAttributes(
-		attribute.Int("Offset", offset),
-		attribute.Int("Limit", limit),
-	)
+	span = tracer.TraceConds(span, conds)
+	span = commontracer.TraceOffsetLimit(span, offset, limit)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
@@ -308,7 +303,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
 		}
 	}()
 
-	span = AppCondsSpanAttributes(span, conds)
+	span = tracer.TraceConds(span, conds)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
@@ -342,7 +337,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		}
 	}()
 
-	span = AppCondsSpanAttributes(span, conds)
+	span = tracer.TraceConds(span, conds)
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
@@ -407,7 +402,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 		}
 	}()
 
-	span = AppCondsSpanAttributes(span, conds)
+	span = tracer.TraceConds(span, conds)
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {

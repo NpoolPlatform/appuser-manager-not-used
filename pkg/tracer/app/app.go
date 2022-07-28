@@ -1,6 +1,8 @@
 package general
 
 import (
+	"fmt"
+
 	"go.opentelemetry.io/otel/attribute"
 	trace1 "go.opentelemetry.io/otel/trace"
 
@@ -9,11 +11,11 @@ import (
 
 func trace(span trace1.Span, in *npool.AppReq, index int) trace1.Span {
 	span.SetAttributes(
-		attribute.String("ID", in.GetID()),
-		attribute.String("Description", in.GetDescription()),
-		attribute.String("CreatedBy", in.GetID()),
-		attribute.String("Name", in.GetCreatedBy()),
-		attribute.String("Logo", in.GetName()),
+		attribute.String(fmt.Sprintf("ID.%v", index), in.GetID()),
+		attribute.String(fmt.Sprintf("Description.%v", index), in.GetDescription()),
+		attribute.String(fmt.Sprintf("CreatedBy.%v", index), in.GetID()),
+		attribute.String(fmt.Sprintf("Name.%v", index), in.GetCreatedBy()),
+		attribute.String(fmt.Sprintf("Logo.%v", index), in.GetName()),
 	)
 	return span
 }

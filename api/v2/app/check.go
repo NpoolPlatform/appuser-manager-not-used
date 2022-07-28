@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/app"
 	"github.com/google/uuid"
@@ -40,11 +42,11 @@ func validateMany(infos []*npool.AppReq) error {
 			return err
 		}
 
-		if _, ok := name[info.GetName()]; ok {
+		if _, ok := names[info.GetName()]; ok {
 			return fmt.Errorf("duplicate app name")
 		}
 
-		names[info.GetName] = struct{}{}
+		names[info.GetName()] = struct{}{}
 	}
 
 	return nil

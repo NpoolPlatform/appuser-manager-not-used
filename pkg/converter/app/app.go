@@ -18,7 +18,6 @@ func Ent2Grpc(row *ent.App) *npool.App {
 		Description: row.Description,
 		CreatedAt:   row.CreatedAt,
 	}
-
 }
 
 func Ent2GrpcMany(rows []*ent.App) []*npool.App {

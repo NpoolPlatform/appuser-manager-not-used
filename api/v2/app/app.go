@@ -5,18 +5,15 @@ package app
 
 import (
 	"context"
-	"fmt"
 
 	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/app"
-	tracer "github.com/NpoolPlatform/appuser-manager/pkg/converter/app"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/app"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/app"
 
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
 
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	scodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -43,7 +40,7 @@ func (s *Server) CreateApp(ctx context.Context, in *npool.CreateAppRequest) (*np
 
 	err = validate(in.GetInfo())
 	if err != nil {
-		logger.Sguar().Errorw("CreateApp", "error", err)
+		logger.Sugar().Errorw("CreateApp", "error", err)
 		return &npool.CreateAppResponse{}, err
 	}
 
@@ -51,7 +48,7 @@ func (s *Server) CreateApp(ctx context.Context, in *npool.CreateAppRequest) (*np
 
 	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
-		logger.Sguar().Errorw("CreateApp", "error", err)
+		logger.Sugar().Errorw("CreateApp", "error", err)
 		return &npool.CreateAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -108,17 +105,18 @@ func (s *Server) UpdateApp(ctx context.Context, in *npool.UpdateAppRequest) (*np
 		}
 	}()
 
-	span = crud.AppSpanAttributes(span, in.GetInfo())
+	span = tracer.Trace(span, in.GetInfo())
 
 	if _, err := uuid.Parse(in.GetInfo().GetID()); err != nil {
-		logger.Sugar().Errorf("app id is invalid")
+		logger.Sugar().Errorw("UpdateApp", "ID", in.GetInfo().GetID(), "error", err)
 		return &npool.UpdateAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	span.AddEvent("call crud Update")
+	span = commontracer.TraceInvoker(span, "app", "crud", "Update")
+
 	info, err := crud.Update(ctx, in.GetInfo())
 	if err != nil {
-		logger.Sugar().Errorf("fail update app: %v", err)
+		logger.Sugar().Errorw("UpdateApp", "ID", in.GetInfo().GetID(), "error", err)
 		return &npool.UpdateAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -139,19 +137,19 @@ func (s *Server) GetApp(ctx context.Context, in *npool.GetAppRequest) (*npool.Ge
 		}
 	}()
 
-	span.SetAttributes(
-		attribute.String("ID", in.GetID()),
-	)
+	span = commontracer.TraceID(span, in.GetID())
 
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
+		logger.Sugar().Errorw("GetApp", "ID", in.GetID(), "error", err)
 		return &npool.GetAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	span.AddEvent("call crud Row")
+	span = commontracer.TraceInvoker(span, "app", "crud", "Row")
+
 	info, err := crud.Row(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail get App: %v", err)
+		logger.Sugar().Errorw("GetApp", "ID", in.GetID(), "error", err)
 		return &npool.GetAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -172,12 +170,12 @@ func (s *Server) GetAppOnly(ctx context.Context, in *npool.GetAppOnlyRequest) (*
 		}
 	}()
 
-	span = crud.AppCondsSpanAttributes(span, in.GetConds())
+	span = tracer.TraceConds(span, in.GetConds())
+	span = commontracer.TraceInvoker(span, "app", "crud", "RowOnly")
 
-	span.AddEvent("call crud RowOnly")
 	info, err := crud.RowOnly(ctx, in.GetConds())
 	if err != nil {
-		logger.Sugar().Errorf("fail get Apps: %v", err)
+		logger.Sugar().Errorw("GetAppOnly", "error", err)
 		return &npool.GetAppOnlyResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -198,26 +196,18 @@ func (s *Server) GetApps(ctx context.Context, in *npool.GetAppsRequest) (*npool.
 		}
 	}()
 
-	span = crud.AppCondsSpanAttributes(span, in.GetConds())
-	span.SetAttributes(
-		attribute.Int("Offset", int(in.GetOffset())),
-		attribute.Int("Limit", int(in.GetLimit())),
-	)
+	span = tracer.TraceConds(span, in.GetConds())
+	span = commontracer.TraceOffsetLimit(span, int(in.GetOffset()), int(in.GetLimit()))
+	span = commontracer.TraceInvoker(span, "app", "crud", "Rows")
 
-	span.AddEvent("call crud Rows")
 	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
 	if err != nil {
-		logger.Sugar().Errorf("fail get Apps: %v", err)
+		logger.Sugar().Errorw("GetApps", "error", err)
 		return &npool.GetAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	infos := make([]*npool.App, 0, len(rows))
-	for _, val := range rows {
-		infos = append(infos, converter.Ent2Grpc(val))
-	}
-
 	return &npool.GetAppsResponse{
-		Infos: infos,
+		Infos: converter.Ent2GrpcMany(rows),
 		Total: uint32(total),
 	}, nil
 }
@@ -234,19 +224,19 @@ func (s *Server) ExistApp(ctx context.Context, in *npool.ExistAppRequest) (*npoo
 		}
 	}()
 
-	span.SetAttributes(
-		attribute.String("ID", in.GetID()),
-	)
+	span = commontracer.TraceID(span, in.GetID())
 
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
+		logger.Sugar().Errorw("ExistApp", "ID", in.GetID(), "error", err)
 		return &npool.ExistAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	span.AddEvent("call crud Exist")
+	span = commontracer.TraceInvoker(span, "app", "crud", "Exist")
+
 	exist, err := crud.Exist(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail check App: %v", err)
+		logger.Sugar().Errorw("ExistApp", "ID", in.GetID(), "error", err)
 		return &npool.ExistAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -267,12 +257,12 @@ func (s *Server) ExistAppConds(ctx context.Context, in *npool.ExistAppCondsReque
 		}
 	}()
 
-	span = crud.AppCondsSpanAttributes(span, in.GetConds())
+	span = tracer.TraceConds(span, in.GetConds())
+	span = commontracer.TraceInvoker(span, "app", "crud", "ExistAppConds")
 
-	span.AddEvent("call crud ExistConds")
 	exist, err := crud.ExistConds(ctx, in.GetConds())
 	if err != nil {
-		logger.Sugar().Errorf("fail check App: %v", err)
+		logger.Sugar().Errorw("ExistAppConds", "error", err)
 		return &npool.ExistAppCondsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -293,12 +283,12 @@ func (s *Server) CountApps(ctx context.Context, in *npool.CountAppsRequest) (*np
 		}
 	}()
 
-	span = crud.AppCondsSpanAttributes(span, in.GetConds())
+	span = tracer.TraceConds(span, in.GetConds())
+	span = commontracer.TraceInvoker(span, "app", "crud", "Count")
 
-	span.AddEvent("call crud Count")
 	total, err := crud.Count(ctx, in.GetConds())
 	if err != nil {
-		logger.Sugar().Errorf("fail count Apps: %v", err)
+		logger.Sugar().Errorw("Counts", "error", err)
 		return &npool.CountAppsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -319,23 +309,23 @@ func (s *Server) DeleteApp(ctx context.Context, in *npool.DeleteAppRequest) (*np
 		}
 	}()
 
-	span.SetAttributes(
-		attribute.String("ID", in.GetID()),
-	)
+	span = commontracer.TraceID(span, in.GetID())
 
 	id, err := uuid.Parse(in.GetID())
 	if err != nil {
+		logger.Sugar().Errorw("DeleteApp", "ID", in.GetID(), "error", err)
 		return &npool.DeleteAppResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	span.AddEvent("call crud Delete")
+	span = commontracer.TraceInvoker(span, "app", "crud", "Delete")
+
 	info, err := crud.Delete(ctx, id)
 	if err != nil {
-		logger.Sugar().Errorf("fail delete App: %v", err)
+		logger.Sugar().Errorw("DeleteApp", "ID", in.GetID(), "error", err)
 		return &npool.DeleteAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	return &npool.DeleteAppResponse{
-		Info: (info),
+		Info: converter.Ent2Grpc(info),
 	}, nil
 }

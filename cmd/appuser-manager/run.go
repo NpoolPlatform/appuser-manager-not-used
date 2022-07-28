@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/NpoolPlatform/appuser-manager/api/v1"
 	"time"
+
+	"github.com/NpoolPlatform/appuser-manager/api"
 
 	db "github.com/NpoolPlatform/appuser-manager/pkg/db"
 	msgcli "github.com/NpoolPlatform/appuser-manager/pkg/message/client"
@@ -52,13 +53,13 @@ var runCmd = &cli.Command{
 }
 
 func rpcRegister(server grpc.ServiceRegistrar) error {
-	v1.Register(server)
+	api.Register(server)
 	apimgrcli.RegisterGRPC(server)
 	return nil
 }
 
 func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	err := v1.RegisterGateway(mux, endpoint, opts)
+	err := api.RegisterGateway(mux, endpoint, opts)
 	if err != nil {
 		return err
 	}
