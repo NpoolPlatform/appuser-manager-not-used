@@ -2,12 +2,14 @@ package db
 
 import (
 	"context"
+	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
-
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/migrate"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 
+	atlas "ariga.io/atlas/sql/schema"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
@@ -30,7 +32,8 @@ func Init() error {
 	if err != nil {
 		return err
 	}
-	return cli.Schema.Create(context.Background())
+
+	return cli.Schema.Create(context.Background(), migrate.WithDropColumn(true), schema.WithDiffHook(renameColumnHook))
 }
 
 func Client() (*ent.Client, error) {
@@ -81,4 +84,49 @@ func WithClient(ctx context.Context, fn func(ctx context.Context, cli *ent.Clien
 		return err
 	}
 	return nil
+}
+
+func renameColumnHook(next schema.Differ) schema.Differ {
+	return schema.DiffFunc(func(current, desired *atlas.Schema) ([]atlas.Change, error) {
+		changes, err := next.Diff(current, desired)
+		if err != nil {
+			return nil, err
+		}
+		for _, c := range changes {
+			m, ok := c.(*atlas.ModifyTable)
+
+			if !ok {
+				continue
+			}
+
+			changes := atlas.Changes(m.Changes)
+
+			if i, j := changes.IndexDropColumn("create_at"), changes.IndexAddColumn("created_at"); i != -1 && j != -1 {
+				changes = append(changes, &atlas.RenameColumn{
+					From: changes[i].(*atlas.DropColumn).C,
+					To:   changes[j].(*atlas.AddColumn).C,
+				})
+				changes.RemoveIndex(i, j)
+			}
+
+			if i, j := changes.IndexDropColumn("update_at"), changes.IndexAddColumn("updated_at"); i != -1 && j != -1 {
+				changes = append(changes, &atlas.RenameColumn{
+					From: changes[i].(*atlas.DropColumn).C,
+					To:   changes[j].(*atlas.AddColumn).C,
+				})
+				changes.RemoveIndex(i, j)
+			}
+
+			if i, j := changes.IndexDropColumn("delete_at"), changes.IndexAddColumn("deleted_at"); i != -1 && j != -1 {
+				changes = append(changes, &atlas.RenameColumn{
+					From: changes[i].(*atlas.DropColumn).C,
+					To:   changes[j].(*atlas.AddColumn).C,
+				})
+				changes.RemoveIndex(i, j)
+			}
+
+			m.Changes = changes
+		}
+		return changes, nil
+	})
 }
