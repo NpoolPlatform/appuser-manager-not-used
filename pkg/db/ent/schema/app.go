@@ -1,10 +1,9 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 )
@@ -14,6 +13,12 @@ type App struct {
 	ent.Schema
 }
 
+func (App) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.TimeMixin{},
+	}
+}
+
 // Fields of the App.
 func (App) Fields() []ent.Field {
 	return []ent.Field{
@@ -21,24 +26,12 @@ func (App) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.UUID("created_by", uuid.UUID{}),
-		field.String("name").Unique(),
-		field.String("logo"),
-		field.String("description"),
-		field.Uint32("create_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("update_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}).
-			UpdateDefault(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("delete_at").
-			DefaultFunc(func() uint32 {
-				return 0
-			}),
+		field.String("name").
+			Unique(),
+		field.String("logo").
+			Default(""),
+		field.String("description").
+			Default(""),
 	}
 }
 

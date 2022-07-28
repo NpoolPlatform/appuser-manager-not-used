@@ -2,20 +2,24 @@ package api
 
 import (
 	"context"
-
-	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+	"github.com/NpoolPlatform/appuser-manager/api/v2/app"
+	appusermgr "github.com/NpoolPlatform/message/npool/appuser/mgr/v2"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	npool.UnimplementedAppUserManagerServer
+	appusermgr.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	npool.RegisterAppUserManagerServer(server, &Server{})
+	appusermgr.RegisterManagerServer(server, &Server{})
+	app.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	return npool.RegisterAppUserManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts)
+	if err := appusermgr.RegisterManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
+		return err
+	}
+	return nil
 }

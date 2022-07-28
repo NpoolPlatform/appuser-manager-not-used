@@ -3,6 +3,7 @@
 package appuserextra
 
 import (
+	"entgo.io/ent"
 	"github.com/google/uuid"
 )
 
@@ -11,6 +12,12 @@ const (
 	Label = "app_user_extra"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// FieldAppID holds the string denoting the app_id field in the database.
 	FieldAppID = "app_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
@@ -37,12 +44,6 @@ const (
 	FieldOrganization = "organization"
 	// FieldIDNumber holds the string denoting the id_number field in the database.
 	FieldIDNumber = "id_number"
-	// FieldCreateAt holds the string denoting the create_at field in the database.
-	FieldCreateAt = "create_at"
-	// FieldUpdateAt holds the string denoting the update_at field in the database.
-	FieldUpdateAt = "update_at"
-	// FieldDeleteAt holds the string denoting the delete_at field in the database.
-	FieldDeleteAt = "delete_at"
 	// Table holds the table name of the appuserextra in the database.
 	Table = "app_user_extras"
 )
@@ -50,6 +51,9 @@ const (
 // Columns holds all SQL columns for appuserextra fields.
 var Columns = []string{
 	FieldID,
+	FieldCreatedAt,
+	FieldUpdatedAt,
+	FieldDeletedAt,
 	FieldAppID,
 	FieldUserID,
 	FieldUsername,
@@ -63,9 +67,6 @@ var Columns = []string{
 	FieldAvatar,
 	FieldOrganization,
 	FieldIDNumber,
-	FieldCreateAt,
-	FieldUpdateAt,
-	FieldDeleteAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -78,15 +79,45 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "github.com/NpoolPlatform/appuser-manager/pkg/db/ent/runtime"
+//
 var (
-	// DefaultCreateAt holds the default value on creation for the "create_at" field.
-	DefaultCreateAt func() uint32
-	// DefaultUpdateAt holds the default value on creation for the "update_at" field.
-	DefaultUpdateAt func() uint32
-	// UpdateDefaultUpdateAt holds the default value on update for the "update_at" field.
-	UpdateDefaultUpdateAt func() uint32
-	// DefaultDeleteAt holds the default value on creation for the "delete_at" field.
-	DefaultDeleteAt func() uint32
+	Hooks  [1]ent.Hook
+	Policy ent.Policy
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() uint32
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() uint32
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() uint32
+	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
+	DefaultDeletedAt func() uint32
+	// DefaultUsername holds the default value on creation for the "username" field.
+	DefaultUsername string
+	// DefaultFirstName holds the default value on creation for the "first_name" field.
+	DefaultFirstName string
+	// DefaultLastName holds the default value on creation for the "last_name" field.
+	DefaultLastName string
+	// DefaultAddressFields holds the default value on creation for the "address_fields" field.
+	DefaultAddressFields []string
+	// DefaultGender holds the default value on creation for the "gender" field.
+	DefaultGender string
+	// DefaultPostalCode holds the default value on creation for the "postal_code" field.
+	DefaultPostalCode string
+	// DefaultAge holds the default value on creation for the "age" field.
+	DefaultAge uint32
+	// DefaultBirthday holds the default value on creation for the "birthday" field.
+	DefaultBirthday uint32
+	// DefaultAvatar holds the default value on creation for the "avatar" field.
+	DefaultAvatar string
+	// DefaultOrganization holds the default value on creation for the "organization" field.
+	DefaultOrganization string
+	// DefaultIDNumber holds the default value on creation for the "id_number" field.
+	DefaultIDNumber string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

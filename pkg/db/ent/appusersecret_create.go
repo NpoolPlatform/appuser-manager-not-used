@@ -23,44 +23,44 @@ type AppUserSecretCreate struct {
 	conflict []sql.ConflictOption
 }
 
-// SetCreateAt sets the "create_at" field.
-func (ausc *AppUserSecretCreate) SetCreateAt(u uint32) *AppUserSecretCreate {
-	ausc.mutation.SetCreateAt(u)
+// SetCreatedAt sets the "created_at" field.
+func (ausc *AppUserSecretCreate) SetCreatedAt(u uint32) *AppUserSecretCreate {
+	ausc.mutation.SetCreatedAt(u)
 	return ausc
 }
 
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (ausc *AppUserSecretCreate) SetNillableCreateAt(u *uint32) *AppUserSecretCreate {
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ausc *AppUserSecretCreate) SetNillableCreatedAt(u *uint32) *AppUserSecretCreate {
 	if u != nil {
-		ausc.SetCreateAt(*u)
+		ausc.SetCreatedAt(*u)
 	}
 	return ausc
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (ausc *AppUserSecretCreate) SetUpdateAt(u uint32) *AppUserSecretCreate {
-	ausc.mutation.SetUpdateAt(u)
+// SetUpdatedAt sets the "updated_at" field.
+func (ausc *AppUserSecretCreate) SetUpdatedAt(u uint32) *AppUserSecretCreate {
+	ausc.mutation.SetUpdatedAt(u)
 	return ausc
 }
 
-// SetNillableUpdateAt sets the "update_at" field if the given value is not nil.
-func (ausc *AppUserSecretCreate) SetNillableUpdateAt(u *uint32) *AppUserSecretCreate {
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (ausc *AppUserSecretCreate) SetNillableUpdatedAt(u *uint32) *AppUserSecretCreate {
 	if u != nil {
-		ausc.SetUpdateAt(*u)
+		ausc.SetUpdatedAt(*u)
 	}
 	return ausc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (ausc *AppUserSecretCreate) SetDeleteAt(u uint32) *AppUserSecretCreate {
-	ausc.mutation.SetDeleteAt(u)
+// SetDeletedAt sets the "deleted_at" field.
+func (ausc *AppUserSecretCreate) SetDeletedAt(u uint32) *AppUserSecretCreate {
+	ausc.mutation.SetDeletedAt(u)
 	return ausc
 }
 
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (ausc *AppUserSecretCreate) SetNillableDeleteAt(u *uint32) *AppUserSecretCreate {
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (ausc *AppUserSecretCreate) SetNillableDeletedAt(u *uint32) *AppUserSecretCreate {
 	if u != nil {
-		ausc.SetDeleteAt(*u)
+		ausc.SetDeletedAt(*u)
 	}
 	return ausc
 }
@@ -182,26 +182,26 @@ func (ausc *AppUserSecretCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (ausc *AppUserSecretCreate) defaults() error {
-	if _, ok := ausc.mutation.CreateAt(); !ok {
-		if appusersecret.DefaultCreateAt == nil {
-			return fmt.Errorf("ent: uninitialized appusersecret.DefaultCreateAt (forgotten import ent/runtime?)")
+	if _, ok := ausc.mutation.CreatedAt(); !ok {
+		if appusersecret.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appusersecret.DefaultCreatedAt (forgotten import ent/runtime?)")
 		}
-		v := appusersecret.DefaultCreateAt()
-		ausc.mutation.SetCreateAt(v)
+		v := appusersecret.DefaultCreatedAt()
+		ausc.mutation.SetCreatedAt(v)
 	}
-	if _, ok := ausc.mutation.UpdateAt(); !ok {
-		if appusersecret.DefaultUpdateAt == nil {
-			return fmt.Errorf("ent: uninitialized appusersecret.DefaultUpdateAt (forgotten import ent/runtime?)")
+	if _, ok := ausc.mutation.UpdatedAt(); !ok {
+		if appusersecret.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appusersecret.DefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := appusersecret.DefaultUpdateAt()
-		ausc.mutation.SetUpdateAt(v)
+		v := appusersecret.DefaultUpdatedAt()
+		ausc.mutation.SetUpdatedAt(v)
 	}
-	if _, ok := ausc.mutation.DeleteAt(); !ok {
-		if appusersecret.DefaultDeleteAt == nil {
-			return fmt.Errorf("ent: uninitialized appusersecret.DefaultDeleteAt (forgotten import ent/runtime?)")
+	if _, ok := ausc.mutation.DeletedAt(); !ok {
+		if appusersecret.DefaultDeletedAt == nil {
+			return fmt.Errorf("ent: uninitialized appusersecret.DefaultDeletedAt (forgotten import ent/runtime?)")
 		}
-		v := appusersecret.DefaultDeleteAt()
-		ausc.mutation.SetDeleteAt(v)
+		v := appusersecret.DefaultDeletedAt()
+		ausc.mutation.SetDeletedAt(v)
 	}
 	if _, ok := ausc.mutation.ID(); !ok {
 		if appusersecret.DefaultID == nil {
@@ -215,14 +215,14 @@ func (ausc *AppUserSecretCreate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (ausc *AppUserSecretCreate) check() error {
-	if _, ok := ausc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUserSecret.create_at"`)}
+	if _, ok := ausc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "AppUserSecret.created_at"`)}
 	}
-	if _, ok := ausc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "AppUserSecret.update_at"`)}
+	if _, ok := ausc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "AppUserSecret.updated_at"`)}
 	}
-	if _, ok := ausc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppUserSecret.delete_at"`)}
+	if _, ok := ausc.mutation.DeletedAt(); !ok {
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUserSecret.deleted_at"`)}
 	}
 	if _, ok := ausc.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUserSecret.app_id"`)}
@@ -276,29 +276,29 @@ func (ausc *AppUserSecretCreate) createSpec() (*AppUserSecret, *sqlgraph.CreateS
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := ausc.mutation.CreateAt(); ok {
+	if value, ok := ausc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appusersecret.FieldCreateAt,
+			Column: appusersecret.FieldCreatedAt,
 		})
-		_node.CreateAt = value
+		_node.CreatedAt = value
 	}
-	if value, ok := ausc.mutation.UpdateAt(); ok {
+	if value, ok := ausc.mutation.UpdatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appusersecret.FieldUpdateAt,
+			Column: appusersecret.FieldUpdatedAt,
 		})
-		_node.UpdateAt = value
+		_node.UpdatedAt = value
 	}
-	if value, ok := ausc.mutation.DeleteAt(); ok {
+	if value, ok := ausc.mutation.DeletedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appusersecret.FieldDeleteAt,
+			Column: appusersecret.FieldDeletedAt,
 		})
-		_node.DeleteAt = value
+		_node.DeletedAt = value
 	}
 	if value, ok := ausc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -347,7 +347,7 @@ func (ausc *AppUserSecretCreate) createSpec() (*AppUserSecret, *sqlgraph.CreateS
 // of the `INSERT` statement. For example:
 //
 //	client.AppUserSecret.Create().
-//		SetCreateAt(v).
+//		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -356,7 +356,7 @@ func (ausc *AppUserSecretCreate) createSpec() (*AppUserSecret, *sqlgraph.CreateS
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserSecretUpsert) {
-//			SetCreateAt(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -394,57 +394,57 @@ type (
 	}
 )
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserSecretUpsert) SetCreateAt(v uint32) *AppUserSecretUpsert {
-	u.Set(appusersecret.FieldCreateAt, v)
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserSecretUpsert) SetCreatedAt(v uint32) *AppUserSecretUpsert {
+	u.Set(appusersecret.FieldCreatedAt, v)
 	return u
 }
 
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsert) UpdateCreateAt() *AppUserSecretUpsert {
-	u.SetExcluded(appusersecret.FieldCreateAt)
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsert) UpdateCreatedAt() *AppUserSecretUpsert {
+	u.SetExcluded(appusersecret.FieldCreatedAt)
 	return u
 }
 
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserSecretUpsert) AddCreateAt(v uint32) *AppUserSecretUpsert {
-	u.Add(appusersecret.FieldCreateAt, v)
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserSecretUpsert) AddCreatedAt(v uint32) *AppUserSecretUpsert {
+	u.Add(appusersecret.FieldCreatedAt, v)
 	return u
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserSecretUpsert) SetUpdateAt(v uint32) *AppUserSecretUpsert {
-	u.Set(appusersecret.FieldUpdateAt, v)
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserSecretUpsert) SetUpdatedAt(v uint32) *AppUserSecretUpsert {
+	u.Set(appusersecret.FieldUpdatedAt, v)
 	return u
 }
 
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsert) UpdateUpdateAt() *AppUserSecretUpsert {
-	u.SetExcluded(appusersecret.FieldUpdateAt)
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsert) UpdateUpdatedAt() *AppUserSecretUpsert {
+	u.SetExcluded(appusersecret.FieldUpdatedAt)
 	return u
 }
 
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserSecretUpsert) AddUpdateAt(v uint32) *AppUserSecretUpsert {
-	u.Add(appusersecret.FieldUpdateAt, v)
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserSecretUpsert) AddUpdatedAt(v uint32) *AppUserSecretUpsert {
+	u.Add(appusersecret.FieldUpdatedAt, v)
 	return u
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserSecretUpsert) SetDeleteAt(v uint32) *AppUserSecretUpsert {
-	u.Set(appusersecret.FieldDeleteAt, v)
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserSecretUpsert) SetDeletedAt(v uint32) *AppUserSecretUpsert {
+	u.Set(appusersecret.FieldDeletedAt, v)
 	return u
 }
 
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsert) UpdateDeleteAt() *AppUserSecretUpsert {
-	u.SetExcluded(appusersecret.FieldDeleteAt)
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsert) UpdateDeletedAt() *AppUserSecretUpsert {
+	u.SetExcluded(appusersecret.FieldDeletedAt)
 	return u
 }
 
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserSecretUpsert) AddDeleteAt(v uint32) *AppUserSecretUpsert {
-	u.Add(appusersecret.FieldDeleteAt, v)
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserSecretUpsert) AddDeletedAt(v uint32) *AppUserSecretUpsert {
+	u.Add(appusersecret.FieldDeletedAt, v)
 	return u
 }
 
@@ -558,66 +558,66 @@ func (u *AppUserSecretUpsertOne) Update(set func(*AppUserSecretUpsert)) *AppUser
 	return u
 }
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserSecretUpsertOne) SetCreateAt(v uint32) *AppUserSecretUpsertOne {
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserSecretUpsertOne) SetCreatedAt(v uint32) *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.SetCreateAt(v)
+		s.SetCreatedAt(v)
 	})
 }
 
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserSecretUpsertOne) AddCreateAt(v uint32) *AppUserSecretUpsertOne {
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserSecretUpsertOne) AddCreatedAt(v uint32) *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.AddCreateAt(v)
+		s.AddCreatedAt(v)
 	})
 }
 
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsertOne) UpdateCreateAt() *AppUserSecretUpsertOne {
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsertOne) UpdateCreatedAt() *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.UpdateCreateAt()
+		s.UpdateCreatedAt()
 	})
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserSecretUpsertOne) SetUpdateAt(v uint32) *AppUserSecretUpsertOne {
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserSecretUpsertOne) SetUpdatedAt(v uint32) *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.SetUpdateAt(v)
+		s.SetUpdatedAt(v)
 	})
 }
 
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserSecretUpsertOne) AddUpdateAt(v uint32) *AppUserSecretUpsertOne {
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserSecretUpsertOne) AddUpdatedAt(v uint32) *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.AddUpdateAt(v)
+		s.AddUpdatedAt(v)
 	})
 }
 
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsertOne) UpdateUpdateAt() *AppUserSecretUpsertOne {
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsertOne) UpdateUpdatedAt() *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.UpdateUpdateAt()
+		s.UpdateUpdatedAt()
 	})
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserSecretUpsertOne) SetDeleteAt(v uint32) *AppUserSecretUpsertOne {
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserSecretUpsertOne) SetDeletedAt(v uint32) *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.SetDeleteAt(v)
+		s.SetDeletedAt(v)
 	})
 }
 
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserSecretUpsertOne) AddDeleteAt(v uint32) *AppUserSecretUpsertOne {
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserSecretUpsertOne) AddDeletedAt(v uint32) *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.AddDeleteAt(v)
+		s.AddDeletedAt(v)
 	})
 }
 
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsertOne) UpdateDeleteAt() *AppUserSecretUpsertOne {
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsertOne) UpdateDeletedAt() *AppUserSecretUpsertOne {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.UpdateDeleteAt()
+		s.UpdateDeletedAt()
 	})
 }
 
@@ -823,7 +823,7 @@ func (auscb *AppUserSecretCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserSecretUpsert) {
-//			SetCreateAt(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -907,66 +907,66 @@ func (u *AppUserSecretUpsertBulk) Update(set func(*AppUserSecretUpsert)) *AppUse
 	return u
 }
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserSecretUpsertBulk) SetCreateAt(v uint32) *AppUserSecretUpsertBulk {
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserSecretUpsertBulk) SetCreatedAt(v uint32) *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.SetCreateAt(v)
+		s.SetCreatedAt(v)
 	})
 }
 
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserSecretUpsertBulk) AddCreateAt(v uint32) *AppUserSecretUpsertBulk {
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserSecretUpsertBulk) AddCreatedAt(v uint32) *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.AddCreateAt(v)
+		s.AddCreatedAt(v)
 	})
 }
 
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsertBulk) UpdateCreateAt() *AppUserSecretUpsertBulk {
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsertBulk) UpdateCreatedAt() *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.UpdateCreateAt()
+		s.UpdateCreatedAt()
 	})
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserSecretUpsertBulk) SetUpdateAt(v uint32) *AppUserSecretUpsertBulk {
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserSecretUpsertBulk) SetUpdatedAt(v uint32) *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.SetUpdateAt(v)
+		s.SetUpdatedAt(v)
 	})
 }
 
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserSecretUpsertBulk) AddUpdateAt(v uint32) *AppUserSecretUpsertBulk {
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserSecretUpsertBulk) AddUpdatedAt(v uint32) *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.AddUpdateAt(v)
+		s.AddUpdatedAt(v)
 	})
 }
 
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsertBulk) UpdateUpdateAt() *AppUserSecretUpsertBulk {
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsertBulk) UpdateUpdatedAt() *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.UpdateUpdateAt()
+		s.UpdateUpdatedAt()
 	})
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserSecretUpsertBulk) SetDeleteAt(v uint32) *AppUserSecretUpsertBulk {
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserSecretUpsertBulk) SetDeletedAt(v uint32) *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.SetDeleteAt(v)
+		s.SetDeletedAt(v)
 	})
 }
 
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserSecretUpsertBulk) AddDeleteAt(v uint32) *AppUserSecretUpsertBulk {
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserSecretUpsertBulk) AddDeletedAt(v uint32) *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.AddDeleteAt(v)
+		s.AddDeletedAt(v)
 	})
 }
 
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserSecretUpsertBulk) UpdateDeleteAt() *AppUserSecretUpsertBulk {
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserSecretUpsertBulk) UpdateDeletedAt() *AppUserSecretUpsertBulk {
 	return u.Update(func(s *AppUserSecretUpsert) {
-		s.UpdateDeleteAt()
+		s.UpdateDeletedAt()
 	})
 }
 

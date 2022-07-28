@@ -28,6 +28,61 @@ func (aru *AppRoleUpdate) Where(ps ...predicate.AppRole) *AppRoleUpdate {
 	return aru
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (aru *AppRoleUpdate) SetCreatedAt(u uint32) *AppRoleUpdate {
+	aru.mutation.ResetCreatedAt()
+	aru.mutation.SetCreatedAt(u)
+	return aru
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableCreatedAt(u *uint32) *AppRoleUpdate {
+	if u != nil {
+		aru.SetCreatedAt(*u)
+	}
+	return aru
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (aru *AppRoleUpdate) AddCreatedAt(u int32) *AppRoleUpdate {
+	aru.mutation.AddCreatedAt(u)
+	return aru
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (aru *AppRoleUpdate) SetUpdatedAt(u uint32) *AppRoleUpdate {
+	aru.mutation.ResetUpdatedAt()
+	aru.mutation.SetUpdatedAt(u)
+	return aru
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (aru *AppRoleUpdate) AddUpdatedAt(u int32) *AppRoleUpdate {
+	aru.mutation.AddUpdatedAt(u)
+	return aru
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (aru *AppRoleUpdate) SetDeletedAt(u uint32) *AppRoleUpdate {
+	aru.mutation.ResetDeletedAt()
+	aru.mutation.SetDeletedAt(u)
+	return aru
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableDeletedAt(u *uint32) *AppRoleUpdate {
+	if u != nil {
+		aru.SetDeletedAt(*u)
+	}
+	return aru
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (aru *AppRoleUpdate) AddDeletedAt(u int32) *AppRoleUpdate {
+	aru.mutation.AddDeletedAt(u)
+	return aru
+}
+
 // SetCreatedBy sets the "created_by" field.
 func (aru *AppRoleUpdate) SetCreatedBy(u uuid.UUID) *AppRoleUpdate {
 	aru.mutation.SetCreatedBy(u)
@@ -46,6 +101,14 @@ func (aru *AppRoleUpdate) SetDescription(s string) *AppRoleUpdate {
 	return aru
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableDescription(s *string) *AppRoleUpdate {
+	if s != nil {
+		aru.SetDescription(*s)
+	}
+	return aru
+}
+
 // SetAppID sets the "app_id" field.
 func (aru *AppRoleUpdate) SetAppID(u uuid.UUID) *AppRoleUpdate {
 	aru.mutation.SetAppID(u)
@@ -55,61 +118,6 @@ func (aru *AppRoleUpdate) SetAppID(u uuid.UUID) *AppRoleUpdate {
 // SetDefault sets the "default" field.
 func (aru *AppRoleUpdate) SetDefault(b bool) *AppRoleUpdate {
 	aru.mutation.SetDefault(b)
-	return aru
-}
-
-// SetCreateAt sets the "create_at" field.
-func (aru *AppRoleUpdate) SetCreateAt(u uint32) *AppRoleUpdate {
-	aru.mutation.ResetCreateAt()
-	aru.mutation.SetCreateAt(u)
-	return aru
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (aru *AppRoleUpdate) SetNillableCreateAt(u *uint32) *AppRoleUpdate {
-	if u != nil {
-		aru.SetCreateAt(*u)
-	}
-	return aru
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (aru *AppRoleUpdate) AddCreateAt(u int32) *AppRoleUpdate {
-	aru.mutation.AddCreateAt(u)
-	return aru
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (aru *AppRoleUpdate) SetUpdateAt(u uint32) *AppRoleUpdate {
-	aru.mutation.ResetUpdateAt()
-	aru.mutation.SetUpdateAt(u)
-	return aru
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (aru *AppRoleUpdate) AddUpdateAt(u int32) *AppRoleUpdate {
-	aru.mutation.AddUpdateAt(u)
-	return aru
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (aru *AppRoleUpdate) SetDeleteAt(u uint32) *AppRoleUpdate {
-	aru.mutation.ResetDeleteAt()
-	aru.mutation.SetDeleteAt(u)
-	return aru
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (aru *AppRoleUpdate) SetNillableDeleteAt(u *uint32) *AppRoleUpdate {
-	if u != nil {
-		aru.SetDeleteAt(*u)
-	}
-	return aru
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (aru *AppRoleUpdate) AddDeleteAt(u int32) *AppRoleUpdate {
-	aru.mutation.AddDeleteAt(u)
 	return aru
 }
 
@@ -124,7 +132,9 @@ func (aru *AppRoleUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	aru.defaults()
+	if err := aru.defaults(); err != nil {
+		return 0, err
+	}
 	if len(aru.hooks) == 0 {
 		affected, err = aru.sqlSave(ctx)
 	} else {
@@ -174,11 +184,15 @@ func (aru *AppRoleUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aru *AppRoleUpdate) defaults() {
-	if _, ok := aru.mutation.UpdateAt(); !ok {
-		v := approle.UpdateDefaultUpdateAt()
-		aru.mutation.SetUpdateAt(v)
+func (aru *AppRoleUpdate) defaults() error {
+	if _, ok := aru.mutation.UpdatedAt(); !ok {
+		if approle.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized approle.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := approle.UpdateDefaultUpdatedAt()
+		aru.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -198,6 +212,48 @@ func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := aru.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldCreatedAt,
+		})
+	}
+	if value, ok := aru.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldCreatedAt,
+		})
+	}
+	if value, ok := aru.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aru.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aru.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldDeletedAt,
+		})
+	}
+	if value, ok := aru.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldDeletedAt,
+		})
 	}
 	if value, ok := aru.mutation.CreatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -234,48 +290,6 @@ func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approle.FieldDefault,
 		})
 	}
-	if value, ok := aru.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldCreateAt,
-		})
-	}
-	if value, ok := aru.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldCreateAt,
-		})
-	}
-	if value, ok := aru.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldUpdateAt,
-		})
-	}
-	if value, ok := aru.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldUpdateAt,
-		})
-	}
-	if value, ok := aru.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldDeleteAt,
-		})
-	}
-	if value, ok := aru.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldDeleteAt,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, aru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{approle.Label}
@@ -293,6 +307,61 @@ type AppRoleUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppRoleMutation
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (aruo *AppRoleUpdateOne) SetCreatedAt(u uint32) *AppRoleUpdateOne {
+	aruo.mutation.ResetCreatedAt()
+	aruo.mutation.SetCreatedAt(u)
+	return aruo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableCreatedAt(u *uint32) *AppRoleUpdateOne {
+	if u != nil {
+		aruo.SetCreatedAt(*u)
+	}
+	return aruo
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (aruo *AppRoleUpdateOne) AddCreatedAt(u int32) *AppRoleUpdateOne {
+	aruo.mutation.AddCreatedAt(u)
+	return aruo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (aruo *AppRoleUpdateOne) SetUpdatedAt(u uint32) *AppRoleUpdateOne {
+	aruo.mutation.ResetUpdatedAt()
+	aruo.mutation.SetUpdatedAt(u)
+	return aruo
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (aruo *AppRoleUpdateOne) AddUpdatedAt(u int32) *AppRoleUpdateOne {
+	aruo.mutation.AddUpdatedAt(u)
+	return aruo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (aruo *AppRoleUpdateOne) SetDeletedAt(u uint32) *AppRoleUpdateOne {
+	aruo.mutation.ResetDeletedAt()
+	aruo.mutation.SetDeletedAt(u)
+	return aruo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableDeletedAt(u *uint32) *AppRoleUpdateOne {
+	if u != nil {
+		aruo.SetDeletedAt(*u)
+	}
+	return aruo
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (aruo *AppRoleUpdateOne) AddDeletedAt(u int32) *AppRoleUpdateOne {
+	aruo.mutation.AddDeletedAt(u)
+	return aruo
 }
 
 // SetCreatedBy sets the "created_by" field.
@@ -313,6 +382,14 @@ func (aruo *AppRoleUpdateOne) SetDescription(s string) *AppRoleUpdateOne {
 	return aruo
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableDescription(s *string) *AppRoleUpdateOne {
+	if s != nil {
+		aruo.SetDescription(*s)
+	}
+	return aruo
+}
+
 // SetAppID sets the "app_id" field.
 func (aruo *AppRoleUpdateOne) SetAppID(u uuid.UUID) *AppRoleUpdateOne {
 	aruo.mutation.SetAppID(u)
@@ -322,61 +399,6 @@ func (aruo *AppRoleUpdateOne) SetAppID(u uuid.UUID) *AppRoleUpdateOne {
 // SetDefault sets the "default" field.
 func (aruo *AppRoleUpdateOne) SetDefault(b bool) *AppRoleUpdateOne {
 	aruo.mutation.SetDefault(b)
-	return aruo
-}
-
-// SetCreateAt sets the "create_at" field.
-func (aruo *AppRoleUpdateOne) SetCreateAt(u uint32) *AppRoleUpdateOne {
-	aruo.mutation.ResetCreateAt()
-	aruo.mutation.SetCreateAt(u)
-	return aruo
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (aruo *AppRoleUpdateOne) SetNillableCreateAt(u *uint32) *AppRoleUpdateOne {
-	if u != nil {
-		aruo.SetCreateAt(*u)
-	}
-	return aruo
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (aruo *AppRoleUpdateOne) AddCreateAt(u int32) *AppRoleUpdateOne {
-	aruo.mutation.AddCreateAt(u)
-	return aruo
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (aruo *AppRoleUpdateOne) SetUpdateAt(u uint32) *AppRoleUpdateOne {
-	aruo.mutation.ResetUpdateAt()
-	aruo.mutation.SetUpdateAt(u)
-	return aruo
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (aruo *AppRoleUpdateOne) AddUpdateAt(u int32) *AppRoleUpdateOne {
-	aruo.mutation.AddUpdateAt(u)
-	return aruo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (aruo *AppRoleUpdateOne) SetDeleteAt(u uint32) *AppRoleUpdateOne {
-	aruo.mutation.ResetDeleteAt()
-	aruo.mutation.SetDeleteAt(u)
-	return aruo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (aruo *AppRoleUpdateOne) SetNillableDeleteAt(u *uint32) *AppRoleUpdateOne {
-	if u != nil {
-		aruo.SetDeleteAt(*u)
-	}
-	return aruo
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (aruo *AppRoleUpdateOne) AddDeleteAt(u int32) *AppRoleUpdateOne {
-	aruo.mutation.AddDeleteAt(u)
 	return aruo
 }
 
@@ -398,7 +420,9 @@ func (aruo *AppRoleUpdateOne) Save(ctx context.Context) (*AppRole, error) {
 		err  error
 		node *AppRole
 	)
-	aruo.defaults()
+	if err := aruo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(aruo.hooks) == 0 {
 		node, err = aruo.sqlSave(ctx)
 	} else {
@@ -448,11 +472,15 @@ func (aruo *AppRoleUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aruo *AppRoleUpdateOne) defaults() {
-	if _, ok := aruo.mutation.UpdateAt(); !ok {
-		v := approle.UpdateDefaultUpdateAt()
-		aruo.mutation.SetUpdateAt(v)
+func (aruo *AppRoleUpdateOne) defaults() error {
+	if _, ok := aruo.mutation.UpdatedAt(); !ok {
+		if approle.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized approle.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := approle.UpdateDefaultUpdatedAt()
+		aruo.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err error) {
@@ -490,6 +518,48 @@ func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err 
 			}
 		}
 	}
+	if value, ok := aruo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldCreatedAt,
+		})
+	}
+	if value, ok := aruo.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldCreatedAt,
+		})
+	}
+	if value, ok := aruo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aruo.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aruo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldDeletedAt,
+		})
+	}
+	if value, ok := aruo.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: approle.FieldDeletedAt,
+		})
+	}
 	if value, ok := aruo.mutation.CreatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -523,48 +593,6 @@ func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err 
 			Type:   field.TypeBool,
 			Value:  value,
 			Column: approle.FieldDefault,
-		})
-	}
-	if value, ok := aruo.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldCreateAt,
-		})
-	}
-	if value, ok := aruo.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldCreateAt,
-		})
-	}
-	if value, ok := aruo.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldUpdateAt,
-		})
-	}
-	if value, ok := aruo.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldUpdateAt,
-		})
-	}
-	if value, ok := aruo.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldDeleteAt,
-		})
-	}
-	if value, ok := aruo.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: approle.FieldDeleteAt,
 		})
 	}
 	_node = &AppRole{config: aruo.config}

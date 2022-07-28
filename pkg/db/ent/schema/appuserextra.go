@@ -1,11 +1,10 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 )
@@ -13,6 +12,12 @@ import (
 // AppUserExtra holds the schema definition for the AppUserExtra entity.
 type AppUserExtra struct {
 	ent.Schema
+}
+
+func (AppUserExtra) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.TimeMixin{},
+	}
 }
 
 // Fields of the AppUserExtra.
@@ -23,32 +28,28 @@ func (AppUserExtra) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
-		field.String("username"),
-		field.String("first_name"),
-		field.String("last_name"),
-		field.JSON("address_fields", []string{}),
-		field.String("gender"),
-		field.String("postal_code"),
-		field.Uint32("age"),
-		field.Uint32("birthday"),
-		field.String("avatar"),
-		field.String("organization"),
-		field.String("id_number"),
-		field.Uint32("create_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("update_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}).
-			UpdateDefault(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("delete_at").
-			DefaultFunc(func() uint32 {
-				return 0
-			}),
+		field.String("username").
+			Default(""),
+		field.String("first_name").
+			Default(""),
+		field.String("last_name").
+			Default(""),
+		field.JSON("address_fields", []string{}).
+			Default([]string{}),
+		field.String("gender").
+			Default(""),
+		field.String("postal_code").
+			Default(""),
+		field.Uint32("age").
+			Default(0),
+		field.Uint32("birthday").
+			Default(0),
+		field.String("avatar").
+			Default(""),
+		field.String("organization").
+			Default(""),
+		field.String("id_number").
+			Default(""),
 	}
 }
 

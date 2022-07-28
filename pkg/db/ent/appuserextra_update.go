@@ -28,6 +28,61 @@ func (aueu *AppUserExtraUpdate) Where(ps ...predicate.AppUserExtra) *AppUserExtr
 	return aueu
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (aueu *AppUserExtraUpdate) SetCreatedAt(u uint32) *AppUserExtraUpdate {
+	aueu.mutation.ResetCreatedAt()
+	aueu.mutation.SetCreatedAt(u)
+	return aueu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableCreatedAt(u *uint32) *AppUserExtraUpdate {
+	if u != nil {
+		aueu.SetCreatedAt(*u)
+	}
+	return aueu
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (aueu *AppUserExtraUpdate) AddCreatedAt(u int32) *AppUserExtraUpdate {
+	aueu.mutation.AddCreatedAt(u)
+	return aueu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (aueu *AppUserExtraUpdate) SetUpdatedAt(u uint32) *AppUserExtraUpdate {
+	aueu.mutation.ResetUpdatedAt()
+	aueu.mutation.SetUpdatedAt(u)
+	return aueu
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (aueu *AppUserExtraUpdate) AddUpdatedAt(u int32) *AppUserExtraUpdate {
+	aueu.mutation.AddUpdatedAt(u)
+	return aueu
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (aueu *AppUserExtraUpdate) SetDeletedAt(u uint32) *AppUserExtraUpdate {
+	aueu.mutation.ResetDeletedAt()
+	aueu.mutation.SetDeletedAt(u)
+	return aueu
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableDeletedAt(u *uint32) *AppUserExtraUpdate {
+	if u != nil {
+		aueu.SetDeletedAt(*u)
+	}
+	return aueu
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (aueu *AppUserExtraUpdate) AddDeletedAt(u int32) *AppUserExtraUpdate {
+	aueu.mutation.AddDeletedAt(u)
+	return aueu
+}
+
 // SetAppID sets the "app_id" field.
 func (aueu *AppUserExtraUpdate) SetAppID(u uuid.UUID) *AppUserExtraUpdate {
 	aueu.mutation.SetAppID(u)
@@ -46,15 +101,39 @@ func (aueu *AppUserExtraUpdate) SetUsername(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableUsername(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetUsername(*s)
+	}
+	return aueu
+}
+
 // SetFirstName sets the "first_name" field.
 func (aueu *AppUserExtraUpdate) SetFirstName(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetFirstName(s)
 	return aueu
 }
 
+// SetNillableFirstName sets the "first_name" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableFirstName(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetFirstName(*s)
+	}
+	return aueu
+}
+
 // SetLastName sets the "last_name" field.
 func (aueu *AppUserExtraUpdate) SetLastName(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetLastName(s)
+	return aueu
+}
+
+// SetNillableLastName sets the "last_name" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableLastName(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetLastName(*s)
+	}
 	return aueu
 }
 
@@ -70,9 +149,25 @@ func (aueu *AppUserExtraUpdate) SetGender(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableGender(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetGender(*s)
+	}
+	return aueu
+}
+
 // SetPostalCode sets the "postal_code" field.
 func (aueu *AppUserExtraUpdate) SetPostalCode(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetPostalCode(s)
+	return aueu
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillablePostalCode(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetPostalCode(*s)
+	}
 	return aueu
 }
 
@@ -80,6 +175,14 @@ func (aueu *AppUserExtraUpdate) SetPostalCode(s string) *AppUserExtraUpdate {
 func (aueu *AppUserExtraUpdate) SetAge(u uint32) *AppUserExtraUpdate {
 	aueu.mutation.ResetAge()
 	aueu.mutation.SetAge(u)
+	return aueu
+}
+
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableAge(u *uint32) *AppUserExtraUpdate {
+	if u != nil {
+		aueu.SetAge(*u)
+	}
 	return aueu
 }
 
@@ -96,6 +199,14 @@ func (aueu *AppUserExtraUpdate) SetBirthday(u uint32) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableBirthday(u *uint32) *AppUserExtraUpdate {
+	if u != nil {
+		aueu.SetBirthday(*u)
+	}
+	return aueu
+}
+
 // AddBirthday adds u to the "birthday" field.
 func (aueu *AppUserExtraUpdate) AddBirthday(u int32) *AppUserExtraUpdate {
 	aueu.mutation.AddBirthday(u)
@@ -108,9 +219,25 @@ func (aueu *AppUserExtraUpdate) SetAvatar(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableAvatar(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetAvatar(*s)
+	}
+	return aueu
+}
+
 // SetOrganization sets the "organization" field.
 func (aueu *AppUserExtraUpdate) SetOrganization(s string) *AppUserExtraUpdate {
 	aueu.mutation.SetOrganization(s)
+	return aueu
+}
+
+// SetNillableOrganization sets the "organization" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableOrganization(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetOrganization(*s)
+	}
 	return aueu
 }
 
@@ -120,58 +247,11 @@ func (aueu *AppUserExtraUpdate) SetIDNumber(s string) *AppUserExtraUpdate {
 	return aueu
 }
 
-// SetCreateAt sets the "create_at" field.
-func (aueu *AppUserExtraUpdate) SetCreateAt(u uint32) *AppUserExtraUpdate {
-	aueu.mutation.ResetCreateAt()
-	aueu.mutation.SetCreateAt(u)
-	return aueu
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (aueu *AppUserExtraUpdate) SetNillableCreateAt(u *uint32) *AppUserExtraUpdate {
-	if u != nil {
-		aueu.SetCreateAt(*u)
+// SetNillableIDNumber sets the "id_number" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableIDNumber(s *string) *AppUserExtraUpdate {
+	if s != nil {
+		aueu.SetIDNumber(*s)
 	}
-	return aueu
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (aueu *AppUserExtraUpdate) AddCreateAt(u int32) *AppUserExtraUpdate {
-	aueu.mutation.AddCreateAt(u)
-	return aueu
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (aueu *AppUserExtraUpdate) SetUpdateAt(u uint32) *AppUserExtraUpdate {
-	aueu.mutation.ResetUpdateAt()
-	aueu.mutation.SetUpdateAt(u)
-	return aueu
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (aueu *AppUserExtraUpdate) AddUpdateAt(u int32) *AppUserExtraUpdate {
-	aueu.mutation.AddUpdateAt(u)
-	return aueu
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (aueu *AppUserExtraUpdate) SetDeleteAt(u uint32) *AppUserExtraUpdate {
-	aueu.mutation.ResetDeleteAt()
-	aueu.mutation.SetDeleteAt(u)
-	return aueu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (aueu *AppUserExtraUpdate) SetNillableDeleteAt(u *uint32) *AppUserExtraUpdate {
-	if u != nil {
-		aueu.SetDeleteAt(*u)
-	}
-	return aueu
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (aueu *AppUserExtraUpdate) AddDeleteAt(u int32) *AppUserExtraUpdate {
-	aueu.mutation.AddDeleteAt(u)
 	return aueu
 }
 
@@ -186,7 +266,9 @@ func (aueu *AppUserExtraUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	aueu.defaults()
+	if err := aueu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(aueu.hooks) == 0 {
 		affected, err = aueu.sqlSave(ctx)
 	} else {
@@ -236,11 +318,15 @@ func (aueu *AppUserExtraUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aueu *AppUserExtraUpdate) defaults() {
-	if _, ok := aueu.mutation.UpdateAt(); !ok {
-		v := appuserextra.UpdateDefaultUpdateAt()
-		aueu.mutation.SetUpdateAt(v)
+func (aueu *AppUserExtraUpdate) defaults() error {
+	if _, ok := aueu.mutation.UpdatedAt(); !ok {
+		if appuserextra.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserextra.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := appuserextra.UpdateDefaultUpdatedAt()
+		aueu.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -260,6 +346,48 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := aueu.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldCreatedAt,
+		})
+	}
+	if value, ok := aueu.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldCreatedAt,
+		})
+	}
+	if value, ok := aueu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aueu.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aueu.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldDeletedAt,
+		})
+	}
+	if value, ok := aueu.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldDeletedAt,
+		})
 	}
 	if value, ok := aueu.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -366,48 +494,6 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserextra.FieldIDNumber,
 		})
 	}
-	if value, ok := aueu.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldCreateAt,
-		})
-	}
-	if value, ok := aueu.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldCreateAt,
-		})
-	}
-	if value, ok := aueu.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldUpdateAt,
-		})
-	}
-	if value, ok := aueu.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldUpdateAt,
-		})
-	}
-	if value, ok := aueu.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldDeleteAt,
-		})
-	}
-	if value, ok := aueu.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldDeleteAt,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, aueu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appuserextra.Label}
@@ -425,6 +511,61 @@ type AppUserExtraUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppUserExtraMutation
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (aueuo *AppUserExtraUpdateOne) SetCreatedAt(u uint32) *AppUserExtraUpdateOne {
+	aueuo.mutation.ResetCreatedAt()
+	aueuo.mutation.SetCreatedAt(u)
+	return aueuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableCreatedAt(u *uint32) *AppUserExtraUpdateOne {
+	if u != nil {
+		aueuo.SetCreatedAt(*u)
+	}
+	return aueuo
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (aueuo *AppUserExtraUpdateOne) AddCreatedAt(u int32) *AppUserExtraUpdateOne {
+	aueuo.mutation.AddCreatedAt(u)
+	return aueuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (aueuo *AppUserExtraUpdateOne) SetUpdatedAt(u uint32) *AppUserExtraUpdateOne {
+	aueuo.mutation.ResetUpdatedAt()
+	aueuo.mutation.SetUpdatedAt(u)
+	return aueuo
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (aueuo *AppUserExtraUpdateOne) AddUpdatedAt(u int32) *AppUserExtraUpdateOne {
+	aueuo.mutation.AddUpdatedAt(u)
+	return aueuo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (aueuo *AppUserExtraUpdateOne) SetDeletedAt(u uint32) *AppUserExtraUpdateOne {
+	aueuo.mutation.ResetDeletedAt()
+	aueuo.mutation.SetDeletedAt(u)
+	return aueuo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableDeletedAt(u *uint32) *AppUserExtraUpdateOne {
+	if u != nil {
+		aueuo.SetDeletedAt(*u)
+	}
+	return aueuo
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (aueuo *AppUserExtraUpdateOne) AddDeletedAt(u int32) *AppUserExtraUpdateOne {
+	aueuo.mutation.AddDeletedAt(u)
+	return aueuo
 }
 
 // SetAppID sets the "app_id" field.
@@ -445,15 +586,39 @@ func (aueuo *AppUserExtraUpdateOne) SetUsername(s string) *AppUserExtraUpdateOne
 	return aueuo
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableUsername(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetUsername(*s)
+	}
+	return aueuo
+}
+
 // SetFirstName sets the "first_name" field.
 func (aueuo *AppUserExtraUpdateOne) SetFirstName(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetFirstName(s)
 	return aueuo
 }
 
+// SetNillableFirstName sets the "first_name" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableFirstName(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetFirstName(*s)
+	}
+	return aueuo
+}
+
 // SetLastName sets the "last_name" field.
 func (aueuo *AppUserExtraUpdateOne) SetLastName(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetLastName(s)
+	return aueuo
+}
+
+// SetNillableLastName sets the "last_name" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableLastName(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetLastName(*s)
+	}
 	return aueuo
 }
 
@@ -469,9 +634,25 @@ func (aueuo *AppUserExtraUpdateOne) SetGender(s string) *AppUserExtraUpdateOne {
 	return aueuo
 }
 
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableGender(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetGender(*s)
+	}
+	return aueuo
+}
+
 // SetPostalCode sets the "postal_code" field.
 func (aueuo *AppUserExtraUpdateOne) SetPostalCode(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetPostalCode(s)
+	return aueuo
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillablePostalCode(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetPostalCode(*s)
+	}
 	return aueuo
 }
 
@@ -479,6 +660,14 @@ func (aueuo *AppUserExtraUpdateOne) SetPostalCode(s string) *AppUserExtraUpdateO
 func (aueuo *AppUserExtraUpdateOne) SetAge(u uint32) *AppUserExtraUpdateOne {
 	aueuo.mutation.ResetAge()
 	aueuo.mutation.SetAge(u)
+	return aueuo
+}
+
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableAge(u *uint32) *AppUserExtraUpdateOne {
+	if u != nil {
+		aueuo.SetAge(*u)
+	}
 	return aueuo
 }
 
@@ -495,6 +684,14 @@ func (aueuo *AppUserExtraUpdateOne) SetBirthday(u uint32) *AppUserExtraUpdateOne
 	return aueuo
 }
 
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableBirthday(u *uint32) *AppUserExtraUpdateOne {
+	if u != nil {
+		aueuo.SetBirthday(*u)
+	}
+	return aueuo
+}
+
 // AddBirthday adds u to the "birthday" field.
 func (aueuo *AppUserExtraUpdateOne) AddBirthday(u int32) *AppUserExtraUpdateOne {
 	aueuo.mutation.AddBirthday(u)
@@ -507,9 +704,25 @@ func (aueuo *AppUserExtraUpdateOne) SetAvatar(s string) *AppUserExtraUpdateOne {
 	return aueuo
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableAvatar(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetAvatar(*s)
+	}
+	return aueuo
+}
+
 // SetOrganization sets the "organization" field.
 func (aueuo *AppUserExtraUpdateOne) SetOrganization(s string) *AppUserExtraUpdateOne {
 	aueuo.mutation.SetOrganization(s)
+	return aueuo
+}
+
+// SetNillableOrganization sets the "organization" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableOrganization(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetOrganization(*s)
+	}
 	return aueuo
 }
 
@@ -519,58 +732,11 @@ func (aueuo *AppUserExtraUpdateOne) SetIDNumber(s string) *AppUserExtraUpdateOne
 	return aueuo
 }
 
-// SetCreateAt sets the "create_at" field.
-func (aueuo *AppUserExtraUpdateOne) SetCreateAt(u uint32) *AppUserExtraUpdateOne {
-	aueuo.mutation.ResetCreateAt()
-	aueuo.mutation.SetCreateAt(u)
-	return aueuo
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (aueuo *AppUserExtraUpdateOne) SetNillableCreateAt(u *uint32) *AppUserExtraUpdateOne {
-	if u != nil {
-		aueuo.SetCreateAt(*u)
+// SetNillableIDNumber sets the "id_number" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableIDNumber(s *string) *AppUserExtraUpdateOne {
+	if s != nil {
+		aueuo.SetIDNumber(*s)
 	}
-	return aueuo
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (aueuo *AppUserExtraUpdateOne) AddCreateAt(u int32) *AppUserExtraUpdateOne {
-	aueuo.mutation.AddCreateAt(u)
-	return aueuo
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (aueuo *AppUserExtraUpdateOne) SetUpdateAt(u uint32) *AppUserExtraUpdateOne {
-	aueuo.mutation.ResetUpdateAt()
-	aueuo.mutation.SetUpdateAt(u)
-	return aueuo
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (aueuo *AppUserExtraUpdateOne) AddUpdateAt(u int32) *AppUserExtraUpdateOne {
-	aueuo.mutation.AddUpdateAt(u)
-	return aueuo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (aueuo *AppUserExtraUpdateOne) SetDeleteAt(u uint32) *AppUserExtraUpdateOne {
-	aueuo.mutation.ResetDeleteAt()
-	aueuo.mutation.SetDeleteAt(u)
-	return aueuo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (aueuo *AppUserExtraUpdateOne) SetNillableDeleteAt(u *uint32) *AppUserExtraUpdateOne {
-	if u != nil {
-		aueuo.SetDeleteAt(*u)
-	}
-	return aueuo
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (aueuo *AppUserExtraUpdateOne) AddDeleteAt(u int32) *AppUserExtraUpdateOne {
-	aueuo.mutation.AddDeleteAt(u)
 	return aueuo
 }
 
@@ -592,7 +758,9 @@ func (aueuo *AppUserExtraUpdateOne) Save(ctx context.Context) (*AppUserExtra, er
 		err  error
 		node *AppUserExtra
 	)
-	aueuo.defaults()
+	if err := aueuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(aueuo.hooks) == 0 {
 		node, err = aueuo.sqlSave(ctx)
 	} else {
@@ -642,11 +810,15 @@ func (aueuo *AppUserExtraUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (aueuo *AppUserExtraUpdateOne) defaults() {
-	if _, ok := aueuo.mutation.UpdateAt(); !ok {
-		v := appuserextra.UpdateDefaultUpdateAt()
-		aueuo.mutation.SetUpdateAt(v)
+func (aueuo *AppUserExtraUpdateOne) defaults() error {
+	if _, ok := aueuo.mutation.UpdatedAt(); !ok {
+		if appuserextra.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserextra.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := appuserextra.UpdateDefaultUpdatedAt()
+		aueuo.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUserExtra, err error) {
@@ -683,6 +855,48 @@ func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := aueuo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldCreatedAt,
+		})
+	}
+	if value, ok := aueuo.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldCreatedAt,
+		})
+	}
+	if value, ok := aueuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aueuo.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldUpdatedAt,
+		})
+	}
+	if value, ok := aueuo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldDeletedAt,
+		})
+	}
+	if value, ok := aueuo.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldDeletedAt,
+		})
 	}
 	if value, ok := aueuo.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -787,48 +1001,6 @@ func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserextra.FieldIDNumber,
-		})
-	}
-	if value, ok := aueuo.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldCreateAt,
-		})
-	}
-	if value, ok := aueuo.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldCreateAt,
-		})
-	}
-	if value, ok := aueuo.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldUpdateAt,
-		})
-	}
-	if value, ok := aueuo.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldUpdateAt,
-		})
-	}
-	if value, ok := aueuo.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldDeleteAt,
-		})
-	}
-	if value, ok := aueuo.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldDeleteAt,
 		})
 	}
 	_node = &AppUserExtra{config: aueuo.config}

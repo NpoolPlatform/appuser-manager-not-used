@@ -35,13 +35,13 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "App",
 		Fields: map[string]*sqlgraph.FieldSpec{
+			app.FieldCreatedAt:   {Type: field.TypeUint32, Column: app.FieldCreatedAt},
+			app.FieldUpdatedAt:   {Type: field.TypeUint32, Column: app.FieldUpdatedAt},
+			app.FieldDeletedAt:   {Type: field.TypeUint32, Column: app.FieldDeletedAt},
 			app.FieldCreatedBy:   {Type: field.TypeUUID, Column: app.FieldCreatedBy},
 			app.FieldName:        {Type: field.TypeString, Column: app.FieldName},
 			app.FieldLogo:        {Type: field.TypeString, Column: app.FieldLogo},
 			app.FieldDescription: {Type: field.TypeString, Column: app.FieldDescription},
-			app.FieldCreateAt:    {Type: field.TypeUint32, Column: app.FieldCreateAt},
-			app.FieldUpdateAt:    {Type: field.TypeUint32, Column: app.FieldUpdateAt},
-			app.FieldDeleteAt:    {Type: field.TypeUint32, Column: app.FieldDeleteAt},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -55,6 +55,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppControl",
 		Fields: map[string]*sqlgraph.FieldSpec{
+			appcontrol.FieldCreatedAt:           {Type: field.TypeUint32, Column: appcontrol.FieldCreatedAt},
+			appcontrol.FieldUpdatedAt:           {Type: field.TypeUint32, Column: appcontrol.FieldUpdatedAt},
+			appcontrol.FieldDeletedAt:           {Type: field.TypeUint32, Column: appcontrol.FieldDeletedAt},
 			appcontrol.FieldAppID:               {Type: field.TypeUUID, Column: appcontrol.FieldAppID},
 			appcontrol.FieldSignupMethods:       {Type: field.TypeJSON, Column: appcontrol.FieldSignupMethods},
 			appcontrol.FieldExternSigninMethods: {Type: field.TypeJSON, Column: appcontrol.FieldExternSigninMethods},
@@ -62,9 +65,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appcontrol.FieldKycEnable:           {Type: field.TypeBool, Column: appcontrol.FieldKycEnable},
 			appcontrol.FieldSigninVerifyEnable:  {Type: field.TypeBool, Column: appcontrol.FieldSigninVerifyEnable},
 			appcontrol.FieldInvitationCodeMust:  {Type: field.TypeBool, Column: appcontrol.FieldInvitationCodeMust},
-			appcontrol.FieldCreateAt:            {Type: field.TypeUint32, Column: appcontrol.FieldCreateAt},
-			appcontrol.FieldUpdateAt:            {Type: field.TypeUint32, Column: appcontrol.FieldUpdateAt},
-			appcontrol.FieldDeleteAt:            {Type: field.TypeUint32, Column: appcontrol.FieldDeleteAt},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -78,14 +78,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppRole",
 		Fields: map[string]*sqlgraph.FieldSpec{
+			approle.FieldCreatedAt:   {Type: field.TypeUint32, Column: approle.FieldCreatedAt},
+			approle.FieldUpdatedAt:   {Type: field.TypeUint32, Column: approle.FieldUpdatedAt},
+			approle.FieldDeletedAt:   {Type: field.TypeUint32, Column: approle.FieldDeletedAt},
 			approle.FieldCreatedBy:   {Type: field.TypeUUID, Column: approle.FieldCreatedBy},
 			approle.FieldRole:        {Type: field.TypeString, Column: approle.FieldRole},
 			approle.FieldDescription: {Type: field.TypeString, Column: approle.FieldDescription},
 			approle.FieldAppID:       {Type: field.TypeUUID, Column: approle.FieldAppID},
 			approle.FieldDefault:     {Type: field.TypeBool, Column: approle.FieldDefault},
-			approle.FieldCreateAt:    {Type: field.TypeUint32, Column: approle.FieldCreateAt},
-			approle.FieldUpdateAt:    {Type: field.TypeUint32, Column: approle.FieldUpdateAt},
-			approle.FieldDeleteAt:    {Type: field.TypeUint32, Column: approle.FieldDeleteAt},
 		},
 	}
 	graph.Nodes[3] = &sqlgraph.Node{
@@ -99,12 +99,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppRoleUser",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			approleuser.FieldCreateAt: {Type: field.TypeUint32, Column: approleuser.FieldCreateAt},
-			approleuser.FieldUpdateAt: {Type: field.TypeUint32, Column: approleuser.FieldUpdateAt},
-			approleuser.FieldDeleteAt: {Type: field.TypeUint32, Column: approleuser.FieldDeleteAt},
-			approleuser.FieldAppID:    {Type: field.TypeUUID, Column: approleuser.FieldAppID},
-			approleuser.FieldRoleID:   {Type: field.TypeUUID, Column: approleuser.FieldRoleID},
-			approleuser.FieldUserID:   {Type: field.TypeUUID, Column: approleuser.FieldUserID},
+			approleuser.FieldCreatedAt: {Type: field.TypeUint32, Column: approleuser.FieldCreatedAt},
+			approleuser.FieldUpdatedAt: {Type: field.TypeUint32, Column: approleuser.FieldUpdatedAt},
+			approleuser.FieldDeletedAt: {Type: field.TypeUint32, Column: approleuser.FieldDeletedAt},
+			approleuser.FieldAppID:     {Type: field.TypeUUID, Column: approleuser.FieldAppID},
+			approleuser.FieldRoleID:    {Type: field.TypeUUID, Column: approleuser.FieldRoleID},
+			approleuser.FieldUserID:    {Type: field.TypeUUID, Column: approleuser.FieldUserID},
 		},
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
@@ -118,9 +118,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUser",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appuser.FieldCreateAt:      {Type: field.TypeUint32, Column: appuser.FieldCreateAt},
-			appuser.FieldUpdateAt:      {Type: field.TypeUint32, Column: appuser.FieldUpdateAt},
-			appuser.FieldDeleteAt:      {Type: field.TypeUint32, Column: appuser.FieldDeleteAt},
+			appuser.FieldCreatedAt:     {Type: field.TypeUint32, Column: appuser.FieldCreatedAt},
+			appuser.FieldUpdatedAt:     {Type: field.TypeUint32, Column: appuser.FieldUpdatedAt},
+			appuser.FieldDeletedAt:     {Type: field.TypeUint32, Column: appuser.FieldDeletedAt},
 			appuser.FieldAppID:         {Type: field.TypeUUID, Column: appuser.FieldAppID},
 			appuser.FieldEmailAddress:  {Type: field.TypeString, Column: appuser.FieldEmailAddress},
 			appuser.FieldPhoneNo:       {Type: field.TypeString, Column: appuser.FieldPhoneNo},
@@ -138,13 +138,13 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUserControl",
 		Fields: map[string]*sqlgraph.FieldSpec{
+			appusercontrol.FieldCreatedAt:                          {Type: field.TypeUint32, Column: appusercontrol.FieldCreatedAt},
+			appusercontrol.FieldUpdatedAt:                          {Type: field.TypeUint32, Column: appusercontrol.FieldUpdatedAt},
+			appusercontrol.FieldDeletedAt:                          {Type: field.TypeUint32, Column: appusercontrol.FieldDeletedAt},
 			appusercontrol.FieldAppID:                              {Type: field.TypeUUID, Column: appusercontrol.FieldAppID},
 			appusercontrol.FieldUserID:                             {Type: field.TypeUUID, Column: appusercontrol.FieldUserID},
 			appusercontrol.FieldSigninVerifyByGoogleAuthentication: {Type: field.TypeBool, Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication},
 			appusercontrol.FieldGoogleAuthenticationVerified:       {Type: field.TypeBool, Column: appusercontrol.FieldGoogleAuthenticationVerified},
-			appusercontrol.FieldCreateAt:                           {Type: field.TypeUint32, Column: appusercontrol.FieldCreateAt},
-			appusercontrol.FieldUpdateAt:                           {Type: field.TypeUint32, Column: appusercontrol.FieldUpdateAt},
-			appusercontrol.FieldDeleteAt:                           {Type: field.TypeUint32, Column: appusercontrol.FieldDeleteAt},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -158,6 +158,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUserExtra",
 		Fields: map[string]*sqlgraph.FieldSpec{
+			appuserextra.FieldCreatedAt:     {Type: field.TypeUint32, Column: appuserextra.FieldCreatedAt},
+			appuserextra.FieldUpdatedAt:     {Type: field.TypeUint32, Column: appuserextra.FieldUpdatedAt},
+			appuserextra.FieldDeletedAt:     {Type: field.TypeUint32, Column: appuserextra.FieldDeletedAt},
 			appuserextra.FieldAppID:         {Type: field.TypeUUID, Column: appuserextra.FieldAppID},
 			appuserextra.FieldUserID:        {Type: field.TypeUUID, Column: appuserextra.FieldUserID},
 			appuserextra.FieldUsername:      {Type: field.TypeString, Column: appuserextra.FieldUsername},
@@ -171,9 +174,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appuserextra.FieldAvatar:        {Type: field.TypeString, Column: appuserextra.FieldAvatar},
 			appuserextra.FieldOrganization:  {Type: field.TypeString, Column: appuserextra.FieldOrganization},
 			appuserextra.FieldIDNumber:      {Type: field.TypeString, Column: appuserextra.FieldIDNumber},
-			appuserextra.FieldCreateAt:      {Type: field.TypeUint32, Column: appuserextra.FieldCreateAt},
-			appuserextra.FieldUpdateAt:      {Type: field.TypeUint32, Column: appuserextra.FieldUpdateAt},
-			appuserextra.FieldDeleteAt:      {Type: field.TypeUint32, Column: appuserextra.FieldDeleteAt},
 		},
 	}
 	graph.Nodes[7] = &sqlgraph.Node{
@@ -187,9 +187,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUserSecret",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appusersecret.FieldCreateAt:     {Type: field.TypeUint32, Column: appusersecret.FieldCreateAt},
-			appusersecret.FieldUpdateAt:     {Type: field.TypeUint32, Column: appusersecret.FieldUpdateAt},
-			appusersecret.FieldDeleteAt:     {Type: field.TypeUint32, Column: appusersecret.FieldDeleteAt},
+			appusersecret.FieldCreatedAt:    {Type: field.TypeUint32, Column: appusersecret.FieldCreatedAt},
+			appusersecret.FieldUpdatedAt:    {Type: field.TypeUint32, Column: appusersecret.FieldUpdatedAt},
+			appusersecret.FieldDeletedAt:    {Type: field.TypeUint32, Column: appusersecret.FieldDeletedAt},
 			appusersecret.FieldAppID:        {Type: field.TypeUUID, Column: appusersecret.FieldAppID},
 			appusersecret.FieldUserID:       {Type: field.TypeUUID, Column: appusersecret.FieldUserID},
 			appusersecret.FieldPasswordHash: {Type: field.TypeString, Column: appusersecret.FieldPasswordHash},
@@ -208,9 +208,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUserThirdParty",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appuserthirdparty.FieldCreateAt:             {Type: field.TypeUint32, Column: appuserthirdparty.FieldCreateAt},
-			appuserthirdparty.FieldUpdateAt:             {Type: field.TypeUint32, Column: appuserthirdparty.FieldUpdateAt},
-			appuserthirdparty.FieldDeleteAt:             {Type: field.TypeUint32, Column: appuserthirdparty.FieldDeleteAt},
+			appuserthirdparty.FieldCreatedAt:            {Type: field.TypeUint32, Column: appuserthirdparty.FieldCreatedAt},
+			appuserthirdparty.FieldUpdatedAt:            {Type: field.TypeUint32, Column: appuserthirdparty.FieldUpdatedAt},
+			appuserthirdparty.FieldDeletedAt:            {Type: field.TypeUint32, Column: appuserthirdparty.FieldDeletedAt},
 			appuserthirdparty.FieldAppID:                {Type: field.TypeUUID, Column: appuserthirdparty.FieldAppID},
 			appuserthirdparty.FieldUserID:               {Type: field.TypeUUID, Column: appuserthirdparty.FieldUserID},
 			appuserthirdparty.FieldThirdPartyUserID:     {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserID},
@@ -230,11 +230,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "BanApp",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			banapp.FieldAppID:    {Type: field.TypeUUID, Column: banapp.FieldAppID},
-			banapp.FieldMessage:  {Type: field.TypeString, Column: banapp.FieldMessage},
-			banapp.FieldCreateAt: {Type: field.TypeUint32, Column: banapp.FieldCreateAt},
-			banapp.FieldUpdateAt: {Type: field.TypeUint32, Column: banapp.FieldUpdateAt},
-			banapp.FieldDeleteAt: {Type: field.TypeUint32, Column: banapp.FieldDeleteAt},
+			banapp.FieldCreatedAt: {Type: field.TypeUint32, Column: banapp.FieldCreatedAt},
+			banapp.FieldUpdatedAt: {Type: field.TypeUint32, Column: banapp.FieldUpdatedAt},
+			banapp.FieldDeletedAt: {Type: field.TypeUint32, Column: banapp.FieldDeletedAt},
+			banapp.FieldAppID:     {Type: field.TypeUUID, Column: banapp.FieldAppID},
+			banapp.FieldMessage:   {Type: field.TypeString, Column: banapp.FieldMessage},
 		},
 	}
 	graph.Nodes[10] = &sqlgraph.Node{
@@ -248,12 +248,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "BanAppUser",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			banappuser.FieldAppID:    {Type: field.TypeUUID, Column: banappuser.FieldAppID},
-			banappuser.FieldUserID:   {Type: field.TypeUUID, Column: banappuser.FieldUserID},
-			banappuser.FieldMessage:  {Type: field.TypeString, Column: banappuser.FieldMessage},
-			banappuser.FieldCreateAt: {Type: field.TypeUint32, Column: banappuser.FieldCreateAt},
-			banappuser.FieldUpdateAt: {Type: field.TypeUint32, Column: banappuser.FieldUpdateAt},
-			banappuser.FieldDeleteAt: {Type: field.TypeUint32, Column: banappuser.FieldDeleteAt},
+			banappuser.FieldCreatedAt: {Type: field.TypeUint32, Column: banappuser.FieldCreatedAt},
+			banappuser.FieldUpdatedAt: {Type: field.TypeUint32, Column: banappuser.FieldUpdatedAt},
+			banappuser.FieldDeletedAt: {Type: field.TypeUint32, Column: banappuser.FieldDeletedAt},
+			banappuser.FieldAppID:     {Type: field.TypeUUID, Column: banappuser.FieldAppID},
+			banappuser.FieldUserID:    {Type: field.TypeUUID, Column: banappuser.FieldUserID},
+			banappuser.FieldMessage:   {Type: field.TypeString, Column: banappuser.FieldMessage},
 		},
 	}
 	return graph
@@ -304,6 +304,21 @@ func (f *AppFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(app.FieldID))
 }
 
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(app.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(app.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(app.FieldDeletedAt))
+}
+
 // WhereCreatedBy applies the entql [16]byte predicate on the created_by field.
 func (f *AppFilter) WhereCreatedBy(p entql.ValueP) {
 	f.Where(p.Field(app.FieldCreatedBy))
@@ -322,21 +337,6 @@ func (f *AppFilter) WhereLogo(p entql.StringP) {
 // WhereDescription applies the entql string predicate on the description field.
 func (f *AppFilter) WhereDescription(p entql.StringP) {
 	f.Where(p.Field(app.FieldDescription))
-}
-
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(app.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(app.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(app.FieldDeleteAt))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -378,6 +378,21 @@ func (f *AppControlFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(appcontrol.FieldID))
 }
 
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppControlFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appcontrol.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppControlFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appcontrol.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppControlFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appcontrol.FieldDeletedAt))
+}
+
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
 func (f *AppControlFilter) WhereAppID(p entql.ValueP) {
 	f.Where(p.Field(appcontrol.FieldAppID))
@@ -411,21 +426,6 @@ func (f *AppControlFilter) WhereSigninVerifyEnable(p entql.BoolP) {
 // WhereInvitationCodeMust applies the entql bool predicate on the invitation_code_must field.
 func (f *AppControlFilter) WhereInvitationCodeMust(p entql.BoolP) {
 	f.Where(p.Field(appcontrol.FieldInvitationCodeMust))
-}
-
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppControlFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appcontrol.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppControlFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appcontrol.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppControlFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appcontrol.FieldDeleteAt))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -467,6 +467,21 @@ func (f *AppRoleFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(approle.FieldID))
 }
 
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppRoleFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(approle.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppRoleFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(approle.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppRoleFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(approle.FieldDeletedAt))
+}
+
 // WhereCreatedBy applies the entql [16]byte predicate on the created_by field.
 func (f *AppRoleFilter) WhereCreatedBy(p entql.ValueP) {
 	f.Where(p.Field(approle.FieldCreatedBy))
@@ -490,21 +505,6 @@ func (f *AppRoleFilter) WhereAppID(p entql.ValueP) {
 // WhereDefault applies the entql bool predicate on the default field.
 func (f *AppRoleFilter) WhereDefault(p entql.BoolP) {
 	f.Where(p.Field(approle.FieldDefault))
-}
-
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppRoleFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(approle.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppRoleFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(approle.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppRoleFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(approle.FieldDeleteAt))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -546,19 +546,19 @@ func (f *AppRoleUserFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(approleuser.FieldID))
 }
 
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppRoleUserFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(approleuser.FieldCreateAt))
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppRoleUserFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(approleuser.FieldCreatedAt))
 }
 
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppRoleUserFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(approleuser.FieldUpdateAt))
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppRoleUserFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(approleuser.FieldUpdatedAt))
 }
 
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppRoleUserFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(approleuser.FieldDeleteAt))
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppRoleUserFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(approleuser.FieldDeletedAt))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -615,19 +615,19 @@ func (f *AppUserFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(appuser.FieldID))
 }
 
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppUserFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuser.FieldCreateAt))
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppUserFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuser.FieldCreatedAt))
 }
 
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppUserFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuser.FieldUpdateAt))
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppUserFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuser.FieldUpdatedAt))
 }
 
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppUserFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appuser.FieldDeleteAt))
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppUserFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuser.FieldDeletedAt))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -689,6 +689,21 @@ func (f *AppUserControlFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(appusercontrol.FieldID))
 }
 
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppUserControlFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appusercontrol.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppUserControlFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appusercontrol.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppUserControlFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appusercontrol.FieldDeletedAt))
+}
+
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
 func (f *AppUserControlFilter) WhereAppID(p entql.ValueP) {
 	f.Where(p.Field(appusercontrol.FieldAppID))
@@ -707,21 +722,6 @@ func (f *AppUserControlFilter) WhereSigninVerifyByGoogleAuthentication(p entql.B
 // WhereGoogleAuthenticationVerified applies the entql bool predicate on the google_authentication_verified field.
 func (f *AppUserControlFilter) WhereGoogleAuthenticationVerified(p entql.BoolP) {
 	f.Where(p.Field(appusercontrol.FieldGoogleAuthenticationVerified))
-}
-
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppUserControlFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appusercontrol.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppUserControlFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appusercontrol.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppUserControlFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appusercontrol.FieldDeleteAt))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -761,6 +761,21 @@ func (f *AppUserExtraFilter) Where(p entql.P) {
 // WhereID applies the entql [16]byte predicate on the id field.
 func (f *AppUserExtraFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(appuserextra.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppUserExtraFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserextra.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppUserExtraFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserextra.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppUserExtraFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserextra.FieldDeletedAt))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -828,21 +843,6 @@ func (f *AppUserExtraFilter) WhereIDNumber(p entql.StringP) {
 	f.Where(p.Field(appuserextra.FieldIDNumber))
 }
 
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppUserExtraFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserextra.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppUserExtraFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserextra.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppUserExtraFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserextra.FieldDeleteAt))
-}
-
 // addPredicate implements the predicateAdder interface.
 func (ausq *AppUserSecretQuery) addPredicate(pred func(s *sql.Selector)) {
 	ausq.predicates = append(ausq.predicates, pred)
@@ -882,19 +882,19 @@ func (f *AppUserSecretFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(appusersecret.FieldID))
 }
 
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppUserSecretFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appusersecret.FieldCreateAt))
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppUserSecretFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appusersecret.FieldCreatedAt))
 }
 
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppUserSecretFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appusersecret.FieldUpdateAt))
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppUserSecretFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appusersecret.FieldUpdatedAt))
 }
 
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppUserSecretFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appusersecret.FieldDeleteAt))
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppUserSecretFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appusersecret.FieldDeletedAt))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -961,19 +961,19 @@ func (f *AppUserThirdPartyFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(appuserthirdparty.FieldID))
 }
 
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *AppUserThirdPartyFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserthirdparty.FieldCreateAt))
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AppUserThirdPartyFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserthirdparty.FieldCreatedAt))
 }
 
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *AppUserThirdPartyFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserthirdparty.FieldUpdateAt))
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AppUserThirdPartyFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserthirdparty.FieldUpdatedAt))
 }
 
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *AppUserThirdPartyFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(appuserthirdparty.FieldDeleteAt))
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AppUserThirdPartyFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(appuserthirdparty.FieldDeletedAt))
 }
 
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
@@ -1045,6 +1045,21 @@ func (f *BanAppFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(banapp.FieldID))
 }
 
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *BanAppFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(banapp.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *BanAppFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(banapp.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *BanAppFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(banapp.FieldDeletedAt))
+}
+
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
 func (f *BanAppFilter) WhereAppID(p entql.ValueP) {
 	f.Where(p.Field(banapp.FieldAppID))
@@ -1053,21 +1068,6 @@ func (f *BanAppFilter) WhereAppID(p entql.ValueP) {
 // WhereMessage applies the entql string predicate on the message field.
 func (f *BanAppFilter) WhereMessage(p entql.StringP) {
 	f.Where(p.Field(banapp.FieldMessage))
-}
-
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *BanAppFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(banapp.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *BanAppFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(banapp.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *BanAppFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(banapp.FieldDeleteAt))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1109,6 +1109,21 @@ func (f *BanAppUserFilter) WhereID(p entql.ValueP) {
 	f.Where(p.Field(banappuser.FieldID))
 }
 
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *BanAppUserFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(banappuser.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *BanAppUserFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(banappuser.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *BanAppUserFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(banappuser.FieldDeletedAt))
+}
+
 // WhereAppID applies the entql [16]byte predicate on the app_id field.
 func (f *BanAppUserFilter) WhereAppID(p entql.ValueP) {
 	f.Where(p.Field(banappuser.FieldAppID))
@@ -1122,19 +1137,4 @@ func (f *BanAppUserFilter) WhereUserID(p entql.ValueP) {
 // WhereMessage applies the entql string predicate on the message field.
 func (f *BanAppUserFilter) WhereMessage(p entql.StringP) {
 	f.Where(p.Field(banappuser.FieldMessage))
-}
-
-// WhereCreateAt applies the entql uint32 predicate on the create_at field.
-func (f *BanAppUserFilter) WhereCreateAt(p entql.Uint32P) {
-	f.Where(p.Field(banappuser.FieldCreateAt))
-}
-
-// WhereUpdateAt applies the entql uint32 predicate on the update_at field.
-func (f *BanAppUserFilter) WhereUpdateAt(p entql.Uint32P) {
-	f.Where(p.Field(banappuser.FieldUpdateAt))
-}
-
-// WhereDeleteAt applies the entql uint32 predicate on the delete_at field.
-func (f *BanAppUserFilter) WhereDeleteAt(p entql.Uint32P) {
-	f.Where(p.Field(banappuser.FieldDeleteAt))
 }

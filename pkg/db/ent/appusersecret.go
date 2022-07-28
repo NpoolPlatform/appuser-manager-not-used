@@ -16,12 +16,12 @@ type AppUserSecret struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -39,7 +39,7 @@ func (*AppUserSecret) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appusersecret.FieldCreateAt, appusersecret.FieldUpdateAt, appusersecret.FieldDeleteAt:
+		case appusersecret.FieldCreatedAt, appusersecret.FieldUpdatedAt, appusersecret.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case appusersecret.FieldPasswordHash, appusersecret.FieldSalt, appusersecret.FieldGoogleSecret:
 			values[i] = new(sql.NullString)
@@ -66,23 +66,23 @@ func (aus *AppUserSecret) assignValues(columns []string, values []interface{}) e
 			} else if value != nil {
 				aus.ID = *value
 			}
-		case appusersecret.FieldCreateAt:
+		case appusersecret.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				aus.CreateAt = uint32(value.Int64)
+				aus.CreatedAt = uint32(value.Int64)
 			}
-		case appusersecret.FieldUpdateAt:
+		case appusersecret.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				aus.UpdateAt = uint32(value.Int64)
+				aus.UpdatedAt = uint32(value.Int64)
 			}
-		case appusersecret.FieldDeleteAt:
+		case appusersecret.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				aus.DeleteAt = uint32(value.Int64)
+				aus.DeletedAt = uint32(value.Int64)
 			}
 		case appusersecret.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -142,12 +142,12 @@ func (aus *AppUserSecret) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppUserSecret(")
 	builder.WriteString(fmt.Sprintf("id=%v", aus.ID))
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", aus.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", aus.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", aus.DeleteAt))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", aus.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", aus.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", aus.DeletedAt))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", aus.AppID))
 	builder.WriteString(", user_id=")

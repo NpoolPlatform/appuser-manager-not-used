@@ -1,11 +1,10 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 )
@@ -13,6 +12,12 @@ import (
 // AppRole holds the schema definition for the AppRole entity.
 type AppRole struct {
 	ent.Schema
+}
+
+func (AppRole) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.TimeMixin{},
+	}
 }
 
 // Fields of the AppRole.
@@ -23,24 +28,10 @@ func (AppRole) Fields() []ent.Field {
 			Unique(),
 		field.UUID("created_by", uuid.UUID{}),
 		field.String("role"),
-		field.String("description"),
+		field.String("description").
+			Default(""),
 		field.UUID("app_id", uuid.UUID{}),
 		field.Bool("default"),
-		field.Uint32("create_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("update_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}).
-			UpdateDefault(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("delete_at").
-			DefaultFunc(func() uint32 {
-				return 0
-			}),
 	}
 }
 

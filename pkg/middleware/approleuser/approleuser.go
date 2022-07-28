@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
-	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
-	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
-	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approle"
+	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approleuser"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 )
 
 func CreateAppRoleUser(ctx context.Context, in *npool.CreateAppRoleUserRequest) (*npool.CreateAppRoleUserResponse, error) {

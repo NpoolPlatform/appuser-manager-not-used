@@ -16,6 +16,12 @@ type AppRole struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// CreatedBy holds the value of the "created_by" field.
 	CreatedBy uuid.UUID `json:"created_by,omitempty"`
 	// Role holds the value of the "role" field.
@@ -26,12 +32,6 @@ type AppRole struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// Default holds the value of the "default" field.
 	Default bool `json:"default,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -41,7 +41,7 @@ func (*AppRole) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case approle.FieldDefault:
 			values[i] = new(sql.NullBool)
-		case approle.FieldCreateAt, approle.FieldUpdateAt, approle.FieldDeleteAt:
+		case approle.FieldCreatedAt, approle.FieldUpdatedAt, approle.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case approle.FieldRole, approle.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -67,6 +67,24 @@ func (ar *AppRole) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				ar.ID = *value
+			}
+		case approle.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				ar.CreatedAt = uint32(value.Int64)
+			}
+		case approle.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				ar.UpdatedAt = uint32(value.Int64)
+			}
+		case approle.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				ar.DeletedAt = uint32(value.Int64)
 			}
 		case approle.FieldCreatedBy:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -98,24 +116,6 @@ func (ar *AppRole) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ar.Default = value.Bool
 			}
-		case approle.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				ar.CreateAt = uint32(value.Int64)
-			}
-		case approle.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				ar.UpdateAt = uint32(value.Int64)
-			}
-		case approle.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				ar.DeleteAt = uint32(value.Int64)
-			}
 		}
 	}
 	return nil
@@ -144,6 +144,12 @@ func (ar *AppRole) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppRole(")
 	builder.WriteString(fmt.Sprintf("id=%v", ar.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", ar.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", ar.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", ar.DeletedAt))
 	builder.WriteString(", created_by=")
 	builder.WriteString(fmt.Sprintf("%v", ar.CreatedBy))
 	builder.WriteString(", role=")
@@ -154,12 +160,6 @@ func (ar *AppRole) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ar.AppID))
 	builder.WriteString(", default=")
 	builder.WriteString(fmt.Sprintf("%v", ar.Default))
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", ar.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", ar.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", ar.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

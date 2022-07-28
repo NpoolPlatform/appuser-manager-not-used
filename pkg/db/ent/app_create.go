@@ -23,6 +23,48 @@ type AppCreate struct {
 	conflict []sql.ConflictOption
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (ac *AppCreate) SetCreatedAt(u uint32) *AppCreate {
+	ac.mutation.SetCreatedAt(u)
+	return ac
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ac *AppCreate) SetNillableCreatedAt(u *uint32) *AppCreate {
+	if u != nil {
+		ac.SetCreatedAt(*u)
+	}
+	return ac
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (ac *AppCreate) SetUpdatedAt(u uint32) *AppCreate {
+	ac.mutation.SetUpdatedAt(u)
+	return ac
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (ac *AppCreate) SetNillableUpdatedAt(u *uint32) *AppCreate {
+	if u != nil {
+		ac.SetUpdatedAt(*u)
+	}
+	return ac
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (ac *AppCreate) SetDeletedAt(u uint32) *AppCreate {
+	ac.mutation.SetDeletedAt(u)
+	return ac
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (ac *AppCreate) SetNillableDeletedAt(u *uint32) *AppCreate {
+	if u != nil {
+		ac.SetDeletedAt(*u)
+	}
+	return ac
+}
+
 // SetCreatedBy sets the "created_by" field.
 func (ac *AppCreate) SetCreatedBy(u uuid.UUID) *AppCreate {
 	ac.mutation.SetCreatedBy(u)
@@ -41,50 +83,24 @@ func (ac *AppCreate) SetLogo(s string) *AppCreate {
 	return ac
 }
 
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (ac *AppCreate) SetNillableLogo(s *string) *AppCreate {
+	if s != nil {
+		ac.SetLogo(*s)
+	}
+	return ac
+}
+
 // SetDescription sets the "description" field.
 func (ac *AppCreate) SetDescription(s string) *AppCreate {
 	ac.mutation.SetDescription(s)
 	return ac
 }
 
-// SetCreateAt sets the "create_at" field.
-func (ac *AppCreate) SetCreateAt(u uint32) *AppCreate {
-	ac.mutation.SetCreateAt(u)
-	return ac
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (ac *AppCreate) SetNillableCreateAt(u *uint32) *AppCreate {
-	if u != nil {
-		ac.SetCreateAt(*u)
-	}
-	return ac
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (ac *AppCreate) SetUpdateAt(u uint32) *AppCreate {
-	ac.mutation.SetUpdateAt(u)
-	return ac
-}
-
-// SetNillableUpdateAt sets the "update_at" field if the given value is not nil.
-func (ac *AppCreate) SetNillableUpdateAt(u *uint32) *AppCreate {
-	if u != nil {
-		ac.SetUpdateAt(*u)
-	}
-	return ac
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (ac *AppCreate) SetDeleteAt(u uint32) *AppCreate {
-	ac.mutation.SetDeleteAt(u)
-	return ac
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (ac *AppCreate) SetNillableDeleteAt(u *uint32) *AppCreate {
-	if u != nil {
-		ac.SetDeleteAt(*u)
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (ac *AppCreate) SetNillableDescription(s *string) *AppCreate {
+	if s != nil {
+		ac.SetDescription(*s)
 	}
 	return ac
 }
@@ -114,7 +130,9 @@ func (ac *AppCreate) Save(ctx context.Context) (*App, error) {
 		err  error
 		node *App
 	)
-	ac.defaults()
+	if err := ac.defaults(); err != nil {
+		return nil, err
+	}
 	if len(ac.hooks) == 0 {
 		if err = ac.check(); err != nil {
 			return nil, err
@@ -173,27 +191,57 @@ func (ac *AppCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (ac *AppCreate) defaults() {
-	if _, ok := ac.mutation.CreateAt(); !ok {
-		v := app.DefaultCreateAt()
-		ac.mutation.SetCreateAt(v)
+func (ac *AppCreate) defaults() error {
+	if _, ok := ac.mutation.CreatedAt(); !ok {
+		if app.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized app.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := app.DefaultCreatedAt()
+		ac.mutation.SetCreatedAt(v)
 	}
-	if _, ok := ac.mutation.UpdateAt(); !ok {
-		v := app.DefaultUpdateAt()
-		ac.mutation.SetUpdateAt(v)
+	if _, ok := ac.mutation.UpdatedAt(); !ok {
+		if app.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized app.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := app.DefaultUpdatedAt()
+		ac.mutation.SetUpdatedAt(v)
 	}
-	if _, ok := ac.mutation.DeleteAt(); !ok {
-		v := app.DefaultDeleteAt()
-		ac.mutation.SetDeleteAt(v)
+	if _, ok := ac.mutation.DeletedAt(); !ok {
+		if app.DefaultDeletedAt == nil {
+			return fmt.Errorf("ent: uninitialized app.DefaultDeletedAt (forgotten import ent/runtime?)")
+		}
+		v := app.DefaultDeletedAt()
+		ac.mutation.SetDeletedAt(v)
+	}
+	if _, ok := ac.mutation.Logo(); !ok {
+		v := app.DefaultLogo
+		ac.mutation.SetLogo(v)
+	}
+	if _, ok := ac.mutation.Description(); !ok {
+		v := app.DefaultDescription
+		ac.mutation.SetDescription(v)
 	}
 	if _, ok := ac.mutation.ID(); !ok {
+		if app.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized app.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := app.DefaultID()
 		ac.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (ac *AppCreate) check() error {
+	if _, ok := ac.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "App.created_at"`)}
+	}
+	if _, ok := ac.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "App.updated_at"`)}
+	}
+	if _, ok := ac.mutation.DeletedAt(); !ok {
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "App.deleted_at"`)}
+	}
 	if _, ok := ac.mutation.CreatedBy(); !ok {
 		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "App.created_by"`)}
 	}
@@ -205,15 +253,6 @@ func (ac *AppCreate) check() error {
 	}
 	if _, ok := ac.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "App.description"`)}
-	}
-	if _, ok := ac.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "App.create_at"`)}
-	}
-	if _, ok := ac.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "App.update_at"`)}
-	}
-	if _, ok := ac.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "App.delete_at"`)}
 	}
 	return nil
 }
@@ -252,6 +291,30 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
+	if value, ok := ac.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := ac.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
+	if value, ok := ac.mutation.DeletedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldDeletedAt,
+		})
+		_node.DeletedAt = value
+	}
 	if value, ok := ac.mutation.CreatedBy(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -284,30 +347,6 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 		})
 		_node.Description = value
 	}
-	if value, ok := ac.mutation.CreateAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldCreateAt,
-		})
-		_node.CreateAt = value
-	}
-	if value, ok := ac.mutation.UpdateAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldUpdateAt,
-		})
-		_node.UpdateAt = value
-	}
-	if value, ok := ac.mutation.DeleteAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldDeleteAt,
-		})
-		_node.DeleteAt = value
-	}
 	return _node, _spec
 }
 
@@ -315,7 +354,7 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 // of the `INSERT` statement. For example:
 //
 //	client.App.Create().
-//		SetCreatedBy(v).
+//		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -324,7 +363,7 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUpsert) {
-//			SetCreatedBy(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -361,6 +400,60 @@ type (
 		*sql.UpdateSet
 	}
 )
+
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUpsert) SetCreatedAt(v uint32) *AppUpsert {
+	u.Set(app.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUpsert) UpdateCreatedAt() *AppUpsert {
+	u.SetExcluded(app.FieldCreatedAt)
+	return u
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUpsert) AddCreatedAt(v uint32) *AppUpsert {
+	u.Add(app.FieldCreatedAt, v)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUpsert) SetUpdatedAt(v uint32) *AppUpsert {
+	u.Set(app.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUpsert) UpdateUpdatedAt() *AppUpsert {
+	u.SetExcluded(app.FieldUpdatedAt)
+	return u
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUpsert) AddUpdatedAt(v uint32) *AppUpsert {
+	u.Add(app.FieldUpdatedAt, v)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUpsert) SetDeletedAt(v uint32) *AppUpsert {
+	u.Set(app.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUpsert) UpdateDeletedAt() *AppUpsert {
+	u.SetExcluded(app.FieldDeletedAt)
+	return u
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUpsert) AddDeletedAt(v uint32) *AppUpsert {
+	u.Add(app.FieldDeletedAt, v)
+	return u
+}
 
 // SetCreatedBy sets the "created_by" field.
 func (u *AppUpsert) SetCreatedBy(v uuid.UUID) *AppUpsert {
@@ -407,60 +500,6 @@ func (u *AppUpsert) SetDescription(v string) *AppUpsert {
 // UpdateDescription sets the "description" field to the value that was provided on create.
 func (u *AppUpsert) UpdateDescription() *AppUpsert {
 	u.SetExcluded(app.FieldDescription)
-	return u
-}
-
-// SetCreateAt sets the "create_at" field.
-func (u *AppUpsert) SetCreateAt(v uint32) *AppUpsert {
-	u.Set(app.FieldCreateAt, v)
-	return u
-}
-
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUpsert) UpdateCreateAt() *AppUpsert {
-	u.SetExcluded(app.FieldCreateAt)
-	return u
-}
-
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUpsert) AddCreateAt(v uint32) *AppUpsert {
-	u.Add(app.FieldCreateAt, v)
-	return u
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUpsert) SetUpdateAt(v uint32) *AppUpsert {
-	u.Set(app.FieldUpdateAt, v)
-	return u
-}
-
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUpsert) UpdateUpdateAt() *AppUpsert {
-	u.SetExcluded(app.FieldUpdateAt)
-	return u
-}
-
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUpsert) AddUpdateAt(v uint32) *AppUpsert {
-	u.Add(app.FieldUpdateAt, v)
-	return u
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUpsert) SetDeleteAt(v uint32) *AppUpsert {
-	u.Set(app.FieldDeleteAt, v)
-	return u
-}
-
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUpsert) UpdateDeleteAt() *AppUpsert {
-	u.SetExcluded(app.FieldDeleteAt)
-	return u
-}
-
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUpsert) AddDeleteAt(v uint32) *AppUpsert {
-	u.Add(app.FieldDeleteAt, v)
 	return u
 }
 
@@ -512,6 +551,69 @@ func (u *AppUpsertOne) Update(set func(*AppUpsert)) *AppUpsertOne {
 		set(&AppUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUpsertOne) SetCreatedAt(v uint32) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUpsertOne) AddCreatedAt(v uint32) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.AddCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUpsertOne) UpdateCreatedAt() *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUpsertOne) SetUpdatedAt(v uint32) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUpsertOne) AddUpdatedAt(v uint32) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUpsertOne) UpdateUpdatedAt() *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUpsertOne) SetDeletedAt(v uint32) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUpsertOne) AddDeletedAt(v uint32) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.AddDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUpsertOne) UpdateDeletedAt() *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateDeletedAt()
+	})
 }
 
 // SetCreatedBy sets the "created_by" field.
@@ -567,69 +669,6 @@ func (u *AppUpsertOne) SetDescription(v string) *AppUpsertOne {
 func (u *AppUpsertOne) UpdateDescription() *AppUpsertOne {
 	return u.Update(func(s *AppUpsert) {
 		s.UpdateDescription()
-	})
-}
-
-// SetCreateAt sets the "create_at" field.
-func (u *AppUpsertOne) SetCreateAt(v uint32) *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.SetCreateAt(v)
-	})
-}
-
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUpsertOne) AddCreateAt(v uint32) *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.AddCreateAt(v)
-	})
-}
-
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUpsertOne) UpdateCreateAt() *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.UpdateCreateAt()
-	})
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUpsertOne) SetUpdateAt(v uint32) *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.SetUpdateAt(v)
-	})
-}
-
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUpsertOne) AddUpdateAt(v uint32) *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.AddUpdateAt(v)
-	})
-}
-
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUpsertOne) UpdateUpdateAt() *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.UpdateUpdateAt()
-	})
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUpsertOne) SetDeleteAt(v uint32) *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.SetDeleteAt(v)
-	})
-}
-
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUpsertOne) AddDeleteAt(v uint32) *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.AddDeleteAt(v)
-	})
-}
-
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUpsertOne) UpdateDeleteAt() *AppUpsertOne {
-	return u.Update(func(s *AppUpsert) {
-		s.UpdateDeleteAt()
 	})
 }
 
@@ -765,7 +804,7 @@ func (acb *AppCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUpsert) {
-//			SetCreatedBy(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -849,6 +888,69 @@ func (u *AppUpsertBulk) Update(set func(*AppUpsert)) *AppUpsertBulk {
 	return u
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUpsertBulk) SetCreatedAt(v uint32) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUpsertBulk) AddCreatedAt(v uint32) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.AddCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUpsertBulk) UpdateCreatedAt() *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUpsertBulk) SetUpdatedAt(v uint32) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUpsertBulk) AddUpdatedAt(v uint32) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUpsertBulk) UpdateUpdatedAt() *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUpsertBulk) SetDeletedAt(v uint32) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUpsertBulk) AddDeletedAt(v uint32) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.AddDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUpsertBulk) UpdateDeletedAt() *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
 // SetCreatedBy sets the "created_by" field.
 func (u *AppUpsertBulk) SetCreatedBy(v uuid.UUID) *AppUpsertBulk {
 	return u.Update(func(s *AppUpsert) {
@@ -902,69 +1004,6 @@ func (u *AppUpsertBulk) SetDescription(v string) *AppUpsertBulk {
 func (u *AppUpsertBulk) UpdateDescription() *AppUpsertBulk {
 	return u.Update(func(s *AppUpsert) {
 		s.UpdateDescription()
-	})
-}
-
-// SetCreateAt sets the "create_at" field.
-func (u *AppUpsertBulk) SetCreateAt(v uint32) *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.SetCreateAt(v)
-	})
-}
-
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUpsertBulk) AddCreateAt(v uint32) *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.AddCreateAt(v)
-	})
-}
-
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUpsertBulk) UpdateCreateAt() *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.UpdateCreateAt()
-	})
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUpsertBulk) SetUpdateAt(v uint32) *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.SetUpdateAt(v)
-	})
-}
-
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUpsertBulk) AddUpdateAt(v uint32) *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.AddUpdateAt(v)
-	})
-}
-
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUpsertBulk) UpdateUpdateAt() *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.UpdateUpdateAt()
-	})
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUpsertBulk) SetDeleteAt(v uint32) *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.SetDeleteAt(v)
-	})
-}
-
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUpsertBulk) AddDeleteAt(v uint32) *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.AddDeleteAt(v)
-	})
-}
-
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUpsertBulk) UpdateDeleteAt() *AppUpsertBulk {
-	return u.Update(func(s *AppUpsert) {
-		s.UpdateDeleteAt()
 	})
 }
 

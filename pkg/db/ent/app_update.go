@@ -28,6 +28,61 @@ func (au *AppUpdate) Where(ps ...predicate.App) *AppUpdate {
 	return au
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (au *AppUpdate) SetCreatedAt(u uint32) *AppUpdate {
+	au.mutation.ResetCreatedAt()
+	au.mutation.SetCreatedAt(u)
+	return au
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (au *AppUpdate) SetNillableCreatedAt(u *uint32) *AppUpdate {
+	if u != nil {
+		au.SetCreatedAt(*u)
+	}
+	return au
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (au *AppUpdate) AddCreatedAt(u int32) *AppUpdate {
+	au.mutation.AddCreatedAt(u)
+	return au
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (au *AppUpdate) SetUpdatedAt(u uint32) *AppUpdate {
+	au.mutation.ResetUpdatedAt()
+	au.mutation.SetUpdatedAt(u)
+	return au
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (au *AppUpdate) AddUpdatedAt(u int32) *AppUpdate {
+	au.mutation.AddUpdatedAt(u)
+	return au
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (au *AppUpdate) SetDeletedAt(u uint32) *AppUpdate {
+	au.mutation.ResetDeletedAt()
+	au.mutation.SetDeletedAt(u)
+	return au
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (au *AppUpdate) SetNillableDeletedAt(u *uint32) *AppUpdate {
+	if u != nil {
+		au.SetDeletedAt(*u)
+	}
+	return au
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (au *AppUpdate) AddDeletedAt(u int32) *AppUpdate {
+	au.mutation.AddDeletedAt(u)
+	return au
+}
+
 // SetCreatedBy sets the "created_by" field.
 func (au *AppUpdate) SetCreatedBy(u uuid.UUID) *AppUpdate {
 	au.mutation.SetCreatedBy(u)
@@ -46,64 +101,25 @@ func (au *AppUpdate) SetLogo(s string) *AppUpdate {
 	return au
 }
 
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (au *AppUpdate) SetNillableLogo(s *string) *AppUpdate {
+	if s != nil {
+		au.SetLogo(*s)
+	}
+	return au
+}
+
 // SetDescription sets the "description" field.
 func (au *AppUpdate) SetDescription(s string) *AppUpdate {
 	au.mutation.SetDescription(s)
 	return au
 }
 
-// SetCreateAt sets the "create_at" field.
-func (au *AppUpdate) SetCreateAt(u uint32) *AppUpdate {
-	au.mutation.ResetCreateAt()
-	au.mutation.SetCreateAt(u)
-	return au
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (au *AppUpdate) SetNillableCreateAt(u *uint32) *AppUpdate {
-	if u != nil {
-		au.SetCreateAt(*u)
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (au *AppUpdate) SetNillableDescription(s *string) *AppUpdate {
+	if s != nil {
+		au.SetDescription(*s)
 	}
-	return au
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (au *AppUpdate) AddCreateAt(u int32) *AppUpdate {
-	au.mutation.AddCreateAt(u)
-	return au
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (au *AppUpdate) SetUpdateAt(u uint32) *AppUpdate {
-	au.mutation.ResetUpdateAt()
-	au.mutation.SetUpdateAt(u)
-	return au
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (au *AppUpdate) AddUpdateAt(u int32) *AppUpdate {
-	au.mutation.AddUpdateAt(u)
-	return au
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (au *AppUpdate) SetDeleteAt(u uint32) *AppUpdate {
-	au.mutation.ResetDeleteAt()
-	au.mutation.SetDeleteAt(u)
-	return au
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (au *AppUpdate) SetNillableDeleteAt(u *uint32) *AppUpdate {
-	if u != nil {
-		au.SetDeleteAt(*u)
-	}
-	return au
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (au *AppUpdate) AddDeleteAt(u int32) *AppUpdate {
-	au.mutation.AddDeleteAt(u)
 	return au
 }
 
@@ -118,7 +134,9 @@ func (au *AppUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	au.defaults()
+	if err := au.defaults(); err != nil {
+		return 0, err
+	}
 	if len(au.hooks) == 0 {
 		affected, err = au.sqlSave(ctx)
 	} else {
@@ -168,11 +186,15 @@ func (au *AppUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (au *AppUpdate) defaults() {
-	if _, ok := au.mutation.UpdateAt(); !ok {
-		v := app.UpdateDefaultUpdateAt()
-		au.mutation.SetUpdateAt(v)
+func (au *AppUpdate) defaults() error {
+	if _, ok := au.mutation.UpdatedAt(); !ok {
+		if app.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized app.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := app.UpdateDefaultUpdatedAt()
+		au.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -192,6 +214,48 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := au.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldCreatedAt,
+		})
+	}
+	if value, ok := au.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldCreatedAt,
+		})
+	}
+	if value, ok := au.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldUpdatedAt,
+		})
+	}
+	if value, ok := au.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldUpdatedAt,
+		})
+	}
+	if value, ok := au.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldDeletedAt,
+		})
+	}
+	if value, ok := au.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldDeletedAt,
+		})
 	}
 	if value, ok := au.mutation.CreatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -221,48 +285,6 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: app.FieldDescription,
 		})
 	}
-	if value, ok := au.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldCreateAt,
-		})
-	}
-	if value, ok := au.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldCreateAt,
-		})
-	}
-	if value, ok := au.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldUpdateAt,
-		})
-	}
-	if value, ok := au.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldUpdateAt,
-		})
-	}
-	if value, ok := au.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldDeleteAt,
-		})
-	}
-	if value, ok := au.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldDeleteAt,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{app.Label}
@@ -280,6 +302,61 @@ type AppUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppMutation
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (auo *AppUpdateOne) SetCreatedAt(u uint32) *AppUpdateOne {
+	auo.mutation.ResetCreatedAt()
+	auo.mutation.SetCreatedAt(u)
+	return auo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableCreatedAt(u *uint32) *AppUpdateOne {
+	if u != nil {
+		auo.SetCreatedAt(*u)
+	}
+	return auo
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (auo *AppUpdateOne) AddCreatedAt(u int32) *AppUpdateOne {
+	auo.mutation.AddCreatedAt(u)
+	return auo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (auo *AppUpdateOne) SetUpdatedAt(u uint32) *AppUpdateOne {
+	auo.mutation.ResetUpdatedAt()
+	auo.mutation.SetUpdatedAt(u)
+	return auo
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (auo *AppUpdateOne) AddUpdatedAt(u int32) *AppUpdateOne {
+	auo.mutation.AddUpdatedAt(u)
+	return auo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (auo *AppUpdateOne) SetDeletedAt(u uint32) *AppUpdateOne {
+	auo.mutation.ResetDeletedAt()
+	auo.mutation.SetDeletedAt(u)
+	return auo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableDeletedAt(u *uint32) *AppUpdateOne {
+	if u != nil {
+		auo.SetDeletedAt(*u)
+	}
+	return auo
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (auo *AppUpdateOne) AddDeletedAt(u int32) *AppUpdateOne {
+	auo.mutation.AddDeletedAt(u)
+	return auo
 }
 
 // SetCreatedBy sets the "created_by" field.
@@ -300,64 +377,25 @@ func (auo *AppUpdateOne) SetLogo(s string) *AppUpdateOne {
 	return auo
 }
 
+// SetNillableLogo sets the "logo" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableLogo(s *string) *AppUpdateOne {
+	if s != nil {
+		auo.SetLogo(*s)
+	}
+	return auo
+}
+
 // SetDescription sets the "description" field.
 func (auo *AppUpdateOne) SetDescription(s string) *AppUpdateOne {
 	auo.mutation.SetDescription(s)
 	return auo
 }
 
-// SetCreateAt sets the "create_at" field.
-func (auo *AppUpdateOne) SetCreateAt(u uint32) *AppUpdateOne {
-	auo.mutation.ResetCreateAt()
-	auo.mutation.SetCreateAt(u)
-	return auo
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (auo *AppUpdateOne) SetNillableCreateAt(u *uint32) *AppUpdateOne {
-	if u != nil {
-		auo.SetCreateAt(*u)
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableDescription(s *string) *AppUpdateOne {
+	if s != nil {
+		auo.SetDescription(*s)
 	}
-	return auo
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (auo *AppUpdateOne) AddCreateAt(u int32) *AppUpdateOne {
-	auo.mutation.AddCreateAt(u)
-	return auo
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (auo *AppUpdateOne) SetUpdateAt(u uint32) *AppUpdateOne {
-	auo.mutation.ResetUpdateAt()
-	auo.mutation.SetUpdateAt(u)
-	return auo
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (auo *AppUpdateOne) AddUpdateAt(u int32) *AppUpdateOne {
-	auo.mutation.AddUpdateAt(u)
-	return auo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (auo *AppUpdateOne) SetDeleteAt(u uint32) *AppUpdateOne {
-	auo.mutation.ResetDeleteAt()
-	auo.mutation.SetDeleteAt(u)
-	return auo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (auo *AppUpdateOne) SetNillableDeleteAt(u *uint32) *AppUpdateOne {
-	if u != nil {
-		auo.SetDeleteAt(*u)
-	}
-	return auo
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (auo *AppUpdateOne) AddDeleteAt(u int32) *AppUpdateOne {
-	auo.mutation.AddDeleteAt(u)
 	return auo
 }
 
@@ -379,7 +417,9 @@ func (auo *AppUpdateOne) Save(ctx context.Context) (*App, error) {
 		err  error
 		node *App
 	)
-	auo.defaults()
+	if err := auo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(auo.hooks) == 0 {
 		node, err = auo.sqlSave(ctx)
 	} else {
@@ -429,11 +469,15 @@ func (auo *AppUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (auo *AppUpdateOne) defaults() {
-	if _, ok := auo.mutation.UpdateAt(); !ok {
-		v := app.UpdateDefaultUpdateAt()
-		auo.mutation.SetUpdateAt(v)
+func (auo *AppUpdateOne) defaults() error {
+	if _, ok := auo.mutation.UpdatedAt(); !ok {
+		if app.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized app.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := app.UpdateDefaultUpdatedAt()
+		auo.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
@@ -471,6 +515,48 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 			}
 		}
 	}
+	if value, ok := auo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldCreatedAt,
+		})
+	}
+	if value, ok := auo.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldCreatedAt,
+		})
+	}
+	if value, ok := auo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldUpdatedAt,
+		})
+	}
+	if value, ok := auo.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldUpdatedAt,
+		})
+	}
+	if value, ok := auo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldDeletedAt,
+		})
+	}
+	if value, ok := auo.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: app.FieldDeletedAt,
+		})
+	}
 	if value, ok := auo.mutation.CreatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -497,48 +583,6 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: app.FieldDescription,
-		})
-	}
-	if value, ok := auo.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldCreateAt,
-		})
-	}
-	if value, ok := auo.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldCreateAt,
-		})
-	}
-	if value, ok := auo.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldUpdateAt,
-		})
-	}
-	if value, ok := auo.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldUpdateAt,
-		})
-	}
-	if value, ok := auo.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldDeleteAt,
-		})
-	}
-	if value, ok := auo.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: app.FieldDeleteAt,
 		})
 	}
 	_node = &App{config: auo.config}

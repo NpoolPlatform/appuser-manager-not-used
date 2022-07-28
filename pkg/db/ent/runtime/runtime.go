@@ -27,62 +27,110 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	appMixin := schema.App{}.Mixin()
+	app.Policy = privacy.NewPolicies(appMixin[0], schema.App{})
+	app.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := app.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appMixinFields0 := appMixin[0].Fields()
+	_ = appMixinFields0
 	appFields := schema.App{}.Fields()
 	_ = appFields
-	// appDescCreateAt is the schema descriptor for create_at field.
-	appDescCreateAt := appFields[5].Descriptor()
-	// app.DefaultCreateAt holds the default value on creation for the create_at field.
-	app.DefaultCreateAt = appDescCreateAt.Default.(func() uint32)
-	// appDescUpdateAt is the schema descriptor for update_at field.
-	appDescUpdateAt := appFields[6].Descriptor()
-	// app.DefaultUpdateAt holds the default value on creation for the update_at field.
-	app.DefaultUpdateAt = appDescUpdateAt.Default.(func() uint32)
-	// app.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	app.UpdateDefaultUpdateAt = appDescUpdateAt.UpdateDefault.(func() uint32)
-	// appDescDeleteAt is the schema descriptor for delete_at field.
-	appDescDeleteAt := appFields[7].Descriptor()
-	// app.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	app.DefaultDeleteAt = appDescDeleteAt.Default.(func() uint32)
+	// appDescCreatedAt is the schema descriptor for created_at field.
+	appDescCreatedAt := appMixinFields0[0].Descriptor()
+	// app.DefaultCreatedAt holds the default value on creation for the created_at field.
+	app.DefaultCreatedAt = appDescCreatedAt.Default.(func() uint32)
+	// appDescUpdatedAt is the schema descriptor for updated_at field.
+	appDescUpdatedAt := appMixinFields0[1].Descriptor()
+	// app.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	app.DefaultUpdatedAt = appDescUpdatedAt.Default.(func() uint32)
+	// app.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	app.UpdateDefaultUpdatedAt = appDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appDescDeletedAt is the schema descriptor for deleted_at field.
+	appDescDeletedAt := appMixinFields0[2].Descriptor()
+	// app.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	app.DefaultDeletedAt = appDescDeletedAt.Default.(func() uint32)
+	// appDescLogo is the schema descriptor for logo field.
+	appDescLogo := appFields[3].Descriptor()
+	// app.DefaultLogo holds the default value on creation for the logo field.
+	app.DefaultLogo = appDescLogo.Default.(string)
+	// appDescDescription is the schema descriptor for description field.
+	appDescDescription := appFields[4].Descriptor()
+	// app.DefaultDescription holds the default value on creation for the description field.
+	app.DefaultDescription = appDescDescription.Default.(string)
 	// appDescID is the schema descriptor for id field.
 	appDescID := appFields[0].Descriptor()
 	// app.DefaultID holds the default value on creation for the id field.
 	app.DefaultID = appDescID.Default.(func() uuid.UUID)
+	appcontrolMixin := schema.AppControl{}.Mixin()
+	appcontrol.Policy = privacy.NewPolicies(appcontrolMixin[0], schema.AppControl{})
+	appcontrol.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appcontrol.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appcontrolMixinFields0 := appcontrolMixin[0].Fields()
+	_ = appcontrolMixinFields0
 	appcontrolFields := schema.AppControl{}.Fields()
 	_ = appcontrolFields
-	// appcontrolDescCreateAt is the schema descriptor for create_at field.
-	appcontrolDescCreateAt := appcontrolFields[8].Descriptor()
-	// appcontrol.DefaultCreateAt holds the default value on creation for the create_at field.
-	appcontrol.DefaultCreateAt = appcontrolDescCreateAt.Default.(func() uint32)
-	// appcontrolDescUpdateAt is the schema descriptor for update_at field.
-	appcontrolDescUpdateAt := appcontrolFields[9].Descriptor()
-	// appcontrol.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appcontrol.DefaultUpdateAt = appcontrolDescUpdateAt.Default.(func() uint32)
-	// appcontrol.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appcontrol.UpdateDefaultUpdateAt = appcontrolDescUpdateAt.UpdateDefault.(func() uint32)
-	// appcontrolDescDeleteAt is the schema descriptor for delete_at field.
-	appcontrolDescDeleteAt := appcontrolFields[10].Descriptor()
-	// appcontrol.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appcontrol.DefaultDeleteAt = appcontrolDescDeleteAt.Default.(func() uint32)
+	// appcontrolDescCreatedAt is the schema descriptor for created_at field.
+	appcontrolDescCreatedAt := appcontrolMixinFields0[0].Descriptor()
+	// appcontrol.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appcontrol.DefaultCreatedAt = appcontrolDescCreatedAt.Default.(func() uint32)
+	// appcontrolDescUpdatedAt is the schema descriptor for updated_at field.
+	appcontrolDescUpdatedAt := appcontrolMixinFields0[1].Descriptor()
+	// appcontrol.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appcontrol.DefaultUpdatedAt = appcontrolDescUpdatedAt.Default.(func() uint32)
+	// appcontrol.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appcontrol.UpdateDefaultUpdatedAt = appcontrolDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appcontrolDescDeletedAt is the schema descriptor for deleted_at field.
+	appcontrolDescDeletedAt := appcontrolMixinFields0[2].Descriptor()
+	// appcontrol.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appcontrol.DefaultDeletedAt = appcontrolDescDeletedAt.Default.(func() uint32)
 	// appcontrolDescID is the schema descriptor for id field.
 	appcontrolDescID := appcontrolFields[0].Descriptor()
 	// appcontrol.DefaultID holds the default value on creation for the id field.
 	appcontrol.DefaultID = appcontrolDescID.Default.(func() uuid.UUID)
+	approleMixin := schema.AppRole{}.Mixin()
+	approle.Policy = privacy.NewPolicies(approleMixin[0], schema.AppRole{})
+	approle.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := approle.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	approleMixinFields0 := approleMixin[0].Fields()
+	_ = approleMixinFields0
 	approleFields := schema.AppRole{}.Fields()
 	_ = approleFields
-	// approleDescCreateAt is the schema descriptor for create_at field.
-	approleDescCreateAt := approleFields[6].Descriptor()
-	// approle.DefaultCreateAt holds the default value on creation for the create_at field.
-	approle.DefaultCreateAt = approleDescCreateAt.Default.(func() uint32)
-	// approleDescUpdateAt is the schema descriptor for update_at field.
-	approleDescUpdateAt := approleFields[7].Descriptor()
-	// approle.DefaultUpdateAt holds the default value on creation for the update_at field.
-	approle.DefaultUpdateAt = approleDescUpdateAt.Default.(func() uint32)
-	// approle.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	approle.UpdateDefaultUpdateAt = approleDescUpdateAt.UpdateDefault.(func() uint32)
-	// approleDescDeleteAt is the schema descriptor for delete_at field.
-	approleDescDeleteAt := approleFields[8].Descriptor()
-	// approle.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	approle.DefaultDeleteAt = approleDescDeleteAt.Default.(func() uint32)
+	// approleDescCreatedAt is the schema descriptor for created_at field.
+	approleDescCreatedAt := approleMixinFields0[0].Descriptor()
+	// approle.DefaultCreatedAt holds the default value on creation for the created_at field.
+	approle.DefaultCreatedAt = approleDescCreatedAt.Default.(func() uint32)
+	// approleDescUpdatedAt is the schema descriptor for updated_at field.
+	approleDescUpdatedAt := approleMixinFields0[1].Descriptor()
+	// approle.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	approle.DefaultUpdatedAt = approleDescUpdatedAt.Default.(func() uint32)
+	// approle.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	approle.UpdateDefaultUpdatedAt = approleDescUpdatedAt.UpdateDefault.(func() uint32)
+	// approleDescDeletedAt is the schema descriptor for deleted_at field.
+	approleDescDeletedAt := approleMixinFields0[2].Descriptor()
+	// approle.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	approle.DefaultDeletedAt = approleDescDeletedAt.Default.(func() uint32)
+	// approleDescDescription is the schema descriptor for description field.
+	approleDescDescription := approleFields[3].Descriptor()
+	// approle.DefaultDescription holds the default value on creation for the description field.
+	approle.DefaultDescription = approleDescDescription.Default.(string)
 	// approleDescID is the schema descriptor for id field.
 	approleDescID := approleFields[0].Descriptor()
 	// approle.DefaultID holds the default value on creation for the id field.
@@ -101,20 +149,20 @@ func init() {
 	_ = approleuserMixinFields0
 	approleuserFields := schema.AppRoleUser{}.Fields()
 	_ = approleuserFields
-	// approleuserDescCreateAt is the schema descriptor for create_at field.
-	approleuserDescCreateAt := approleuserMixinFields0[0].Descriptor()
-	// approleuser.DefaultCreateAt holds the default value on creation for the create_at field.
-	approleuser.DefaultCreateAt = approleuserDescCreateAt.Default.(func() uint32)
-	// approleuserDescUpdateAt is the schema descriptor for update_at field.
-	approleuserDescUpdateAt := approleuserMixinFields0[1].Descriptor()
-	// approleuser.DefaultUpdateAt holds the default value on creation for the update_at field.
-	approleuser.DefaultUpdateAt = approleuserDescUpdateAt.Default.(func() uint32)
-	// approleuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	approleuser.UpdateDefaultUpdateAt = approleuserDescUpdateAt.UpdateDefault.(func() uint32)
-	// approleuserDescDeleteAt is the schema descriptor for delete_at field.
-	approleuserDescDeleteAt := approleuserMixinFields0[2].Descriptor()
-	// approleuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	approleuser.DefaultDeleteAt = approleuserDescDeleteAt.Default.(func() uint32)
+	// approleuserDescCreatedAt is the schema descriptor for created_at field.
+	approleuserDescCreatedAt := approleuserMixinFields0[0].Descriptor()
+	// approleuser.DefaultCreatedAt holds the default value on creation for the created_at field.
+	approleuser.DefaultCreatedAt = approleuserDescCreatedAt.Default.(func() uint32)
+	// approleuserDescUpdatedAt is the schema descriptor for updated_at field.
+	approleuserDescUpdatedAt := approleuserMixinFields0[1].Descriptor()
+	// approleuser.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	approleuser.DefaultUpdatedAt = approleuserDescUpdatedAt.Default.(func() uint32)
+	// approleuser.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	approleuser.UpdateDefaultUpdatedAt = approleuserDescUpdatedAt.UpdateDefault.(func() uint32)
+	// approleuserDescDeletedAt is the schema descriptor for deleted_at field.
+	approleuserDescDeletedAt := approleuserMixinFields0[2].Descriptor()
+	// approleuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	approleuser.DefaultDeletedAt = approleuserDescDeletedAt.Default.(func() uint32)
 	// approleuserDescID is the schema descriptor for id field.
 	approleuserDescID := approleuserFields[0].Descriptor()
 	// approleuser.DefaultID holds the default value on creation for the id field.
@@ -133,60 +181,136 @@ func init() {
 	_ = appuserMixinFields0
 	appuserFields := schema.AppUser{}.Fields()
 	_ = appuserFields
-	// appuserDescCreateAt is the schema descriptor for create_at field.
-	appuserDescCreateAt := appuserMixinFields0[0].Descriptor()
-	// appuser.DefaultCreateAt holds the default value on creation for the create_at field.
-	appuser.DefaultCreateAt = appuserDescCreateAt.Default.(func() uint32)
-	// appuserDescUpdateAt is the schema descriptor for update_at field.
-	appuserDescUpdateAt := appuserMixinFields0[1].Descriptor()
-	// appuser.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appuser.DefaultUpdateAt = appuserDescUpdateAt.Default.(func() uint32)
-	// appuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appuser.UpdateDefaultUpdateAt = appuserDescUpdateAt.UpdateDefault.(func() uint32)
-	// appuserDescDeleteAt is the schema descriptor for delete_at field.
-	appuserDescDeleteAt := appuserMixinFields0[2].Descriptor()
-	// appuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appuser.DefaultDeleteAt = appuserDescDeleteAt.Default.(func() uint32)
+	// appuserDescCreatedAt is the schema descriptor for created_at field.
+	appuserDescCreatedAt := appuserMixinFields0[0].Descriptor()
+	// appuser.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appuser.DefaultCreatedAt = appuserDescCreatedAt.Default.(func() uint32)
+	// appuserDescUpdatedAt is the schema descriptor for updated_at field.
+	appuserDescUpdatedAt := appuserMixinFields0[1].Descriptor()
+	// appuser.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appuser.DefaultUpdatedAt = appuserDescUpdatedAt.Default.(func() uint32)
+	// appuser.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appuser.UpdateDefaultUpdatedAt = appuserDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appuserDescDeletedAt is the schema descriptor for deleted_at field.
+	appuserDescDeletedAt := appuserMixinFields0[2].Descriptor()
+	// appuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appuser.DefaultDeletedAt = appuserDescDeletedAt.Default.(func() uint32)
+	// appuserDescEmailAddress is the schema descriptor for email_address field.
+	appuserDescEmailAddress := appuserFields[2].Descriptor()
+	// appuser.DefaultEmailAddress holds the default value on creation for the email_address field.
+	appuser.DefaultEmailAddress = appuserDescEmailAddress.Default.(string)
+	// appuserDescPhoneNo is the schema descriptor for phone_no field.
+	appuserDescPhoneNo := appuserFields[3].Descriptor()
+	// appuser.DefaultPhoneNo holds the default value on creation for the phone_no field.
+	appuser.DefaultPhoneNo = appuserDescPhoneNo.Default.(string)
 	// appuserDescID is the schema descriptor for id field.
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.
 	appuser.DefaultID = appuserDescID.Default.(func() uuid.UUID)
+	appusercontrolMixin := schema.AppUserControl{}.Mixin()
+	appusercontrol.Policy = privacy.NewPolicies(appusercontrolMixin[0], schema.AppUserControl{})
+	appusercontrol.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appusercontrol.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appusercontrolMixinFields0 := appusercontrolMixin[0].Fields()
+	_ = appusercontrolMixinFields0
 	appusercontrolFields := schema.AppUserControl{}.Fields()
 	_ = appusercontrolFields
-	// appusercontrolDescCreateAt is the schema descriptor for create_at field.
-	appusercontrolDescCreateAt := appusercontrolFields[5].Descriptor()
-	// appusercontrol.DefaultCreateAt holds the default value on creation for the create_at field.
-	appusercontrol.DefaultCreateAt = appusercontrolDescCreateAt.Default.(func() uint32)
-	// appusercontrolDescUpdateAt is the schema descriptor for update_at field.
-	appusercontrolDescUpdateAt := appusercontrolFields[6].Descriptor()
-	// appusercontrol.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appusercontrol.DefaultUpdateAt = appusercontrolDescUpdateAt.Default.(func() uint32)
-	// appusercontrol.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appusercontrol.UpdateDefaultUpdateAt = appusercontrolDescUpdateAt.UpdateDefault.(func() uint32)
-	// appusercontrolDescDeleteAt is the schema descriptor for delete_at field.
-	appusercontrolDescDeleteAt := appusercontrolFields[7].Descriptor()
-	// appusercontrol.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appusercontrol.DefaultDeleteAt = appusercontrolDescDeleteAt.Default.(func() uint32)
+	// appusercontrolDescCreatedAt is the schema descriptor for created_at field.
+	appusercontrolDescCreatedAt := appusercontrolMixinFields0[0].Descriptor()
+	// appusercontrol.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appusercontrol.DefaultCreatedAt = appusercontrolDescCreatedAt.Default.(func() uint32)
+	// appusercontrolDescUpdatedAt is the schema descriptor for updated_at field.
+	appusercontrolDescUpdatedAt := appusercontrolMixinFields0[1].Descriptor()
+	// appusercontrol.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appusercontrol.DefaultUpdatedAt = appusercontrolDescUpdatedAt.Default.(func() uint32)
+	// appusercontrol.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appusercontrol.UpdateDefaultUpdatedAt = appusercontrolDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appusercontrolDescDeletedAt is the schema descriptor for deleted_at field.
+	appusercontrolDescDeletedAt := appusercontrolMixinFields0[2].Descriptor()
+	// appusercontrol.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appusercontrol.DefaultDeletedAt = appusercontrolDescDeletedAt.Default.(func() uint32)
 	// appusercontrolDescID is the schema descriptor for id field.
 	appusercontrolDescID := appusercontrolFields[0].Descriptor()
 	// appusercontrol.DefaultID holds the default value on creation for the id field.
 	appusercontrol.DefaultID = appusercontrolDescID.Default.(func() uuid.UUID)
+	appuserextraMixin := schema.AppUserExtra{}.Mixin()
+	appuserextra.Policy = privacy.NewPolicies(appuserextraMixin[0], schema.AppUserExtra{})
+	appuserextra.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := appuserextra.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	appuserextraMixinFields0 := appuserextraMixin[0].Fields()
+	_ = appuserextraMixinFields0
 	appuserextraFields := schema.AppUserExtra{}.Fields()
 	_ = appuserextraFields
-	// appuserextraDescCreateAt is the schema descriptor for create_at field.
-	appuserextraDescCreateAt := appuserextraFields[14].Descriptor()
-	// appuserextra.DefaultCreateAt holds the default value on creation for the create_at field.
-	appuserextra.DefaultCreateAt = appuserextraDescCreateAt.Default.(func() uint32)
-	// appuserextraDescUpdateAt is the schema descriptor for update_at field.
-	appuserextraDescUpdateAt := appuserextraFields[15].Descriptor()
-	// appuserextra.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appuserextra.DefaultUpdateAt = appuserextraDescUpdateAt.Default.(func() uint32)
-	// appuserextra.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appuserextra.UpdateDefaultUpdateAt = appuserextraDescUpdateAt.UpdateDefault.(func() uint32)
-	// appuserextraDescDeleteAt is the schema descriptor for delete_at field.
-	appuserextraDescDeleteAt := appuserextraFields[16].Descriptor()
-	// appuserextra.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appuserextra.DefaultDeleteAt = appuserextraDescDeleteAt.Default.(func() uint32)
+	// appuserextraDescCreatedAt is the schema descriptor for created_at field.
+	appuserextraDescCreatedAt := appuserextraMixinFields0[0].Descriptor()
+	// appuserextra.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appuserextra.DefaultCreatedAt = appuserextraDescCreatedAt.Default.(func() uint32)
+	// appuserextraDescUpdatedAt is the schema descriptor for updated_at field.
+	appuserextraDescUpdatedAt := appuserextraMixinFields0[1].Descriptor()
+	// appuserextra.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appuserextra.DefaultUpdatedAt = appuserextraDescUpdatedAt.Default.(func() uint32)
+	// appuserextra.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appuserextra.UpdateDefaultUpdatedAt = appuserextraDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appuserextraDescDeletedAt is the schema descriptor for deleted_at field.
+	appuserextraDescDeletedAt := appuserextraMixinFields0[2].Descriptor()
+	// appuserextra.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appuserextra.DefaultDeletedAt = appuserextraDescDeletedAt.Default.(func() uint32)
+	// appuserextraDescUsername is the schema descriptor for username field.
+	appuserextraDescUsername := appuserextraFields[3].Descriptor()
+	// appuserextra.DefaultUsername holds the default value on creation for the username field.
+	appuserextra.DefaultUsername = appuserextraDescUsername.Default.(string)
+	// appuserextraDescFirstName is the schema descriptor for first_name field.
+	appuserextraDescFirstName := appuserextraFields[4].Descriptor()
+	// appuserextra.DefaultFirstName holds the default value on creation for the first_name field.
+	appuserextra.DefaultFirstName = appuserextraDescFirstName.Default.(string)
+	// appuserextraDescLastName is the schema descriptor for last_name field.
+	appuserextraDescLastName := appuserextraFields[5].Descriptor()
+	// appuserextra.DefaultLastName holds the default value on creation for the last_name field.
+	appuserextra.DefaultLastName = appuserextraDescLastName.Default.(string)
+	// appuserextraDescAddressFields is the schema descriptor for address_fields field.
+	appuserextraDescAddressFields := appuserextraFields[6].Descriptor()
+	// appuserextra.DefaultAddressFields holds the default value on creation for the address_fields field.
+	appuserextra.DefaultAddressFields = appuserextraDescAddressFields.Default.([]string)
+	// appuserextraDescGender is the schema descriptor for gender field.
+	appuserextraDescGender := appuserextraFields[7].Descriptor()
+	// appuserextra.DefaultGender holds the default value on creation for the gender field.
+	appuserextra.DefaultGender = appuserextraDescGender.Default.(string)
+	// appuserextraDescPostalCode is the schema descriptor for postal_code field.
+	appuserextraDescPostalCode := appuserextraFields[8].Descriptor()
+	// appuserextra.DefaultPostalCode holds the default value on creation for the postal_code field.
+	appuserextra.DefaultPostalCode = appuserextraDescPostalCode.Default.(string)
+	// appuserextraDescAge is the schema descriptor for age field.
+	appuserextraDescAge := appuserextraFields[9].Descriptor()
+	// appuserextra.DefaultAge holds the default value on creation for the age field.
+	appuserextra.DefaultAge = appuserextraDescAge.Default.(uint32)
+	// appuserextraDescBirthday is the schema descriptor for birthday field.
+	appuserextraDescBirthday := appuserextraFields[10].Descriptor()
+	// appuserextra.DefaultBirthday holds the default value on creation for the birthday field.
+	appuserextra.DefaultBirthday = appuserextraDescBirthday.Default.(uint32)
+	// appuserextraDescAvatar is the schema descriptor for avatar field.
+	appuserextraDescAvatar := appuserextraFields[11].Descriptor()
+	// appuserextra.DefaultAvatar holds the default value on creation for the avatar field.
+	appuserextra.DefaultAvatar = appuserextraDescAvatar.Default.(string)
+	// appuserextraDescOrganization is the schema descriptor for organization field.
+	appuserextraDescOrganization := appuserextraFields[12].Descriptor()
+	// appuserextra.DefaultOrganization holds the default value on creation for the organization field.
+	appuserextra.DefaultOrganization = appuserextraDescOrganization.Default.(string)
+	// appuserextraDescIDNumber is the schema descriptor for id_number field.
+	appuserextraDescIDNumber := appuserextraFields[13].Descriptor()
+	// appuserextra.DefaultIDNumber holds the default value on creation for the id_number field.
+	appuserextra.DefaultIDNumber = appuserextraDescIDNumber.Default.(string)
 	// appuserextraDescID is the schema descriptor for id field.
 	appuserextraDescID := appuserextraFields[0].Descriptor()
 	// appuserextra.DefaultID holds the default value on creation for the id field.
@@ -205,20 +329,20 @@ func init() {
 	_ = appusersecretMixinFields0
 	appusersecretFields := schema.AppUserSecret{}.Fields()
 	_ = appusersecretFields
-	// appusersecretDescCreateAt is the schema descriptor for create_at field.
-	appusersecretDescCreateAt := appusersecretMixinFields0[0].Descriptor()
-	// appusersecret.DefaultCreateAt holds the default value on creation for the create_at field.
-	appusersecret.DefaultCreateAt = appusersecretDescCreateAt.Default.(func() uint32)
-	// appusersecretDescUpdateAt is the schema descriptor for update_at field.
-	appusersecretDescUpdateAt := appusersecretMixinFields0[1].Descriptor()
-	// appusersecret.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appusersecret.DefaultUpdateAt = appusersecretDescUpdateAt.Default.(func() uint32)
-	// appusersecret.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appusersecret.UpdateDefaultUpdateAt = appusersecretDescUpdateAt.UpdateDefault.(func() uint32)
-	// appusersecretDescDeleteAt is the schema descriptor for delete_at field.
-	appusersecretDescDeleteAt := appusersecretMixinFields0[2].Descriptor()
-	// appusersecret.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appusersecret.DefaultDeleteAt = appusersecretDescDeleteAt.Default.(func() uint32)
+	// appusersecretDescCreatedAt is the schema descriptor for created_at field.
+	appusersecretDescCreatedAt := appusersecretMixinFields0[0].Descriptor()
+	// appusersecret.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appusersecret.DefaultCreatedAt = appusersecretDescCreatedAt.Default.(func() uint32)
+	// appusersecretDescUpdatedAt is the schema descriptor for updated_at field.
+	appusersecretDescUpdatedAt := appusersecretMixinFields0[1].Descriptor()
+	// appusersecret.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appusersecret.DefaultUpdatedAt = appusersecretDescUpdatedAt.Default.(func() uint32)
+	// appusersecret.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appusersecret.UpdateDefaultUpdatedAt = appusersecretDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appusersecretDescDeletedAt is the schema descriptor for deleted_at field.
+	appusersecretDescDeletedAt := appusersecretMixinFields0[2].Descriptor()
+	// appusersecret.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appusersecret.DefaultDeletedAt = appusersecretDescDeletedAt.Default.(func() uint32)
 	// appusersecretDescID is the schema descriptor for id field.
 	appusersecretDescID := appusersecretFields[0].Descriptor()
 	// appusersecret.DefaultID holds the default value on creation for the id field.
@@ -237,64 +361,102 @@ func init() {
 	_ = appuserthirdpartyMixinFields0
 	appuserthirdpartyFields := schema.AppUserThirdParty{}.Fields()
 	_ = appuserthirdpartyFields
-	// appuserthirdpartyDescCreateAt is the schema descriptor for create_at field.
-	appuserthirdpartyDescCreateAt := appuserthirdpartyMixinFields0[0].Descriptor()
-	// appuserthirdparty.DefaultCreateAt holds the default value on creation for the create_at field.
-	appuserthirdparty.DefaultCreateAt = appuserthirdpartyDescCreateAt.Default.(func() uint32)
-	// appuserthirdpartyDescUpdateAt is the schema descriptor for update_at field.
-	appuserthirdpartyDescUpdateAt := appuserthirdpartyMixinFields0[1].Descriptor()
-	// appuserthirdparty.DefaultUpdateAt holds the default value on creation for the update_at field.
-	appuserthirdparty.DefaultUpdateAt = appuserthirdpartyDescUpdateAt.Default.(func() uint32)
-	// appuserthirdparty.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	appuserthirdparty.UpdateDefaultUpdateAt = appuserthirdpartyDescUpdateAt.UpdateDefault.(func() uint32)
-	// appuserthirdpartyDescDeleteAt is the schema descriptor for delete_at field.
-	appuserthirdpartyDescDeleteAt := appuserthirdpartyMixinFields0[2].Descriptor()
-	// appuserthirdparty.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	appuserthirdparty.DefaultDeleteAt = appuserthirdpartyDescDeleteAt.Default.(func() uint32)
+	// appuserthirdpartyDescCreatedAt is the schema descriptor for created_at field.
+	appuserthirdpartyDescCreatedAt := appuserthirdpartyMixinFields0[0].Descriptor()
+	// appuserthirdparty.DefaultCreatedAt holds the default value on creation for the created_at field.
+	appuserthirdparty.DefaultCreatedAt = appuserthirdpartyDescCreatedAt.Default.(func() uint32)
+	// appuserthirdpartyDescUpdatedAt is the schema descriptor for updated_at field.
+	appuserthirdpartyDescUpdatedAt := appuserthirdpartyMixinFields0[1].Descriptor()
+	// appuserthirdparty.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	appuserthirdparty.DefaultUpdatedAt = appuserthirdpartyDescUpdatedAt.Default.(func() uint32)
+	// appuserthirdparty.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	appuserthirdparty.UpdateDefaultUpdatedAt = appuserthirdpartyDescUpdatedAt.UpdateDefault.(func() uint32)
+	// appuserthirdpartyDescDeletedAt is the schema descriptor for deleted_at field.
+	appuserthirdpartyDescDeletedAt := appuserthirdpartyMixinFields0[2].Descriptor()
+	// appuserthirdparty.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	appuserthirdparty.DefaultDeletedAt = appuserthirdpartyDescDeletedAt.Default.(func() uint32)
+	// appuserthirdpartyDescThirdPartyUsername is the schema descriptor for third_party_username field.
+	appuserthirdpartyDescThirdPartyUsername := appuserthirdpartyFields[5].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyUsername holds the default value on creation for the third_party_username field.
+	appuserthirdparty.DefaultThirdPartyUsername = appuserthirdpartyDescThirdPartyUsername.Default.(string)
 	// appuserthirdpartyDescThirdPartyUserAvatar is the schema descriptor for third_party_user_avatar field.
 	appuserthirdpartyDescThirdPartyUserAvatar := appuserthirdpartyFields[6].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyUserAvatar holds the default value on creation for the third_party_user_avatar field.
+	appuserthirdparty.DefaultThirdPartyUserAvatar = appuserthirdpartyDescThirdPartyUserAvatar.Default.(string)
 	// appuserthirdparty.ThirdPartyUserAvatarValidator is a validator for the "third_party_user_avatar" field. It is called by the builders before save.
 	appuserthirdparty.ThirdPartyUserAvatarValidator = appuserthirdpartyDescThirdPartyUserAvatar.Validators[0].(func(string) error)
 	// appuserthirdpartyDescID is the schema descriptor for id field.
 	appuserthirdpartyDescID := appuserthirdpartyFields[0].Descriptor()
 	// appuserthirdparty.DefaultID holds the default value on creation for the id field.
 	appuserthirdparty.DefaultID = appuserthirdpartyDescID.Default.(func() uuid.UUID)
+	banappMixin := schema.BanApp{}.Mixin()
+	banapp.Policy = privacy.NewPolicies(banappMixin[0], schema.BanApp{})
+	banapp.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := banapp.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	banappMixinFields0 := banappMixin[0].Fields()
+	_ = banappMixinFields0
 	banappFields := schema.BanApp{}.Fields()
 	_ = banappFields
-	// banappDescCreateAt is the schema descriptor for create_at field.
-	banappDescCreateAt := banappFields[3].Descriptor()
-	// banapp.DefaultCreateAt holds the default value on creation for the create_at field.
-	banapp.DefaultCreateAt = banappDescCreateAt.Default.(func() uint32)
-	// banappDescUpdateAt is the schema descriptor for update_at field.
-	banappDescUpdateAt := banappFields[4].Descriptor()
-	// banapp.DefaultUpdateAt holds the default value on creation for the update_at field.
-	banapp.DefaultUpdateAt = banappDescUpdateAt.Default.(func() uint32)
-	// banapp.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	banapp.UpdateDefaultUpdateAt = banappDescUpdateAt.UpdateDefault.(func() uint32)
-	// banappDescDeleteAt is the schema descriptor for delete_at field.
-	banappDescDeleteAt := banappFields[5].Descriptor()
-	// banapp.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	banapp.DefaultDeleteAt = banappDescDeleteAt.Default.(func() uint32)
+	// banappDescCreatedAt is the schema descriptor for created_at field.
+	banappDescCreatedAt := banappMixinFields0[0].Descriptor()
+	// banapp.DefaultCreatedAt holds the default value on creation for the created_at field.
+	banapp.DefaultCreatedAt = banappDescCreatedAt.Default.(func() uint32)
+	// banappDescUpdatedAt is the schema descriptor for updated_at field.
+	banappDescUpdatedAt := banappMixinFields0[1].Descriptor()
+	// banapp.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	banapp.DefaultUpdatedAt = banappDescUpdatedAt.Default.(func() uint32)
+	// banapp.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	banapp.UpdateDefaultUpdatedAt = banappDescUpdatedAt.UpdateDefault.(func() uint32)
+	// banappDescDeletedAt is the schema descriptor for deleted_at field.
+	banappDescDeletedAt := banappMixinFields0[2].Descriptor()
+	// banapp.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	banapp.DefaultDeletedAt = banappDescDeletedAt.Default.(func() uint32)
+	// banappDescMessage is the schema descriptor for message field.
+	banappDescMessage := banappFields[2].Descriptor()
+	// banapp.DefaultMessage holds the default value on creation for the message field.
+	banapp.DefaultMessage = banappDescMessage.Default.(string)
 	// banappDescID is the schema descriptor for id field.
 	banappDescID := banappFields[0].Descriptor()
 	// banapp.DefaultID holds the default value on creation for the id field.
 	banapp.DefaultID = banappDescID.Default.(func() uuid.UUID)
+	banappuserMixin := schema.BanAppUser{}.Mixin()
+	banappuser.Policy = privacy.NewPolicies(banappuserMixin[0], schema.BanAppUser{})
+	banappuser.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := banappuser.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	banappuserMixinFields0 := banappuserMixin[0].Fields()
+	_ = banappuserMixinFields0
 	banappuserFields := schema.BanAppUser{}.Fields()
 	_ = banappuserFields
-	// banappuserDescCreateAt is the schema descriptor for create_at field.
-	banappuserDescCreateAt := banappuserFields[4].Descriptor()
-	// banappuser.DefaultCreateAt holds the default value on creation for the create_at field.
-	banappuser.DefaultCreateAt = banappuserDescCreateAt.Default.(func() uint32)
-	// banappuserDescUpdateAt is the schema descriptor for update_at field.
-	banappuserDescUpdateAt := banappuserFields[5].Descriptor()
-	// banappuser.DefaultUpdateAt holds the default value on creation for the update_at field.
-	banappuser.DefaultUpdateAt = banappuserDescUpdateAt.Default.(func() uint32)
-	// banappuser.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
-	banappuser.UpdateDefaultUpdateAt = banappuserDescUpdateAt.UpdateDefault.(func() uint32)
-	// banappuserDescDeleteAt is the schema descriptor for delete_at field.
-	banappuserDescDeleteAt := banappuserFields[6].Descriptor()
-	// banappuser.DefaultDeleteAt holds the default value on creation for the delete_at field.
-	banappuser.DefaultDeleteAt = banappuserDescDeleteAt.Default.(func() uint32)
+	// banappuserDescCreatedAt is the schema descriptor for created_at field.
+	banappuserDescCreatedAt := banappuserMixinFields0[0].Descriptor()
+	// banappuser.DefaultCreatedAt holds the default value on creation for the created_at field.
+	banappuser.DefaultCreatedAt = banappuserDescCreatedAt.Default.(func() uint32)
+	// banappuserDescUpdatedAt is the schema descriptor for updated_at field.
+	banappuserDescUpdatedAt := banappuserMixinFields0[1].Descriptor()
+	// banappuser.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	banappuser.DefaultUpdatedAt = banappuserDescUpdatedAt.Default.(func() uint32)
+	// banappuser.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	banappuser.UpdateDefaultUpdatedAt = banappuserDescUpdatedAt.UpdateDefault.(func() uint32)
+	// banappuserDescDeletedAt is the schema descriptor for deleted_at field.
+	banappuserDescDeletedAt := banappuserMixinFields0[2].Descriptor()
+	// banappuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	banappuser.DefaultDeletedAt = banappuserDescDeletedAt.Default.(func() uint32)
+	// banappuserDescMessage is the schema descriptor for message field.
+	banappuserDescMessage := banappuserFields[3].Descriptor()
+	// banappuser.DefaultMessage holds the default value on creation for the message field.
+	banappuser.DefaultMessage = banappuserDescMessage.Default.(string)
 	// banappuserDescID is the schema descriptor for id field.
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.

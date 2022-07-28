@@ -17,6 +17,12 @@ type AppControl struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// SignupMethods holds the value of the "signup_methods" field.
@@ -31,12 +37,6 @@ type AppControl struct {
 	SigninVerifyEnable bool `json:"signin_verify_enable,omitempty"`
 	// InvitationCodeMust holds the value of the "invitation_code_must" field.
 	InvitationCodeMust bool `json:"invitation_code_must,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,7 +48,7 @@ func (*AppControl) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case appcontrol.FieldKycEnable, appcontrol.FieldSigninVerifyEnable, appcontrol.FieldInvitationCodeMust:
 			values[i] = new(sql.NullBool)
-		case appcontrol.FieldCreateAt, appcontrol.FieldUpdateAt, appcontrol.FieldDeleteAt:
+		case appcontrol.FieldCreatedAt, appcontrol.FieldUpdatedAt, appcontrol.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case appcontrol.FieldRecaptchaMethod:
 			values[i] = new(sql.NullString)
@@ -74,6 +74,24 @@ func (ac *AppControl) assignValues(columns []string, values []interface{}) error
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				ac.ID = *value
+			}
+		case appcontrol.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				ac.CreatedAt = uint32(value.Int64)
+			}
+		case appcontrol.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				ac.UpdatedAt = uint32(value.Int64)
+			}
+		case appcontrol.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				ac.DeletedAt = uint32(value.Int64)
 			}
 		case appcontrol.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -121,24 +139,6 @@ func (ac *AppControl) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				ac.InvitationCodeMust = value.Bool
 			}
-		case appcontrol.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				ac.CreateAt = uint32(value.Int64)
-			}
-		case appcontrol.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				ac.UpdateAt = uint32(value.Int64)
-			}
-		case appcontrol.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				ac.DeleteAt = uint32(value.Int64)
-			}
 		}
 	}
 	return nil
@@ -167,6 +167,12 @@ func (ac *AppControl) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppControl(")
 	builder.WriteString(fmt.Sprintf("id=%v", ac.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", ac.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", ac.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", ac.DeletedAt))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", ac.AppID))
 	builder.WriteString(", signup_methods=")
@@ -181,12 +187,6 @@ func (ac *AppControl) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ac.SigninVerifyEnable))
 	builder.WriteString(", invitation_code_must=")
 	builder.WriteString(fmt.Sprintf("%v", ac.InvitationCodeMust))
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", ac.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", ac.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", ac.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

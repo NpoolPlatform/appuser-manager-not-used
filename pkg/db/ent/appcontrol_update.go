@@ -28,6 +28,61 @@ func (acu *AppControlUpdate) Where(ps ...predicate.AppControl) *AppControlUpdate
 	return acu
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (acu *AppControlUpdate) SetCreatedAt(u uint32) *AppControlUpdate {
+	acu.mutation.ResetCreatedAt()
+	acu.mutation.SetCreatedAt(u)
+	return acu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableCreatedAt(u *uint32) *AppControlUpdate {
+	if u != nil {
+		acu.SetCreatedAt(*u)
+	}
+	return acu
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (acu *AppControlUpdate) AddCreatedAt(u int32) *AppControlUpdate {
+	acu.mutation.AddCreatedAt(u)
+	return acu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (acu *AppControlUpdate) SetUpdatedAt(u uint32) *AppControlUpdate {
+	acu.mutation.ResetUpdatedAt()
+	acu.mutation.SetUpdatedAt(u)
+	return acu
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (acu *AppControlUpdate) AddUpdatedAt(u int32) *AppControlUpdate {
+	acu.mutation.AddUpdatedAt(u)
+	return acu
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (acu *AppControlUpdate) SetDeletedAt(u uint32) *AppControlUpdate {
+	acu.mutation.ResetDeletedAt()
+	acu.mutation.SetDeletedAt(u)
+	return acu
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableDeletedAt(u *uint32) *AppControlUpdate {
+	if u != nil {
+		acu.SetDeletedAt(*u)
+	}
+	return acu
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (acu *AppControlUpdate) AddDeletedAt(u int32) *AppControlUpdate {
+	acu.mutation.AddDeletedAt(u)
+	return acu
+}
+
 // SetAppID sets the "app_id" field.
 func (acu *AppControlUpdate) SetAppID(u uuid.UUID) *AppControlUpdate {
 	acu.mutation.SetAppID(u)
@@ -70,61 +125,6 @@ func (acu *AppControlUpdate) SetInvitationCodeMust(b bool) *AppControlUpdate {
 	return acu
 }
 
-// SetCreateAt sets the "create_at" field.
-func (acu *AppControlUpdate) SetCreateAt(u uint32) *AppControlUpdate {
-	acu.mutation.ResetCreateAt()
-	acu.mutation.SetCreateAt(u)
-	return acu
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (acu *AppControlUpdate) SetNillableCreateAt(u *uint32) *AppControlUpdate {
-	if u != nil {
-		acu.SetCreateAt(*u)
-	}
-	return acu
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (acu *AppControlUpdate) AddCreateAt(u int32) *AppControlUpdate {
-	acu.mutation.AddCreateAt(u)
-	return acu
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (acu *AppControlUpdate) SetUpdateAt(u uint32) *AppControlUpdate {
-	acu.mutation.ResetUpdateAt()
-	acu.mutation.SetUpdateAt(u)
-	return acu
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (acu *AppControlUpdate) AddUpdateAt(u int32) *AppControlUpdate {
-	acu.mutation.AddUpdateAt(u)
-	return acu
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (acu *AppControlUpdate) SetDeleteAt(u uint32) *AppControlUpdate {
-	acu.mutation.ResetDeleteAt()
-	acu.mutation.SetDeleteAt(u)
-	return acu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (acu *AppControlUpdate) SetNillableDeleteAt(u *uint32) *AppControlUpdate {
-	if u != nil {
-		acu.SetDeleteAt(*u)
-	}
-	return acu
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (acu *AppControlUpdate) AddDeleteAt(u int32) *AppControlUpdate {
-	acu.mutation.AddDeleteAt(u)
-	return acu
-}
-
 // Mutation returns the AppControlMutation object of the builder.
 func (acu *AppControlUpdate) Mutation() *AppControlMutation {
 	return acu.mutation
@@ -136,7 +136,9 @@ func (acu *AppControlUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	acu.defaults()
+	if err := acu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(acu.hooks) == 0 {
 		affected, err = acu.sqlSave(ctx)
 	} else {
@@ -186,11 +188,15 @@ func (acu *AppControlUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (acu *AppControlUpdate) defaults() {
-	if _, ok := acu.mutation.UpdateAt(); !ok {
-		v := appcontrol.UpdateDefaultUpdateAt()
-		acu.mutation.SetUpdateAt(v)
+func (acu *AppControlUpdate) defaults() error {
+	if _, ok := acu.mutation.UpdatedAt(); !ok {
+		if appcontrol.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appcontrol.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := appcontrol.UpdateDefaultUpdatedAt()
+		acu.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -210,6 +216,48 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := acu.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldCreatedAt,
+		})
+	}
+	if value, ok := acu.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldCreatedAt,
+		})
+	}
+	if value, ok := acu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldUpdatedAt,
+		})
+	}
+	if value, ok := acu.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldUpdatedAt,
+		})
+	}
+	if value, ok := acu.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldDeletedAt,
+		})
+	}
+	if value, ok := acu.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldDeletedAt,
+		})
 	}
 	if value, ok := acu.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -260,48 +308,6 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}
-	if value, ok := acu.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldCreateAt,
-		})
-	}
-	if value, ok := acu.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldCreateAt,
-		})
-	}
-	if value, ok := acu.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldUpdateAt,
-		})
-	}
-	if value, ok := acu.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldUpdateAt,
-		})
-	}
-	if value, ok := acu.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldDeleteAt,
-		})
-	}
-	if value, ok := acu.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldDeleteAt,
-		})
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, acu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appcontrol.Label}
@@ -319,6 +325,61 @@ type AppControlUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *AppControlMutation
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (acuo *AppControlUpdateOne) SetCreatedAt(u uint32) *AppControlUpdateOne {
+	acuo.mutation.ResetCreatedAt()
+	acuo.mutation.SetCreatedAt(u)
+	return acuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableCreatedAt(u *uint32) *AppControlUpdateOne {
+	if u != nil {
+		acuo.SetCreatedAt(*u)
+	}
+	return acuo
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (acuo *AppControlUpdateOne) AddCreatedAt(u int32) *AppControlUpdateOne {
+	acuo.mutation.AddCreatedAt(u)
+	return acuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (acuo *AppControlUpdateOne) SetUpdatedAt(u uint32) *AppControlUpdateOne {
+	acuo.mutation.ResetUpdatedAt()
+	acuo.mutation.SetUpdatedAt(u)
+	return acuo
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (acuo *AppControlUpdateOne) AddUpdatedAt(u int32) *AppControlUpdateOne {
+	acuo.mutation.AddUpdatedAt(u)
+	return acuo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (acuo *AppControlUpdateOne) SetDeletedAt(u uint32) *AppControlUpdateOne {
+	acuo.mutation.ResetDeletedAt()
+	acuo.mutation.SetDeletedAt(u)
+	return acuo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableDeletedAt(u *uint32) *AppControlUpdateOne {
+	if u != nil {
+		acuo.SetDeletedAt(*u)
+	}
+	return acuo
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (acuo *AppControlUpdateOne) AddDeletedAt(u int32) *AppControlUpdateOne {
+	acuo.mutation.AddDeletedAt(u)
+	return acuo
 }
 
 // SetAppID sets the "app_id" field.
@@ -363,61 +424,6 @@ func (acuo *AppControlUpdateOne) SetInvitationCodeMust(b bool) *AppControlUpdate
 	return acuo
 }
 
-// SetCreateAt sets the "create_at" field.
-func (acuo *AppControlUpdateOne) SetCreateAt(u uint32) *AppControlUpdateOne {
-	acuo.mutation.ResetCreateAt()
-	acuo.mutation.SetCreateAt(u)
-	return acuo
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (acuo *AppControlUpdateOne) SetNillableCreateAt(u *uint32) *AppControlUpdateOne {
-	if u != nil {
-		acuo.SetCreateAt(*u)
-	}
-	return acuo
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (acuo *AppControlUpdateOne) AddCreateAt(u int32) *AppControlUpdateOne {
-	acuo.mutation.AddCreateAt(u)
-	return acuo
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (acuo *AppControlUpdateOne) SetUpdateAt(u uint32) *AppControlUpdateOne {
-	acuo.mutation.ResetUpdateAt()
-	acuo.mutation.SetUpdateAt(u)
-	return acuo
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (acuo *AppControlUpdateOne) AddUpdateAt(u int32) *AppControlUpdateOne {
-	acuo.mutation.AddUpdateAt(u)
-	return acuo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (acuo *AppControlUpdateOne) SetDeleteAt(u uint32) *AppControlUpdateOne {
-	acuo.mutation.ResetDeleteAt()
-	acuo.mutation.SetDeleteAt(u)
-	return acuo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (acuo *AppControlUpdateOne) SetNillableDeleteAt(u *uint32) *AppControlUpdateOne {
-	if u != nil {
-		acuo.SetDeleteAt(*u)
-	}
-	return acuo
-}
-
-// AddDeleteAt adds u to the "delete_at" field.
-func (acuo *AppControlUpdateOne) AddDeleteAt(u int32) *AppControlUpdateOne {
-	acuo.mutation.AddDeleteAt(u)
-	return acuo
-}
-
 // Mutation returns the AppControlMutation object of the builder.
 func (acuo *AppControlUpdateOne) Mutation() *AppControlMutation {
 	return acuo.mutation
@@ -436,7 +442,9 @@ func (acuo *AppControlUpdateOne) Save(ctx context.Context) (*AppControl, error) 
 		err  error
 		node *AppControl
 	)
-	acuo.defaults()
+	if err := acuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(acuo.hooks) == 0 {
 		node, err = acuo.sqlSave(ctx)
 	} else {
@@ -486,11 +494,15 @@ func (acuo *AppControlUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (acuo *AppControlUpdateOne) defaults() {
-	if _, ok := acuo.mutation.UpdateAt(); !ok {
-		v := appcontrol.UpdateDefaultUpdateAt()
-		acuo.mutation.SetUpdateAt(v)
+func (acuo *AppControlUpdateOne) defaults() error {
+	if _, ok := acuo.mutation.UpdatedAt(); !ok {
+		if appcontrol.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appcontrol.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := appcontrol.UpdateDefaultUpdatedAt()
+		acuo.mutation.SetUpdatedAt(v)
 	}
+	return nil
 }
 
 func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl, err error) {
@@ -527,6 +539,48 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := acuo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldCreatedAt,
+		})
+	}
+	if value, ok := acuo.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldCreatedAt,
+		})
+	}
+	if value, ok := acuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldUpdatedAt,
+		})
+	}
+	if value, ok := acuo.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldUpdatedAt,
+		})
+	}
+	if value, ok := acuo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldDeletedAt,
+		})
+	}
+	if value, ok := acuo.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldDeletedAt,
+		})
 	}
 	if value, ok := acuo.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -575,48 +629,6 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Type:   field.TypeBool,
 			Value:  value,
 			Column: appcontrol.FieldInvitationCodeMust,
-		})
-	}
-	if value, ok := acuo.mutation.CreateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldCreateAt,
-		})
-	}
-	if value, ok := acuo.mutation.AddedCreateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldCreateAt,
-		})
-	}
-	if value, ok := acuo.mutation.UpdateAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldUpdateAt,
-		})
-	}
-	if value, ok := acuo.mutation.AddedUpdateAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldUpdateAt,
-		})
-	}
-	if value, ok := acuo.mutation.DeleteAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldDeleteAt,
-		})
-	}
-	if value, ok := acuo.mutation.AddedDeleteAt(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appcontrol.FieldDeleteAt,
 		})
 	}
 	_node = &AppControl{config: acuo.config}

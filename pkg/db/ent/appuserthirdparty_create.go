@@ -23,44 +23,44 @@ type AppUserThirdPartyCreate struct {
 	conflict []sql.ConflictOption
 }
 
-// SetCreateAt sets the "create_at" field.
-func (autpc *AppUserThirdPartyCreate) SetCreateAt(u uint32) *AppUserThirdPartyCreate {
-	autpc.mutation.SetCreateAt(u)
+// SetCreatedAt sets the "created_at" field.
+func (autpc *AppUserThirdPartyCreate) SetCreatedAt(u uint32) *AppUserThirdPartyCreate {
+	autpc.mutation.SetCreatedAt(u)
 	return autpc
 }
 
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (autpc *AppUserThirdPartyCreate) SetNillableCreateAt(u *uint32) *AppUserThirdPartyCreate {
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableCreatedAt(u *uint32) *AppUserThirdPartyCreate {
 	if u != nil {
-		autpc.SetCreateAt(*u)
+		autpc.SetCreatedAt(*u)
 	}
 	return autpc
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (autpc *AppUserThirdPartyCreate) SetUpdateAt(u uint32) *AppUserThirdPartyCreate {
-	autpc.mutation.SetUpdateAt(u)
+// SetUpdatedAt sets the "updated_at" field.
+func (autpc *AppUserThirdPartyCreate) SetUpdatedAt(u uint32) *AppUserThirdPartyCreate {
+	autpc.mutation.SetUpdatedAt(u)
 	return autpc
 }
 
-// SetNillableUpdateAt sets the "update_at" field if the given value is not nil.
-func (autpc *AppUserThirdPartyCreate) SetNillableUpdateAt(u *uint32) *AppUserThirdPartyCreate {
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableUpdatedAt(u *uint32) *AppUserThirdPartyCreate {
 	if u != nil {
-		autpc.SetUpdateAt(*u)
+		autpc.SetUpdatedAt(*u)
 	}
 	return autpc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (autpc *AppUserThirdPartyCreate) SetDeleteAt(u uint32) *AppUserThirdPartyCreate {
-	autpc.mutation.SetDeleteAt(u)
+// SetDeletedAt sets the "deleted_at" field.
+func (autpc *AppUserThirdPartyCreate) SetDeletedAt(u uint32) *AppUserThirdPartyCreate {
+	autpc.mutation.SetDeletedAt(u)
 	return autpc
 }
 
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (autpc *AppUserThirdPartyCreate) SetNillableDeleteAt(u *uint32) *AppUserThirdPartyCreate {
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableDeletedAt(u *uint32) *AppUserThirdPartyCreate {
 	if u != nil {
-		autpc.SetDeleteAt(*u)
+		autpc.SetDeletedAt(*u)
 	}
 	return autpc
 }
@@ -95,9 +95,25 @@ func (autpc *AppUserThirdPartyCreate) SetThirdPartyUsername(s string) *AppUserTh
 	return autpc
 }
 
+// SetNillableThirdPartyUsername sets the "third_party_username" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUsername(s *string) *AppUserThirdPartyCreate {
+	if s != nil {
+		autpc.SetThirdPartyUsername(*s)
+	}
+	return autpc
+}
+
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
 func (autpc *AppUserThirdPartyCreate) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyCreate {
 	autpc.mutation.SetThirdPartyUserAvatar(s)
+	return autpc
+}
+
+// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyCreate {
+	if s != nil {
+		autpc.SetThirdPartyUserAvatar(*s)
+	}
 	return autpc
 }
 
@@ -188,26 +204,34 @@ func (autpc *AppUserThirdPartyCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (autpc *AppUserThirdPartyCreate) defaults() error {
-	if _, ok := autpc.mutation.CreateAt(); !ok {
-		if appuserthirdparty.DefaultCreateAt == nil {
-			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultCreateAt (forgotten import ent/runtime?)")
+	if _, ok := autpc.mutation.CreatedAt(); !ok {
+		if appuserthirdparty.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultCreatedAt (forgotten import ent/runtime?)")
 		}
-		v := appuserthirdparty.DefaultCreateAt()
-		autpc.mutation.SetCreateAt(v)
+		v := appuserthirdparty.DefaultCreatedAt()
+		autpc.mutation.SetCreatedAt(v)
 	}
-	if _, ok := autpc.mutation.UpdateAt(); !ok {
-		if appuserthirdparty.DefaultUpdateAt == nil {
-			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultUpdateAt (forgotten import ent/runtime?)")
+	if _, ok := autpc.mutation.UpdatedAt(); !ok {
+		if appuserthirdparty.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := appuserthirdparty.DefaultUpdateAt()
-		autpc.mutation.SetUpdateAt(v)
+		v := appuserthirdparty.DefaultUpdatedAt()
+		autpc.mutation.SetUpdatedAt(v)
 	}
-	if _, ok := autpc.mutation.DeleteAt(); !ok {
-		if appuserthirdparty.DefaultDeleteAt == nil {
-			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultDeleteAt (forgotten import ent/runtime?)")
+	if _, ok := autpc.mutation.DeletedAt(); !ok {
+		if appuserthirdparty.DefaultDeletedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultDeletedAt (forgotten import ent/runtime?)")
 		}
-		v := appuserthirdparty.DefaultDeleteAt()
-		autpc.mutation.SetDeleteAt(v)
+		v := appuserthirdparty.DefaultDeletedAt()
+		autpc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := autpc.mutation.ThirdPartyUsername(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyUsername
+		autpc.mutation.SetThirdPartyUsername(v)
+	}
+	if _, ok := autpc.mutation.ThirdPartyUserAvatar(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyUserAvatar
+		autpc.mutation.SetThirdPartyUserAvatar(v)
 	}
 	if _, ok := autpc.mutation.ID(); !ok {
 		if appuserthirdparty.DefaultID == nil {
@@ -221,14 +245,14 @@ func (autpc *AppUserThirdPartyCreate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (autpc *AppUserThirdPartyCreate) check() error {
-	if _, ok := autpc.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUserThirdParty.create_at"`)}
+	if _, ok := autpc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "AppUserThirdParty.created_at"`)}
 	}
-	if _, ok := autpc.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "AppUserThirdParty.update_at"`)}
+	if _, ok := autpc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "AppUserThirdParty.updated_at"`)}
 	}
-	if _, ok := autpc.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppUserThirdParty.delete_at"`)}
+	if _, ok := autpc.mutation.DeletedAt(); !ok {
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUserThirdParty.deleted_at"`)}
 	}
 	if _, ok := autpc.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUserThirdParty.app_id"`)}
@@ -290,29 +314,29 @@ func (autpc *AppUserThirdPartyCreate) createSpec() (*AppUserThirdParty, *sqlgrap
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := autpc.mutation.CreateAt(); ok {
+	if value, ok := autpc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldCreateAt,
+			Column: appuserthirdparty.FieldCreatedAt,
 		})
-		_node.CreateAt = value
+		_node.CreatedAt = value
 	}
-	if value, ok := autpc.mutation.UpdateAt(); ok {
+	if value, ok := autpc.mutation.UpdatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldUpdateAt,
+			Column: appuserthirdparty.FieldUpdatedAt,
 		})
-		_node.UpdateAt = value
+		_node.UpdatedAt = value
 	}
-	if value, ok := autpc.mutation.DeleteAt(); ok {
+	if value, ok := autpc.mutation.DeletedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldDeleteAt,
+			Column: appuserthirdparty.FieldDeletedAt,
 		})
-		_node.DeleteAt = value
+		_node.DeletedAt = value
 	}
 	if value, ok := autpc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -369,7 +393,7 @@ func (autpc *AppUserThirdPartyCreate) createSpec() (*AppUserThirdParty, *sqlgrap
 // of the `INSERT` statement. For example:
 //
 //	client.AppUserThirdParty.Create().
-//		SetCreateAt(v).
+//		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -378,7 +402,7 @@ func (autpc *AppUserThirdPartyCreate) createSpec() (*AppUserThirdParty, *sqlgrap
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserThirdPartyUpsert) {
-//			SetCreateAt(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -416,57 +440,57 @@ type (
 	}
 )
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserThirdPartyUpsert) SetCreateAt(v uint32) *AppUserThirdPartyUpsert {
-	u.Set(appuserthirdparty.FieldCreateAt, v)
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserThirdPartyUpsert) SetCreatedAt(v uint32) *AppUserThirdPartyUpsert {
+	u.Set(appuserthirdparty.FieldCreatedAt, v)
 	return u
 }
 
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsert) UpdateCreateAt() *AppUserThirdPartyUpsert {
-	u.SetExcluded(appuserthirdparty.FieldCreateAt)
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsert) UpdateCreatedAt() *AppUserThirdPartyUpsert {
+	u.SetExcluded(appuserthirdparty.FieldCreatedAt)
 	return u
 }
 
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserThirdPartyUpsert) AddCreateAt(v uint32) *AppUserThirdPartyUpsert {
-	u.Add(appuserthirdparty.FieldCreateAt, v)
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserThirdPartyUpsert) AddCreatedAt(v uint32) *AppUserThirdPartyUpsert {
+	u.Add(appuserthirdparty.FieldCreatedAt, v)
 	return u
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserThirdPartyUpsert) SetUpdateAt(v uint32) *AppUserThirdPartyUpsert {
-	u.Set(appuserthirdparty.FieldUpdateAt, v)
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserThirdPartyUpsert) SetUpdatedAt(v uint32) *AppUserThirdPartyUpsert {
+	u.Set(appuserthirdparty.FieldUpdatedAt, v)
 	return u
 }
 
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsert) UpdateUpdateAt() *AppUserThirdPartyUpsert {
-	u.SetExcluded(appuserthirdparty.FieldUpdateAt)
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsert) UpdateUpdatedAt() *AppUserThirdPartyUpsert {
+	u.SetExcluded(appuserthirdparty.FieldUpdatedAt)
 	return u
 }
 
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserThirdPartyUpsert) AddUpdateAt(v uint32) *AppUserThirdPartyUpsert {
-	u.Add(appuserthirdparty.FieldUpdateAt, v)
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserThirdPartyUpsert) AddUpdatedAt(v uint32) *AppUserThirdPartyUpsert {
+	u.Add(appuserthirdparty.FieldUpdatedAt, v)
 	return u
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserThirdPartyUpsert) SetDeleteAt(v uint32) *AppUserThirdPartyUpsert {
-	u.Set(appuserthirdparty.FieldDeleteAt, v)
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserThirdPartyUpsert) SetDeletedAt(v uint32) *AppUserThirdPartyUpsert {
+	u.Set(appuserthirdparty.FieldDeletedAt, v)
 	return u
 }
 
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsert) UpdateDeleteAt() *AppUserThirdPartyUpsert {
-	u.SetExcluded(appuserthirdparty.FieldDeleteAt)
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsert) UpdateDeletedAt() *AppUserThirdPartyUpsert {
+	u.SetExcluded(appuserthirdparty.FieldDeletedAt)
 	return u
 }
 
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserThirdPartyUpsert) AddDeleteAt(v uint32) *AppUserThirdPartyUpsert {
-	u.Add(appuserthirdparty.FieldDeleteAt, v)
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserThirdPartyUpsert) AddDeletedAt(v uint32) *AppUserThirdPartyUpsert {
+	u.Add(appuserthirdparty.FieldDeletedAt, v)
 	return u
 }
 
@@ -592,66 +616,66 @@ func (u *AppUserThirdPartyUpsertOne) Update(set func(*AppUserThirdPartyUpsert)) 
 	return u
 }
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserThirdPartyUpsertOne) SetCreateAt(v uint32) *AppUserThirdPartyUpsertOne {
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserThirdPartyUpsertOne) SetCreatedAt(v uint32) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetCreateAt(v)
+		s.SetCreatedAt(v)
 	})
 }
 
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserThirdPartyUpsertOne) AddCreateAt(v uint32) *AppUserThirdPartyUpsertOne {
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserThirdPartyUpsertOne) AddCreatedAt(v uint32) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.AddCreateAt(v)
+		s.AddCreatedAt(v)
 	})
 }
 
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertOne) UpdateCreateAt() *AppUserThirdPartyUpsertOne {
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertOne) UpdateCreatedAt() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateCreateAt()
+		s.UpdateCreatedAt()
 	})
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserThirdPartyUpsertOne) SetUpdateAt(v uint32) *AppUserThirdPartyUpsertOne {
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserThirdPartyUpsertOne) SetUpdatedAt(v uint32) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetUpdateAt(v)
+		s.SetUpdatedAt(v)
 	})
 }
 
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserThirdPartyUpsertOne) AddUpdateAt(v uint32) *AppUserThirdPartyUpsertOne {
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserThirdPartyUpsertOne) AddUpdatedAt(v uint32) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.AddUpdateAt(v)
+		s.AddUpdatedAt(v)
 	})
 }
 
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertOne) UpdateUpdateAt() *AppUserThirdPartyUpsertOne {
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertOne) UpdateUpdatedAt() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateUpdateAt()
+		s.UpdateUpdatedAt()
 	})
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserThirdPartyUpsertOne) SetDeleteAt(v uint32) *AppUserThirdPartyUpsertOne {
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserThirdPartyUpsertOne) SetDeletedAt(v uint32) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetDeleteAt(v)
+		s.SetDeletedAt(v)
 	})
 }
 
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserThirdPartyUpsertOne) AddDeleteAt(v uint32) *AppUserThirdPartyUpsertOne {
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserThirdPartyUpsertOne) AddDeletedAt(v uint32) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.AddDeleteAt(v)
+		s.AddDeletedAt(v)
 	})
 }
 
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertOne) UpdateDeleteAt() *AppUserThirdPartyUpsertOne {
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertOne) UpdateDeletedAt() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateDeleteAt()
+		s.UpdateDeletedAt()
 	})
 }
 
@@ -871,7 +895,7 @@ func (autpcb *AppUserThirdPartyCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserThirdPartyUpsert) {
-//			SetCreateAt(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -955,66 +979,66 @@ func (u *AppUserThirdPartyUpsertBulk) Update(set func(*AppUserThirdPartyUpsert))
 	return u
 }
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserThirdPartyUpsertBulk) SetCreateAt(v uint32) *AppUserThirdPartyUpsertBulk {
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserThirdPartyUpsertBulk) SetCreatedAt(v uint32) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetCreateAt(v)
+		s.SetCreatedAt(v)
 	})
 }
 
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserThirdPartyUpsertBulk) AddCreateAt(v uint32) *AppUserThirdPartyUpsertBulk {
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserThirdPartyUpsertBulk) AddCreatedAt(v uint32) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.AddCreateAt(v)
+		s.AddCreatedAt(v)
 	})
 }
 
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertBulk) UpdateCreateAt() *AppUserThirdPartyUpsertBulk {
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertBulk) UpdateCreatedAt() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateCreateAt()
+		s.UpdateCreatedAt()
 	})
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserThirdPartyUpsertBulk) SetUpdateAt(v uint32) *AppUserThirdPartyUpsertBulk {
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserThirdPartyUpsertBulk) SetUpdatedAt(v uint32) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetUpdateAt(v)
+		s.SetUpdatedAt(v)
 	})
 }
 
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserThirdPartyUpsertBulk) AddUpdateAt(v uint32) *AppUserThirdPartyUpsertBulk {
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserThirdPartyUpsertBulk) AddUpdatedAt(v uint32) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.AddUpdateAt(v)
+		s.AddUpdatedAt(v)
 	})
 }
 
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertBulk) UpdateUpdateAt() *AppUserThirdPartyUpsertBulk {
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertBulk) UpdateUpdatedAt() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateUpdateAt()
+		s.UpdateUpdatedAt()
 	})
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserThirdPartyUpsertBulk) SetDeleteAt(v uint32) *AppUserThirdPartyUpsertBulk {
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserThirdPartyUpsertBulk) SetDeletedAt(v uint32) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetDeleteAt(v)
+		s.SetDeletedAt(v)
 	})
 }
 
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserThirdPartyUpsertBulk) AddDeleteAt(v uint32) *AppUserThirdPartyUpsertBulk {
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserThirdPartyUpsertBulk) AddDeletedAt(v uint32) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.AddDeleteAt(v)
+		s.AddDeletedAt(v)
 	})
 }
 
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertBulk) UpdateDeleteAt() *AppUserThirdPartyUpsertBulk {
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertBulk) UpdateDeletedAt() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateDeleteAt()
+		s.UpdateDeletedAt()
 	})
 }
 

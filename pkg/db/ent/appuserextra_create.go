@@ -23,6 +23,48 @@ type AppUserExtraCreate struct {
 	conflict []sql.ConflictOption
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (auec *AppUserExtraCreate) SetCreatedAt(u uint32) *AppUserExtraCreate {
+	auec.mutation.SetCreatedAt(u)
+	return auec
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableCreatedAt(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetCreatedAt(*u)
+	}
+	return auec
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (auec *AppUserExtraCreate) SetUpdatedAt(u uint32) *AppUserExtraCreate {
+	auec.mutation.SetUpdatedAt(u)
+	return auec
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableUpdatedAt(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetUpdatedAt(*u)
+	}
+	return auec
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (auec *AppUserExtraCreate) SetDeletedAt(u uint32) *AppUserExtraCreate {
+	auec.mutation.SetDeletedAt(u)
+	return auec
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableDeletedAt(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetDeletedAt(*u)
+	}
+	return auec
+}
+
 // SetAppID sets the "app_id" field.
 func (auec *AppUserExtraCreate) SetAppID(u uuid.UUID) *AppUserExtraCreate {
 	auec.mutation.SetAppID(u)
@@ -41,15 +83,39 @@ func (auec *AppUserExtraCreate) SetUsername(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableUsername(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetUsername(*s)
+	}
+	return auec
+}
+
 // SetFirstName sets the "first_name" field.
 func (auec *AppUserExtraCreate) SetFirstName(s string) *AppUserExtraCreate {
 	auec.mutation.SetFirstName(s)
 	return auec
 }
 
+// SetNillableFirstName sets the "first_name" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableFirstName(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetFirstName(*s)
+	}
+	return auec
+}
+
 // SetLastName sets the "last_name" field.
 func (auec *AppUserExtraCreate) SetLastName(s string) *AppUserExtraCreate {
 	auec.mutation.SetLastName(s)
+	return auec
+}
+
+// SetNillableLastName sets the "last_name" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableLastName(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetLastName(*s)
+	}
 	return auec
 }
 
@@ -65,9 +131,25 @@ func (auec *AppUserExtraCreate) SetGender(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableGender(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetGender(*s)
+	}
+	return auec
+}
+
 // SetPostalCode sets the "postal_code" field.
 func (auec *AppUserExtraCreate) SetPostalCode(s string) *AppUserExtraCreate {
 	auec.mutation.SetPostalCode(s)
+	return auec
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillablePostalCode(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetPostalCode(*s)
+	}
 	return auec
 }
 
@@ -77,9 +159,25 @@ func (auec *AppUserExtraCreate) SetAge(u uint32) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableAge(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetAge(*u)
+	}
+	return auec
+}
+
 // SetBirthday sets the "birthday" field.
 func (auec *AppUserExtraCreate) SetBirthday(u uint32) *AppUserExtraCreate {
 	auec.mutation.SetBirthday(u)
+	return auec
+}
+
+// SetNillableBirthday sets the "birthday" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableBirthday(u *uint32) *AppUserExtraCreate {
+	if u != nil {
+		auec.SetBirthday(*u)
+	}
 	return auec
 }
 
@@ -89,9 +187,25 @@ func (auec *AppUserExtraCreate) SetAvatar(s string) *AppUserExtraCreate {
 	return auec
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableAvatar(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetAvatar(*s)
+	}
+	return auec
+}
+
 // SetOrganization sets the "organization" field.
 func (auec *AppUserExtraCreate) SetOrganization(s string) *AppUserExtraCreate {
 	auec.mutation.SetOrganization(s)
+	return auec
+}
+
+// SetNillableOrganization sets the "organization" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableOrganization(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetOrganization(*s)
+	}
 	return auec
 }
 
@@ -101,44 +215,10 @@ func (auec *AppUserExtraCreate) SetIDNumber(s string) *AppUserExtraCreate {
 	return auec
 }
 
-// SetCreateAt sets the "create_at" field.
-func (auec *AppUserExtraCreate) SetCreateAt(u uint32) *AppUserExtraCreate {
-	auec.mutation.SetCreateAt(u)
-	return auec
-}
-
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (auec *AppUserExtraCreate) SetNillableCreateAt(u *uint32) *AppUserExtraCreate {
-	if u != nil {
-		auec.SetCreateAt(*u)
-	}
-	return auec
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (auec *AppUserExtraCreate) SetUpdateAt(u uint32) *AppUserExtraCreate {
-	auec.mutation.SetUpdateAt(u)
-	return auec
-}
-
-// SetNillableUpdateAt sets the "update_at" field if the given value is not nil.
-func (auec *AppUserExtraCreate) SetNillableUpdateAt(u *uint32) *AppUserExtraCreate {
-	if u != nil {
-		auec.SetUpdateAt(*u)
-	}
-	return auec
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (auec *AppUserExtraCreate) SetDeleteAt(u uint32) *AppUserExtraCreate {
-	auec.mutation.SetDeleteAt(u)
-	return auec
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (auec *AppUserExtraCreate) SetNillableDeleteAt(u *uint32) *AppUserExtraCreate {
-	if u != nil {
-		auec.SetDeleteAt(*u)
+// SetNillableIDNumber sets the "id_number" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableIDNumber(s *string) *AppUserExtraCreate {
+	if s != nil {
+		auec.SetIDNumber(*s)
 	}
 	return auec
 }
@@ -168,7 +248,9 @@ func (auec *AppUserExtraCreate) Save(ctx context.Context) (*AppUserExtra, error)
 		err  error
 		node *AppUserExtra
 	)
-	auec.defaults()
+	if err := auec.defaults(); err != nil {
+		return nil, err
+	}
 	if len(auec.hooks) == 0 {
 		if err = auec.check(); err != nil {
 			return nil, err
@@ -227,27 +309,93 @@ func (auec *AppUserExtraCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (auec *AppUserExtraCreate) defaults() {
-	if _, ok := auec.mutation.CreateAt(); !ok {
-		v := appuserextra.DefaultCreateAt()
-		auec.mutation.SetCreateAt(v)
+func (auec *AppUserExtraCreate) defaults() error {
+	if _, ok := auec.mutation.CreatedAt(); !ok {
+		if appuserextra.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserextra.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := appuserextra.DefaultCreatedAt()
+		auec.mutation.SetCreatedAt(v)
 	}
-	if _, ok := auec.mutation.UpdateAt(); !ok {
-		v := appuserextra.DefaultUpdateAt()
-		auec.mutation.SetUpdateAt(v)
+	if _, ok := auec.mutation.UpdatedAt(); !ok {
+		if appuserextra.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserextra.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := appuserextra.DefaultUpdatedAt()
+		auec.mutation.SetUpdatedAt(v)
 	}
-	if _, ok := auec.mutation.DeleteAt(); !ok {
-		v := appuserextra.DefaultDeleteAt()
-		auec.mutation.SetDeleteAt(v)
+	if _, ok := auec.mutation.DeletedAt(); !ok {
+		if appuserextra.DefaultDeletedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserextra.DefaultDeletedAt (forgotten import ent/runtime?)")
+		}
+		v := appuserextra.DefaultDeletedAt()
+		auec.mutation.SetDeletedAt(v)
+	}
+	if _, ok := auec.mutation.Username(); !ok {
+		v := appuserextra.DefaultUsername
+		auec.mutation.SetUsername(v)
+	}
+	if _, ok := auec.mutation.FirstName(); !ok {
+		v := appuserextra.DefaultFirstName
+		auec.mutation.SetFirstName(v)
+	}
+	if _, ok := auec.mutation.LastName(); !ok {
+		v := appuserextra.DefaultLastName
+		auec.mutation.SetLastName(v)
+	}
+	if _, ok := auec.mutation.AddressFields(); !ok {
+		v := appuserextra.DefaultAddressFields
+		auec.mutation.SetAddressFields(v)
+	}
+	if _, ok := auec.mutation.Gender(); !ok {
+		v := appuserextra.DefaultGender
+		auec.mutation.SetGender(v)
+	}
+	if _, ok := auec.mutation.PostalCode(); !ok {
+		v := appuserextra.DefaultPostalCode
+		auec.mutation.SetPostalCode(v)
+	}
+	if _, ok := auec.mutation.Age(); !ok {
+		v := appuserextra.DefaultAge
+		auec.mutation.SetAge(v)
+	}
+	if _, ok := auec.mutation.Birthday(); !ok {
+		v := appuserextra.DefaultBirthday
+		auec.mutation.SetBirthday(v)
+	}
+	if _, ok := auec.mutation.Avatar(); !ok {
+		v := appuserextra.DefaultAvatar
+		auec.mutation.SetAvatar(v)
+	}
+	if _, ok := auec.mutation.Organization(); !ok {
+		v := appuserextra.DefaultOrganization
+		auec.mutation.SetOrganization(v)
+	}
+	if _, ok := auec.mutation.IDNumber(); !ok {
+		v := appuserextra.DefaultIDNumber
+		auec.mutation.SetIDNumber(v)
 	}
 	if _, ok := auec.mutation.ID(); !ok {
+		if appuserextra.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized appuserextra.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := appuserextra.DefaultID()
 		auec.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (auec *AppUserExtraCreate) check() error {
+	if _, ok := auec.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "AppUserExtra.created_at"`)}
+	}
+	if _, ok := auec.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "AppUserExtra.updated_at"`)}
+	}
+	if _, ok := auec.mutation.DeletedAt(); !ok {
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUserExtra.deleted_at"`)}
+	}
 	if _, ok := auec.mutation.AppID(); !ok {
 		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUserExtra.app_id"`)}
 	}
@@ -287,15 +435,6 @@ func (auec *AppUserExtraCreate) check() error {
 	if _, ok := auec.mutation.IDNumber(); !ok {
 		return &ValidationError{Name: "id_number", err: errors.New(`ent: missing required field "AppUserExtra.id_number"`)}
 	}
-	if _, ok := auec.mutation.CreateAt(); !ok {
-		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppUserExtra.create_at"`)}
-	}
-	if _, ok := auec.mutation.UpdateAt(); !ok {
-		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "AppUserExtra.update_at"`)}
-	}
-	if _, ok := auec.mutation.DeleteAt(); !ok {
-		return &ValidationError{Name: "delete_at", err: errors.New(`ent: missing required field "AppUserExtra.delete_at"`)}
-	}
 	return nil
 }
 
@@ -332,6 +471,30 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 	if id, ok := auec.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := auec.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := auec.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
+	if value, ok := auec.mutation.DeletedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuserextra.FieldDeletedAt,
+		})
+		_node.DeletedAt = value
 	}
 	if value, ok := auec.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -437,30 +600,6 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 		})
 		_node.IDNumber = value
 	}
-	if value, ok := auec.mutation.CreateAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldCreateAt,
-		})
-		_node.CreateAt = value
-	}
-	if value, ok := auec.mutation.UpdateAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldUpdateAt,
-		})
-		_node.UpdateAt = value
-	}
-	if value, ok := auec.mutation.DeleteAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: appuserextra.FieldDeleteAt,
-		})
-		_node.DeleteAt = value
-	}
 	return _node, _spec
 }
 
@@ -468,7 +607,7 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 // of the `INSERT` statement. For example:
 //
 //	client.AppUserExtra.Create().
-//		SetAppID(v).
+//		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -477,7 +616,7 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserExtraUpsert) {
-//			SetAppID(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -514,6 +653,60 @@ type (
 		*sql.UpdateSet
 	}
 )
+
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserExtraUpsert) SetCreatedAt(v uint32) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateCreatedAt() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldCreatedAt)
+	return u
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserExtraUpsert) AddCreatedAt(v uint32) *AppUserExtraUpsert {
+	u.Add(appuserextra.FieldCreatedAt, v)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserExtraUpsert) SetUpdatedAt(v uint32) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateUpdatedAt() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldUpdatedAt)
+	return u
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserExtraUpsert) AddUpdatedAt(v uint32) *AppUserExtraUpsert {
+	u.Add(appuserextra.FieldUpdatedAt, v)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserExtraUpsert) SetDeletedAt(v uint32) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateDeletedAt() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldDeletedAt)
+	return u
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserExtraUpsert) AddDeletedAt(v uint32) *AppUserExtraUpsert {
+	u.Add(appuserextra.FieldDeletedAt, v)
+	return u
+}
 
 // SetAppID sets the "app_id" field.
 func (u *AppUserExtraUpsert) SetAppID(v uuid.UUID) *AppUserExtraUpsert {
@@ -683,60 +876,6 @@ func (u *AppUserExtraUpsert) UpdateIDNumber() *AppUserExtraUpsert {
 	return u
 }
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserExtraUpsert) SetCreateAt(v uint32) *AppUserExtraUpsert {
-	u.Set(appuserextra.FieldCreateAt, v)
-	return u
-}
-
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsert) UpdateCreateAt() *AppUserExtraUpsert {
-	u.SetExcluded(appuserextra.FieldCreateAt)
-	return u
-}
-
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserExtraUpsert) AddCreateAt(v uint32) *AppUserExtraUpsert {
-	u.Add(appuserextra.FieldCreateAt, v)
-	return u
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserExtraUpsert) SetUpdateAt(v uint32) *AppUserExtraUpsert {
-	u.Set(appuserextra.FieldUpdateAt, v)
-	return u
-}
-
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsert) UpdateUpdateAt() *AppUserExtraUpsert {
-	u.SetExcluded(appuserextra.FieldUpdateAt)
-	return u
-}
-
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserExtraUpsert) AddUpdateAt(v uint32) *AppUserExtraUpsert {
-	u.Add(appuserextra.FieldUpdateAt, v)
-	return u
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserExtraUpsert) SetDeleteAt(v uint32) *AppUserExtraUpsert {
-	u.Set(appuserextra.FieldDeleteAt, v)
-	return u
-}
-
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsert) UpdateDeleteAt() *AppUserExtraUpsert {
-	u.SetExcluded(appuserextra.FieldDeleteAt)
-	return u
-}
-
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserExtraUpsert) AddDeleteAt(v uint32) *AppUserExtraUpsert {
-	u.Add(appuserextra.FieldDeleteAt, v)
-	return u
-}
-
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -785,6 +924,69 @@ func (u *AppUserExtraUpsertOne) Update(set func(*AppUserExtraUpsert)) *AppUserEx
 		set(&AppUserExtraUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserExtraUpsertOne) SetCreatedAt(v uint32) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserExtraUpsertOne) AddCreatedAt(v uint32) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.AddCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateCreatedAt() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserExtraUpsertOne) SetUpdatedAt(v uint32) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserExtraUpsertOne) AddUpdatedAt(v uint32) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateUpdatedAt() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserExtraUpsertOne) SetDeletedAt(v uint32) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserExtraUpsertOne) AddDeletedAt(v uint32) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.AddDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateDeletedAt() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateDeletedAt()
+	})
 }
 
 // SetAppID sets the "app_id" field.
@@ -983,69 +1185,6 @@ func (u *AppUserExtraUpsertOne) UpdateIDNumber() *AppUserExtraUpsertOne {
 	})
 }
 
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserExtraUpsertOne) SetCreateAt(v uint32) *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.SetCreateAt(v)
-	})
-}
-
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserExtraUpsertOne) AddCreateAt(v uint32) *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.AddCreateAt(v)
-	})
-}
-
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsertOne) UpdateCreateAt() *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.UpdateCreateAt()
-	})
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserExtraUpsertOne) SetUpdateAt(v uint32) *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.SetUpdateAt(v)
-	})
-}
-
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserExtraUpsertOne) AddUpdateAt(v uint32) *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.AddUpdateAt(v)
-	})
-}
-
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsertOne) UpdateUpdateAt() *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.UpdateUpdateAt()
-	})
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserExtraUpsertOne) SetDeleteAt(v uint32) *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.SetDeleteAt(v)
-	})
-}
-
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserExtraUpsertOne) AddDeleteAt(v uint32) *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.AddDeleteAt(v)
-	})
-}
-
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsertOne) UpdateDeleteAt() *AppUserExtraUpsertOne {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.UpdateDeleteAt()
-	})
-}
-
 // Exec executes the query.
 func (u *AppUserExtraUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
@@ -1178,7 +1317,7 @@ func (auecb *AppUserExtraCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.AppUserExtraUpsert) {
-//			SetAppID(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -1260,6 +1399,69 @@ func (u *AppUserExtraUpsertBulk) Update(set func(*AppUserExtraUpsert)) *AppUserE
 		set(&AppUserExtraUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *AppUserExtraUpsertBulk) SetCreatedAt(v uint32) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *AppUserExtraUpsertBulk) AddCreatedAt(v uint32) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.AddCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateCreatedAt() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *AppUserExtraUpsertBulk) SetUpdatedAt(v uint32) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *AppUserExtraUpsertBulk) AddUpdatedAt(v uint32) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateUpdatedAt() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *AppUserExtraUpsertBulk) SetDeletedAt(v uint32) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *AppUserExtraUpsertBulk) AddDeletedAt(v uint32) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.AddDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateDeletedAt() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateDeletedAt()
+	})
 }
 
 // SetAppID sets the "app_id" field.
@@ -1455,69 +1657,6 @@ func (u *AppUserExtraUpsertBulk) SetIDNumber(v string) *AppUserExtraUpsertBulk {
 func (u *AppUserExtraUpsertBulk) UpdateIDNumber() *AppUserExtraUpsertBulk {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateIDNumber()
-	})
-}
-
-// SetCreateAt sets the "create_at" field.
-func (u *AppUserExtraUpsertBulk) SetCreateAt(v uint32) *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.SetCreateAt(v)
-	})
-}
-
-// AddCreateAt adds v to the "create_at" field.
-func (u *AppUserExtraUpsertBulk) AddCreateAt(v uint32) *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.AddCreateAt(v)
-	})
-}
-
-// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsertBulk) UpdateCreateAt() *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.UpdateCreateAt()
-	})
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (u *AppUserExtraUpsertBulk) SetUpdateAt(v uint32) *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.SetUpdateAt(v)
-	})
-}
-
-// AddUpdateAt adds v to the "update_at" field.
-func (u *AppUserExtraUpsertBulk) AddUpdateAt(v uint32) *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.AddUpdateAt(v)
-	})
-}
-
-// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsertBulk) UpdateUpdateAt() *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.UpdateUpdateAt()
-	})
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (u *AppUserExtraUpsertBulk) SetDeleteAt(v uint32) *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.SetDeleteAt(v)
-	})
-}
-
-// AddDeleteAt adds v to the "delete_at" field.
-func (u *AppUserExtraUpsertBulk) AddDeleteAt(v uint32) *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.AddDeleteAt(v)
-	})
-}
-
-// UpdateDeleteAt sets the "delete_at" field to the value that was provided on create.
-func (u *AppUserExtraUpsertBulk) UpdateDeleteAt() *AppUserExtraUpsertBulk {
-	return u.Update(func(s *AppUserExtraUpsert) {
-		s.UpdateDeleteAt()
 	})
 }
 

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -25,6 +26,7 @@ type AppRoleUserQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppRoleUser
+	modifiers  []func(s *sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -255,12 +257,12 @@ func (aruq *AppRoleUserQuery) Clone() *AppRoleUserQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AppRoleUser.Query().
-//		GroupBy(approleuser.FieldCreateAt).
+//		GroupBy(approleuser.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -282,11 +284,11 @@ func (aruq *AppRoleUserQuery) GroupBy(field string, fields ...string) *AppRoleUs
 // Example:
 //
 //	var v []struct {
-//		CreateAt uint32 `json:"create_at,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.AppRoleUser.Query().
-//		Select(approleuser.FieldCreateAt).
+//		Select(approleuser.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (aruq *AppRoleUserQuery) Select(fields ...string) *AppRoleUserSelect {
@@ -333,6 +335,9 @@ func (aruq *AppRoleUserQuery) sqlAll(ctx context.Context) ([]*AppRoleUser, error
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	if len(aruq.modifiers) > 0 {
+		_spec.Modifiers = aruq.modifiers
+	}
 	if err := sqlgraph.QueryNodes(ctx, aruq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -344,6 +349,9 @@ func (aruq *AppRoleUserQuery) sqlAll(ctx context.Context) ([]*AppRoleUser, error
 
 func (aruq *AppRoleUserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := aruq.querySpec()
+	if len(aruq.modifiers) > 0 {
+		_spec.Modifiers = aruq.modifiers
+	}
 	_spec.Node.Columns = aruq.fields
 	if len(aruq.fields) > 0 {
 		_spec.Unique = aruq.unique != nil && *aruq.unique
@@ -422,6 +430,9 @@ func (aruq *AppRoleUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if aruq.unique != nil && *aruq.unique {
 		selector.Distinct()
 	}
+	for _, m := range aruq.modifiers {
+		m(selector)
+	}
 	for _, p := range aruq.predicates {
 		p(selector)
 	}
@@ -437,6 +448,38 @@ func (aruq *AppRoleUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (aruq *AppRoleUserQuery) ForUpdate(opts ...sql.LockOption) *AppRoleUserQuery {
+	if aruq.driver.Dialect() == dialect.Postgres {
+		aruq.Unique(false)
+	}
+	aruq.modifiers = append(aruq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return aruq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (aruq *AppRoleUserQuery) ForShare(opts ...sql.LockOption) *AppRoleUserQuery {
+	if aruq.driver.Dialect() == dialect.Postgres {
+		aruq.Unique(false)
+	}
+	aruq.modifiers = append(aruq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return aruq
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aruq *AppRoleUserQuery) Modify(modifiers ...func(s *sql.Selector)) *AppRoleUserSelect {
+	aruq.modifiers = append(aruq.modifiers, modifiers...)
+	return aruq.Select()
 }
 
 // AppRoleUserGroupBy is the group-by builder for AppRoleUser entities.
@@ -925,4 +968,10 @@ func (arus *AppRoleUserSelect) sqlScan(ctx context.Context, v interface{}) error
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (arus *AppRoleUserSelect) Modify(modifiers ...func(s *sql.Selector)) *AppRoleUserSelect {
+	arus.modifiers = append(arus.modifiers, modifiers...)
+	return arus
 }

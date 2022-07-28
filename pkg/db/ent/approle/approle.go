@@ -3,6 +3,7 @@
 package approle
 
 import (
+	"entgo.io/ent"
 	"github.com/google/uuid"
 )
 
@@ -11,6 +12,12 @@ const (
 	Label = "app_role"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// FieldCreatedBy holds the string denoting the created_by field in the database.
 	FieldCreatedBy = "created_by"
 	// FieldRole holds the string denoting the role field in the database.
@@ -21,12 +28,6 @@ const (
 	FieldAppID = "app_id"
 	// FieldDefault holds the string denoting the default field in the database.
 	FieldDefault = "default"
-	// FieldCreateAt holds the string denoting the create_at field in the database.
-	FieldCreateAt = "create_at"
-	// FieldUpdateAt holds the string denoting the update_at field in the database.
-	FieldUpdateAt = "update_at"
-	// FieldDeleteAt holds the string denoting the delete_at field in the database.
-	FieldDeleteAt = "delete_at"
 	// Table holds the table name of the approle in the database.
 	Table = "app_roles"
 )
@@ -34,14 +35,14 @@ const (
 // Columns holds all SQL columns for approle fields.
 var Columns = []string{
 	FieldID,
+	FieldCreatedAt,
+	FieldUpdatedAt,
+	FieldDeletedAt,
 	FieldCreatedBy,
 	FieldRole,
 	FieldDescription,
 	FieldAppID,
 	FieldDefault,
-	FieldCreateAt,
-	FieldUpdateAt,
-	FieldDeleteAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -54,15 +55,25 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "github.com/NpoolPlatform/appuser-manager/pkg/db/ent/runtime"
+//
 var (
-	// DefaultCreateAt holds the default value on creation for the "create_at" field.
-	DefaultCreateAt func() uint32
-	// DefaultUpdateAt holds the default value on creation for the "update_at" field.
-	DefaultUpdateAt func() uint32
-	// UpdateDefaultUpdateAt holds the default value on update for the "update_at" field.
-	UpdateDefaultUpdateAt func() uint32
-	// DefaultDeleteAt holds the default value on creation for the "delete_at" field.
-	DefaultDeleteAt func() uint32
+	Hooks  [1]ent.Hook
+	Policy ent.Policy
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() uint32
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() uint32
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() uint32
+	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
+	DefaultDeletedAt func() uint32
+	// DefaultDescription holds the default value on creation for the "description" field.
+	DefaultDescription string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

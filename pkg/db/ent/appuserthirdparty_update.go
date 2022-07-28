@@ -28,58 +28,58 @@ func (autpu *AppUserThirdPartyUpdate) Where(ps ...predicate.AppUserThirdParty) *
 	return autpu
 }
 
-// SetCreateAt sets the "create_at" field.
-func (autpu *AppUserThirdPartyUpdate) SetCreateAt(u uint32) *AppUserThirdPartyUpdate {
-	autpu.mutation.ResetCreateAt()
-	autpu.mutation.SetCreateAt(u)
+// SetCreatedAt sets the "created_at" field.
+func (autpu *AppUserThirdPartyUpdate) SetCreatedAt(u uint32) *AppUserThirdPartyUpdate {
+	autpu.mutation.ResetCreatedAt()
+	autpu.mutation.SetCreatedAt(u)
 	return autpu
 }
 
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (autpu *AppUserThirdPartyUpdate) SetNillableCreateAt(u *uint32) *AppUserThirdPartyUpdate {
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableCreatedAt(u *uint32) *AppUserThirdPartyUpdate {
 	if u != nil {
-		autpu.SetCreateAt(*u)
+		autpu.SetCreatedAt(*u)
 	}
 	return autpu
 }
 
-// AddCreateAt adds u to the "create_at" field.
-func (autpu *AppUserThirdPartyUpdate) AddCreateAt(u int32) *AppUserThirdPartyUpdate {
-	autpu.mutation.AddCreateAt(u)
+// AddCreatedAt adds u to the "created_at" field.
+func (autpu *AppUserThirdPartyUpdate) AddCreatedAt(u int32) *AppUserThirdPartyUpdate {
+	autpu.mutation.AddCreatedAt(u)
 	return autpu
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (autpu *AppUserThirdPartyUpdate) SetUpdateAt(u uint32) *AppUserThirdPartyUpdate {
-	autpu.mutation.ResetUpdateAt()
-	autpu.mutation.SetUpdateAt(u)
+// SetUpdatedAt sets the "updated_at" field.
+func (autpu *AppUserThirdPartyUpdate) SetUpdatedAt(u uint32) *AppUserThirdPartyUpdate {
+	autpu.mutation.ResetUpdatedAt()
+	autpu.mutation.SetUpdatedAt(u)
 	return autpu
 }
 
-// AddUpdateAt adds u to the "update_at" field.
-func (autpu *AppUserThirdPartyUpdate) AddUpdateAt(u int32) *AppUserThirdPartyUpdate {
-	autpu.mutation.AddUpdateAt(u)
+// AddUpdatedAt adds u to the "updated_at" field.
+func (autpu *AppUserThirdPartyUpdate) AddUpdatedAt(u int32) *AppUserThirdPartyUpdate {
+	autpu.mutation.AddUpdatedAt(u)
 	return autpu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (autpu *AppUserThirdPartyUpdate) SetDeleteAt(u uint32) *AppUserThirdPartyUpdate {
-	autpu.mutation.ResetDeleteAt()
-	autpu.mutation.SetDeleteAt(u)
+// SetDeletedAt sets the "deleted_at" field.
+func (autpu *AppUserThirdPartyUpdate) SetDeletedAt(u uint32) *AppUserThirdPartyUpdate {
+	autpu.mutation.ResetDeletedAt()
+	autpu.mutation.SetDeletedAt(u)
 	return autpu
 }
 
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (autpu *AppUserThirdPartyUpdate) SetNillableDeleteAt(u *uint32) *AppUserThirdPartyUpdate {
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableDeletedAt(u *uint32) *AppUserThirdPartyUpdate {
 	if u != nil {
-		autpu.SetDeleteAt(*u)
+		autpu.SetDeletedAt(*u)
 	}
 	return autpu
 }
 
-// AddDeleteAt adds u to the "delete_at" field.
-func (autpu *AppUserThirdPartyUpdate) AddDeleteAt(u int32) *AppUserThirdPartyUpdate {
-	autpu.mutation.AddDeleteAt(u)
+// AddDeletedAt adds u to the "deleted_at" field.
+func (autpu *AppUserThirdPartyUpdate) AddDeletedAt(u int32) *AppUserThirdPartyUpdate {
+	autpu.mutation.AddDeletedAt(u)
 	return autpu
 }
 
@@ -113,9 +113,25 @@ func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUsername(s string) *AppUserTh
 	return autpu
 }
 
+// SetNillableThirdPartyUsername sets the "third_party_username" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUsername(s *string) *AppUserThirdPartyUpdate {
+	if s != nil {
+		autpu.SetThirdPartyUsername(*s)
+	}
+	return autpu
+}
+
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
 func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyUpdate {
 	autpu.mutation.SetThirdPartyUserAvatar(s)
+	return autpu
+}
+
+// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyUpdate {
+	if s != nil {
+		autpu.SetThirdPartyUserAvatar(*s)
+	}
 	return autpu
 }
 
@@ -189,12 +205,12 @@ func (autpu *AppUserThirdPartyUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (autpu *AppUserThirdPartyUpdate) defaults() error {
-	if _, ok := autpu.mutation.UpdateAt(); !ok {
-		if appuserthirdparty.UpdateDefaultUpdateAt == nil {
-			return fmt.Errorf("ent: uninitialized appuserthirdparty.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+	if _, ok := autpu.mutation.UpdatedAt(); !ok {
+		if appuserthirdparty.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := appuserthirdparty.UpdateDefaultUpdateAt()
-		autpu.mutation.SetUpdateAt(v)
+		v := appuserthirdparty.UpdateDefaultUpdatedAt()
+		autpu.mutation.SetUpdatedAt(v)
 	}
 	return nil
 }
@@ -227,46 +243,46 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 			}
 		}
 	}
-	if value, ok := autpu.mutation.CreateAt(); ok {
+	if value, ok := autpu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldCreateAt,
+			Column: appuserthirdparty.FieldCreatedAt,
 		})
 	}
-	if value, ok := autpu.mutation.AddedCreateAt(); ok {
+	if value, ok := autpu.mutation.AddedCreatedAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldCreateAt,
+			Column: appuserthirdparty.FieldCreatedAt,
 		})
 	}
-	if value, ok := autpu.mutation.UpdateAt(); ok {
+	if value, ok := autpu.mutation.UpdatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldUpdateAt,
+			Column: appuserthirdparty.FieldUpdatedAt,
 		})
 	}
-	if value, ok := autpu.mutation.AddedUpdateAt(); ok {
+	if value, ok := autpu.mutation.AddedUpdatedAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldUpdateAt,
+			Column: appuserthirdparty.FieldUpdatedAt,
 		})
 	}
-	if value, ok := autpu.mutation.DeleteAt(); ok {
+	if value, ok := autpu.mutation.DeletedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldDeleteAt,
+			Column: appuserthirdparty.FieldDeletedAt,
 		})
 	}
-	if value, ok := autpu.mutation.AddedDeleteAt(); ok {
+	if value, ok := autpu.mutation.AddedDeletedAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldDeleteAt,
+			Column: appuserthirdparty.FieldDeletedAt,
 		})
 	}
 	if value, ok := autpu.mutation.AppID(); ok {
@@ -330,58 +346,58 @@ type AppUserThirdPartyUpdateOne struct {
 	mutation *AppUserThirdPartyMutation
 }
 
-// SetCreateAt sets the "create_at" field.
-func (autpuo *AppUserThirdPartyUpdateOne) SetCreateAt(u uint32) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.ResetCreateAt()
-	autpuo.mutation.SetCreateAt(u)
+// SetCreatedAt sets the "created_at" field.
+func (autpuo *AppUserThirdPartyUpdateOne) SetCreatedAt(u uint32) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ResetCreatedAt()
+	autpuo.mutation.SetCreatedAt(u)
 	return autpuo
 }
 
-// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
-func (autpuo *AppUserThirdPartyUpdateOne) SetNillableCreateAt(u *uint32) *AppUserThirdPartyUpdateOne {
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableCreatedAt(u *uint32) *AppUserThirdPartyUpdateOne {
 	if u != nil {
-		autpuo.SetCreateAt(*u)
+		autpuo.SetCreatedAt(*u)
 	}
 	return autpuo
 }
 
-// AddCreateAt adds u to the "create_at" field.
-func (autpuo *AppUserThirdPartyUpdateOne) AddCreateAt(u int32) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.AddCreateAt(u)
+// AddCreatedAt adds u to the "created_at" field.
+func (autpuo *AppUserThirdPartyUpdateOne) AddCreatedAt(u int32) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.AddCreatedAt(u)
 	return autpuo
 }
 
-// SetUpdateAt sets the "update_at" field.
-func (autpuo *AppUserThirdPartyUpdateOne) SetUpdateAt(u uint32) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.ResetUpdateAt()
-	autpuo.mutation.SetUpdateAt(u)
+// SetUpdatedAt sets the "updated_at" field.
+func (autpuo *AppUserThirdPartyUpdateOne) SetUpdatedAt(u uint32) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ResetUpdatedAt()
+	autpuo.mutation.SetUpdatedAt(u)
 	return autpuo
 }
 
-// AddUpdateAt adds u to the "update_at" field.
-func (autpuo *AppUserThirdPartyUpdateOne) AddUpdateAt(u int32) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.AddUpdateAt(u)
+// AddUpdatedAt adds u to the "updated_at" field.
+func (autpuo *AppUserThirdPartyUpdateOne) AddUpdatedAt(u int32) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.AddUpdatedAt(u)
 	return autpuo
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (autpuo *AppUserThirdPartyUpdateOne) SetDeleteAt(u uint32) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.ResetDeleteAt()
-	autpuo.mutation.SetDeleteAt(u)
+// SetDeletedAt sets the "deleted_at" field.
+func (autpuo *AppUserThirdPartyUpdateOne) SetDeletedAt(u uint32) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ResetDeletedAt()
+	autpuo.mutation.SetDeletedAt(u)
 	return autpuo
 }
 
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (autpuo *AppUserThirdPartyUpdateOne) SetNillableDeleteAt(u *uint32) *AppUserThirdPartyUpdateOne {
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableDeletedAt(u *uint32) *AppUserThirdPartyUpdateOne {
 	if u != nil {
-		autpuo.SetDeleteAt(*u)
+		autpuo.SetDeletedAt(*u)
 	}
 	return autpuo
 }
 
-// AddDeleteAt adds u to the "delete_at" field.
-func (autpuo *AppUserThirdPartyUpdateOne) AddDeleteAt(u int32) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.AddDeleteAt(u)
+// AddDeletedAt adds u to the "deleted_at" field.
+func (autpuo *AppUserThirdPartyUpdateOne) AddDeletedAt(u int32) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.AddDeletedAt(u)
 	return autpuo
 }
 
@@ -415,9 +431,25 @@ func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUsername(s string) *AppUs
 	return autpuo
 }
 
+// SetNillableThirdPartyUsername sets the "third_party_username" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUsername(s *string) *AppUserThirdPartyUpdateOne {
+	if s != nil {
+		autpuo.SetThirdPartyUsername(*s)
+	}
+	return autpuo
+}
+
 // SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
 func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyUpdateOne {
 	autpuo.mutation.SetThirdPartyUserAvatar(s)
+	return autpuo
+}
+
+// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyUpdateOne {
+	if s != nil {
+		autpuo.SetThirdPartyUserAvatar(*s)
+	}
 	return autpuo
 }
 
@@ -498,12 +530,12 @@ func (autpuo *AppUserThirdPartyUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (autpuo *AppUserThirdPartyUpdateOne) defaults() error {
-	if _, ok := autpuo.mutation.UpdateAt(); !ok {
-		if appuserthirdparty.UpdateDefaultUpdateAt == nil {
-			return fmt.Errorf("ent: uninitialized appuserthirdparty.UpdateDefaultUpdateAt (forgotten import ent/runtime?)")
+	if _, ok := autpuo.mutation.UpdatedAt(); !ok {
+		if appuserthirdparty.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := appuserthirdparty.UpdateDefaultUpdateAt()
-		autpuo.mutation.SetUpdateAt(v)
+		v := appuserthirdparty.UpdateDefaultUpdatedAt()
+		autpuo.mutation.SetUpdatedAt(v)
 	}
 	return nil
 }
@@ -553,46 +585,46 @@ func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *A
 			}
 		}
 	}
-	if value, ok := autpuo.mutation.CreateAt(); ok {
+	if value, ok := autpuo.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldCreateAt,
+			Column: appuserthirdparty.FieldCreatedAt,
 		})
 	}
-	if value, ok := autpuo.mutation.AddedCreateAt(); ok {
+	if value, ok := autpuo.mutation.AddedCreatedAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldCreateAt,
+			Column: appuserthirdparty.FieldCreatedAt,
 		})
 	}
-	if value, ok := autpuo.mutation.UpdateAt(); ok {
+	if value, ok := autpuo.mutation.UpdatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldUpdateAt,
+			Column: appuserthirdparty.FieldUpdatedAt,
 		})
 	}
-	if value, ok := autpuo.mutation.AddedUpdateAt(); ok {
+	if value, ok := autpuo.mutation.AddedUpdatedAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldUpdateAt,
+			Column: appuserthirdparty.FieldUpdatedAt,
 		})
 	}
-	if value, ok := autpuo.mutation.DeleteAt(); ok {
+	if value, ok := autpuo.mutation.DeletedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldDeleteAt,
+			Column: appuserthirdparty.FieldDeletedAt,
 		})
 	}
-	if value, ok := autpuo.mutation.AddedDeleteAt(); ok {
+	if value, ok := autpuo.mutation.AddedDeletedAt(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Value:  value,
-			Column: appuserthirdparty.FieldDeleteAt,
+			Column: appuserthirdparty.FieldDeletedAt,
 		})
 	}
 	if value, ok := autpuo.mutation.AppID(); ok {

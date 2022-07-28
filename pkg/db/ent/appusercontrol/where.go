@@ -91,6 +91,27 @@ func IDLTE(id uuid.UUID) predicate.AppUserControl {
 	})
 }
 
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
+func UpdatedAt(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
+func DeletedAt(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDeletedAt), v))
+	})
+}
+
 // AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
 func AppID(v uuid.UUID) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
@@ -119,24 +140,231 @@ func GoogleAuthenticationVerified(v bool) predicate.AppUserControl {
 	})
 }
 
-// CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
-func CreateAt(v uint32) predicate.AppUserControl {
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v uint32) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCreateAt), v))
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
 	})
 }
 
-// UpdateAt applies equality check predicate on the "update_at" field. It's identical to UpdateAtEQ.
-func UpdateAt(v uint32) predicate.AppUserControl {
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v uint32) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUpdateAt), v))
+		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
 	})
 }
 
-// DeleteAt applies equality check predicate on the "delete_at" field. It's identical to DeleteAtEQ.
-func DeleteAt(v uint32) predicate.AppUserControl {
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...uint32) predicate.AppUserControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
 	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDeleteAt), v))
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...uint32) predicate.AppUserControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
+func UpdatedAtEQ(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtNEQ applies the NEQ predicate on the "updated_at" field.
+func UpdatedAtNEQ(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtIn applies the In predicate on the "updated_at" field.
+func UpdatedAtIn(vs ...uint32) predicate.AppUserControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUpdatedAt), v...))
+	})
+}
+
+// UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
+func UpdatedAtNotIn(vs ...uint32) predicate.AppUserControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUpdatedAt), v...))
+	})
+}
+
+// UpdatedAtGT applies the GT predicate on the "updated_at" field.
+func UpdatedAtGT(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtGTE applies the GTE predicate on the "updated_at" field.
+func UpdatedAtGTE(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtLT applies the LT predicate on the "updated_at" field.
+func UpdatedAtLT(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
+func UpdatedAtLTE(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
+func DeletedAtEQ(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDeletedAt), v))
+	})
+}
+
+// DeletedAtNEQ applies the NEQ predicate on the "deleted_at" field.
+func DeletedAtNEQ(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDeletedAt), v))
+	})
+}
+
+// DeletedAtIn applies the In predicate on the "deleted_at" field.
+func DeletedAtIn(vs ...uint32) predicate.AppUserControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDeletedAt), v...))
+	})
+}
+
+// DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
+func DeletedAtNotIn(vs ...uint32) predicate.AppUserControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDeletedAt), v...))
+	})
+}
+
+// DeletedAtGT applies the GT predicate on the "deleted_at" field.
+func DeletedAtGT(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDeletedAt), v))
+	})
+}
+
+// DeletedAtGTE applies the GTE predicate on the "deleted_at" field.
+func DeletedAtGTE(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDeletedAt), v))
+	})
+}
+
+// DeletedAtLT applies the LT predicate on the "deleted_at" field.
+func DeletedAtLT(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDeletedAt), v))
+	})
+}
+
+// DeletedAtLTE applies the LTE predicate on the "deleted_at" field.
+func DeletedAtLTE(v uint32) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDeletedAt), v))
 	})
 }
 
@@ -317,234 +545,6 @@ func GoogleAuthenticationVerifiedEQ(v bool) predicate.AppUserControl {
 func GoogleAuthenticationVerifiedNEQ(v bool) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldGoogleAuthenticationVerified), v))
-	})
-}
-
-// CreateAtEQ applies the EQ predicate on the "create_at" field.
-func CreateAtEQ(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCreateAt), v))
-	})
-}
-
-// CreateAtNEQ applies the NEQ predicate on the "create_at" field.
-func CreateAtNEQ(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCreateAt), v))
-	})
-}
-
-// CreateAtIn applies the In predicate on the "create_at" field.
-func CreateAtIn(vs ...uint32) predicate.AppUserControl {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldCreateAt), v...))
-	})
-}
-
-// CreateAtNotIn applies the NotIn predicate on the "create_at" field.
-func CreateAtNotIn(vs ...uint32) predicate.AppUserControl {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldCreateAt), v...))
-	})
-}
-
-// CreateAtGT applies the GT predicate on the "create_at" field.
-func CreateAtGT(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCreateAt), v))
-	})
-}
-
-// CreateAtGTE applies the GTE predicate on the "create_at" field.
-func CreateAtGTE(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCreateAt), v))
-	})
-}
-
-// CreateAtLT applies the LT predicate on the "create_at" field.
-func CreateAtLT(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCreateAt), v))
-	})
-}
-
-// CreateAtLTE applies the LTE predicate on the "create_at" field.
-func CreateAtLTE(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCreateAt), v))
-	})
-}
-
-// UpdateAtEQ applies the EQ predicate on the "update_at" field.
-func UpdateAtEQ(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUpdateAt), v))
-	})
-}
-
-// UpdateAtNEQ applies the NEQ predicate on the "update_at" field.
-func UpdateAtNEQ(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUpdateAt), v))
-	})
-}
-
-// UpdateAtIn applies the In predicate on the "update_at" field.
-func UpdateAtIn(vs ...uint32) predicate.AppUserControl {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldUpdateAt), v...))
-	})
-}
-
-// UpdateAtNotIn applies the NotIn predicate on the "update_at" field.
-func UpdateAtNotIn(vs ...uint32) predicate.AppUserControl {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldUpdateAt), v...))
-	})
-}
-
-// UpdateAtGT applies the GT predicate on the "update_at" field.
-func UpdateAtGT(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldUpdateAt), v))
-	})
-}
-
-// UpdateAtGTE applies the GTE predicate on the "update_at" field.
-func UpdateAtGTE(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldUpdateAt), v))
-	})
-}
-
-// UpdateAtLT applies the LT predicate on the "update_at" field.
-func UpdateAtLT(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldUpdateAt), v))
-	})
-}
-
-// UpdateAtLTE applies the LTE predicate on the "update_at" field.
-func UpdateAtLTE(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldUpdateAt), v))
-	})
-}
-
-// DeleteAtEQ applies the EQ predicate on the "delete_at" field.
-func DeleteAtEQ(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDeleteAt), v))
-	})
-}
-
-// DeleteAtNEQ applies the NEQ predicate on the "delete_at" field.
-func DeleteAtNEQ(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDeleteAt), v))
-	})
-}
-
-// DeleteAtIn applies the In predicate on the "delete_at" field.
-func DeleteAtIn(vs ...uint32) predicate.AppUserControl {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldDeleteAt), v...))
-	})
-}
-
-// DeleteAtNotIn applies the NotIn predicate on the "delete_at" field.
-func DeleteAtNotIn(vs ...uint32) predicate.AppUserControl {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldDeleteAt), v...))
-	})
-}
-
-// DeleteAtGT applies the GT predicate on the "delete_at" field.
-func DeleteAtGT(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDeleteAt), v))
-	})
-}
-
-// DeleteAtGTE applies the GTE predicate on the "delete_at" field.
-func DeleteAtGTE(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDeleteAt), v))
-	})
-}
-
-// DeleteAtLT applies the LT predicate on the "delete_at" field.
-func DeleteAtLT(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDeleteAt), v))
-	})
-}
-
-// DeleteAtLTE applies the LTE predicate on the "delete_at" field.
-func DeleteAtLTE(v uint32) predicate.AppUserControl {
-	return predicate.AppUserControl(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDeleteAt), v))
 	})
 }
 

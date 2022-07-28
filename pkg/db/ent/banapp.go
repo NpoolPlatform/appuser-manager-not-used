@@ -16,16 +16,16 @@ type BanApp struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// Message holds the value of the "message" field.
 	Message string `json:"message,omitempty"`
-	// CreateAt holds the value of the "create_at" field.
-	CreateAt uint32 `json:"create_at,omitempty"`
-	// UpdateAt holds the value of the "update_at" field.
-	UpdateAt uint32 `json:"update_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt uint32 `json:"delete_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -33,7 +33,7 @@ func (*BanApp) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case banapp.FieldCreateAt, banapp.FieldUpdateAt, banapp.FieldDeleteAt:
+		case banapp.FieldCreatedAt, banapp.FieldUpdatedAt, banapp.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case banapp.FieldMessage:
 			values[i] = new(sql.NullString)
@@ -60,6 +60,24 @@ func (ba *BanApp) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				ba.ID = *value
 			}
+		case banapp.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				ba.CreatedAt = uint32(value.Int64)
+			}
+		case banapp.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				ba.UpdatedAt = uint32(value.Int64)
+			}
+		case banapp.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				ba.DeletedAt = uint32(value.Int64)
+			}
 		case banapp.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field app_id", values[i])
@@ -71,24 +89,6 @@ func (ba *BanApp) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field message", values[i])
 			} else if value.Valid {
 				ba.Message = value.String
-			}
-		case banapp.FieldCreateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_at", values[i])
-			} else if value.Valid {
-				ba.CreateAt = uint32(value.Int64)
-			}
-		case banapp.FieldUpdateAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_at", values[i])
-			} else if value.Valid {
-				ba.UpdateAt = uint32(value.Int64)
-			}
-		case banapp.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				ba.DeleteAt = uint32(value.Int64)
 			}
 		}
 	}
@@ -118,16 +118,16 @@ func (ba *BanApp) String() string {
 	var builder strings.Builder
 	builder.WriteString("BanApp(")
 	builder.WriteString(fmt.Sprintf("id=%v", ba.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(fmt.Sprintf("%v", ba.CreatedAt))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", ba.UpdatedAt))
+	builder.WriteString(", deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", ba.DeletedAt))
 	builder.WriteString(", app_id=")
 	builder.WriteString(fmt.Sprintf("%v", ba.AppID))
 	builder.WriteString(", message=")
 	builder.WriteString(ba.Message)
-	builder.WriteString(", create_at=")
-	builder.WriteString(fmt.Sprintf("%v", ba.CreateAt))
-	builder.WriteString(", update_at=")
-	builder.WriteString(fmt.Sprintf("%v", ba.UpdateAt))
-	builder.WriteString(", delete_at=")
-	builder.WriteString(fmt.Sprintf("%v", ba.DeleteAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

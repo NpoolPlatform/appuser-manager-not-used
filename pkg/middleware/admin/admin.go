@@ -5,12 +5,12 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
-	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
-	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
-	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
-	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
+	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/app"
+	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approle"
+	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approleuser"
+	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appuser"
 	appusermw "github.com/NpoolPlatform/appuser-manager/pkg/middleware/appuser"
-	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 
 	"github.com/google/uuid"
 )
