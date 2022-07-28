@@ -7,9 +7,23 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusercontrol"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 
+	"ariga.io/atlas/sql/migrate"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/schema"
+	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
 
 	// ent policy runtime
@@ -25,12 +39,87 @@ func client() (*ent.Client, error) {
 	return ent.NewClient(ent.Driver(drv)), nil
 }
 
+func alterColumnNames(next schema.Applier) schema.Applier {
+	return schema.ApplyFunc(func(ctx context.Context, conn dialect.ExecQuerier, plan *migrate.Plan) error {
+		tables := []string{
+			app.Table,
+			appcontrol.Table,
+			approle.Table,
+			approleuser.Table,
+			appuser.Table,
+			appusercontrol.Table,
+			appuserextra.Table,
+			appusersecret.Table,
+			appuserthirdparty.Table,
+			banapp.Table,
+			banappuser.Table,
+		}
+
+	changeTableColumn:
+		for _, table := range tables {
+			dstColumn := "created_at"
+			srcColumn := "create_at"
+
+			query, args := entsql.
+				Select("datetime_precision").
+				From(entsql.Table("`information_schema`.`columns`")).
+				Where(
+					entsql.And(
+						entsql.EQ("table_name", table),
+						entsql.EQ("column_name", dstColumn),
+					),
+				).
+				Count().
+				Query()
+
+			rows := entsql.Rows{}
+			if err := conn.Query(ctx, query, args, &rows); err != nil {
+				return err
+			}
+
+			for rows.Next() {
+				count := 0
+				if err := rows.Scan(&count); err != nil {
+					return err
+				}
+				if count > 0 {
+					rows.Close()
+					continue changeTableColumn
+				}
+			}
+			rows.Close()
+
+			cb := entsql.
+				Column(dstColumn).
+				Type(field.TypeInt.String())
+
+			query, args = entsql.
+				AlterTable(table).
+				ChangeColumn(srcColumn, cb).
+				Query()
+			query = query + " unsigned"
+			if err := conn.Exec(ctx, query, args, nil); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
+
 func Init() error {
 	cli, err := client()
 	if err != nil {
 		return err
 	}
-	return cli.Schema.Create(context.Background())
+	err = cli.Schema.Create(
+		context.Background(),
+		schema.WithApplyHook(alterColumnNames),
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func Client() (*ent.Client, error) {
