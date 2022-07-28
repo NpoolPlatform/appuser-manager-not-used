@@ -55,51 +55,59 @@ func alterColumnNames(next schema.Applier) schema.Applier {
 			banappuser.Table,
 		}
 
+		columns := [][]string{
+			[]string{"create_at", "created_at"},
+			[]string{"update_at", "updated_at"},
+			[]string{"delete_at", "deleted_at"},
+		}
+
 	changeTableColumn:
 		for _, table := range tables {
-			dstColumn := "created_at"
-			srcColumn := "create_at"
+			for _, column := range columns {
+				dstColumn := column[0]
+				srcColumn := column[1]
 
-			query, args := entsql.
-				Select("datetime_precision").
-				From(entsql.Table("`information_schema`.`columns`")).
-				Where(
-					entsql.And(
-						entsql.EQ("table_name", table),
-						entsql.EQ("column_name", dstColumn),
-					),
-				).
-				Count().
-				Query()
+				query, args := entsql.
+					Select("datetime_precision").
+					From(entsql.Table("`information_schema`.`columns`")).
+					Where(
+						entsql.And(
+							entsql.EQ("table_name", table),
+							entsql.EQ("column_name", dstColumn),
+						),
+					).
+					Count().
+					Query()
 
-			rows := entsql.Rows{}
-			if err := conn.Query(ctx, query, args, &rows); err != nil {
-				return err
-			}
-
-			for rows.Next() {
-				count := 0
-				if err := rows.Scan(&count); err != nil {
+				rows := entsql.Rows{}
+				if err := conn.Query(ctx, query, args, &rows); err != nil {
 					return err
 				}
-				if count > 0 {
-					rows.Close()
-					continue changeTableColumn
+
+				for rows.Next() {
+					count := 0
+					if err := rows.Scan(&count); err != nil {
+						return err
+					}
+					if count > 0 {
+						rows.Close()
+						continue changeTableColumn
+					}
 				}
-			}
-			rows.Close()
+				rows.Close()
 
-			cb := entsql.
-				Column(dstColumn).
-				Type(field.TypeInt.String())
+				cb := entsql.
+					Column(dstColumn).
+					Type(field.TypeInt.String())
 
-			query, args = entsql.
-				AlterTable(table).
-				ChangeColumn(srcColumn, cb).
-				Query()
-			query = query + " unsigned"
-			if err := conn.Exec(ctx, query, args, nil); err != nil {
-				return err
+				query, args = entsql.
+					AlterTable(table).
+					ChangeColumn(srcColumn, cb).
+					Query()
+				query = query + " unsigned"
+				if err := conn.Exec(ctx, query, args, nil); err != nil {
+					return err
+				}
 			}
 		}
 
