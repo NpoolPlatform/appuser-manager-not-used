@@ -61,8 +61,8 @@ func alterColumnNames(next schema.Applier) schema.Applier {
 			[]string{"delete_at", "deleted_at"},
 		}
 
-	changeTableColumn:
 		for _, table := range tables {
+		changeTableColumn:
 			for _, column := range columns {
 				dstColumn := column[0]
 				srcColumn := column[1]
