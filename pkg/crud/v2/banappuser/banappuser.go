@@ -11,7 +11,6 @@ import (
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/banappuser"
 
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
@@ -148,9 +147,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 		}
 	}()
 
-	span.SetAttributes(
-		attribute.String("ID", id.String()),
-	)
+	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.BanAppUser.Query().Where(banappuser.ID(id)).Only(_ctx)
@@ -328,9 +325,7 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 		}
 	}()
 
-	span.SetAttributes(
-		attribute.String("ID", id.String()),
-	)
+	span = commontracer.TraceID(span, id.String())
 
 	exist := false
 
@@ -395,9 +390,7 @@ func Delete(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 		}
 	}()
 
-	span.SetAttributes(
-		attribute.String("ID", id.String()),
-	)
+	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		info, err = cli.BanAppUser.UpdateOneID(id).

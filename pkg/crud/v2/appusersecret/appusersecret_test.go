@@ -1,4 +1,4 @@
-package app
+package appusersecret
 
 import (
 	"context"
@@ -7,13 +7,14 @@ import (
 	"strconv"
 	"testing"
 
+	val "github.com/NpoolPlatform/message/npool"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit" //nolint
-	val "github.com/NpoolPlatform/message/npool"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/app"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appusersecret"
 
 	"github.com/google/uuid"
 
@@ -29,83 +30,90 @@ func init() {
 	}
 }
 
-var entApp = ent.App{
-	ID:          uuid.New(),
-	CreatedBy:   uuid.New(),
-	Name:        uuid.New().String(),
-	Description: uuid.New().String(),
-	Logo:        uuid.New().String(),
+var entAppUserSecret = ent.AppUserSecret{
+	GoogleSecret: uuid.New().String(),
+	ID:           uuid.New(),
+	AppID:        uuid.New(),
+	UserID:       uuid.New(),
+	PasswordHash: uuid.New().String(),
+	Salt:         uuid.New().String(),
 }
 
 var (
-	id        = entApp.ID.String()
-	createdBy = entApp.CreatedBy.String()
-	appInfo   = npool.AppReq{
-		ID:          &id,
-		CreatedBy:   &createdBy,
-		Name:        &entApp.Name,
-		Description: &entApp.Description,
-		Logo:        &entApp.Logo,
+	appID  = entAppUserSecret.AppID.String()
+	userID = entAppUserSecret.UserID.String()
+	id     = entAppUserSecret.ID.String()
+
+	appusersecretInfo = npool.AppUserSecretReq{
+		AppID:        &appID,
+		UserID:       &userID,
+		PasswordHash: &entAppUserSecret.PasswordHash,
+		Salt:         &entAppUserSecret.Salt,
+		GoogleSecret: &entAppUserSecret.GoogleSecret,
+		ID:           &id,
 	}
 )
 
-var info *ent.App
+var info *ent.AppUserSecret
 
-func rowToObject(row *ent.App) *ent.App {
-	return &ent.App{
-		ID:          row.ID,
-		CreatedBy:   row.CreatedBy,
-		Name:        row.Name,
-		Logo:        row.Logo,
-		Description: row.Description,
-		CreatedAt:   row.CreatedAt,
+func rowToObject(row *ent.AppUserSecret) *ent.AppUserSecret {
+	return &ent.AppUserSecret{
+		AppID:        row.AppID,
+		UserID:       row.UserID,
+		PasswordHash: row.PasswordHash,
+		Salt:         row.Salt,
+		GoogleSecret: row.GoogleSecret,
+		ID:           row.ID,
 	}
 }
 
 func create(t *testing.T) {
 	var err error
-	info, err = Create(context.Background(), &appInfo)
+	info, err = Create(context.Background(), &appusersecretInfo)
 	if assert.Nil(t, err) {
 		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
-			entApp.ID = info.ID
-			entApp.CreatedAt = info.CreatedAt
+			entAppUserSecret.ID = info.ID
 		}
-		assert.Equal(t, rowToObject(info), &entApp)
+		assert.Equal(t, rowToObject(info), &entAppUserSecret)
 	}
 }
 
 func createBulk(t *testing.T) {
-	entApp := []ent.App{
+	entAppUserSecret := []ent.AppUserSecret{
 		{
-			ID:          uuid.New(),
-			CreatedBy:   uuid.New(),
-			Name:        uuid.New().String(),
-			Description: uuid.New().String(),
-			Logo:        uuid.New().String(),
+			GoogleSecret: uuid.New().String(),
+			ID:           uuid.New(),
+			AppID:        uuid.New(),
+			UserID:       uuid.New(),
+			PasswordHash: uuid.New().String(),
+			Salt:         uuid.New().String(),
 		},
 		{
-			ID:          uuid.New(),
-			CreatedBy:   uuid.New(),
-			Name:        uuid.New().String(),
-			Description: uuid.New().String(),
-			Logo:        uuid.New().String(),
+			GoogleSecret: uuid.New().String(),
+			ID:           uuid.New(),
+			AppID:        uuid.New(),
+			UserID:       uuid.New(),
+			PasswordHash: uuid.New().String(),
+			Salt:         uuid.New().String(),
 		},
 	}
 
-	apps := []*npool.AppReq{}
-	for key := range entApp {
-		id := entApp[key].ID.String()
-		createdBy := entApp[key].CreatedBy.String()
-		apps = append(apps, &npool.AppReq{
-			ID:          &id,
-			CreatedBy:   &createdBy,
-			Name:        &entApp[key].Name,
-			Logo:        &entApp[key].Logo,
-			Description: &entApp[key].Description,
-			CreatedAt:   &entApp[key].CreatedAt,
+	appusersecrets := []*npool.AppUserSecretReq{}
+	for key := range entAppUserSecret {
+		appID := entAppUserSecret[key].AppID.String()
+		userID := entAppUserSecret[key].UserID.String()
+		id := entAppUserSecret[key].ID.String()
+
+		appusersecrets = append(appusersecrets, &npool.AppUserSecretReq{
+			AppID:        &appID,
+			UserID:       &userID,
+			PasswordHash: &entAppUserSecret[key].PasswordHash,
+			Salt:         &entAppUserSecret[key].Salt,
+			GoogleSecret: &entAppUserSecret[key].GoogleSecret,
+			ID:           &id,
 		})
 	}
-	infos, err := CreateBulk(context.Background(), apps)
+	infos, err := CreateBulk(context.Background(), appusersecrets)
 	if assert.Nil(t, err) {
 		assert.Equal(t, len(infos), 2)
 		assert.NotEqual(t, infos[0].ID, uuid.UUID{}.String())
@@ -115,9 +123,9 @@ func createBulk(t *testing.T) {
 
 func update(t *testing.T) {
 	var err error
-	info, err = Update(context.Background(), &appInfo)
+	info, err = Update(context.Background(), &appusersecretInfo)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entApp)
+		assert.Equal(t, rowToObject(info), &entAppUserSecret)
 	}
 }
 
@@ -125,7 +133,7 @@ func row(t *testing.T) {
 	var err error
 	info, err = Row(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entApp)
+		assert.Equal(t, rowToObject(info), &entAppUserSecret)
 	}
 }
 
@@ -139,7 +147,7 @@ func rows(t *testing.T) {
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, 1)
-		assert.Equal(t, rowToObject(infos[0]), &entApp)
+		assert.Equal(t, rowToObject(infos[0]), &entAppUserSecret)
 	}
 }
 
@@ -153,7 +161,7 @@ func rowOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entApp)
+		assert.Equal(t, rowToObject(info), &entAppUserSecret)
 	}
 }
 
@@ -195,7 +203,7 @@ func existConds(t *testing.T) {
 func delete(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entApp)
+		assert.Equal(t, rowToObject(info), &entAppUserSecret)
 	}
 }
 

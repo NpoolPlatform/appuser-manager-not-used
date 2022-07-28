@@ -1,27 +1,27 @@
-package app
+package appusersecret
 
 import (
 	"context"
 	"fmt"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"time"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
-	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/app"
+	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/appusersecret"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/app"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appusersecret"
 	"github.com/google/uuid"
 )
 
-func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
-	var info *ent.App
+func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret, error) {
+	var info *ent.AppUserSecret
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
@@ -36,21 +36,24 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.App.Create()
+		c := cli.AppUserSecret.Create()
 		if in.ID != nil {
 			c.SetID(uuid.MustParse(in.GetID()))
 		}
-		if in.CreatedBy != nil {
-			c.SetCreatedBy(uuid.MustParse(in.GetCreatedBy()))
+		if in.AppID != nil {
+			c.SetAppID(uuid.MustParse(in.GetAppID()))
 		}
-		if in.Name != nil {
-			c.SetName(in.GetName())
+		if in.UserID != nil {
+			c.SetUserID(uuid.MustParse(in.GetUserID()))
 		}
-		if in.Logo != nil {
-			c.SetLogo(in.GetLogo())
+		if in.PasswordHash != nil {
+			c.SetPasswordHash(in.GetPasswordHash())
 		}
-		if in.Description != nil {
-			c.SetDescription(in.GetDescription())
+		if in.Salt != nil {
+			c.SetSalt(in.GetSalt())
+		}
+		if in.GoogleSecret != nil {
+			c.SetGoogleSecret(in.GetGoogleSecret())
 		}
 		info, err = c.Save(_ctx)
 		return err
@@ -62,9 +65,9 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
+func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUserSecret, error) {
 	var err error
-	rows := []*ent.App{}
+	rows := []*ent.AppUserSecret{}
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
 	defer span.End()
@@ -79,26 +82,29 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	span = tracer.TraceMany(span, in)
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		bulk := make([]*ent.AppCreate, len(in))
+		bulk := make([]*ent.AppUserSecretCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.App.Create()
+			bulk[i] = tx.AppUserSecret.Create()
 			if info.ID != nil {
 				bulk[i].SetID(uuid.MustParse(info.GetID()))
 			}
-			if info.CreatedBy != nil {
-				bulk[i].SetCreatedBy(uuid.MustParse(info.GetCreatedBy()))
+			if info.AppID != nil {
+				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
 			}
-			if info.Name != nil {
-				bulk[i].SetName(info.GetName())
+			if info.UserID != nil {
+				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
 			}
-			if info.Logo != nil {
-				bulk[i].SetLogo(info.GetLogo())
+			if info.PasswordHash != nil {
+				bulk[i].SetPasswordHash(info.GetPasswordHash())
 			}
-			if info.Description != nil {
-				bulk[i].SetDescription(info.GetDescription())
+			if info.Salt != nil {
+				bulk[i].SetSalt(info.GetSalt())
+			}
+			if info.GoogleSecret != nil {
+				bulk[i].SetGoogleSecret(info.GetGoogleSecret())
 			}
 		}
-		rows, err = tx.App.CreateBulk(bulk...).Save(_ctx)
+		rows, err = tx.AppUserSecret.CreateBulk(bulk...).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -108,9 +114,9 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	return rows, nil
 }
 
-func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
+func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret, error) {
 	var err error
-	var info *ent.App
+	var info *ent.AppUserSecret
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
 	defer span.End()
@@ -125,15 +131,15 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.App.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.Name != nil {
-			u.SetName(in.GetName())
+		u := cli.AppUserSecret.UpdateOneID(uuid.MustParse(in.GetID()))
+		if in.PasswordHash != nil {
+			u.SetPasswordHash(in.GetPasswordHash())
 		}
-		if in.Logo != nil {
-			u.SetLogo(in.GetLogo())
+		if in.Salt != nil {
+			u.SetSalt(in.GetSalt())
 		}
-		if in.Description != nil {
-			u.SetDescription(in.GetDescription())
+		if in.GoogleSecret != nil {
+			u.SetGoogleSecret(in.GetGoogleSecret())
 		}
 		info, err = u.Save(_ctx)
 		return err
@@ -145,8 +151,8 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	return info, nil
 }
 
-func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
-	var info *ent.App
+func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {
+	var info *ent.AppUserSecret
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
@@ -162,7 +168,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.App.Query().Where(app.ID(id)).Only(_ctx)
+		info, err = cli.AppUserSecret.Query().Where(appusersecret.ID(id)).Only(_ctx)
 		return err
 	})
 	if err != nil {
@@ -173,76 +179,44 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 }
 
 //nolint
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
-	stm := cli.App.Query()
+func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery, error) {
+	stm := cli.AppUserSecret.Query()
 
 	if conds.ID != nil {
+		id := uuid.MustParse(conds.GetID().GetValue())
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(app.ID(uuid.MustParse(conds.GetID().GetValue())))
-		case cruder.IN:
-			var ids []uuid.UUID
-			for _, val := range conds.GetIDs().GetValue() {
-				id, err := uuid.Parse(val)
-				if err != nil {
-					return nil, err
-				}
-				ids = append(ids, id)
-			}
-			stm.Where(app.IDIn(ids...))
+			stm.Where(appusersecret.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid app field")
+			return nil, fmt.Errorf("invalid appusersecret field")
 		}
 	}
 
-	if conds.CreatedBy != nil {
-		createdBy := uuid.MustParse(conds.GetCreatedBy().GetValue())
-		switch conds.GetCreatedBy().GetOp() {
+	if conds.AppID != nil {
+		appID := uuid.MustParse(conds.GetAppID().GetValue())
+		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(app.CreatedBy(createdBy))
+			stm.Where(appusersecret.AppID(appID))
 		default:
-			return nil, fmt.Errorf("invalid app field")
+			return nil, fmt.Errorf("invalid appusersecret field")
 		}
 	}
 
-	if conds.Name != nil {
-		switch conds.GetName().GetOp() {
+	if conds.UserID != nil {
+		userID := uuid.MustParse(conds.GetUserID().GetValue())
+		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
-			stm.Where(app.Name(conds.GetName().GetValue()))
-		case cruder.IN:
-			stm.Where(app.NameIn(conds.GetName().GetValue()))
+			stm.Where(appusersecret.UserID(userID))
 		default:
-			return nil, fmt.Errorf("invalid app field")
-		}
-	}
-
-	if conds.Logo != nil {
-		switch conds.GetLogo().GetOp() {
-		case cruder.EQ:
-			stm.Where(app.Logo(conds.GetLogo().GetValue()))
-		case cruder.IN:
-			stm.Where(app.LogoIn(conds.GetLogo().GetValue()))
-		default:
-			return nil, fmt.Errorf("invalid app field")
-		}
-	}
-
-	if conds.Description != nil {
-		switch conds.GetDescription().GetOp() {
-		case cruder.EQ:
-			stm.Where(app.Description(conds.GetDescription().GetValue()))
-		case cruder.IN:
-			stm.Where(app.DescriptionIn(conds.GetDescription().GetValue()))
-		default:
-			return nil, fmt.Errorf("invalid app field")
+			return nil, fmt.Errorf("invalid appusersecret field")
 		}
 	}
 	return stm, nil
 }
 
-func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.App, int, error) {
+func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.AppUserSecret, int, error) {
 	var err error
-	rows := []*ent.App{}
+	rows := []*ent.AppUserSecret{}
 	var total int
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
@@ -270,7 +244,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 
 		rows, err = stm.
 			Offset(offset).
-			Order(ent.Desc(app.FieldUpdatedAt)).
+			Order(ent.Desc(appusersecret.FieldUpdatedAt)).
 			Limit(limit).
 			All(_ctx)
 		if err != nil {
@@ -286,8 +260,8 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 	return rows, total, nil
 }
 
-func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.App, error) {
-	var info *ent.App
+func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUserSecret, error) {
+	var info *ent.AppUserSecret
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
@@ -374,7 +348,7 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.App.Query().Where(app.ID(id)).Exist(_ctx)
+		exist, err = cli.AppUserSecret.Query().Where(appusersecret.ID(id)).Exist(_ctx)
 		return err
 	})
 	if err != nil {
@@ -420,8 +394,8 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return exist, nil
 }
 
-func Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
-	var info *ent.App
+func Delete(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {
+	var info *ent.AppUserSecret
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
@@ -437,7 +411,7 @@ func Delete(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.App.UpdateOneID(id).
+		info, err = cli.AppUserSecret.UpdateOneID(id).
 			SetDeletedAt(uint32(time.Now().Unix())).
 			Save(_ctx)
 		return err
