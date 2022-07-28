@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	servicename "github.com/NpoolPlatform/appuser-manager/pkg/service-name"
+	servicename "github.com/NpoolPlatform/appuser-manager/pkg/servicename"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/app"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
