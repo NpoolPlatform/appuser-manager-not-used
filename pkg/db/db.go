@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"fmt"
-
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -20,6 +19,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 
 	"ariga.io/atlas/sql/migrate"
+
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
