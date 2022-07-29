@@ -76,7 +76,7 @@ func alterColumnNames(next schema.Applier) schema.Applier {
 			}
 		}
 
-		return nil
+		return next.Apply(ctx, conn, plan)
 	})
 }
 
