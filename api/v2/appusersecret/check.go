@@ -41,3 +41,7 @@ func validate(info *npool.AppUserSecretReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppUserSecretReq) error {
+	return validate(info)
+}

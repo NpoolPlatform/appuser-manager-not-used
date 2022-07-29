@@ -51,3 +51,7 @@ func validateMany(infos []*npool.AppUserExtraReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppUserExtraReq) error {
+	return validate(info)
+}

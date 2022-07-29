@@ -41,3 +41,7 @@ func validate(info *npool.AppUserThirdPartyReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppUserThirdPartyReq) error {
+	return validate(info)
+}

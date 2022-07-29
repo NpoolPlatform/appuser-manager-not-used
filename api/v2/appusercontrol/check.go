@@ -31,3 +31,7 @@ func validate(info *npool.AppUserControlReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppUserControlReq) error {
+	return validate(info)
+}

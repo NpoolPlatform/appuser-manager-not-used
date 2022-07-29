@@ -46,3 +46,7 @@ func validateMany(infos []*npool.BanAppReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.BanAppReq) error {
+	return validate(info)
+}

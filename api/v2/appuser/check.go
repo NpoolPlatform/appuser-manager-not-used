@@ -20,3 +20,7 @@ func validate(info *npool.AppUserReq) error {
 	}
 	return nil
 }
+
+func Validate(info *npool.AppUserReq) error {
+	return validate(info)
+}
