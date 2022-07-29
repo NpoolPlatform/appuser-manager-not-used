@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package approleuser
 
 import (
@@ -238,7 +238,8 @@ func (s *Server) ExistAppRoleUser(ctx context.Context, in *npool.ExistAppRoleUse
 	}, nil
 }
 
-func (s *Server) ExistAppRoleUserConds(ctx context.Context, in *npool.ExistAppRoleUserCondsRequest) (*npool.ExistAppRoleUserCondsResponse, error) {
+func (s *Server) ExistAppRoleUserConds(ctx context.Context,
+	in *npool.ExistAppRoleUserCondsRequest) (*npool.ExistAppRoleUserCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppRoleUserConds")

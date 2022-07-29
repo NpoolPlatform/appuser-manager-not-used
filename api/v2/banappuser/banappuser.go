@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package banappuser
 
 import (
@@ -243,7 +243,8 @@ func (s *Server) ExistBanAppUser(ctx context.Context, in *npool.ExistBanAppUserR
 	}, nil
 }
 
-func (s *Server) ExistBanAppUserConds(ctx context.Context, in *npool.ExistBanAppUserCondsRequest) (*npool.ExistBanAppUserCondsResponse, error) {
+func (s *Server) ExistBanAppUserConds(ctx context.Context,
+	in *npool.ExistBanAppUserCondsRequest) (*npool.ExistBanAppUserCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistBanAppUserConds")

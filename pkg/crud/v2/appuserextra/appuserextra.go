@@ -21,7 +21,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//nolint:gocognit
+//nolint:nolintlint,gocyclo
 func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, error) {
 	var info *ent.AppUserExtra
 	var err error
@@ -91,7 +91,7 @@ func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	return info, nil
 }
 
-//nolint:gocognit
+//nolint:nolintlint,gocyclo
 func CreateBulk(ctx context.Context, in []*npool.AppUserExtraReq) ([]*ent.AppUserExtra, error) {
 	var err error
 	rows := []*ent.AppUserExtra{}
@@ -232,7 +232,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {
 	return info, nil
 }
 
-//nolint
+//nolint:nolintlint,gocyclo
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery, error) {
 	stm := cli.AppUserExtra.Query()
 

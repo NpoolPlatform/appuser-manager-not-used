@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package appuserextra
 
 import (
@@ -55,7 +55,8 @@ func (s *Server) CreateAppUserExtra(ctx context.Context, in *npool.CreateAppUser
 	}, nil
 }
 
-func (s *Server) CreateAppUserExtras(ctx context.Context, in *npool.CreateAppUserExtrasRequest) (*npool.CreateAppUserExtrasResponse, error) {
+func (s *Server) CreateAppUserExtras(ctx context.Context,
+	in *npool.CreateAppUserExtrasRequest) (*npool.CreateAppUserExtrasResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserExtras")
@@ -156,7 +157,8 @@ func (s *Server) GetAppUserExtra(ctx context.Context, in *npool.GetAppUserExtraR
 	}, nil
 }
 
-func (s *Server) GetAppUserExtraOnly(ctx context.Context, in *npool.GetAppUserExtraOnlyRequest) (*npool.GetAppUserExtraOnlyResponse, error) {
+func (s *Server) GetAppUserExtraOnly(ctx context.Context,
+	in *npool.GetAppUserExtraOnlyRequest) (*npool.GetAppUserExtraOnlyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserExtraOnly")
@@ -243,7 +245,8 @@ func (s *Server) ExistAppUserExtra(ctx context.Context, in *npool.ExistAppUserEx
 	}, nil
 }
 
-func (s *Server) ExistAppUserExtraConds(ctx context.Context, in *npool.ExistAppUserExtraCondsRequest) (*npool.ExistAppUserExtraCondsResponse, error) {
+func (s *Server) ExistAppUserExtraConds(ctx context.Context,
+	in *npool.ExistAppUserExtraCondsRequest) (*npool.ExistAppUserExtraCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserExtraConds")

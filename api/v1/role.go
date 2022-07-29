@@ -1,3 +1,4 @@
+//nolint:nolintlint,lll,dupl
 package v1
 
 import (

@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package appusercontrol
 
 import (
@@ -22,7 +22,8 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Server) CreateAppUserControl(ctx context.Context, in *npool.CreateAppUserControlRequest) (*npool.CreateAppUserControlResponse, error) {
+func (s *Server) CreateAppUserControl(ctx context.Context,
+	in *npool.CreateAppUserControlRequest) (*npool.CreateAppUserControlResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserControl")
@@ -55,7 +56,8 @@ func (s *Server) CreateAppUserControl(ctx context.Context, in *npool.CreateAppUs
 	}, nil
 }
 
-func (s *Server) CreateAppUserControls(ctx context.Context, in *npool.CreateAppUserControlsRequest) (*npool.CreateAppUserControlsResponse, error) {
+func (s *Server) CreateAppUserControls(ctx context.Context,
+	in *npool.CreateAppUserControlsRequest) (*npool.CreateAppUserControlsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserControls")
@@ -86,7 +88,8 @@ func (s *Server) CreateAppUserControls(ctx context.Context, in *npool.CreateAppU
 	}, nil
 }
 
-func (s *Server) UpdateAppUserControl(ctx context.Context, in *npool.UpdateAppUserControlRequest) (*npool.UpdateAppUserControlResponse, error) {
+func (s *Server) UpdateAppUserControl(ctx context.Context,
+	in *npool.UpdateAppUserControlRequest) (*npool.UpdateAppUserControlResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppUserControl")
@@ -151,7 +154,8 @@ func (s *Server) GetAppUserControl(ctx context.Context, in *npool.GetAppUserCont
 	}, nil
 }
 
-func (s *Server) GetAppUserControlOnly(ctx context.Context, in *npool.GetAppUserControlOnlyRequest) (*npool.GetAppUserControlOnlyResponse, error) {
+func (s *Server) GetAppUserControlOnly(ctx context.Context,
+	in *npool.GetAppUserControlOnlyRequest) (*npool.GetAppUserControlOnlyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserControlOnly")
@@ -205,7 +209,8 @@ func (s *Server) GetAppUserControls(ctx context.Context, in *npool.GetAppUserCon
 	}, nil
 }
 
-func (s *Server) ExistAppUserControl(ctx context.Context, in *npool.ExistAppUserControlRequest) (*npool.ExistAppUserControlResponse, error) {
+func (s *Server) ExistAppUserControl(ctx context.Context,
+	in *npool.ExistAppUserControlRequest) (*npool.ExistAppUserControlResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserControl")
@@ -238,7 +243,8 @@ func (s *Server) ExistAppUserControl(ctx context.Context, in *npool.ExistAppUser
 	}, nil
 }
 
-func (s *Server) ExistAppUserControlConds(ctx context.Context, in *npool.ExistAppUserControlCondsRequest) (*npool.ExistAppUserControlCondsResponse, error) {
+func (s *Server) ExistAppUserControlConds(ctx context.Context,
+	in *npool.ExistAppUserControlCondsRequest) (*npool.ExistAppUserControlCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserControlConds")
@@ -264,7 +270,8 @@ func (s *Server) ExistAppUserControlConds(ctx context.Context, in *npool.ExistAp
 	}, nil
 }
 
-func (s *Server) CountAppUserControls(ctx context.Context, in *npool.CountAppUserControlsRequest) (*npool.CountAppUserControlsResponse, error) {
+func (s *Server) CountAppUserControls(ctx context.Context,
+	in *npool.CountAppUserControlsRequest) (*npool.CountAppUserControlsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppUserControls")
@@ -290,7 +297,8 @@ func (s *Server) CountAppUserControls(ctx context.Context, in *npool.CountAppUse
 	}, nil
 }
 
-func (s *Server) DeleteAppUserControl(ctx context.Context, in *npool.DeleteAppUserControlRequest) (*npool.DeleteAppUserControlResponse, error) {
+func (s *Server) DeleteAppUserControl(ctx context.Context,
+	in *npool.DeleteAppUserControlRequest) (*npool.DeleteAppUserControlResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppUserControl")

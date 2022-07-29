@@ -13,7 +13,7 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appuserthirdparty"
 
 	"github.com/google/uuid"
@@ -206,7 +206,7 @@ func existConds(t *testing.T) {
 	}
 }
 
-func delete(t *testing.T) {
+func deleteT(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, rowToObject(info), &entAppUserThirdParty)
@@ -225,6 +225,6 @@ func TestMainOrder(t *testing.T) {
 	t.Run("update", update)
 	t.Run("exist", exist)
 	t.Run("existConds", existConds)
-	t.Run("delete", delete)
+	t.Run("delete", deleteT)
 	t.Run("count", count)
 }

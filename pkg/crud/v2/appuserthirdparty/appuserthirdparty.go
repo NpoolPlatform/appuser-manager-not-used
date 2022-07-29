@@ -69,7 +69,7 @@ func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	return info, nil
 }
 
-//nolint:gocognit
+//nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.AppUserThirdParty, error) {
 	var err error
 	rows := []*ent.AppUserThirdParty{}
@@ -183,7 +183,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserThirdParty, error) {
 	return info, nil
 }
 
-//nolint
+//nolint:nolintlint,gocyclo
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQuery, error) {
 	stm := cli.AppUserThirdParty.Query()
 	if conds.ID != nil {

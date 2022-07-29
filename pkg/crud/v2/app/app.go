@@ -172,7 +172,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 	return info, nil
 }
 
-//nolint
+//nolint:nolintlint,gocyclo
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 	stm := cli.App.Query()
 

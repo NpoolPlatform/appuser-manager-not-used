@@ -66,7 +66,7 @@ func Create(ctx context.Context, in *npool.AppRoleReq) (*ent.AppRole, error) {
 	return info, nil
 }
 
-//nolint:gocognit
+//nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppRoleReq) ([]*ent.AppRole, error) {
 	var err error
 	rows := []*ent.AppRole{}
@@ -180,7 +180,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppRole, error) {
 	return info, nil
 }
 
-//nolint
+//nolint:nolintlint,gocyclo
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, error) {
 	stm := cli.AppRole.Query()
 

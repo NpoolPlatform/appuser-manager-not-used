@@ -1,3 +1,4 @@
+//nolint:nolintlint,gosec,gomnd
 package encrypt
 
 import (

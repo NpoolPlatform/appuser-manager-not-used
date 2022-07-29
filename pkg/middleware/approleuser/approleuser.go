@@ -1,3 +1,4 @@
+//nolint:nolintlint,dupl
 package approleuser
 
 import (
