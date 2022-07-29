@@ -25,6 +25,7 @@ type AppRoleUserQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppRoleUser
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (aruq *AppRoleUserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(aruq.modifiers) > 0 {
+		_spec.Modifiers = aruq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (aruq *AppRoleUserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 
 func (aruq *AppRoleUserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := aruq.querySpec()
+	if len(aruq.modifiers) > 0 {
+		_spec.Modifiers = aruq.modifiers
+	}
 	_spec.Node.Columns = aruq.fields
 	if len(aruq.fields) > 0 {
 		_spec.Unique = aruq.unique != nil && *aruq.unique
@@ -426,6 +433,9 @@ func (aruq *AppRoleUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if aruq.unique != nil && *aruq.unique {
 		selector.Distinct()
 	}
+	for _, m := range aruq.modifiers {
+		m(selector)
+	}
 	for _, p := range aruq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (aruq *AppRoleUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aruq *AppRoleUserQuery) Modify(modifiers ...func(s *sql.Selector)) *AppRoleUserSelect {
+	aruq.modifiers = append(aruq.modifiers, modifiers...)
+	return aruq.Select()
 }
 
 // AppRoleUserGroupBy is the group-by builder for AppRoleUser entities.
@@ -533,4 +549,10 @@ func (arus *AppRoleUserSelect) sqlScan(ctx context.Context, v interface{}) error
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (arus *AppRoleUserSelect) Modify(modifiers ...func(s *sql.Selector)) *AppRoleUserSelect {
+	arus.modifiers = append(arus.modifiers, modifiers...)
+	return arus
 }

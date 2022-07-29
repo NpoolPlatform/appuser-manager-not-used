@@ -25,6 +25,7 @@ type AppUserSecretQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserSecret
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (ausq *AppUserSecretQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(ausq.modifiers) > 0 {
+		_spec.Modifiers = ausq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (ausq *AppUserSecretQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 
 func (ausq *AppUserSecretQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := ausq.querySpec()
+	if len(ausq.modifiers) > 0 {
+		_spec.Modifiers = ausq.modifiers
+	}
 	_spec.Node.Columns = ausq.fields
 	if len(ausq.fields) > 0 {
 		_spec.Unique = ausq.unique != nil && *ausq.unique
@@ -426,6 +433,9 @@ func (ausq *AppUserSecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if ausq.unique != nil && *ausq.unique {
 		selector.Distinct()
 	}
+	for _, m := range ausq.modifiers {
+		m(selector)
+	}
 	for _, p := range ausq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (ausq *AppUserSecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (ausq *AppUserSecretQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserSecretSelect {
+	ausq.modifiers = append(ausq.modifiers, modifiers...)
+	return ausq.Select()
 }
 
 // AppUserSecretGroupBy is the group-by builder for AppUserSecret entities.
@@ -533,4 +549,10 @@ func (auss *AppUserSecretSelect) sqlScan(ctx context.Context, v interface{}) err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (auss *AppUserSecretSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserSecretSelect {
+	auss.modifiers = append(auss.modifiers, modifiers...)
+	return auss
 }

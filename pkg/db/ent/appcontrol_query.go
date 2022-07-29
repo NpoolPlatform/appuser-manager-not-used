@@ -25,6 +25,7 @@ type AppControlQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppControl
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (acq *AppControlQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(acq.modifiers) > 0 {
+		_spec.Modifiers = acq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (acq *AppControlQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 
 func (acq *AppControlQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := acq.querySpec()
+	if len(acq.modifiers) > 0 {
+		_spec.Modifiers = acq.modifiers
+	}
 	_spec.Node.Columns = acq.fields
 	if len(acq.fields) > 0 {
 		_spec.Unique = acq.unique != nil && *acq.unique
@@ -426,6 +433,9 @@ func (acq *AppControlQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if acq.unique != nil && *acq.unique {
 		selector.Distinct()
 	}
+	for _, m := range acq.modifiers {
+		m(selector)
+	}
 	for _, p := range acq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (acq *AppControlQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (acq *AppControlQuery) Modify(modifiers ...func(s *sql.Selector)) *AppControlSelect {
+	acq.modifiers = append(acq.modifiers, modifiers...)
+	return acq.Select()
 }
 
 // AppControlGroupBy is the group-by builder for AppControl entities.
@@ -533,4 +549,10 @@ func (acs *AppControlSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (acs *AppControlSelect) Modify(modifiers ...func(s *sql.Selector)) *AppControlSelect {
+	acs.modifiers = append(acs.modifiers, modifiers...)
+	return acs
 }

@@ -25,6 +25,7 @@ type AppRoleQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppRole
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (arq *AppRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(arq.modifiers) > 0 {
+		_spec.Modifiers = arq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (arq *AppRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App
 
 func (arq *AppRoleQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := arq.querySpec()
+	if len(arq.modifiers) > 0 {
+		_spec.Modifiers = arq.modifiers
+	}
 	_spec.Node.Columns = arq.fields
 	if len(arq.fields) > 0 {
 		_spec.Unique = arq.unique != nil && *arq.unique
@@ -426,6 +433,9 @@ func (arq *AppRoleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if arq.unique != nil && *arq.unique {
 		selector.Distinct()
 	}
+	for _, m := range arq.modifiers {
+		m(selector)
+	}
 	for _, p := range arq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (arq *AppRoleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (arq *AppRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *AppRoleSelect {
+	arq.modifiers = append(arq.modifiers, modifiers...)
+	return arq.Select()
 }
 
 // AppRoleGroupBy is the group-by builder for AppRole entities.
@@ -533,4 +549,10 @@ func (ars *AppRoleSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (ars *AppRoleSelect) Modify(modifiers ...func(s *sql.Selector)) *AppRoleSelect {
+	ars.modifiers = append(ars.modifiers, modifiers...)
+	return ars
 }
