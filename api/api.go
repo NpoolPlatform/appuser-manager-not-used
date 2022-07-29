@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"github.com/NpoolPlatform/appuser-manager/api/v2/appusercontrol"
 
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appuserextra"
 
@@ -25,6 +26,7 @@ func Register(server grpc.ServiceRegistrar) {
 	banappuser.Register(server)
 	banapp.Register(server)
 	appuserextra.Register(server)
+	appusercontrol.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
