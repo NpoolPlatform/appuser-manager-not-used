@@ -51,3 +51,11 @@ func validateMany(infos []*npool.AppReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppReq) error {
+	return validate(info)
+}
+
+func ValidateMany(infos []*npool.AppReq) error {
+	return validateMany(infos)
+}
