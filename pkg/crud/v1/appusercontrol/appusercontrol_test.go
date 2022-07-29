@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit" //nolint
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 
 	"github.com/google/uuid"

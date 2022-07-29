@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package appusersecret
 
 import (
@@ -22,7 +22,8 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Server) CreateAppUserSecret(ctx context.Context, in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
+func (s *Server) CreateAppUserSecret(ctx context.Context,
+	in *npool.CreateAppUserSecretRequest) (*npool.CreateAppUserSecretResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserSecret")
@@ -55,7 +56,8 @@ func (s *Server) CreateAppUserSecret(ctx context.Context, in *npool.CreateAppUse
 	}, nil
 }
 
-func (s *Server) CreateAppUserSecrets(ctx context.Context, in *npool.CreateAppUserSecretsRequest) (*npool.CreateAppUserSecretsResponse, error) {
+func (s *Server) CreateAppUserSecrets(ctx context.Context,
+	in *npool.CreateAppUserSecretsRequest) (*npool.CreateAppUserSecretsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserSecrets")
@@ -86,7 +88,8 @@ func (s *Server) CreateAppUserSecrets(ctx context.Context, in *npool.CreateAppUs
 	}, nil
 }
 
-func (s *Server) UpdateAppUserSecret(ctx context.Context, in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
+func (s *Server) UpdateAppUserSecret(ctx context.Context,
+	in *npool.UpdateAppUserSecretRequest) (*npool.UpdateAppUserSecretResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppUserSecret")
@@ -151,7 +154,8 @@ func (s *Server) GetAppUserSecret(ctx context.Context, in *npool.GetAppUserSecre
 	}, nil
 }
 
-func (s *Server) GetAppUserSecretOnly(ctx context.Context, in *npool.GetAppUserSecretOnlyRequest) (*npool.GetAppUserSecretOnlyResponse, error) {
+func (s *Server) GetAppUserSecretOnly(ctx context.Context,
+	in *npool.GetAppUserSecretOnlyRequest) (*npool.GetAppUserSecretOnlyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserSecretOnly")
@@ -238,7 +242,8 @@ func (s *Server) ExistAppUserSecret(ctx context.Context, in *npool.ExistAppUserS
 	}, nil
 }
 
-func (s *Server) ExistAppUserSecretConds(ctx context.Context, in *npool.ExistAppUserSecretCondsRequest) (*npool.ExistAppUserSecretCondsResponse, error) {
+func (s *Server) ExistAppUserSecretConds(ctx context.Context,
+	in *npool.ExistAppUserSecretCondsRequest) (*npool.ExistAppUserSecretCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserSecretConds")
@@ -264,7 +269,8 @@ func (s *Server) ExistAppUserSecretConds(ctx context.Context, in *npool.ExistApp
 	}, nil
 }
 
-func (s *Server) CountAppUserSecrets(ctx context.Context, in *npool.CountAppUserSecretsRequest) (*npool.CountAppUserSecretsResponse, error) {
+func (s *Server) CountAppUserSecrets(ctx context.Context,
+	in *npool.CountAppUserSecretsRequest) (*npool.CountAppUserSecretsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppUserSecrets")
@@ -290,7 +296,8 @@ func (s *Server) CountAppUserSecrets(ctx context.Context, in *npool.CountAppUser
 	}, nil
 }
 
-func (s *Server) DeleteAppUserSecret(ctx context.Context, in *npool.DeleteAppUserSecretRequest) (*npool.DeleteAppUserSecretResponse, error) {
+func (s *Server) DeleteAppUserSecret(ctx context.Context,
+	in *npool.DeleteAppUserSecretRequest) (*npool.DeleteAppUserSecretResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppUserSecret")

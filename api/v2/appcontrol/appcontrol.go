@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package appcontrol
 
 import (
@@ -238,7 +238,8 @@ func (s *Server) ExistAppControl(ctx context.Context, in *npool.ExistAppControlR
 	}, nil
 }
 
-func (s *Server) ExistAppControlConds(ctx context.Context, in *npool.ExistAppControlCondsRequest) (*npool.ExistAppControlCondsResponse, error) {
+func (s *Server) ExistAppControlConds(ctx context.Context,
+	in *npool.ExistAppControlCondsRequest) (*npool.ExistAppControlCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppControlConds")

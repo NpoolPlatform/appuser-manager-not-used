@@ -20,6 +20,7 @@ func (AppUserThirdParty) Mixin() []ent.Mixin {
 
 // Fields of the AppUserThirdParty.
 func (AppUserThirdParty) Fields() []ent.Field {
+	var userAvatarMaxLen = 1024
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
@@ -31,7 +32,7 @@ func (AppUserThirdParty) Fields() []ent.Field {
 		field.String("third_party_username").
 			Default(""),
 		field.String("third_party_user_avatar").
-			Default("").MaxLen(1024),
+			Default("").MaxLen(userAvatarMaxLen),
 	}
 }
 

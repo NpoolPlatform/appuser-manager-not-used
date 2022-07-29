@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	QueueExample = "example" //nolint
+	QueueExample = "example"
 )
 
 type Example struct {

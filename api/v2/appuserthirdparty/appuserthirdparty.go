@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package appuserthirdparty
 
 import (
@@ -22,7 +22,8 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Server) CreateAppUserThirdParty(ctx context.Context, in *npool.CreateAppUserThirdPartyRequest) (*npool.CreateAppUserThirdPartyResponse, error) {
+func (s *Server) CreateAppUserThirdParty(ctx context.Context,
+	in *npool.CreateAppUserThirdPartyRequest) (*npool.CreateAppUserThirdPartyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserThirdParty")
@@ -55,7 +56,8 @@ func (s *Server) CreateAppUserThirdParty(ctx context.Context, in *npool.CreateAp
 	}, nil
 }
 
-func (s *Server) CreateAppUserThirdParties(ctx context.Context, in *npool.CreateAppUserThirdPartiesRequest) (*npool.CreateAppUserThirdPartiesResponse, error) {
+func (s *Server) CreateAppUserThirdParties(ctx context.Context,
+	in *npool.CreateAppUserThirdPartiesRequest) (*npool.CreateAppUserThirdPartiesResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppUserThirdParties")
@@ -86,7 +88,8 @@ func (s *Server) CreateAppUserThirdParties(ctx context.Context, in *npool.Create
 	}, nil
 }
 
-func (s *Server) UpdateAppUserThirdParty(ctx context.Context, in *npool.UpdateAppUserThirdPartyRequest) (*npool.UpdateAppUserThirdPartyResponse, error) {
+func (s *Server) UpdateAppUserThirdParty(ctx context.Context,
+	in *npool.UpdateAppUserThirdPartyRequest) (*npool.UpdateAppUserThirdPartyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateAppUserThirdParty")
@@ -118,7 +121,8 @@ func (s *Server) UpdateAppUserThirdParty(ctx context.Context, in *npool.UpdateAp
 	}, nil
 }
 
-func (s *Server) GetAppUserThirdParty(ctx context.Context, in *npool.GetAppUserThirdPartyRequest) (*npool.GetAppUserThirdPartyResponse, error) {
+func (s *Server) GetAppUserThirdParty(ctx context.Context,
+	in *npool.GetAppUserThirdPartyRequest) (*npool.GetAppUserThirdPartyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserThirdParty")
@@ -151,7 +155,8 @@ func (s *Server) GetAppUserThirdParty(ctx context.Context, in *npool.GetAppUserT
 	}, nil
 }
 
-func (s *Server) GetAppUserThirdPartyOnly(ctx context.Context, in *npool.GetAppUserThirdPartyOnlyRequest) (*npool.GetAppUserThirdPartyOnlyResponse, error) {
+func (s *Server) GetAppUserThirdPartyOnly(ctx context.Context,
+	in *npool.GetAppUserThirdPartyOnlyRequest) (*npool.GetAppUserThirdPartyOnlyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserThirdPartyOnly")
@@ -177,7 +182,8 @@ func (s *Server) GetAppUserThirdPartyOnly(ctx context.Context, in *npool.GetAppU
 	}, nil
 }
 
-func (s *Server) GetAppUserThirdParties(ctx context.Context, in *npool.GetAppUserThirdPartiesRequest) (*npool.GetAppUserThirdPartiesResponse, error) {
+func (s *Server) GetAppUserThirdParties(ctx context.Context,
+	in *npool.GetAppUserThirdPartiesRequest) (*npool.GetAppUserThirdPartiesResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppUserThirdParties")
@@ -205,7 +211,8 @@ func (s *Server) GetAppUserThirdParties(ctx context.Context, in *npool.GetAppUse
 	}, nil
 }
 
-func (s *Server) ExistAppUserThirdParty(ctx context.Context, in *npool.ExistAppUserThirdPartyRequest) (*npool.ExistAppUserThirdPartyResponse, error) {
+func (s *Server) ExistAppUserThirdParty(ctx context.Context,
+	in *npool.ExistAppUserThirdPartyRequest) (*npool.ExistAppUserThirdPartyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserThirdParty")
@@ -238,7 +245,8 @@ func (s *Server) ExistAppUserThirdParty(ctx context.Context, in *npool.ExistAppU
 	}, nil
 }
 
-func (s *Server) ExistAppUserThirdPartyConds(ctx context.Context, in *npool.ExistAppUserThirdPartyCondsRequest) (*npool.ExistAppUserThirdPartyCondsResponse, error) {
+func (s *Server) ExistAppUserThirdPartyConds(ctx context.Context,
+	in *npool.ExistAppUserThirdPartyCondsRequest) (*npool.ExistAppUserThirdPartyCondsResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "ExistAppUserThirdPartyConds")
@@ -264,7 +272,8 @@ func (s *Server) ExistAppUserThirdPartyConds(ctx context.Context, in *npool.Exis
 	}, nil
 }
 
-func (s *Server) CountAppUserThirdParties(ctx context.Context, in *npool.CountAppUserThirdPartiesRequest) (*npool.CountAppUserThirdPartiesResponse, error) {
+func (s *Server) CountAppUserThirdParties(ctx context.Context,
+	in *npool.CountAppUserThirdPartiesRequest) (*npool.CountAppUserThirdPartiesResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CountAppUserThirdParties")
@@ -290,7 +299,8 @@ func (s *Server) CountAppUserThirdParties(ctx context.Context, in *npool.CountAp
 	}, nil
 }
 
-func (s *Server) DeleteAppUserThirdParty(ctx context.Context, in *npool.DeleteAppUserThirdPartyRequest) (*npool.DeleteAppUserThirdPartyResponse, error) {
+func (s *Server) DeleteAppUserThirdParty(ctx context.Context,
+	in *npool.DeleteAppUserThirdPartyRequest) (*npool.DeleteAppUserThirdPartyResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "DeleteAppUserThirdParty")

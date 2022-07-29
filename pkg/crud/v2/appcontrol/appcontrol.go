@@ -72,7 +72,7 @@ func Create(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	return info, nil
 }
 
-//nolint:gocognit
+//nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppControl, error) {
 	var err error
 	rows := []*ent.AppControl{}
@@ -201,7 +201,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppControl, error) {
 	return info, nil
 }
 
-//nolint
+//nolint:nolintlint,gocyclo
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppControlQuery, error) {
 	stm := cli.AppControl.Query()
 
@@ -381,6 +381,7 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	return exist, nil
 }
 
+//nolint:nolintlint,gocyclo
 func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	var err error
 

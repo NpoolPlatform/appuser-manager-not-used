@@ -1,3 +1,4 @@
+//nolint:dupl,lll,unparam
 package appuser
 
 import (
@@ -183,7 +184,7 @@ func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserReque
 	}, nil
 }
 
-func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUserInfo, error) { //nolint
+func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUserInfo, error) {
 	info := &npool.AppUserInfo{
 		User: user,
 	}
@@ -235,7 +236,7 @@ func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUser
 	return info, nil
 }
 
-func VerifyByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAppAccountPasswordRequest) (*npool.VerifyAppUserByAppAccountPasswordResponse, error) { //nolint
+func VerifyByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAppAccountPasswordRequest) (*npool.VerifyAppUserByAppAccountPasswordResponse, error) {
 	resp, err := appusercrud.GetByAppAccount(ctx, &npool.GetAppUserByAppAccountRequest{
 		AppID:   in.GetAppID(),
 		Account: in.GetAccount(),
@@ -338,7 +339,7 @@ func GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppReq
 	}, nil
 }
 
-func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) { //nolint
+func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) {
 	info := npool.AppInfo{
 		App: app,
 	}

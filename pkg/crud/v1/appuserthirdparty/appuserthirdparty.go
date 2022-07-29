@@ -72,7 +72,8 @@ func Create(ctx context.Context, in *npool.CreateAppUserThirdPartyRequest) (*npo
 	}, nil
 }
 
-func GetByAppUserThirdParty(ctx context.Context, in *npool.GetAppUserThirdPartyByAppThirdPartyIDRequest) (*npool.GetAppUserThirdPartyByAppThirdPartyIDResponse, error) {
+func GetByAppUserThirdParty(ctx context.Context,
+	in *npool.GetAppUserThirdPartyByAppThirdPartyIDRequest) (*npool.GetAppUserThirdPartyByAppThirdPartyIDResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
 		return nil, fmt.Errorf("invalid app id: %v", err)

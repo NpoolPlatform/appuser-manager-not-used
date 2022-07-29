@@ -1,4 +1,4 @@
-//nolint:dupl
+//nolint:nolintlint,dupl
 package appcontrol
 
 import (

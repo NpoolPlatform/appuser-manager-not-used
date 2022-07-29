@@ -66,7 +66,7 @@ func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	return info, nil
 }
 
-//nolint:gocognit
+//nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUserSecret, error) {
 	var err error
 	rows := []*ent.AppUserSecret{}
@@ -180,7 +180,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {
 	return info, nil
 }
 
-//nolint
+//nolint:nolintlint,gocyclo
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery, error) {
 	stm := cli.AppUserSecret.Query()
 
