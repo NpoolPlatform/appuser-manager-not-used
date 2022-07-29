@@ -25,6 +25,7 @@ type BanAppQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.BanApp
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (baq *BanAppQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*BanA
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(baq.modifiers) > 0 {
+		_spec.Modifiers = baq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (baq *BanAppQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*BanA
 
 func (baq *BanAppQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := baq.querySpec()
+	if len(baq.modifiers) > 0 {
+		_spec.Modifiers = baq.modifiers
+	}
 	_spec.Node.Columns = baq.fields
 	if len(baq.fields) > 0 {
 		_spec.Unique = baq.unique != nil && *baq.unique
@@ -426,6 +433,9 @@ func (baq *BanAppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if baq.unique != nil && *baq.unique {
 		selector.Distinct()
 	}
+	for _, m := range baq.modifiers {
+		m(selector)
+	}
 	for _, p := range baq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (baq *BanAppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (baq *BanAppQuery) Modify(modifiers ...func(s *sql.Selector)) *BanAppSelect {
+	baq.modifiers = append(baq.modifiers, modifiers...)
+	return baq.Select()
 }
 
 // BanAppGroupBy is the group-by builder for BanApp entities.
@@ -533,4 +549,10 @@ func (bas *BanAppSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (bas *BanAppSelect) Modify(modifiers ...func(s *sql.Selector)) *BanAppSelect {
+	bas.modifiers = append(bas.modifiers, modifiers...)
+	return bas
 }

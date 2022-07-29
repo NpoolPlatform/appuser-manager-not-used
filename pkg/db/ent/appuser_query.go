@@ -25,6 +25,7 @@ type AppUserQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUser
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (auq *AppUserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(auq.modifiers) > 0 {
+		_spec.Modifiers = auq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (auq *AppUserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App
 
 func (auq *AppUserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := auq.querySpec()
+	if len(auq.modifiers) > 0 {
+		_spec.Modifiers = auq.modifiers
+	}
 	_spec.Node.Columns = auq.fields
 	if len(auq.fields) > 0 {
 		_spec.Unique = auq.unique != nil && *auq.unique
@@ -426,6 +433,9 @@ func (auq *AppUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if auq.unique != nil && *auq.unique {
 		selector.Distinct()
 	}
+	for _, m := range auq.modifiers {
+		m(selector)
+	}
 	for _, p := range auq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (auq *AppUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (auq *AppUserQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserSelect {
+	auq.modifiers = append(auq.modifiers, modifiers...)
+	return auq.Select()
 }
 
 // AppUserGroupBy is the group-by builder for AppUser entities.
@@ -533,4 +549,10 @@ func (aus *AppUserSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aus *AppUserSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserSelect {
+	aus.modifiers = append(aus.modifiers, modifiers...)
+	return aus
 }

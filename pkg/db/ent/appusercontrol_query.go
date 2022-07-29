@@ -25,6 +25,7 @@ type AppUserControlQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserControl
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (aucq *AppUserControlQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(aucq.modifiers) > 0 {
+		_spec.Modifiers = aucq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (aucq *AppUserControlQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 
 func (aucq *AppUserControlQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := aucq.querySpec()
+	if len(aucq.modifiers) > 0 {
+		_spec.Modifiers = aucq.modifiers
+	}
 	_spec.Node.Columns = aucq.fields
 	if len(aucq.fields) > 0 {
 		_spec.Unique = aucq.unique != nil && *aucq.unique
@@ -426,6 +433,9 @@ func (aucq *AppUserControlQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if aucq.unique != nil && *aucq.unique {
 		selector.Distinct()
 	}
+	for _, m := range aucq.modifiers {
+		m(selector)
+	}
 	for _, p := range aucq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (aucq *AppUserControlQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aucq *AppUserControlQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserControlSelect {
+	aucq.modifiers = append(aucq.modifiers, modifiers...)
+	return aucq.Select()
 }
 
 // AppUserControlGroupBy is the group-by builder for AppUserControl entities.
@@ -533,4 +549,10 @@ func (aucs *AppUserControlSelect) sqlScan(ctx context.Context, v interface{}) er
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aucs *AppUserControlSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserControlSelect {
+	aucs.modifiers = append(aucs.modifiers, modifiers...)
+	return aucs
 }

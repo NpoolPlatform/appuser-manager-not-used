@@ -3,7 +3,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
@@ -24,7 +23,7 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
 	if err != nil {
-		return nil, fmt.Errorf("fail get app connection: %v", err)
+		return nil, err
 	}
 
 	defer conn.Close()
@@ -40,12 +39,12 @@ func CreateApp(ctx context.Context, in *npool.AppReq) (*npool.App, error) {
 			Info: in,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail create app: %v", err)
+			return nil, err
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail create app: %v", err)
+		return nil, err
 	}
 	return info.(*npool.App), nil
 }
@@ -56,12 +55,12 @@ func CreateApps(ctx context.Context, in []*npool.AppReq) ([]*npool.App, error) {
 			Infos: in,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail create apps: %v", err)
+			return nil, err
 		}
 		return resp.GetInfos(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail create apps: %v", err)
+		return nil, err
 	}
 	return infos.([]*npool.App), nil
 }
@@ -72,12 +71,12 @@ func GetApp(ctx context.Context, id string) (*npool.App, error) {
 			ID: id,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app: %v", err)
+			return nil, err
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get app: %v", err)
+		return nil, err
 	}
 	return info.(*npool.App), nil
 }
@@ -88,12 +87,12 @@ func GetAppOnly(ctx context.Context, conds *npool.Conds) (*npool.App, error) {
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app: %v", err)
+			return nil, err
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get app: %v", err)
+		return nil, err
 	}
 	return info.(*npool.App), nil
 }
@@ -107,13 +106,13 @@ func GetApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*n
 			Offset: offset,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get apps: %v", err)
+			return nil, err
 		}
 		total = resp.GetTotal()
 		return resp.GetInfos(), nil
 	})
 	if err != nil {
-		return nil, 0, fmt.Errorf("fail get apps: %v", err)
+		return nil, 0, err
 	}
 	return infos.([]*npool.App), total, nil
 }
@@ -124,12 +123,12 @@ func ExistApp(ctx context.Context, id string) (bool, error) {
 			ID: id,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app: %v", err)
+			return nil, err
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return false, fmt.Errorf("fail get app: %v", err)
+		return false, err
 	}
 	return infos.(bool), nil
 }
@@ -140,12 +139,12 @@ func ExistAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get app: %v", err)
+			return nil, err
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return false, fmt.Errorf("fail get app: %v", err)
+		return false, err
 	}
 	return infos.(bool), nil
 }
@@ -156,12 +155,12 @@ func CountApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail count app: %v", err)
+			return nil, err
 		}
 		return resp.GetInfo(), nil
 	})
 	if err != nil {
-		return 0, fmt.Errorf("fail count app: %v", err)
+		return 0, err
 	}
 	return infos.(uint32), nil
 }

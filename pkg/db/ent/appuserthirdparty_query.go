@@ -25,6 +25,7 @@ type AppUserThirdPartyQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserThirdParty
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (autpq *AppUserThirdPartyQuery) sqlAll(ctx context.Context, hooks ...queryH
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(autpq.modifiers) > 0 {
+		_spec.Modifiers = autpq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (autpq *AppUserThirdPartyQuery) sqlAll(ctx context.Context, hooks ...queryH
 
 func (autpq *AppUserThirdPartyQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := autpq.querySpec()
+	if len(autpq.modifiers) > 0 {
+		_spec.Modifiers = autpq.modifiers
+	}
 	_spec.Node.Columns = autpq.fields
 	if len(autpq.fields) > 0 {
 		_spec.Unique = autpq.unique != nil && *autpq.unique
@@ -426,6 +433,9 @@ func (autpq *AppUserThirdPartyQuery) sqlQuery(ctx context.Context) *sql.Selector
 	if autpq.unique != nil && *autpq.unique {
 		selector.Distinct()
 	}
+	for _, m := range autpq.modifiers {
+		m(selector)
+	}
 	for _, p := range autpq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (autpq *AppUserThirdPartyQuery) sqlQuery(ctx context.Context) *sql.Selector
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (autpq *AppUserThirdPartyQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserThirdPartySelect {
+	autpq.modifiers = append(autpq.modifiers, modifiers...)
+	return autpq.Select()
 }
 
 // AppUserThirdPartyGroupBy is the group-by builder for AppUserThirdParty entities.
@@ -533,4 +549,10 @@ func (autps *AppUserThirdPartySelect) sqlScan(ctx context.Context, v interface{}
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (autps *AppUserThirdPartySelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserThirdPartySelect {
+	autps.modifiers = append(autps.modifiers, modifiers...)
+	return autps
 }

@@ -25,6 +25,7 @@ type AppUserExtraQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.AppUserExtra
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (aueq *AppUserExtraQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(aueq.modifiers) > 0 {
+		_spec.Modifiers = aueq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (aueq *AppUserExtraQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 
 func (aueq *AppUserExtraQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := aueq.querySpec()
+	if len(aueq.modifiers) > 0 {
+		_spec.Modifiers = aueq.modifiers
+	}
 	_spec.Node.Columns = aueq.fields
 	if len(aueq.fields) > 0 {
 		_spec.Unique = aueq.unique != nil && *aueq.unique
@@ -426,6 +433,9 @@ func (aueq *AppUserExtraQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if aueq.unique != nil && *aueq.unique {
 		selector.Distinct()
 	}
+	for _, m := range aueq.modifiers {
+		m(selector)
+	}
 	for _, p := range aueq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (aueq *AppUserExtraQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aueq *AppUserExtraQuery) Modify(modifiers ...func(s *sql.Selector)) *AppUserExtraSelect {
+	aueq.modifiers = append(aueq.modifiers, modifiers...)
+	return aueq.Select()
 }
 
 // AppUserExtraGroupBy is the group-by builder for AppUserExtra entities.
@@ -533,4 +549,10 @@ func (aues *AppUserExtraSelect) sqlScan(ctx context.Context, v interface{}) erro
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (aues *AppUserExtraSelect) Modify(modifiers ...func(s *sql.Selector)) *AppUserExtraSelect {
+	aues.modifiers = append(aues.modifiers, modifiers...)
+	return aues
 }

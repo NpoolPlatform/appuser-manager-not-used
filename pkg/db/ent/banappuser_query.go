@@ -25,6 +25,7 @@ type BanAppUserQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.BanAppUser
+	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -334,6 +335,9 @@ func (bauq *BanAppUserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(bauq.modifiers) > 0 {
+		_spec.Modifiers = bauq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -348,6 +352,9 @@ func (bauq *BanAppUserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 
 func (bauq *BanAppUserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := bauq.querySpec()
+	if len(bauq.modifiers) > 0 {
+		_spec.Modifiers = bauq.modifiers
+	}
 	_spec.Node.Columns = bauq.fields
 	if len(bauq.fields) > 0 {
 		_spec.Unique = bauq.unique != nil && *bauq.unique
@@ -426,6 +433,9 @@ func (bauq *BanAppUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if bauq.unique != nil && *bauq.unique {
 		selector.Distinct()
 	}
+	for _, m := range bauq.modifiers {
+		m(selector)
+	}
 	for _, p := range bauq.predicates {
 		p(selector)
 	}
@@ -441,6 +451,12 @@ func (bauq *BanAppUserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (bauq *BanAppUserQuery) Modify(modifiers ...func(s *sql.Selector)) *BanAppUserSelect {
+	bauq.modifiers = append(bauq.modifiers, modifiers...)
+	return bauq.Select()
 }
 
 // BanAppUserGroupBy is the group-by builder for BanAppUser entities.
@@ -533,4 +549,10 @@ func (baus *BanAppUserSelect) sqlScan(ctx context.Context, v interface{}) error 
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (baus *BanAppUserSelect) Modify(modifiers ...func(s *sql.Selector)) *BanAppUserSelect {
+	baus.modifiers = append(baus.modifiers, modifiers...)
+	return baus
 }
