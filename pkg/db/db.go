@@ -26,6 +26,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
 
+	crudermigrate "github.com/NpoolPlatform/libent-cruder/pkg/migrate"
+
 	// ent policy runtime
 	_ "github.com/NpoolPlatform/appuser-manager/pkg/db/ent/runtime"
 )
@@ -62,50 +64,12 @@ func alterColumnNames(next schema.Applier) schema.Applier {
 		}
 
 		for _, table := range tables {
-		changeTableColumn:
 			for _, column := range columns {
-				dstColumn := column[1]
-				srcColumn := column[0]
-
-				query, args := entsql.
-					Select("datetime_precision").
-					From(entsql.Table("`information_schema`.`columns`")).
-					Where(
-						entsql.And(
-							entsql.EQ("table_name", table),
-							entsql.EQ("column_name", dstColumn),
-						),
-					).
-					Count().
-					Query()
-
-				rows := entsql.Rows{}
-				if err := conn.Query(ctx, query, args, &rows); err != nil {
-					return err
-				}
-
-				for rows.Next() {
-					count := 0
-					if err := rows.Scan(&count); err != nil {
-						return err
-					}
-					if count > 0 {
-						rows.Close()
-						continue changeTableColumn
-					}
-				}
-				rows.Close()
-
-				cb := entsql.
-					Column(dstColumn).
-					Type(field.TypeInt.String())
-
-				query, args = entsql.
-					AlterTable(table).
-					ChangeColumn(srcColumn, cb).
-					Query()
-				query = query + " unsigned"
-				if err := conn.Exec(ctx, query, args, nil); err != nil {
+				if err := crudermigrate.RenameColumn(
+					ctx, conn, table,
+					column[0], column[1],
+					field.TypeInt.String(), true); err != nil {
+					logger.Sugar().Errorw("alterColumnNames", "src", column[0], "dst", column[1], "error", err)
 					return err
 				}
 			}

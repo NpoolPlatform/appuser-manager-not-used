@@ -11,7 +11,6 @@ import (
 )
 
 func validate(info *npool.BanAppReq) error {
-
 	if info.AppID == nil {
 		logger.Sugar().Errorw("validate", "AppID", info.AppID)
 		return status.Error(codes.InvalidArgument, "AppID is empty")
