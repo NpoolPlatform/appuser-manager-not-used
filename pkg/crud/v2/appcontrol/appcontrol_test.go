@@ -108,7 +108,6 @@ func createBulk(t *testing.T) {
 	}
 	appcontrols := []*npool.AppControlReq{}
 	for key := range entAppControl {
-
 		id := entAppControl[key].ID.String()
 		appID := entAppControl[key].AppID.String()
 
