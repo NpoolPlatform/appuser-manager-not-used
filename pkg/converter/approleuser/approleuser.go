@@ -11,10 +11,10 @@ func Ent2Grpc(row *ent.AppRoleUser) *npool.AppRoleUser {
 	}
 
 	return &npool.AppRoleUser{
+		ID:     row.ID.String(),
 		AppID:  row.AppID.String(),
 		RoleID: row.RoleID.String(),
 		UserID: row.UserID.String(),
-		ID:     row.ID.String(),
 	}
 }
 
