@@ -1,15 +1,15 @@
-package banappuser
+package appuserextra
 
 import (
 	"context"
 	"fmt"
 	"time"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
-	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/banappuser"
+	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/appuserextra"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
@@ -17,12 +17,13 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/banappuser"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appuserextra"
 	"github.com/google/uuid"
 )
 
-func Create(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, error) {
-	var info *ent.BanAppUser
+//nolint:gocognit
+func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, error) {
+	var info *ent.AppUserExtra
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
@@ -37,18 +38,48 @@ func Create(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, erro
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.BanAppUser.Create()
+		c := cli.AppUserExtra.Create()
 		if in.ID != nil {
 			c.SetID(uuid.MustParse(in.GetID()))
+		}
+		if in.FirstName != nil {
+			c.SetFirstName(in.GetFirstName())
 		}
 		if in.AppID != nil {
 			c.SetAppID(uuid.MustParse(in.GetAppID()))
 		}
+		if in.Organization != nil {
+			c.SetOrganization(in.GetOrganization())
+		}
+		if in.IDNumber != nil {
+			c.SetIDNumber(in.GetIDNumber())
+		}
+		if in.PostalCode != nil {
+			c.SetPostalCode(in.GetPostalCode())
+		}
+		if in.Age != nil {
+			c.SetAge(in.GetAge())
+		}
+		if in.Birthday != nil {
+			c.SetBirthday(in.GetBirthday())
+		}
+		if in.Avatar != nil {
+			c.SetAvatar(in.GetAvatar())
+		}
+		if in.Username != nil {
+			c.SetUsername(in.GetUsername())
+		}
+		if in.LastName != nil {
+			c.SetLastName(in.GetLastName())
+		}
+		if in.Gender != nil {
+			c.SetGender(in.GetGender())
+		}
 		if in.UserID != nil {
 			c.SetUserID(uuid.MustParse(in.GetUserID()))
 		}
-		if in.Message != nil {
-			c.SetMessage(in.GetMessage())
+		if in.AddressFields != nil {
+			c.SetAddressFields(in.GetAddressFields())
 		}
 		info, err = c.Save(_ctx)
 		return err
@@ -60,9 +91,10 @@ func Create(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, erro
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.BanAppUserReq) ([]*ent.BanAppUser, error) {
+//nolint:gocognit
+func CreateBulk(ctx context.Context, in []*npool.AppUserExtraReq) ([]*ent.AppUserExtra, error) {
 	var err error
-	rows := []*ent.BanAppUser{}
+	rows := []*ent.AppUserExtra{}
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
 	defer span.End()
@@ -77,23 +109,53 @@ func CreateBulk(ctx context.Context, in []*npool.BanAppUserReq) ([]*ent.BanAppUs
 	span = tracer.TraceMany(span, in)
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		bulk := make([]*ent.BanAppUserCreate, len(in))
+		bulk := make([]*ent.AppUserExtraCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.BanAppUser.Create()
+			bulk[i] = tx.AppUserExtra.Create()
 			if info.ID != nil {
 				bulk[i].SetID(uuid.MustParse(info.GetID()))
 			}
 			if info.AppID != nil {
 				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
 			}
+			if info.Avatar != nil {
+				bulk[i].SetAvatar(info.GetAvatar())
+			}
+			if info.Organization != nil {
+				bulk[i].SetOrganization(info.GetOrganization())
+			}
 			if info.UserID != nil {
 				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
 			}
-			if info.Message != nil {
-				bulk[i].SetMessage(info.GetMessage())
+			if info.LastName != nil {
+				bulk[i].SetLastName(info.GetLastName())
+			}
+			if info.PostalCode != nil {
+				bulk[i].SetPostalCode(info.GetPostalCode())
+			}
+			if info.Age != nil {
+				bulk[i].SetAge(info.GetAge())
+			}
+			if info.FirstName != nil {
+				bulk[i].SetFirstName(info.GetFirstName())
+			}
+			if info.IDNumber != nil {
+				bulk[i].SetIDNumber(info.GetIDNumber())
+			}
+			if info.Gender != nil {
+				bulk[i].SetGender(info.GetGender())
+			}
+			if info.Birthday != nil {
+				bulk[i].SetBirthday(info.GetBirthday())
+			}
+			if info.Username != nil {
+				bulk[i].SetUsername(info.GetUsername())
+			}
+			if info.AddressFields != nil {
+				bulk[i].SetAddressFields(info.GetAddressFields())
 			}
 		}
-		rows, err = tx.BanAppUser.CreateBulk(bulk...).Save(_ctx)
+		rows, err = tx.AppUserExtra.CreateBulk(bulk...).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -103,9 +165,9 @@ func CreateBulk(ctx context.Context, in []*npool.BanAppUserReq) ([]*ent.BanAppUs
 	return rows, nil
 }
 
-func Update(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, error) {
+func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, error) {
 	var err error
-	var info *ent.BanAppUser
+	var info *ent.AppUserExtra
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
 	defer span.End()
@@ -120,9 +182,18 @@ func Update(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, erro
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.BanAppUser.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.Message != nil {
-			u.SetMessage(in.GetMessage())
+		u := cli.AppUserExtra.UpdateOneID(uuid.MustParse(in.GetID()))
+		if in.Username != nil {
+			u.SetUsername(in.GetUsername())
+		}
+		if in.FirstName != nil {
+			u.SetFirstName(in.GetFirstName())
+		}
+		if in.LastName != nil {
+			u.SetLastName(in.GetLastName())
+		}
+		if in.AddressFields != nil {
+			u.SetAddressFields(in.GetAddressFields())
 		}
 		info, err = u.Save(_ctx)
 		return err
@@ -134,8 +205,8 @@ func Update(ctx context.Context, in *npool.BanAppUserReq) (*ent.BanAppUser, erro
 	return info, nil
 }
 
-func Row(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
-	var info *ent.BanAppUser
+func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {
+	var info *ent.AppUserExtra
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
@@ -151,7 +222,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.BanAppUser.Query().Where(banappuser.ID(id)).Only(_ctx)
+		info, err = cli.AppUserExtra.Query().Where(appuserextra.ID(id)).Only(_ctx)
 		return err
 	})
 	if err != nil {
@@ -162,16 +233,16 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 }
 
 //nolint
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.BanAppUserQuery, error) {
-	stm := cli.BanAppUser.Query()
+func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery, error) {
+	stm := cli.AppUserExtra.Query()
 
 	if conds.ID != nil {
 		id := uuid.MustParse(conds.GetID().GetValue())
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(banappuser.ID(id))
+			stm.Where(appuserextra.ID(id))
 		default:
-			return nil, fmt.Errorf("invalid banappuser field")
+			return nil, fmt.Errorf("invalid appuserextra field")
 		}
 	}
 
@@ -179,9 +250,9 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.BanAppUserQuery, e
 		appID := uuid.MustParse(conds.GetAppID().GetValue())
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(banappuser.AppID(appID))
+			stm.Where(appuserextra.AppID(appID))
 		default:
-			return nil, fmt.Errorf("invalid banappuser field")
+			return nil, fmt.Errorf("invalid appuserextra field")
 		}
 	}
 
@@ -189,17 +260,17 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.BanAppUserQuery, e
 		userID := uuid.MustParse(conds.GetUserID().GetValue())
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
-			stm.Where(banappuser.UserID(userID))
+			stm.Where(appuserextra.UserID(userID))
 		default:
-			return nil, fmt.Errorf("invalid banappuser field")
+			return nil, fmt.Errorf("invalid appuserextra field")
 		}
 	}
 	return stm, nil
 }
 
-func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.BanAppUser, int, error) {
+func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.AppUserExtra, int, error) {
 	var err error
-	rows := []*ent.BanAppUser{}
+	rows := []*ent.AppUserExtra{}
 	var total int
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
@@ -227,7 +298,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ba
 
 		rows, err = stm.
 			Offset(offset).
-			Order(ent.Desc(banappuser.FieldUpdatedAt)).
+			Order(ent.Desc(appuserextra.FieldUpdatedAt)).
 			Limit(limit).
 			All(_ctx)
 		if err != nil {
@@ -243,8 +314,8 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ba
 	return rows, total, nil
 }
 
-func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.BanAppUser, error) {
-	var info *ent.BanAppUser
+func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUserExtra, error) {
+	var info *ent.AppUserExtra
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
@@ -331,7 +402,7 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.BanAppUser.Query().Where(banappuser.ID(id)).Exist(_ctx)
+		exist, err = cli.AppUserExtra.Query().Where(appuserextra.ID(id)).Exist(_ctx)
 		return err
 	})
 	if err != nil {
@@ -377,8 +448,8 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return exist, nil
 }
 
-func Delete(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
-	var info *ent.BanAppUser
+func Delete(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {
+	var info *ent.AppUserExtra
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
@@ -394,7 +465,7 @@ func Delete(ctx context.Context, id uuid.UUID) (*ent.BanAppUser, error) {
 	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.BanAppUser.UpdateOneID(id).
+		info, err = cli.AppUserExtra.UpdateOneID(id).
 			SetDeletedAt(uint32(time.Now().Unix())).
 			Save(_ctx)
 		return err

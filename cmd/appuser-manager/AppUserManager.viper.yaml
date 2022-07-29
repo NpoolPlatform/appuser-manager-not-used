@@ -4,6 +4,7 @@ config:
   http_port: 50230
   grpc_port: 50231
   healthz_port: 50232
+  prometheus_port: 50233
   appid: "89089012783789789719823798127398"
   serviceid: "a79f2fe8-7cd6-11ec-b7a7-069013a3cb9a"
   logdir: "./"

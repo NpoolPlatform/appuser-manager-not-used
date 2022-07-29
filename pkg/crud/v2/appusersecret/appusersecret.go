@@ -3,8 +3,9 @@ package appusersecret
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"time"
+
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
@@ -65,6 +66,7 @@ func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	return info, nil
 }
 
+//nolint:gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUserSecret, error) {
 	var err error
 	rows := []*ent.AppUserSecret{}

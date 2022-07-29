@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
@@ -58,9 +59,9 @@ func alterColumnNames(next schema.Applier) schema.Applier {
 		}
 
 		columns := [][]string{
-			[]string{"create_at", "created_at"},
-			[]string{"update_at", "updated_at"},
-			[]string{"delete_at", "deleted_at"},
+			{"create_at", "created_at"},
+			{"update_at", "updated_at"},
+			{"delete_at", "deleted_at"},
 		}
 
 		for _, table := range tables {

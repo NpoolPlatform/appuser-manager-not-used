@@ -3,8 +3,9 @@ package banapp
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"time"
+
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"

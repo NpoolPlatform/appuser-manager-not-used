@@ -19,19 +19,24 @@ import (
 
 var runCmd = &cli.Command{
 	Name:    "run",
-	Aliases: []string{"s"},
+	Aliases: []string{"r"},
 	Usage:   "Run the daemon",
+	After: func(context *cli.Context) error {
+		if err := grpc2.HShutdown(); err != nil {
+			logger.Sugar().Warnf("graceful shutdown server")
+		}
+		grpc2.GShutdown()
+		return logger.Sync()
+	},
 	Action: func(c *cli.Context) error {
 		if err := db.Init(); err != nil {
 			return err
 		}
-
 		go func() {
 			if err := grpc2.RunGRPC(rpcRegister); err != nil {
 				logger.Sugar().Errorf("fail to run grpc server: %v", err)
 			}
 		}()
-
 		return grpc2.RunGRPCGateWay(rpcGatewayRegister)
 	},
 }

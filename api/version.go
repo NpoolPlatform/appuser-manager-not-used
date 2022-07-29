@@ -5,6 +5,7 @@ package api
 
 import (
 	"context"
+
 	"github.com/NpoolPlatform/appuser-manager/pkg/version"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/NpoolPlatform/message/npool"

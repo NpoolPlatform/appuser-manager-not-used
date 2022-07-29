@@ -3,8 +3,9 @@ package appuserthirdparty
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 	"time"
+
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
@@ -68,6 +69,7 @@ func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	return info, nil
 }
 
+//nolint:gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.AppUserThirdParty, error) {
 	var err error
 	rows := []*ent.AppUserThirdParty{}
