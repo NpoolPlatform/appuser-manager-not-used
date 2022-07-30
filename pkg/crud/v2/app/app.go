@@ -62,6 +62,26 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	return info, nil
 }
 
+func CreateAppTx(ctx context.Context, tx *ent.Tx, info *npool.AppReq) *ent.AppCreate {
+	stm := tx.App.Create()
+	if info.ID != nil {
+		stm.SetID(uuid.MustParse(info.GetID()))
+	}
+	if info.CreatedBy != nil {
+		stm.SetCreatedBy(uuid.MustParse(info.GetCreatedBy()))
+	}
+	if info.Name != nil {
+		stm.SetName(info.GetName())
+	}
+	if info.Logo != nil {
+		stm.SetLogo(info.GetLogo())
+	}
+	if info.Description != nil {
+		stm.SetDescription(info.GetDescription())
+	}
+	return stm
+}
+
 func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	var err error
 	rows := []*ent.App{}
@@ -81,22 +101,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.App.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.CreatedBy != nil {
-				bulk[i].SetCreatedBy(uuid.MustParse(info.GetCreatedBy()))
-			}
-			if info.Name != nil {
-				bulk[i].SetName(info.GetName())
-			}
-			if info.Logo != nil {
-				bulk[i].SetLogo(info.GetLogo())
-			}
-			if info.Description != nil {
-				bulk[i].SetDescription(info.GetDescription())
-			}
+			bulk[i] = CreateAppTx(ctx, tx, info)
 		}
 		rows, err = tx.App.CreateBulk(bulk...).Save(_ctx)
 		return err

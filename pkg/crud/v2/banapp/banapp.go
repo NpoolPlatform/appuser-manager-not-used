@@ -57,6 +57,20 @@ func Create(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 	return info, nil
 }
 
+func CreateBanAppTx(ctx context.Context, tx *ent.Tx, info *npool.BanAppReq) *ent.BanAppCreate {
+	stm := tx.BanApp.Create()
+	if info.ID != nil {
+		stm.SetID(uuid.MustParse(info.GetID()))
+	}
+	if info.AppID != nil {
+		stm.SetAppID(uuid.MustParse(info.GetAppID()))
+	}
+	if info.Message != nil {
+		stm.SetMessage(info.GetMessage())
+	}
+	return stm
+}
+
 func CreateBulk(ctx context.Context, in []*npool.BanAppReq) ([]*ent.BanApp, error) {
 	var err error
 	rows := []*ent.BanApp{}
@@ -76,16 +90,7 @@ func CreateBulk(ctx context.Context, in []*npool.BanAppReq) ([]*ent.BanApp, erro
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.BanAppCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.BanApp.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.Message != nil {
-				bulk[i].SetMessage(info.GetMessage())
-			}
+			bulk[i] = CreateBanAppTx(ctx, tx, info)
 		}
 		rows, err = tx.BanApp.CreateBulk(bulk...).Save(_ctx)
 		return err

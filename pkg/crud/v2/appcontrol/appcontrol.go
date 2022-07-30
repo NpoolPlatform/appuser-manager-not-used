@@ -72,6 +72,35 @@ func Create(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	return info, nil
 }
 
+func CreateAppControlTx(ctx context.Context, tx *ent.Tx, info *npool.AppControlReq) *ent.AppControlCreate {
+	stm := tx.AppControl.Create()
+	if info.ID != nil {
+		stm.SetID(uuid.MustParse(info.GetID()))
+	}
+	if info.AppID != nil {
+		stm.SetAppID(uuid.MustParse(info.GetAppID()))
+	}
+	if info.SignupMethods != nil {
+		stm.SetSignupMethods(info.GetSignupMethods())
+	}
+	if info.ExternSigninMethods != nil {
+		stm.SetExternSigninMethods(info.GetExternSigninMethods())
+	}
+	if info.RecaptchaMethod != nil {
+		stm.SetRecaptchaMethod(info.GetRecaptchaMethod())
+	}
+	if info.KycEnable != nil {
+		stm.SetKycEnable(info.GetKycEnable())
+	}
+	if info.SigninVerifyEnable != nil {
+		stm.SetSigninVerifyEnable(info.GetSigninVerifyEnable())
+	}
+	if info.InvitationCodeMust != nil {
+		stm.SetInvitationCodeMust(info.GetInvitationCodeMust())
+	}
+	return stm
+}
+
 //nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppControl, error) {
 	var err error
@@ -92,31 +121,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppContr
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppControlCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppControl.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.SignupMethods != nil {
-				bulk[i].SetSignupMethods(info.GetSignupMethods())
-			}
-			if info.ExternSigninMethods != nil {
-				bulk[i].SetExternSigninMethods(info.GetExternSigninMethods())
-			}
-			if info.RecaptchaMethod != nil {
-				bulk[i].SetRecaptchaMethod(info.GetRecaptchaMethod())
-			}
-			if info.KycEnable != nil {
-				bulk[i].SetKycEnable(info.GetKycEnable())
-			}
-			if info.SigninVerifyEnable != nil {
-				bulk[i].SetSigninVerifyEnable(info.GetSigninVerifyEnable())
-			}
-			if info.InvitationCodeMust != nil {
-				bulk[i].SetInvitationCodeMust(info.GetInvitationCodeMust())
-			}
+			bulk[i] = CreateAppControlTx(ctx, tx, info)
 		}
 		rows, err = tx.AppControl.CreateBulk(bulk...).Save(_ctx)
 		return err
