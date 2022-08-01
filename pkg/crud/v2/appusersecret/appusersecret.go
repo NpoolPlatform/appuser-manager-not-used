@@ -66,6 +66,29 @@ func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	return info, nil
 }
 
+func CreateTx(tx *ent.Tx, in *npool.AppUserSecretReq) *ent.AppUserSecretCreate {
+	stm := tx.AppUserSecret.Create()
+	if in.ID != nil {
+		stm.SetID(uuid.MustParse(in.GetID()))
+	}
+	if in.AppID != nil {
+		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.UserID != nil {
+		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+	}
+	if in.PasswordHash != nil {
+		stm.SetPasswordHash(in.GetPasswordHash())
+	}
+	if in.Salt != nil {
+		stm.SetSalt(in.GetSalt())
+	}
+	if in.GoogleSecret != nil {
+		stm.SetGoogleSecret(in.GetGoogleSecret())
+	}
+	return stm
+}
+
 //nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUserSecret, error) {
 	var err error
@@ -151,6 +174,21 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdateOne {
+	stm := tx.AppUserSecret.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.PasswordHash != nil {
+		stm.SetPasswordHash(in.GetPasswordHash())
+	}
+	if in.Salt != nil {
+		stm.SetSalt(in.GetSalt())
+	}
+	if in.GoogleSecret != nil {
+		stm.SetGoogleSecret(in.GetGoogleSecret())
+	}
+
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {

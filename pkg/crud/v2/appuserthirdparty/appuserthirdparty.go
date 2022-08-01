@@ -69,6 +69,33 @@ func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	return info, nil
 }
 
+func CreateTx(tx *ent.Tx, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyCreate {
+	stm := tx.AppUserThirdParty.Create()
+	if in.ID != nil {
+		stm.SetID(uuid.MustParse(in.GetID()))
+	}
+	if in.AppID != nil {
+		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.UserID != nil {
+		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+	}
+	if in.ThirdPartyUserID != nil {
+		stm.SetThirdPartyUserID(in.GetThirdPartyUserID())
+	}
+	if in.ThirdPartyID != nil {
+		stm.SetThirdPartyID(in.GetThirdPartyID())
+	}
+	if in.ThirdPartyUsername != nil {
+		stm.SetThirdPartyUsername(in.GetThirdPartyUsername())
+	}
+	if in.ThirdPartyUserAvatar != nil {
+		stm.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+	}
+
+	return stm
+}
+
 //nolint:nolintlint,gocognit
 func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.AppUserThirdParty, error) {
 	var err error
@@ -154,6 +181,17 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdateOne {
+	stm := tx.AppUserThirdParty.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.ThirdPartyUsername != nil {
+		stm.SetThirdPartyUsername(in.GetThirdPartyUsername())
+	}
+	if in.ThirdPartyUserAvatar != nil {
+		stm.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+	}
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserThirdParty, error) {

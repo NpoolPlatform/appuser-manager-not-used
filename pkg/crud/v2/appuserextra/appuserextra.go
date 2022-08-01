@@ -91,6 +91,53 @@ func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	return info, nil
 }
 
+func CreateTx(tx *ent.Tx, in *npool.AppUserExtraReq) *ent.AppUserExtraCreate {
+	stm := tx.AppUserExtra.Create()
+	if in.ID != nil {
+		stm.SetID(uuid.MustParse(in.GetID()))
+	}
+	if in.FirstName != nil {
+		stm.SetFirstName(in.GetFirstName())
+	}
+	if in.AppID != nil {
+		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.Organization != nil {
+		stm.SetOrganization(in.GetOrganization())
+	}
+	if in.IDNumber != nil {
+		stm.SetIDNumber(in.GetIDNumber())
+	}
+	if in.PostalCode != nil {
+		stm.SetPostalCode(in.GetPostalCode())
+	}
+	if in.Age != nil {
+		stm.SetAge(in.GetAge())
+	}
+	if in.Birthday != nil {
+		stm.SetBirthday(in.GetBirthday())
+	}
+	if in.Avatar != nil {
+		stm.SetAvatar(in.GetAvatar())
+	}
+	if in.Username != nil {
+		stm.SetUsername(in.GetUsername())
+	}
+	if in.LastName != nil {
+		stm.SetLastName(in.GetLastName())
+	}
+	if in.Gender != nil {
+		stm.SetGender(in.GetGender())
+	}
+	if in.UserID != nil {
+		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+	}
+	if in.AddressFields != nil {
+		stm.SetAddressFields(in.GetAddressFields())
+	}
+	return stm
+}
+
 //nolint:nolintlint,gocyclo
 func CreateBulk(ctx context.Context, in []*npool.AppUserExtraReq) ([]*ent.AppUserExtra, error) {
 	var err error
@@ -203,6 +250,24 @@ func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdateOne {
+	stm := tx.AppUserExtra.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.Username != nil {
+		stm.SetUsername(in.GetUsername())
+	}
+	if in.FirstName != nil {
+		stm.SetFirstName(in.GetFirstName())
+	}
+	if in.LastName != nil {
+		stm.SetLastName(in.GetLastName())
+	}
+	if in.AddressFields != nil {
+		stm.SetAddressFields(in.GetAddressFields())
+	}
+
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {

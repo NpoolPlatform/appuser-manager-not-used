@@ -63,6 +63,26 @@ func Create(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	return info, nil
 }
 
+func CreateTx(tx *ent.Tx, in *npool.AppUserReq) *ent.AppUserCreate {
+	stm := tx.AppUser.Create()
+	if in.ID != nil {
+		stm.SetID(uuid.MustParse(in.GetID()))
+	}
+	if in.AppID != nil {
+		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.EmailAddress != nil {
+		stm.SetEmailAddress(in.GetEmailAddress())
+	}
+	if in.PhoneNo != nil {
+		stm.SetPhoneNo(in.GetPhoneNo())
+	}
+	if in.ImportFromApp != nil {
+		stm.SetImportFromApp(uuid.MustParse(in.GetImportFromApp()))
+	}
+	return stm
+}
+
 func CreateBulk(ctx context.Context, in []*npool.AppUserReq) ([]*ent.AppUser, error) {
 	var err error
 	rows := []*ent.AppUser{}
@@ -141,6 +161,17 @@ func Update(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppUserReq) *ent.AppUserUpdateOne {
+	stm := tx.AppUser.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.EmailAddress != nil {
+		stm.SetEmailAddress(in.GetEmailAddress())
+	}
+	if in.PhoneNo != nil {
+		stm.SetPhoneNo(in.GetPhoneNo())
+	}
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUser, error) {

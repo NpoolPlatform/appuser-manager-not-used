@@ -63,6 +63,27 @@ func Create(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	return info, nil
 }
 
+func CreateTx(tx *ent.Tx, in *npool.AppUserControlReq) *ent.AppUserControlCreate {
+	stm := tx.AppUserControl.Create()
+	if in.ID != nil {
+		stm.SetID(uuid.MustParse(in.GetID()))
+	}
+	if in.AppID != nil {
+		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.UserID != nil {
+		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+	}
+	if in.SigninVerifyByGoogleAuthentication != nil {
+		stm.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+	}
+	if in.GoogleAuthenticationVerified != nil {
+		stm.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+	}
+
+	return stm
+}
+
 func CreateBulk(ctx context.Context, in []*npool.AppUserControlReq) ([]*ent.AppUserControl, error) {
 	var err error
 	rows := []*ent.AppUserControl{}
@@ -141,6 +162,17 @@ func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppUserControlReq) *ent.AppUserControlUpdateOne {
+	stm := tx.AppUserControl.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.SigninVerifyByGoogleAuthentication != nil {
+		stm.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+	}
+	if in.GoogleAuthenticationVerified != nil {
+		stm.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+	}
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserControl, error) {
