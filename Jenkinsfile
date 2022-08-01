@@ -111,6 +111,17 @@ pipeline {
       }
     }
 
+    stage('Generate docker image for feature test') {
+      when {
+        expression { BUILD_TARGET == 'true' }
+        expression { BRANCH_NAME != 'master' }
+      }
+      steps {
+        sh 'make verify-build'
+        sh 'DEVELOPMENT=feature DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
+      }
+    }
+
     stage('Tag patch') {
       when {
         expression { TAG_PATCH == 'true' }
@@ -221,7 +232,11 @@ pipeline {
 
     stage('Generate docker image for testing or production') {
       when {
-        expression { BUILD_TARGET == 'true' }
+        anyOf {
+          expression { TAG_PATCH == 'true' }
+          expression { TAG_MINOR == 'true' }
+          expression { TAG_MAJOR == 'true' }
+        }
       }
       steps {
         sh(returnStdout: true, script: '''
@@ -247,6 +262,15 @@ pipeline {
             docker rmi $image -f
           done
         '''.stripIndent())
+      }
+    }
+
+    stage('Release docker image for feature test') {
+      when {
+        expression { RELEASE_TARGET == 'true' }
+      }
+      steps {
+        sh 'TAG=feature DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images'
       }
     }
 
