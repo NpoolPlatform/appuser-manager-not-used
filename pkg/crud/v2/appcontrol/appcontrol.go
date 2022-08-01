@@ -72,7 +72,7 @@ func Create(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	return info, nil
 }
 
-func CreateAppControlTx(ctx context.Context, tx *ent.Tx, info *npool.AppControlReq) *ent.AppControlCreate {
+func CreateTx(tx *ent.Tx, info *npool.AppControlReq) *ent.AppControlCreate {
 	stm := tx.AppControl.Create()
 	if info.ID != nil {
 		stm.SetID(uuid.MustParse(info.GetID()))
@@ -121,7 +121,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppContr
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppControlCreate, len(in))
 		for i, info := range in {
-			bulk[i] = CreateAppControlTx(ctx, tx, info)
+			bulk[i] = CreateTx(tx, info)
 		}
 		rows, err = tx.AppControl.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -177,6 +177,29 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppControlReq) *ent.AppControlUpdateOne {
+	u := tx.AppControl.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.SignupMethods != nil {
+		u.SetSignupMethods(in.GetSignupMethods())
+	}
+	if in.ExternSigninMethods != nil {
+		u.SetExternSigninMethods(in.GetExternSigninMethods())
+	}
+	if in.RecaptchaMethod != nil {
+		u.SetRecaptchaMethod(in.GetRecaptchaMethod())
+	}
+	if in.KycEnable != nil {
+		u.SetKycEnable(in.GetKycEnable())
+	}
+	if in.SigninVerifyEnable != nil {
+		u.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
+	}
+	if in.InvitationCodeMust != nil {
+		u.SetInvitationCodeMust(in.GetInvitationCodeMust())
+	}
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppControl, error) {

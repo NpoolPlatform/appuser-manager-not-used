@@ -4,7 +4,7 @@ package appusersecret
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/appusersecret"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/appusersecret"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/appusersecret"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/appusersecret"

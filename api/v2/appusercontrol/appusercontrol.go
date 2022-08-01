@@ -4,7 +4,7 @@ package appusercontrol
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/appusercontrol"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/appusercontrol"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/appusercontrol"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/appusercontrol"

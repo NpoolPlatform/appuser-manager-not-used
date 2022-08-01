@@ -4,7 +4,7 @@ package approleuser
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/approleuser"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/approleuser"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/approleuser"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/approleuser"

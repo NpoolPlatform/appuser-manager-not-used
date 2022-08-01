@@ -4,7 +4,7 @@ package banappuser
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/banappuser"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/banappuser"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/banappuser"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/banappuser"

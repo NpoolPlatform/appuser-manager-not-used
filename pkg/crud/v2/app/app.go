@@ -62,7 +62,7 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	return info, nil
 }
 
-func CreateAppTx(ctx context.Context, tx *ent.Tx, info *npool.AppReq) *ent.AppCreate {
+func CreateTx(tx *ent.Tx, info *npool.AppReq) *ent.AppCreate {
 	stm := tx.App.Create()
 	if info.ID != nil {
 		stm.SetID(uuid.MustParse(info.GetID()))
@@ -101,7 +101,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
-			bulk[i] = CreateAppTx(ctx, tx, info)
+			bulk[i] = CreateTx(tx, info)
 		}
 		rows, err = tx.App.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -148,6 +148,21 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	}
 
 	return info, nil
+}
+
+func UpdateTx(tx *ent.Tx, in *npool.AppReq) *ent.AppUpdateOne {
+	stm := tx.App.UpdateOneID(uuid.MustParse(in.GetID()))
+	if in.Name != nil {
+		stm.SetName(in.GetName())
+	}
+	if in.Logo != nil {
+		stm.SetLogo(in.GetLogo())
+	}
+	if in.Description != nil {
+		stm.SetDescription(in.GetDescription())
+	}
+
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {

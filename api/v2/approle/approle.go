@@ -4,7 +4,7 @@ package approle
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/approle"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/approle"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/approle"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/approle"

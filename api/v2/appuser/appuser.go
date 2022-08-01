@@ -4,7 +4,7 @@ package appuser
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/appuser"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/appuser"
 	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/appuser"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/appuser"
