@@ -24,7 +24,7 @@ require (
 require (
 	ariga.io/atlas v0.5.0
 	github.com/NpoolPlatform/ledger-manager v0.0.0-20220727114744-a028b0ff1bbf
-	github.com/NpoolPlatform/libent-cruder v0.0.0-20220729123015-41e5340448dd
+	github.com/NpoolPlatform/libent-cruder v0.0.0-20220801075201-cab5db8b6290
 	go.opentelemetry.io/otel v1.8.0
 	go.opentelemetry.io/otel/trace v1.8.0
 )
