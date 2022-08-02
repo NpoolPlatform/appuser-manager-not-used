@@ -60,6 +60,24 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 	return info, nil
 }
 
+func CreateTx(tx *ent.Tx, in *npool.AppRoleUserReq) *ent.AppRoleUserCreate {
+	stm := tx.AppRoleUser.Create()
+	if in.AppID != nil {
+		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.RoleID != nil {
+		stm.SetRoleID(uuid.MustParse(in.GetRoleID()))
+	}
+	if in.UserID != nil {
+		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+	}
+	if in.ID != nil {
+		stm.SetID(uuid.MustParse(in.GetID()))
+	}
+
+	return stm
+}
+
 func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRoleUser, error) {
 	var err error
 	rows := []*ent.AppRoleUser{}
