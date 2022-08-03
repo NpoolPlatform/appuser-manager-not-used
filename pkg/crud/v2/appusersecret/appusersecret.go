@@ -176,8 +176,12 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdateOne {
-	stm := tx.AppUserSecret.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateTx(tx *ent.Tx, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdate {
+	stm := tx.AppUserSecret.
+		Update().
+		Where(
+			appusersecret.AppID(uuid.MustParse(in.GetAppID())),
+		)
 	if in.PasswordHash != nil {
 		stm.SetPasswordHash(in.GetPasswordHash())
 	}

@@ -179,27 +179,33 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppControlReq) *ent.AppControlUpdateOne {
-	u := tx.AppControl.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateTx(tx *ent.Tx, in *npool.AppControlReq) *ent.AppControlUpdate {
+	fmt.Println(":******************appID")
+	fmt.Println(in.GetAppID())
+	stm := tx.AppControl.
+		Update().
+		Where(
+			appcontrol.AppID(uuid.MustParse(in.GetAppID())),
+		)
 	if in.SignupMethods != nil {
-		u.SetSignupMethods(in.GetSignupMethods())
+		stm.SetSignupMethods(in.GetSignupMethods())
 	}
 	if in.ExternSigninMethods != nil {
-		u.SetExternSigninMethods(in.GetExternSigninMethods())
+		stm.SetExternSigninMethods(in.GetExternSigninMethods())
 	}
 	if in.RecaptchaMethod != nil {
-		u.SetRecaptchaMethod(in.GetRecaptchaMethod())
+		stm.SetRecaptchaMethod(in.GetRecaptchaMethod())
 	}
 	if in.KycEnable != nil {
-		u.SetKycEnable(in.GetKycEnable())
+		stm.SetKycEnable(in.GetKycEnable())
 	}
 	if in.SigninVerifyEnable != nil {
-		u.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
+		stm.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
 	}
 	if in.InvitationCodeMust != nil {
-		u.SetInvitationCodeMust(in.GetInvitationCodeMust())
+		stm.SetInvitationCodeMust(in.GetInvitationCodeMust())
 	}
-	return u
+	return stm
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppControl, error) {

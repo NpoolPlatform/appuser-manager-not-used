@@ -183,8 +183,12 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdateOne {
-	stm := tx.AppUserThirdParty.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateTx(tx *ent.Tx, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdate {
+	stm := tx.AppUserThirdParty.
+		Update().
+		Where(
+			appuserthirdparty.AppID(uuid.MustParse(in.GetAppID())),
+		)
 	if in.ThirdPartyUsername != nil {
 		stm.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}

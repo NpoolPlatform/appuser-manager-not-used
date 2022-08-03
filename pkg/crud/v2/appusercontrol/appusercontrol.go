@@ -164,8 +164,12 @@ func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserControlReq) *ent.AppUserControlUpdateOne {
-	stm := tx.AppUserControl.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateTx(tx *ent.Tx, in *npool.AppUserControlReq) *ent.AppUserControlUpdate {
+	stm := tx.AppUserControl.
+		Update().
+		Where(
+			appusercontrol.AppID(uuid.MustParse(in.GetAppID())),
+		)
 	if in.SigninVerifyByGoogleAuthentication != nil {
 		stm.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
 	}

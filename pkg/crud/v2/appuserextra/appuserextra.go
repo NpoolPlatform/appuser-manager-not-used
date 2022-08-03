@@ -252,8 +252,12 @@ func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdateOne {
-	stm := tx.AppUserExtra.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateTx(tx *ent.Tx, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdate {
+	stm := tx.AppUserExtra.
+		Update().
+		Where(
+			appuserextra.AppID(uuid.MustParse(in.GetAppID())),
+		)
 	if in.Username != nil {
 		stm.SetUsername(in.GetUsername())
 	}
