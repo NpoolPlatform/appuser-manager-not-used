@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appuser-manager
+  namespace: kube-system
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: appuser-manager
+  template:
+    metadata:
+      labels:
+        app: appuser-manager
+    spec:
+      containers:
+        - name: appuser-manager
+          image: uhub.service.ucloud.cn/entropypool/appuser-manager:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: service-config
+              mountPath: /etc/AppUserManager
+          env:
+            - name: ENV_ENVIRONMENT_TARGET
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.target
+            - name: ENV_CONSUL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.consul_host
+            - name: ENV_CONSUL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.consul_port
+            - name: ENV_CLUSTER_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+      volumes:
+        - name: service-config
+          configMap:
+            name: appuser-manager-config
+            items:
+              - key: service-conf
+                path: AppUserManager.viper.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appuser-manager
+  namespace: kube-system
+spec:
+  ports:
+    - name: http
+      port: 50230
+      targetPort: 50230
+    - name: grpc
+      port: 50231
+      targetPort: 50231
+    - name: healthz
+      port: 50232
+      targetPort: 50232
+    - name: prometheus
+      port: 50233
+      targetPort: 50233
+  selector:
+    app: appuser-manager

@@ -1,6 +1,12 @@
-FROM jrei/systemd-centos:7
+FROM uhub.service.ucloud.cn/entropypool/alpine:3.16
 
-COPY AppUserManager.viper.yaml /etc/AppUserManager/AppUserManager.viper.yaml
-COPY appuser-manager /usr/local/bin/appuser-manager
+WORKDIR /app
 
-CMD ["appuser-manager", "run"]
+COPY appuser-manager /app
+
+ENTRYPOINT ["/app/appuser-manager"]
+
+EXPOSE 50330 50331 50332 50333
+
+CMD ["run"]
+

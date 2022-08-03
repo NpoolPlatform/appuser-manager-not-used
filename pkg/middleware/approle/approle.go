@@ -1,3 +1,4 @@
+//nolint:nolintlint,dupl
 package approle
 
 import (
@@ -5,8 +6,8 @@ import (
 	"fmt"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
-	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
-	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approle"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 )
 
 func Create(ctx context.Context, in *npool.CreateAppRoleRequest) (*npool.CreateAppRoleResponse, error) {

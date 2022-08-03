@@ -1,0 +1,131 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: appuser-manager-traefik-app-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: appuser-manager-traefik-app
+    k8s.kuboard.cn/workload: appuser-manager-traefik-app
+    kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-appuser-manager-prefix@kubernetescrd,
+                                                      kube-system-common-headers@kubernetescrd,
+                                                      kube-system-headers-appid-to-body@kubernetescrd,
+                                                      kube-system-headers-userid-to-body@kubernetescrd,
+                                                      kube-system-headers-app-login-token-to-body@kubernetescrd,
+                                                      kube-system-app-rbac-auth@kubernetescrd
+
+spec:
+  rules:
+    - host: api.npool.top
+      http: &http_rules
+        paths:
+          - path: /api/appuser-manager/version
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/appinfo
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+    - host: api.procyon.vip
+      http: *http_rules
+    - host: api.xpool.top
+      http: *http_rules
+    - host: api.ohhash.com
+      http: *http_rules
+
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: appuser-manager-traefik-app-user-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: appuser-manager-traefik-app-user
+    k8s.kuboard.cn/workload: appuser-manager-traefik-app-user
+    kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-appuser-manager-prefix@kubernetescrd,
+                                                      kube-system-common-headers@kubernetescrd,
+                                                      kube-system-headers-appid-to-body@kubernetescrd,
+                                                      kube-system-headers-userid-to-body@kubernetescrd,
+                                                      kube-system-headers-app-login-token-to-body@kubernetescrd,
+                                                      kube-system-app-user-role-rbac-auth@kubernetescrd
+
+spec:
+  rules:
+    - host: api.npool.top
+      http: &http_rules
+        paths:
+          - path: /api/appuser-manager/v1/create/app
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/create/ban
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/ban
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/delete/app
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/delete/ban
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/update/app
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/userinfos
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/users
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/user
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/app/userinfo
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/apps
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/apps/by/creator
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/appinfos/by/creator
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/get/appinfos
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+          - path: /api/appuser-manager/v1/verify/app
+            backend:
+              serviceName: appuser-manager
+              servicePort: 50230
+    - host: api.procyon.vip
+      http: *http_rules
+    - host: api.xpool.top
+      http: *http_rules
+    - host: api.ohhash.com
+      http: *http_rules

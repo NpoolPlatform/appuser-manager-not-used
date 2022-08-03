@@ -1,22 +1,23 @@
+//nolint:dupl,lll,unparam
 package appuser
 
 import (
 	"context"
 	"fmt"
 
-	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/app"
-	appcontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appcontrol"
-	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approle"
-	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/approleuser"
-	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuser"
-	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusercontrol"
-	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserextra"
-	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appusersecret"
-	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/appuserthirdparty"
-	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banapp"
-	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/banappuser"
+	appcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/app"
+	appcontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appcontrol"
+	approlecrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approle"
+	approleusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/approleuser"
+	appusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appuser"
+	appusercontrolcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appusercontrol"
+	appuserextracrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appuserextra"
+	appusersecretcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appusersecret"
+	appuserthirdcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/appuserthirdparty"
+	banappcrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/banapp"
+	banappusercrud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v1/banappuser"
 	encrypt "github.com/NpoolPlatform/appuser-manager/pkg/middleware/encrypt"
-	npool "github.com/NpoolPlatform/message/npool/appusermgr"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 )
 
 func CreateWithSecret(ctx context.Context, in *npool.CreateAppUserWithSecretRequest, setDefaultRole bool) (*npool.CreateAppUserWithSecretResponse, error) {
@@ -183,7 +184,7 @@ func GetRolesByAppUser(ctx context.Context, in *npool.GetUserRolesByAppUserReque
 	}, nil
 }
 
-func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUserInfo, error) { //nolint
+func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUserInfo, error) {
 	info := &npool.AppUserInfo{
 		User: user,
 	}
@@ -235,7 +236,7 @@ func expandAppUserInfo(ctx context.Context, user *npool.AppUser) (*npool.AppUser
 	return info, nil
 }
 
-func VerifyByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAppAccountPasswordRequest) (*npool.VerifyAppUserByAppAccountPasswordResponse, error) { //nolint
+func VerifyByAppAccountPassword(ctx context.Context, in *npool.VerifyAppUserByAppAccountPasswordRequest) (*npool.VerifyAppUserByAppAccountPasswordResponse, error) {
 	resp, err := appusercrud.GetByAppAccount(ctx, &npool.GetAppUserByAppAccountRequest{
 		AppID:   in.GetAppID(),
 		Account: in.GetAccount(),
@@ -338,7 +339,7 @@ func GetAppUserInfosByApp(ctx context.Context, in *npool.GetAppUserInfosByAppReq
 	}, nil
 }
 
-func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) { //nolint
+func expandAppInfo(ctx context.Context, app *npool.App) (*npool.AppInfo, error) {
 	info := npool.AppInfo{
 		App: app,
 	}

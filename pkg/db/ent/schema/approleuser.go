@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 )
@@ -14,7 +15,7 @@ type AppRoleUser struct {
 
 func (AppRoleUser) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		TimeMixin{},
+		mixin.TimeMixin{},
 	}
 }
 
@@ -26,11 +27,6 @@ func (AppRoleUser) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("role_id", uuid.UUID{}),
-		field.UUID("user_id", uuid.UUID{}),
+		field.UUID("user_id", uuid.UUID{}).Optional(),
 	}
-}
-
-// Edges of the AppRoleUser.
-func (AppRoleUser) Edges() []ent.Edge {
-	return nil
 }

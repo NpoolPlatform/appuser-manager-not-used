@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 	"github.com/google/uuid"
 )
 
@@ -13,12 +14,13 @@ type AppUserThirdParty struct {
 
 func (AppUserThirdParty) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		TimeMixin{},
+		mixin.TimeMixin{},
 	}
 }
 
 // Fields of the AppUserThirdParty.
 func (AppUserThirdParty) Fields() []ent.Field {
+	var userAvatarMaxLen = 1024
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
@@ -27,8 +29,10 @@ func (AppUserThirdParty) Fields() []ent.Field {
 		field.UUID("user_id", uuid.UUID{}),
 		field.String("third_party_user_id"),
 		field.String("third_party_id"),
-		field.String("third_party_username"),
-		field.String("third_party_user_avatar").MaxLen(1024),
+		field.String("third_party_username").
+			Default(""),
+		field.String("third_party_user_avatar").
+			Default("").MaxLen(userAvatarMaxLen),
 	}
 }
 

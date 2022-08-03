@@ -1,10 +1,9 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 )
@@ -12,6 +11,12 @@ import (
 // AppControl holds the schema definition for the AppControl entity.
 type AppControl struct {
 	ent.Schema
+}
+
+func (AppControl) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.TimeMixin{},
+	}
 }
 
 // Fields of the AppControl.
@@ -28,21 +33,6 @@ func (AppControl) Fields() []ent.Field {
 		field.Bool("kyc_enable"),
 		field.Bool("signin_verify_enable"),
 		field.Bool("invitation_code_must"),
-		field.Uint32("create_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("update_at").
-			DefaultFunc(func() uint32 {
-				return uint32(time.Now().Unix())
-			}).
-			UpdateDefault(func() uint32 {
-				return uint32(time.Now().Unix())
-			}),
-		field.Uint32("delete_at").
-			DefaultFunc(func() uint32 {
-				return 0
-			}),
 	}
 }
 
