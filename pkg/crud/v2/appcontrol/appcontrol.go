@@ -180,8 +180,6 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 }
 
 func UpdateTx(tx *ent.Tx, in *npool.AppControlReq) *ent.AppControlUpdate {
-	fmt.Println(":******************appID")
-	fmt.Println(in.GetAppID())
 	stm := tx.AppControl.
 		Update().
 		Where(
