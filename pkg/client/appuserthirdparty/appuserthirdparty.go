@@ -41,7 +41,7 @@ func CreateAppUserThirdParty(ctx context.Context, in *npool.AppUserThirdPartyReq
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func CreateAppUserThirdParties(ctx context.Context, in []*npool.AppUserThirdPart
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func GetAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdPa
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func GetAppUserThirdPartyOnly(ctx context.Context, conds *npool.Conds) (*npool.A
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func GetAppUserThirdParties(ctx context.Context, conds *npool.Conds, limit, offs
 			return nil, err
 		}
 		total = resp.GetTotal()
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
@@ -125,7 +125,7 @@ func ExistAppUserThirdParty(ctx context.Context, id string) (bool, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -141,7 +141,7 @@ func ExistAppUserThirdPartyConds(ctx context.Context, conds *npool.Conds) (bool,
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -157,7 +157,7 @@ func CountAppUserThirdParties(ctx context.Context, conds *npool.Conds) (uint32, 
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return 0, err

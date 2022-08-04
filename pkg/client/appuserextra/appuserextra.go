@@ -41,7 +41,7 @@ func CreateAppUserExtra(ctx context.Context, in *npool.AppUserExtraReq) (*npool.
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func CreateAppUserExtras(ctx context.Context, in []*npool.AppUserExtraReq) ([]*n
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func GetAppUserExtra(ctx context.Context, id string) (*npool.AppUserExtra, error
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func GetAppUserExtraOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUse
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func GetAppUserExtras(ctx context.Context, conds *npool.Conds, limit, offset int
 			return nil, err
 		}
 		total = resp.GetTotal()
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
@@ -125,7 +125,7 @@ func ExistAppUserExtra(ctx context.Context, id string) (bool, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -141,7 +141,7 @@ func ExistAppUserExtraConds(ctx context.Context, conds *npool.Conds) (bool, erro
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -157,7 +157,7 @@ func CountAppUserExtras(ctx context.Context, conds *npool.Conds) (uint32, error)
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return 0, err

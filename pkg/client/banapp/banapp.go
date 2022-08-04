@@ -41,7 +41,7 @@ func CreateBanApp(ctx context.Context, in *npool.BanAppReq) (*npool.BanApp, erro
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func CreateBanApps(ctx context.Context, in []*npool.BanAppReq) ([]*npool.BanApp,
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func GetBanApp(ctx context.Context, id string) (*npool.BanApp, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func GetBanAppOnly(ctx context.Context, conds *npool.Conds) (*npool.BanApp, erro
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func GetBanApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([
 			return nil, err
 		}
 		total = resp.GetTotal()
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
@@ -125,7 +125,7 @@ func ExistBanApp(ctx context.Context, id string) (bool, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -141,7 +141,7 @@ func ExistBanAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -157,7 +157,7 @@ func CountBanApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return 0, err

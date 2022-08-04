@@ -41,7 +41,7 @@ func CreateAppRoleUser(ctx context.Context, in *npool.AppRoleUserReq) (*npool.Ap
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func CreateAppRoleUsers(ctx context.Context, in []*npool.AppRoleUserReq) ([]*npo
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func GetAppRoleUser(ctx context.Context, id string) (*npool.AppRoleUser, error) 
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func GetAppRoleUserOnly(ctx context.Context, conds *npool.Conds) (*npool.AppRole
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func GetAppRoleUsers(ctx context.Context, conds *npool.Conds, limit, offset int3
 			return nil, err
 		}
 		total = resp.GetTotal()
-		return resp.GetInfos(), nil
+		return resp.Infos, nil
 	})
 	if err != nil {
 		return nil, 0, err
@@ -125,7 +125,7 @@ func ExistAppRoleUser(ctx context.Context, id string) (bool, error) {
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -141,7 +141,7 @@ func ExistAppRoleUserConds(ctx context.Context, conds *npool.Conds) (bool, error
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return false, err
@@ -157,7 +157,7 @@ func CountAppRoleUsers(ctx context.Context, conds *npool.Conds) (uint32, error) 
 		if err != nil {
 			return nil, err
 		}
-		return resp.GetInfo(), nil
+		return resp.Info, nil
 	})
 	if err != nil {
 		return 0, err
