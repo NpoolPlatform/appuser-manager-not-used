@@ -37,22 +37,7 @@ func Create(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppUserControl.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.UserID != nil {
-			c.SetUserID(uuid.MustParse(in.GetUserID()))
-		}
-		if in.SigninVerifyByGoogleAuthentication != nil {
-			c.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
-		}
-		if in.GoogleAuthenticationVerified != nil {
-			c.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
-		}
+		c := CreateSet(cli.AppUserControl.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -63,25 +48,24 @@ func Create(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, in *npool.AppUserControlReq) *ent.AppUserControlCreate {
-	stm := tx.AppUserControl.Create()
+func CreateSet(c *ent.AppUserControlCreate, in *npool.AppUserControlReq) *ent.AppUserControlCreate {
 	if in.ID != nil {
-		stm.SetID(uuid.MustParse(in.GetID()))
+		c.SetID(uuid.MustParse(in.GetID()))
 	}
 	if in.AppID != nil {
-		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+		c.SetAppID(uuid.MustParse(in.GetAppID()))
 	}
 	if in.UserID != nil {
-		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
 	if in.SigninVerifyByGoogleAuthentication != nil {
-		stm.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+		c.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
 	}
 	if in.GoogleAuthenticationVerified != nil {
-		stm.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+		c.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
 	}
 
-	return stm
+	return c
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppUserControlReq) ([]*ent.AppUserControl, error) {
@@ -103,22 +87,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserControlReq) ([]*ent.AppU
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppUserControlCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppUserControl.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.UserID != nil {
-				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
-			}
-			if info.SigninVerifyByGoogleAuthentication != nil {
-				bulk[i].SetSigninVerifyByGoogleAuthentication(info.GetSigninVerifyByGoogleAuthentication())
-			}
-			if info.GoogleAuthenticationVerified != nil {
-				bulk[i].SetGoogleAuthenticationVerified(info.GetGoogleAuthenticationVerified())
-			}
+			bulk[i] = CreateSet(tx.AppUserControl.Create(), info)
 		}
 		rows, err = tx.AppUserControl.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -164,19 +133,14 @@ func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserControlReq) *ent.AppUserControlUpdate {
-	stm := tx.AppUserControl.
-		Update().
-		Where(
-			appusercontrol.AppID(uuid.MustParse(in.GetAppID())),
-		)
+func UpdateSet(u *ent.AppUserControlUpdate, in *npool.AppUserControlReq) *ent.AppUserControlUpdate {
 	if in.SigninVerifyByGoogleAuthentication != nil {
-		stm.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+		u.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
 	}
 	if in.GoogleAuthenticationVerified != nil {
-		stm.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+		u.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
 	}
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserControl, error) {

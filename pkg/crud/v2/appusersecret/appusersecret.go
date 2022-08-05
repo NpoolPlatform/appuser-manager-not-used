@@ -37,25 +37,7 @@ func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppUserSecret.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.UserID != nil {
-			c.SetUserID(uuid.MustParse(in.GetUserID()))
-		}
-		if in.PasswordHash != nil {
-			c.SetPasswordHash(in.GetPasswordHash())
-		}
-		if in.Salt != nil {
-			c.SetSalt(in.GetSalt())
-		}
-		if in.GoogleSecret != nil {
-			c.SetGoogleSecret(in.GetGoogleSecret())
-		}
+		c := CreateSet(cli.AppUserSecret.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -66,27 +48,26 @@ func Create(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, in *npool.AppUserSecretReq) *ent.AppUserSecretCreate {
-	stm := tx.AppUserSecret.Create()
+func CreateSet(c *ent.AppUserSecretCreate, in *npool.AppUserSecretReq) *ent.AppUserSecretCreate {
 	if in.ID != nil {
-		stm.SetID(uuid.MustParse(in.GetID()))
+		c.SetID(uuid.MustParse(in.GetID()))
 	}
 	if in.AppID != nil {
-		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+		c.SetAppID(uuid.MustParse(in.GetAppID()))
 	}
 	if in.UserID != nil {
-		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
 	if in.PasswordHash != nil {
-		stm.SetPasswordHash(in.GetPasswordHash())
+		c.SetPasswordHash(in.GetPasswordHash())
 	}
 	if in.Salt != nil {
-		stm.SetSalt(in.GetSalt())
+		c.SetSalt(in.GetSalt())
 	}
 	if in.GoogleSecret != nil {
-		stm.SetGoogleSecret(in.GetGoogleSecret())
+		c.SetGoogleSecret(in.GetGoogleSecret())
 	}
-	return stm
+	return c
 }
 
 //nolint:nolintlint,gocognit
@@ -109,25 +90,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUs
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppUserSecretCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppUserSecret.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.UserID != nil {
-				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
-			}
-			if info.PasswordHash != nil {
-				bulk[i].SetPasswordHash(info.GetPasswordHash())
-			}
-			if info.Salt != nil {
-				bulk[i].SetSalt(info.GetSalt())
-			}
-			if info.GoogleSecret != nil {
-				bulk[i].SetGoogleSecret(info.GetGoogleSecret())
-			}
+			bulk[i] = CreateSet(tx.AppUserSecret.Create(), info)
 		}
 		rows, err = tx.AppUserSecret.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -176,23 +139,18 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdate {
-	stm := tx.AppUserSecret.
-		Update().
-		Where(
-			appusersecret.AppID(uuid.MustParse(in.GetAppID())),
-		)
+func UpdateSet(u *ent.AppUserSecretUpdate, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdate {
 	if in.PasswordHash != nil {
-		stm.SetPasswordHash(in.GetPasswordHash())
+		u.SetPasswordHash(in.GetPasswordHash())
 	}
 	if in.Salt != nil {
-		stm.SetSalt(in.GetSalt())
+		u.SetSalt(in.GetSalt())
 	}
 	if in.GoogleSecret != nil {
-		stm.SetGoogleSecret(in.GetGoogleSecret())
+		u.SetGoogleSecret(in.GetGoogleSecret())
 	}
 
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {

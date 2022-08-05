@@ -133,14 +133,6 @@ func Update(ctx context.Context, in *npool.BanAppReq) (*ent.BanApp, error) {
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.BanAppReq) *ent.BanAppUpdateOne {
-	stm := tx.BanApp.UpdateOneID(uuid.MustParse(in.GetID()))
-	if in.Message != nil {
-		stm.SetMessage(in.GetMessage())
-	}
-	return stm
-}
-
 func Row(ctx context.Context, id uuid.UUID) (*ent.BanApp, error) {
 	var info *ent.BanApp
 	var err error

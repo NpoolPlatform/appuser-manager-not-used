@@ -19,16 +19,6 @@ func validate(info *npool.AppControlReq) error {
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
 
-	if info.ID == nil {
-		logger.Sugar().Errorw("validate", "ID", info.ID)
-		return status.Error(codes.InvalidArgument, "ID is empty")
-	}
-
-	if _, err := uuid.Parse(info.GetID()); err != nil {
-		logger.Sugar().Errorw("validate", "ID", info.GetID(), "error", err)
-		return status.Error(codes.InvalidArgument, "ID is invalid")
-	}
-
 	return nil
 }
 

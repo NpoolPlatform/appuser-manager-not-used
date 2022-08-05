@@ -65,6 +65,22 @@ func CreateApps(ctx context.Context, in []*npool.AppReq) ([]*npool.App, error) {
 	return infos.([]*npool.App), nil
 }
 
+func UpdateApp(ctx context.Context, in *npool.AppReq) (*npool.App, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateApp(ctx, &npool.UpdateAppRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return infos.(*npool.App), nil
+}
+
 func GetApp(ctx context.Context, id string) (*npool.App, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetApp(ctx, &npool.GetAppRequest{
@@ -163,4 +179,20 @@ func CountApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteApp(ctx context.Context, id string) (*npool.App, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteApp(ctx, &npool.DeleteAppRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.App), nil
 }

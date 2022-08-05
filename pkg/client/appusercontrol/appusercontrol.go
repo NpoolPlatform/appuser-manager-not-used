@@ -65,6 +65,22 @@ func CreateAppUserControls(ctx context.Context, in []*npool.AppUserControlReq) (
 	return infos.([]*npool.AppUserControl), nil
 }
 
+func UpdateAppUserControl(ctx context.Context, in *npool.AppUserControlReq) (*npool.AppUserControl, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserControlMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateAppUserControl(ctx, &npool.UpdateAppUserControlRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUserControl), nil
+}
+
 func GetAppUserControl(ctx context.Context, id string) (*npool.AppUserControl, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserControlMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserControl(ctx, &npool.GetAppUserControlRequest{
@@ -163,4 +179,20 @@ func CountAppUserControls(ctx context.Context, conds *npool.Conds) (uint32, erro
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteAppUserControl(ctx context.Context, id string) (*npool.AppUserControl, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserControlMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteAppUserControl(ctx, &npool.DeleteAppUserControlRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUserControl), nil
 }

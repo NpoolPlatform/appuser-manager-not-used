@@ -37,28 +37,7 @@ func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppUserThirdParty.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.UserID != nil {
-			c.SetUserID(uuid.MustParse(in.GetUserID()))
-		}
-		if in.ThirdPartyUserID != nil {
-			c.SetThirdPartyUserID(in.GetThirdPartyUserID())
-		}
-		if in.ThirdPartyID != nil {
-			c.SetThirdPartyID(in.GetThirdPartyID())
-		}
-		if in.ThirdPartyUsername != nil {
-			c.SetThirdPartyUsername(in.GetThirdPartyUsername())
-		}
-		if in.ThirdPartyUserAvatar != nil {
-			c.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
-		}
+		c := CreateSet(cli.AppUserThirdParty.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -69,31 +48,30 @@ func Create(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyCreate {
-	stm := tx.AppUserThirdParty.Create()
+func CreateSet(c *ent.AppUserThirdPartyCreate, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyCreate {
 	if in.ID != nil {
-		stm.SetID(uuid.MustParse(in.GetID()))
+		c.SetID(uuid.MustParse(in.GetID()))
 	}
 	if in.AppID != nil {
-		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+		c.SetAppID(uuid.MustParse(in.GetAppID()))
 	}
 	if in.UserID != nil {
-		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
 	if in.ThirdPartyUserID != nil {
-		stm.SetThirdPartyUserID(in.GetThirdPartyUserID())
+		c.SetThirdPartyUserID(in.GetThirdPartyUserID())
 	}
 	if in.ThirdPartyID != nil {
-		stm.SetThirdPartyID(in.GetThirdPartyID())
+		c.SetThirdPartyID(in.GetThirdPartyID())
 	}
 	if in.ThirdPartyUsername != nil {
-		stm.SetThirdPartyUsername(in.GetThirdPartyUsername())
+		c.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}
 	if in.ThirdPartyUserAvatar != nil {
-		stm.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+		c.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
 	}
 
-	return stm
+	return c
 }
 
 //nolint:nolintlint,gocognit
@@ -116,28 +94,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.A
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppUserThirdPartyCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppUserThirdParty.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.UserID != nil {
-				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
-			}
-			if info.ThirdPartyUserID != nil {
-				bulk[i].SetThirdPartyUserID(info.GetThirdPartyUserID())
-			}
-			if info.ThirdPartyID != nil {
-				bulk[i].SetThirdPartyID(info.GetThirdPartyID())
-			}
-			if info.ThirdPartyUsername != nil {
-				bulk[i].SetThirdPartyUsername(info.GetThirdPartyUsername())
-			}
-			if info.ThirdPartyUserAvatar != nil {
-				bulk[i].SetThirdPartyUserAvatar(info.GetThirdPartyUserAvatar())
-			}
+			bulk[i] = CreateSet(tx.AppUserThirdParty.Create(), info)
 		}
 		rows, err = tx.AppUserThirdParty.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -183,19 +140,14 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdate {
-	stm := tx.AppUserThirdParty.
-		Update().
-		Where(
-			appuserthirdparty.AppID(uuid.MustParse(in.GetAppID())),
-		)
+func UpdateSet(u *ent.AppUserThirdPartyUpdate, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdate {
 	if in.ThirdPartyUsername != nil {
-		stm.SetThirdPartyUsername(in.GetThirdPartyUsername())
+		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}
 	if in.ThirdPartyUserAvatar != nil {
-		stm.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+		u.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
 	}
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserThirdParty, error) {

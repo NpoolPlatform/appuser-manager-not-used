@@ -65,6 +65,22 @@ func CreateBanAppUsers(ctx context.Context, in []*npool.BanAppUserReq) ([]*npool
 	return infos.([]*npool.BanAppUser), nil
 }
 
+func UpdateBanAppUser(ctx context.Context, in *npool.BanAppUserReq) (*npool.BanAppUser, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppUserMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateBanAppUser(ctx, &npool.UpdateBanAppUserRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.BanAppUser), nil
+}
+
 func GetBanAppUser(ctx context.Context, id string) (*npool.BanAppUser, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppUserMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetBanAppUser(ctx, &npool.GetBanAppUserRequest{
@@ -163,4 +179,20 @@ func CountBanAppUsers(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteBanAppUser(ctx context.Context, id string) (*npool.BanAppUser, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppUserMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteBanAppUser(ctx, &npool.DeleteBanAppUserRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.BanAppUser), nil
 }

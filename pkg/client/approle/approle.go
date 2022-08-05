@@ -65,6 +65,22 @@ func CreateAppRoles(ctx context.Context, in []*npool.AppRoleReq) ([]*npool.AppRo
 	return infos.([]*npool.AppRole), nil
 }
 
+func UpdateAppRole(ctx context.Context, in *npool.AppRoleReq) (*npool.AppRole, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateAppRole(ctx, &npool.UpdateAppRoleRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppRole), nil
+}
+
 func GetAppRole(ctx context.Context, id string) (*npool.AppRole, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRole(ctx, &npool.GetAppRoleRequest{
@@ -163,4 +179,20 @@ func CountAppRoles(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteAppRole(ctx context.Context, id string) (*npool.AppRole, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteAppRole(ctx, &npool.DeleteAppRoleRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppRole), nil
 }

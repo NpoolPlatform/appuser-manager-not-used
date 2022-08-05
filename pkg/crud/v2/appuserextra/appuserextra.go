@@ -38,49 +38,7 @@ func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppUserExtra.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.FirstName != nil {
-			c.SetFirstName(in.GetFirstName())
-		}
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.Organization != nil {
-			c.SetOrganization(in.GetOrganization())
-		}
-		if in.IDNumber != nil {
-			c.SetIDNumber(in.GetIDNumber())
-		}
-		if in.PostalCode != nil {
-			c.SetPostalCode(in.GetPostalCode())
-		}
-		if in.Age != nil {
-			c.SetAge(in.GetAge())
-		}
-		if in.Birthday != nil {
-			c.SetBirthday(in.GetBirthday())
-		}
-		if in.Avatar != nil {
-			c.SetAvatar(in.GetAvatar())
-		}
-		if in.Username != nil {
-			c.SetUsername(in.GetUsername())
-		}
-		if in.LastName != nil {
-			c.SetLastName(in.GetLastName())
-		}
-		if in.Gender != nil {
-			c.SetGender(in.GetGender())
-		}
-		if in.UserID != nil {
-			c.SetUserID(uuid.MustParse(in.GetUserID()))
-		}
-		if in.AddressFields != nil {
-			c.SetAddressFields(in.GetAddressFields())
-		}
+		c := CreateSet(cli.AppUserExtra.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -91,51 +49,50 @@ func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, in *npool.AppUserExtraReq) *ent.AppUserExtraCreate {
-	stm := tx.AppUserExtra.Create()
+func CreateSet(c *ent.AppUserExtraCreate, in *npool.AppUserExtraReq) *ent.AppUserExtraCreate {
 	if in.ID != nil {
-		stm.SetID(uuid.MustParse(in.GetID()))
+		c.SetID(uuid.MustParse(in.GetID()))
 	}
 	if in.FirstName != nil {
-		stm.SetFirstName(in.GetFirstName())
+		c.SetFirstName(in.GetFirstName())
 	}
 	if in.AppID != nil {
-		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+		c.SetAppID(uuid.MustParse(in.GetAppID()))
 	}
 	if in.Organization != nil {
-		stm.SetOrganization(in.GetOrganization())
+		c.SetOrganization(in.GetOrganization())
 	}
 	if in.IDNumber != nil {
-		stm.SetIDNumber(in.GetIDNumber())
+		c.SetIDNumber(in.GetIDNumber())
 	}
 	if in.PostalCode != nil {
-		stm.SetPostalCode(in.GetPostalCode())
+		c.SetPostalCode(in.GetPostalCode())
 	}
 	if in.Age != nil {
-		stm.SetAge(in.GetAge())
+		c.SetAge(in.GetAge())
 	}
 	if in.Birthday != nil {
-		stm.SetBirthday(in.GetBirthday())
+		c.SetBirthday(in.GetBirthday())
 	}
 	if in.Avatar != nil {
-		stm.SetAvatar(in.GetAvatar())
+		c.SetAvatar(in.GetAvatar())
 	}
 	if in.Username != nil {
-		stm.SetUsername(in.GetUsername())
+		c.SetUsername(in.GetUsername())
 	}
 	if in.LastName != nil {
-		stm.SetLastName(in.GetLastName())
+		c.SetLastName(in.GetLastName())
 	}
 	if in.Gender != nil {
-		stm.SetGender(in.GetGender())
+		c.SetGender(in.GetGender())
 	}
 	if in.UserID != nil {
-		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
 	if in.AddressFields != nil {
-		stm.SetAddressFields(in.GetAddressFields())
+		c.SetAddressFields(in.GetAddressFields())
 	}
-	return stm
+	return c
 }
 
 //nolint:nolintlint,gocyclo
@@ -158,49 +115,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserExtraReq) ([]*ent.AppUse
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppUserExtraCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppUserExtra.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.Avatar != nil {
-				bulk[i].SetAvatar(info.GetAvatar())
-			}
-			if info.Organization != nil {
-				bulk[i].SetOrganization(info.GetOrganization())
-			}
-			if info.UserID != nil {
-				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
-			}
-			if info.LastName != nil {
-				bulk[i].SetLastName(info.GetLastName())
-			}
-			if info.PostalCode != nil {
-				bulk[i].SetPostalCode(info.GetPostalCode())
-			}
-			if info.Age != nil {
-				bulk[i].SetAge(info.GetAge())
-			}
-			if info.FirstName != nil {
-				bulk[i].SetFirstName(info.GetFirstName())
-			}
-			if info.IDNumber != nil {
-				bulk[i].SetIDNumber(info.GetIDNumber())
-			}
-			if info.Gender != nil {
-				bulk[i].SetGender(info.GetGender())
-			}
-			if info.Birthday != nil {
-				bulk[i].SetBirthday(info.GetBirthday())
-			}
-			if info.Username != nil {
-				bulk[i].SetUsername(info.GetUsername())
-			}
-			if info.AddressFields != nil {
-				bulk[i].SetAddressFields(info.GetAddressFields())
-			}
+			bulk[i] = CreateSet(tx.AppUserExtra.Create(), info)
 		}
 		rows, err = tx.AppUserExtra.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -252,26 +167,21 @@ func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdate {
-	stm := tx.AppUserExtra.
-		Update().
-		Where(
-			appuserextra.AppID(uuid.MustParse(in.GetAppID())),
-		)
+func UpdateSet(u *ent.AppUserExtraUpdate, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdate {
 	if in.Username != nil {
-		stm.SetUsername(in.GetUsername())
+		u.SetUsername(in.GetUsername())
 	}
 	if in.FirstName != nil {
-		stm.SetFirstName(in.GetFirstName())
+		u.SetFirstName(in.GetFirstName())
 	}
 	if in.LastName != nil {
-		stm.SetLastName(in.GetLastName())
+		u.SetLastName(in.GetLastName())
 	}
 	if in.AddressFields != nil {
-		stm.SetAddressFields(in.GetAddressFields())
+		u.SetAddressFields(in.GetAddressFields())
 	}
 
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {

@@ -65,6 +65,22 @@ func CreateAppUsers(ctx context.Context, in []*npool.AppUserReq) ([]*npool.AppUs
 	return infos.([]*npool.AppUser), nil
 }
 
+func UpdateAppUser(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateAppUser(ctx, &npool.UpdateAppUserRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUser), nil
+}
+
 func GetAppUser(ctx context.Context, id string) (*npool.AppUser, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUser(ctx, &npool.GetAppUserRequest{
@@ -163,4 +179,20 @@ func CountAppUsers(ctx context.Context, conds *npool.Conds) (uint32, error) {
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteAppUser(ctx context.Context, id string) (*npool.AppUser, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteAppUser(ctx, &npool.DeleteAppUserRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUser), nil
 }

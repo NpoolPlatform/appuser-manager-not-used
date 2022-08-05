@@ -37,22 +37,7 @@ func Create(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppUser.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.EmailAddress != nil {
-			c.SetEmailAddress(in.GetEmailAddress())
-		}
-		if in.PhoneNo != nil {
-			c.SetPhoneNo(in.GetPhoneNo())
-		}
-		if in.ImportFromApp != nil {
-			c.SetImportFromApp(uuid.MustParse(in.GetImportFromApp()))
-		}
+		c := CreateSet(cli.AppUser.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -63,24 +48,23 @@ func Create(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, in *npool.AppUserReq) *ent.AppUserCreate {
-	stm := tx.AppUser.Create()
+func CreateSet(c *ent.AppUserCreate, in *npool.AppUserReq) *ent.AppUserCreate {
 	if in.ID != nil {
-		stm.SetID(uuid.MustParse(in.GetID()))
+		c.SetID(uuid.MustParse(in.GetID()))
 	}
 	if in.AppID != nil {
-		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+		c.SetAppID(uuid.MustParse(in.GetAppID()))
 	}
 	if in.EmailAddress != nil {
-		stm.SetEmailAddress(in.GetEmailAddress())
+		c.SetEmailAddress(in.GetEmailAddress())
 	}
 	if in.PhoneNo != nil {
-		stm.SetPhoneNo(in.GetPhoneNo())
+		c.SetPhoneNo(in.GetPhoneNo())
 	}
 	if in.ImportFromApp != nil {
-		stm.SetImportFromApp(uuid.MustParse(in.GetImportFromApp()))
+		c.SetImportFromApp(uuid.MustParse(in.GetImportFromApp()))
 	}
-	return stm
+	return c
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppUserReq) ([]*ent.AppUser, error) {
@@ -102,22 +86,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserReq) ([]*ent.AppUser, er
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppUserCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppUser.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.EmailAddress != nil {
-				bulk[i].SetEmailAddress(info.GetEmailAddress())
-			}
-			if info.PhoneNo != nil {
-				bulk[i].SetPhoneNo(info.GetPhoneNo())
-			}
-			if info.ImportFromApp != nil {
-				bulk[i].SetImportFromApp(uuid.MustParse(info.GetImportFromApp()))
-			}
+			bulk[i] = CreateSet(tx.AppUser.Create(), info)
 		}
 		rows, err = tx.AppUser.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -163,15 +132,14 @@ func Update(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppUserReq) *ent.AppUserUpdateOne {
-	stm := tx.AppUser.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateSet(u *ent.AppUserUpdateOne, in *npool.AppUserReq) *ent.AppUserUpdateOne {
 	if in.EmailAddress != nil {
-		stm.SetEmailAddress(in.GetEmailAddress())
+		u.SetEmailAddress(in.GetEmailAddress())
 	}
 	if in.PhoneNo != nil {
-		stm.SetPhoneNo(in.GetPhoneNo())
+		u.SetPhoneNo(in.GetPhoneNo())
 	}
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUser, error) {

@@ -1,3 +1,4 @@
+//nolint:nolintlint,dupl
 package approleuser
 
 import (
@@ -37,19 +38,7 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppRoleUser.Create()
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.RoleID != nil {
-			c.SetRoleID(uuid.MustParse(in.GetRoleID()))
-		}
-		if in.UserID != nil {
-			c.SetUserID(uuid.MustParse(in.GetUserID()))
-		}
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
+		c := CreateSet(cli.AppRoleUser.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -60,22 +49,21 @@ func Create(ctx context.Context, in *npool.AppRoleUserReq) (*ent.AppRoleUser, er
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, in *npool.AppRoleUserReq) *ent.AppRoleUserCreate {
-	stm := tx.AppRoleUser.Create()
+func CreateSet(c *ent.AppRoleUserCreate, in *npool.AppRoleUserReq) *ent.AppRoleUserCreate {
 	if in.AppID != nil {
-		stm.SetAppID(uuid.MustParse(in.GetAppID()))
+		c.SetAppID(uuid.MustParse(in.GetAppID()))
 	}
 	if in.RoleID != nil {
-		stm.SetRoleID(uuid.MustParse(in.GetRoleID()))
+		c.SetRoleID(uuid.MustParse(in.GetRoleID()))
 	}
 	if in.UserID != nil {
-		stm.SetUserID(uuid.MustParse(in.GetUserID()))
+		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
 	if in.ID != nil {
-		stm.SetID(uuid.MustParse(in.GetID()))
+		c.SetID(uuid.MustParse(in.GetID()))
 	}
 
-	return stm
+	return c
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRoleUser, error) {
@@ -97,19 +85,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppRoleUserReq) ([]*ent.AppRole
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppRoleUserCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.AppRoleUser.Create()
-			if info.AppID != nil {
-				bulk[i].SetAppID(uuid.MustParse(info.GetAppID()))
-			}
-			if info.RoleID != nil {
-				bulk[i].SetRoleID(uuid.MustParse(info.GetRoleID()))
-			}
-			if info.UserID != nil {
-				bulk[i].SetUserID(uuid.MustParse(info.GetUserID()))
-			}
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
+			bulk[i] = CreateSet(tx.AppRoleUser.Create(), info)
 		}
 		rows, err = tx.AppRoleUser.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -198,6 +174,16 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.AppID(appID))
+		case cruder.IN:
+			var ids []uuid.UUID
+			for _, val := range conds.GetAppIDs().GetValue() {
+				id, err := uuid.Parse(val)
+				if err != nil {
+					return nil, err
+				}
+				ids = append(ids, id)
+			}
+			stm.Where(approleuser.AppIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid approleuser field")
 		}
@@ -208,6 +194,26 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.UserID(userID))
+		default:
+			return nil, fmt.Errorf("invalid approleuser field")
+		}
+	}
+
+	if conds.RoleID != nil {
+		userID := uuid.MustParse(conds.GetRoleID().GetValue())
+		switch conds.GetRoleID().GetOp() {
+		case cruder.EQ:
+			stm.Where(approleuser.RoleID(userID))
+		case cruder.IN:
+			var ids []uuid.UUID
+			for _, val := range conds.GetRoleIDs().GetValue() {
+				id, err := uuid.Parse(val)
+				if err != nil {
+					return nil, err
+				}
+				ids = append(ids, id)
+			}
+			stm.Where(approleuser.RoleIDIn(ids...))
 		default:
 			return nil, fmt.Errorf("invalid approleuser field")
 		}
