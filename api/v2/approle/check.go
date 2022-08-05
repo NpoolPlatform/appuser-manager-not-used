@@ -36,3 +36,7 @@ func validate(info *npool.AppRoleReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppRoleReq) error {
+	return validate(info)
+}

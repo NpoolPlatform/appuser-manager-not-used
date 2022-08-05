@@ -20,6 +20,24 @@ import (
 	"github.com/google/uuid"
 )
 
+func CreateSet(c *ent.AppCreate, info *npool.AppReq) *ent.AppCreate {
+	if info.ID != nil {
+		c.SetID(uuid.MustParse(info.GetID()))
+	}
+	if info.CreatedBy != nil {
+		c.SetCreatedBy(uuid.MustParse(info.GetCreatedBy()))
+	}
+	if info.Name != nil {
+		c.SetName(info.GetName())
+	}
+	if info.Logo != nil {
+		c.SetLogo(info.GetLogo())
+	}
+	if info.Description != nil {
+		c.SetDescription(info.GetDescription())
+	}
+	return c
+}
 func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	var info *ent.App
 	var err error
@@ -36,22 +54,7 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.App.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.CreatedBy != nil {
-			c.SetCreatedBy(uuid.MustParse(in.GetCreatedBy()))
-		}
-		if in.Name != nil {
-			c.SetName(in.GetName())
-		}
-		if in.Logo != nil {
-			c.SetLogo(in.GetLogo())
-		}
-		if in.Description != nil {
-			c.SetDescription(in.GetDescription())
-		}
+		c := CreateSet(cli.App.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -60,26 +63,6 @@ func Create(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	}
 
 	return info, nil
-}
-
-func CreateTx(tx *ent.Tx, info *npool.AppReq) *ent.AppCreate {
-	stm := tx.App.Create()
-	if info.ID != nil {
-		stm.SetID(uuid.MustParse(info.GetID()))
-	}
-	if info.CreatedBy != nil {
-		stm.SetCreatedBy(uuid.MustParse(info.GetCreatedBy()))
-	}
-	if info.Name != nil {
-		stm.SetName(info.GetName())
-	}
-	if info.Logo != nil {
-		stm.SetLogo(info.GetLogo())
-	}
-	if info.Description != nil {
-		stm.SetDescription(info.GetDescription())
-	}
-	return stm
 }
 
 func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
@@ -101,7 +84,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppReq) ([]*ent.App, error) {
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppCreate, len(in))
 		for i, info := range in {
-			bulk[i] = CreateTx(tx, info)
+			bulk[i] = CreateSet(tx.App.Create(), info)
 		}
 		rows, err = tx.App.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -130,16 +113,7 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.App.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.Name != nil {
-			u.SetName(in.GetName())
-		}
-		if in.Logo != nil {
-			u.SetLogo(in.GetLogo())
-		}
-		if in.Description != nil {
-			u.SetDescription(in.GetDescription())
-		}
+		u := UpdateSet(cli.App.UpdateOneID(uuid.MustParse(in.GetID())), in)
 		info, err = u.Save(_ctx)
 		return err
 	})
@@ -150,19 +124,18 @@ func Update(ctx context.Context, in *npool.AppReq) (*ent.App, error) {
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppReq) *ent.AppUpdateOne {
-	stm := tx.App.UpdateOneID(uuid.MustParse(in.GetID()))
+func UpdateSet(u *ent.AppUpdateOne, in *npool.AppReq) *ent.AppUpdateOne {
 	if in.Name != nil {
-		stm.SetName(in.GetName())
+		u.SetName(in.GetName())
 	}
 	if in.Logo != nil {
-		stm.SetLogo(in.GetLogo())
+		u.SetLogo(in.GetLogo())
 	}
 	if in.Description != nil {
-		stm.SetDescription(in.GetDescription())
+		u.SetDescription(in.GetDescription())
 	}
 
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
@@ -200,7 +173,13 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.ID(uuid.MustParse(conds.GetID().GetValue())))
-		case cruder.IN:
+		default:
+			return nil, fmt.Errorf("invalid app field")
+		}
+	}
+
+	if conds.IDs != nil {
+		if conds.GetIDs().GetOp() == cruder.IN {
 			var ids []uuid.UUID
 			for _, val := range conds.GetIDs().GetValue() {
 				id, err := uuid.Parse(val)
@@ -210,11 +189,8 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 				ids = append(ids, id)
 			}
 			stm.Where(app.IDIn(ids...))
-		default:
-			return nil, fmt.Errorf("invalid app field")
 		}
 	}
-
 	if conds.CreatedBy != nil {
 		createdBy := uuid.MustParse(conds.GetCreatedBy().GetValue())
 		switch conds.GetCreatedBy().GetOp() {
@@ -229,8 +205,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		switch conds.GetName().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.Name(conds.GetName().GetValue()))
-		case cruder.IN:
-			stm.Where(app.NameIn(conds.GetName().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
@@ -240,8 +214,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		switch conds.GetLogo().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.Logo(conds.GetLogo().GetValue()))
-		case cruder.IN:
-			stm.Where(app.LogoIn(conds.GetLogo().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
@@ -251,8 +223,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		switch conds.GetDescription().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.Description(conds.GetDescription().GetValue()))
-		case cruder.IN:
-			stm.Where(app.DescriptionIn(conds.GetDescription().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}

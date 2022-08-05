@@ -37,31 +37,7 @@ func Create(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.AppControl.Create()
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
-		}
-		if in.AppID != nil {
-			c.SetAppID(uuid.MustParse(in.GetAppID()))
-		}
-		if in.SignupMethods != nil {
-			c.SetSignupMethods(in.GetSignupMethods())
-		}
-		if in.ExternSigninMethods != nil {
-			c.SetExternSigninMethods(in.GetExternSigninMethods())
-		}
-		if in.RecaptchaMethod != nil {
-			c.SetRecaptchaMethod(in.GetRecaptchaMethod())
-		}
-		if in.KycEnable != nil {
-			c.SetKycEnable(in.GetKycEnable())
-		}
-		if in.SigninVerifyEnable != nil {
-			c.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
-		}
-		if in.InvitationCodeMust != nil {
-			c.SetInvitationCodeMust(in.GetInvitationCodeMust())
-		}
+		c := CreateSet(cli.AppControl.Create(), in)
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -72,33 +48,32 @@ func Create(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	return info, nil
 }
 
-func CreateTx(tx *ent.Tx, info *npool.AppControlReq) *ent.AppControlCreate {
-	stm := tx.AppControl.Create()
+func CreateSet(c *ent.AppControlCreate, info *npool.AppControlReq) *ent.AppControlCreate {
 	if info.ID != nil {
-		stm.SetID(uuid.MustParse(info.GetID()))
+		c.SetID(uuid.MustParse(info.GetID()))
 	}
 	if info.AppID != nil {
-		stm.SetAppID(uuid.MustParse(info.GetAppID()))
+		c.SetAppID(uuid.MustParse(info.GetAppID()))
 	}
 	if info.SignupMethods != nil {
-		stm.SetSignupMethods(info.GetSignupMethods())
+		c.SetSignupMethods(info.GetSignupMethods())
 	}
 	if info.ExternSigninMethods != nil {
-		stm.SetExternSigninMethods(info.GetExternSigninMethods())
+		c.SetExternSigninMethods(info.GetExternSigninMethods())
 	}
 	if info.RecaptchaMethod != nil {
-		stm.SetRecaptchaMethod(info.GetRecaptchaMethod())
+		c.SetRecaptchaMethod(info.GetRecaptchaMethod())
 	}
 	if info.KycEnable != nil {
-		stm.SetKycEnable(info.GetKycEnable())
+		c.SetKycEnable(info.GetKycEnable())
 	}
 	if info.SigninVerifyEnable != nil {
-		stm.SetSigninVerifyEnable(info.GetSigninVerifyEnable())
+		c.SetSigninVerifyEnable(info.GetSigninVerifyEnable())
 	}
 	if info.InvitationCodeMust != nil {
-		stm.SetInvitationCodeMust(info.GetInvitationCodeMust())
+		c.SetInvitationCodeMust(info.GetInvitationCodeMust())
 	}
-	return stm
+	return c
 }
 
 //nolint:nolintlint,gocognit
@@ -121,7 +96,7 @@ func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppContr
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
 		bulk := make([]*ent.AppControlCreate, len(in))
 		for i, info := range in {
-			bulk[i] = CreateTx(tx, info)
+			bulk[i] = CreateSet(tx.AppControl.Create(), info)
 		}
 		rows, err = tx.AppControl.CreateBulk(bulk...).Save(_ctx)
 		return err
@@ -179,31 +154,26 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	return info, nil
 }
 
-func UpdateTx(tx *ent.Tx, in *npool.AppControlReq) *ent.AppControlUpdate {
-	stm := tx.AppControl.
-		Update().
-		Where(
-			appcontrol.AppID(uuid.MustParse(in.GetAppID())),
-		)
+func UpdateSet(u *ent.AppControlUpdate, in *npool.AppControlReq) *ent.AppControlUpdate {
 	if in.SignupMethods != nil {
-		stm.SetSignupMethods(in.GetSignupMethods())
+		u.SetSignupMethods(in.GetSignupMethods())
 	}
 	if in.ExternSigninMethods != nil {
-		stm.SetExternSigninMethods(in.GetExternSigninMethods())
+		u.SetExternSigninMethods(in.GetExternSigninMethods())
 	}
 	if in.RecaptchaMethod != nil {
-		stm.SetRecaptchaMethod(in.GetRecaptchaMethod())
+		u.SetRecaptchaMethod(in.GetRecaptchaMethod())
 	}
 	if in.KycEnable != nil {
-		stm.SetKycEnable(in.GetKycEnable())
+		u.SetKycEnable(in.GetKycEnable())
 	}
 	if in.SigninVerifyEnable != nil {
-		stm.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
+		u.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
 	}
 	if in.InvitationCodeMust != nil {
-		stm.SetInvitationCodeMust(in.GetInvitationCodeMust())
+		u.SetInvitationCodeMust(in.GetInvitationCodeMust())
 	}
-	return stm
+	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppControl, error) {

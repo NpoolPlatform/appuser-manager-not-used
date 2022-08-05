@@ -41,3 +41,7 @@ func validate(info *npool.AppRoleUserReq) error {
 
 	return nil
 }
+
+func Validate(info *npool.AppRoleUserReq) error {
+	return validate(info)
+}

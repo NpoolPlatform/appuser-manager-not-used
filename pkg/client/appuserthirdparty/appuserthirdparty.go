@@ -65,6 +65,22 @@ func CreateAppUserThirdParties(ctx context.Context, in []*npool.AppUserThirdPart
 	return infos.([]*npool.AppUserThirdParty), nil
 }
 
+func UpdateAppUserThirdParty(ctx context.Context, in *npool.AppUserThirdPartyReq) (*npool.AppUserThirdParty, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateAppUserThirdParty(ctx, &npool.UpdateAppUserThirdPartyRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUserThirdParty), nil
+}
+
 func GetAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdParty(ctx, &npool.GetAppUserThirdPartyRequest{
@@ -163,4 +179,20 @@ func CountAppUserThirdParties(ctx context.Context, conds *npool.Conds) (uint32, 
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteAppUserThirdParty(ctx, &npool.DeleteAppUserThirdPartyRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUserThirdParty), nil
 }

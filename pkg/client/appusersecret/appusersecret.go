@@ -65,6 +65,22 @@ func CreateAppUserSecrets(ctx context.Context, in []*npool.AppUserSecretReq) ([]
 	return infos.([]*npool.AppUserSecret), nil
 }
 
+func UpdateAppUserSecret(ctx context.Context, in *npool.AppUserSecretReq) (*npool.AppUserSecret, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
+		resp, err := cli.UpdateAppUserSecret(ctx, &npool.UpdateAppUserSecretRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUserSecret), nil
+}
+
 func GetAppUserSecret(ctx context.Context, id string) (*npool.AppUserSecret, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserSecret(ctx, &npool.GetAppUserSecretRequest{
@@ -163,4 +179,20 @@ func CountAppUserSecrets(ctx context.Context, conds *npool.Conds) (uint32, error
 		return 0, err
 	}
 	return infos.(uint32), nil
+}
+
+func DeleteAppUserSecret(ctx context.Context, id string) (*npool.AppUserSecret, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
+		resp, err := cli.DeleteAppUserSecret(ctx, &npool.DeleteAppUserSecretRequest{
+			ID: id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return resp.Info, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return info.(*npool.AppUserSecret), nil
 }
