@@ -66,7 +66,7 @@ func CreateApps(ctx context.Context, in []*npool.AppReq) ([]*npool.App, error) {
 }
 
 func UpdateApp(ctx context.Context, in *npool.AppReq) (*npool.App, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
 		resp, err := cli.UpdateApp(ctx, &npool.UpdateAppRequest{
 			Info: in,
 		})
@@ -78,7 +78,7 @@ func UpdateApp(ctx context.Context, in *npool.AppReq) (*npool.App, error) {
 	if err != nil {
 		return nil, err
 	}
-	return infos.(*npool.App), nil
+	return info.(*npool.App), nil
 }
 
 func GetApp(ctx context.Context, id string) (*npool.App, error) {
