@@ -180,8 +180,7 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 	}
 
 	if conds.AppIDs != nil {
-		switch conds.GetAppIDs().GetOp() {
-		case cruder.IN:
+		if conds.GetAppIDs().GetOp() == cruder.IN {
 			var ids []uuid.UUID
 			for _, val := range conds.GetAppIDs().GetValue() {
 				id, err := uuid.Parse(val)
@@ -214,8 +213,7 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 	}
 
 	if conds.RoleIDs != nil {
-		switch conds.GetRoleIDs().GetOp() {
-		case cruder.IN:
+		if conds.GetRoleIDs().GetOp() == cruder.IN {
 			var ids []uuid.UUID
 			for _, val := range conds.GetRoleIDs().GetValue() {
 				id, err := uuid.Parse(val)

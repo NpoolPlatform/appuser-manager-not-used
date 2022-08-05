@@ -179,8 +179,7 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 	}
 
 	if conds.IDs != nil {
-		switch conds.GetIDs().GetOp() {
-		case cruder.IN:
+		if conds.GetIDs().GetOp() == cruder.IN {
 			var ids []uuid.UUID
 			for _, val := range conds.GetIDs().GetValue() {
 				id, err := uuid.Parse(val)

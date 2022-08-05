@@ -214,13 +214,10 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 	}
 
 	if conds.Roles != nil {
-		switch conds.GetRoles().GetOp() {
-		case cruder.IN:
+		if conds.GetRoles().GetOp() == cruder.IN {
 			var roles []string
 			roles = append(roles, conds.GetRoles().GetValue()...)
 			stm.Where(approle.RoleIn(roles...))
-		default:
-			return nil, fmt.Errorf("invalid approle field")
 		}
 	}
 
