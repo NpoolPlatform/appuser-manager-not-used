@@ -178,6 +178,13 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuser.ID(id))
+		default:
+			return nil, fmt.Errorf("invalid appuser field")
+		}
+	}
+
+	if conds.IDs != nil {
+		switch conds.GetIDs().GetOp() {
 		case cruder.IN:
 			var ids []uuid.UUID
 			for _, val := range conds.GetIDs().GetValue() {
@@ -198,10 +205,6 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuser.AppID(appID))
-
-		case cruder.IN:
-			stm.Where(appuser.AppID(appID))
-
 		default:
 			return nil, fmt.Errorf("invalid appuser field")
 		}
