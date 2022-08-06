@@ -134,7 +134,7 @@ func GetAppUsers(ctx context.Context, conds *npool.Conds, limit, offset int32) (
 }
 
 func ExistAppUser(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUser(ctx, &npool.ExistAppUserRequest{
 			ID: id,
 		})
@@ -146,11 +146,11 @@ func ExistAppUser(ctx context.Context, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func ExistAppUserConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserConds(ctx, &npool.ExistAppUserCondsRequest{
 			Conds: conds,
 		})
@@ -162,11 +162,11 @@ func ExistAppUserConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func CountAppUsers(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
 		resp, err := cli.CountAppUsers(ctx, &npool.CountAppUsersRequest{
 			Conds: conds,
 		})
@@ -178,7 +178,7 @@ func CountAppUsers(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	if err != nil {
 		return 0, err
 	}
-	return infos.(uint32), nil
+	return info.(uint32), nil
 }
 
 func DeleteAppUser(ctx context.Context, id string) (*npool.AppUser, error) {
