@@ -3,8 +3,9 @@ package app
 
 import (
 	"context"
-	"google.golang.org/grpc"
 	"time"
+
+	"google.golang.org/grpc"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
@@ -32,7 +33,6 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 		if err != nil {
 			return nil, err
 		}
-
 	} else {
 		conn, err = grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
 		if err != nil {

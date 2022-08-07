@@ -3,11 +3,12 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	val "github.com/NpoolPlatform/message/npool"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	val "github.com/NpoolPlatform/message/npool"
 
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/app"
