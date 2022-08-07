@@ -134,7 +134,7 @@ func GetAppUserSecrets(ctx context.Context, conds *npool.Conds, limit, offset in
 }
 
 func ExistAppUserSecret(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserSecret(ctx, &npool.ExistAppUserSecretRequest{
 			ID: id,
 		})
@@ -146,11 +146,11 @@ func ExistAppUserSecret(ctx context.Context, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func ExistAppUserSecretConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserSecretConds(ctx, &npool.ExistAppUserSecretCondsRequest{
 			Conds: conds,
 		})
@@ -162,11 +162,11 @@ func ExistAppUserSecretConds(ctx context.Context, conds *npool.Conds) (bool, err
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func CountAppUserSecrets(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
 		resp, err := cli.CountAppUserSecrets(ctx, &npool.CountAppUserSecretsRequest{
 			Conds: conds,
 		})
@@ -178,7 +178,7 @@ func CountAppUserSecrets(ctx context.Context, conds *npool.Conds) (uint32, error
 	if err != nil {
 		return 0, err
 	}
-	return infos.(uint32), nil
+	return info.(uint32), nil
 }
 
 func DeleteAppUserSecret(ctx context.Context, id string) (*npool.AppUserSecret, error) {

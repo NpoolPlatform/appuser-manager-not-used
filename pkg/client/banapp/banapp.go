@@ -134,7 +134,7 @@ func GetBanApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([
 }
 
 func ExistBanApp(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistBanApp(ctx, &npool.ExistBanAppRequest{
 			ID: id,
 		})
@@ -146,11 +146,11 @@ func ExistBanApp(ctx context.Context, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func ExistBanAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistBanAppConds(ctx, &npool.ExistBanAppCondsRequest{
 			Conds: conds,
 		})
@@ -162,11 +162,11 @@ func ExistBanAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func CountBanApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
 		resp, err := cli.CountBanApps(ctx, &npool.CountBanAppsRequest{
 			Conds: conds,
 		})
@@ -178,7 +178,7 @@ func CountBanApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	if err != nil {
 		return 0, err
 	}
-	return infos.(uint32), nil
+	return info.(uint32), nil
 }
 
 func DeleteBanApp(ctx context.Context, id string) (*npool.BanApp, error) {
