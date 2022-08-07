@@ -134,7 +134,7 @@ func GetAppUserThirdParties(ctx context.Context, conds *npool.Conds, limit, offs
 }
 
 func ExistAppUserThirdParty(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserThirdParty(ctx, &npool.ExistAppUserThirdPartyRequest{
 			ID: id,
 		})
@@ -146,11 +146,11 @@ func ExistAppUserThirdParty(ctx context.Context, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func ExistAppUserThirdPartyConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserThirdPartyConds(ctx, &npool.ExistAppUserThirdPartyCondsRequest{
 			Conds: conds,
 		})
@@ -162,11 +162,11 @@ func ExistAppUserThirdPartyConds(ctx context.Context, conds *npool.Conds) (bool,
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func CountAppUserThirdParties(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
 		resp, err := cli.CountAppUserThirdParties(ctx, &npool.CountAppUserThirdPartiesRequest{
 			Conds: conds,
 		})
@@ -178,7 +178,7 @@ func CountAppUserThirdParties(ctx context.Context, conds *npool.Conds) (uint32, 
 	if err != nil {
 		return 0, err
 	}
-	return infos.(uint32), nil
+	return info.(uint32), nil
 }
 
 func DeleteAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {

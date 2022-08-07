@@ -134,7 +134,7 @@ func GetApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*n
 }
 
 func ExistApp(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistApp(ctx, &npool.ExistAppRequest{
 			ID: id,
 		})
@@ -146,11 +146,11 @@ func ExistApp(ctx context.Context, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func ExistAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppConds(ctx, &npool.ExistAppCondsRequest{
 			Conds: conds,
 		})
@@ -162,7 +162,7 @@ func ExistAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return infos.(bool), nil
+	return info.(bool), nil
 }
 
 func CountApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
