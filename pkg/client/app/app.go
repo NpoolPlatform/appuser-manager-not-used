@@ -4,7 +4,6 @@ package app
 import (
 	"context"
 	"google.golang.org/grpc"
-	"log"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
@@ -28,11 +27,12 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	var err error
 
 	if IsTest {
+		defer conn.Close()
 		conn, err = grpc.Dial("localhost:50231", grpc.WithInsecure())
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
-		defer conn.Close()
+
 	} else {
 		conn, err = grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
 		if err != nil {
