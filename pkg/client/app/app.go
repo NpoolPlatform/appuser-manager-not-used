@@ -3,6 +3,8 @@ package app
 
 import (
 	"context"
+	"google.golang.org/grpc"
+	"log"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
@@ -14,6 +16,7 @@ import (
 )
 
 var timeout = 10 * time.Second
+var IsTest = true
 
 type handler func(context.Context, npool.AppMgrClient) (cruder.Any, error)
 
@@ -21,12 +24,22 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, err
-	}
+	var conn *grpc.ClientConn
+	var err error
 
-	defer conn.Close()
+	if IsTest {
+		conn, err = grpc.Dial("localhost:50231", grpc.WithInsecure())
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer conn.Close()
+	} else {
+		conn, err = grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
+		if err != nil {
+			return nil, err
+		}
+		defer conn.Close()
+	}
 
 	cli := npool.NewAppMgrClient(conn)
 
