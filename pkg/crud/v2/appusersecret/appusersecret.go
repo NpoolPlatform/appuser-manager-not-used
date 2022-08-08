@@ -286,6 +286,9 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUserSecret, error
 
 		info, err = stm.Only(_ctx)
 		if err != nil {
+			if ent.IsNotFound(err) {
+				return nil
+			}
 			return err
 		}
 

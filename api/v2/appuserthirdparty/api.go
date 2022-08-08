@@ -1,14 +1,14 @@
 package appuserthirdparty
 
 import (
-	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/banappuser"
+	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appuserthirdparty"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	banappuser.UnimplementedBanAppUserMgrServer
+	appuserthirdparty.UnimplementedAppUserThirdPartyMgrServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	banappuser.RegisterBanAppUserMgrServer(server, &Server{})
+	appuserthirdparty.RegisterAppUserThirdPartyMgrServer(server, &Server{})
 }
