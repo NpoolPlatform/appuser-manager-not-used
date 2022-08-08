@@ -7,12 +7,15 @@ import (
 	"strconv"
 	"testing"
 
+	"bou.ke/monkey"
+	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
+	"google.golang.org/grpc"
+
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	val "github.com/NpoolPlatform/message/npool"
 
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/app"
-
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
@@ -51,9 +54,7 @@ func createApp(t *testing.T) {
 	var err error
 	info, err = CreateApp(context.Background(), &appInfo)
 	if assert.Nil(t, err) {
-		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
-			appDate.CreatedAt = info.CreatedAt
-		}
+		appDate.CreatedAt = info.CreatedAt
 		assert.Equal(t, info, &appDate)
 	}
 }
@@ -185,6 +186,11 @@ func TestMainOrder(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
+
+	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
+		return grpc.Dial("localhost:50231", grpc.WithInsecure())
+	})
+
 	t.Run("createApp", createApp)
 	t.Run("createApps", createApps)
 	t.Run("getApp", getApp)
