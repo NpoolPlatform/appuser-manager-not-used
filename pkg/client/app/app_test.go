@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/NpoolPlatform/go-service-framework/pkg/config"
 	"os"
 	"strconv"
 	"testing"
@@ -187,8 +188,10 @@ func TestMainOrder(t *testing.T) {
 		return
 	}
 
+	gport := config.GetIntValueWithNameSpace("", config.KeyGRPCPort)
+
 	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
-		return grpc.Dial("localhost:50231", grpc.WithInsecure())
+		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithInsecure())
 	})
 
 	t.Run("createApp", createApp)
