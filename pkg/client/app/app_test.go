@@ -3,10 +3,11 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/go-service-framework/pkg/config"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/NpoolPlatform/go-service-framework/pkg/config"
 
 	"bou.ke/monkey"
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
