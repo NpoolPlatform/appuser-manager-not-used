@@ -1,12 +1,26 @@
 package appcontrol
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
 	"testing"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/testinit"
+	"github.com/NpoolPlatform/go-service-framework/pkg/config"
+
+	"bou.ke/monkey"
+	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
+	"google.golang.org/grpc"
+
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	val "github.com/NpoolPlatform/message/npool"
+
+	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appcontrol"
+	"github.com/google/uuid"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {
@@ -18,9 +32,189 @@ func init() {
 	}
 }
 
-func TestClient(t *testing.T) {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction { //nolint:staticcheck
+var appControlDate = npool.AppControl{
+	ID:                  uuid.NewString(),
+	AppID:               uuid.NewString(),
+	RecaptchaMethod:     uuid.NewString(),
+	SignupMethods:       []string{uuid.NewString()},
+	ExternSigninMethods: []string{uuid.NewString()},
+	KycEnable:           false,
+	SigninVerifyEnable:  false,
+	InvitationCodeMust:  false,
+}
+
+var (
+	appControlInfo = npool.AppControlReq{
+		ID:                  &appControlDate.ID,
+		AppID:               &appControlDate.AppID,
+		RecaptchaMethod:     &appControlDate.RecaptchaMethod,
+		KycEnable:           &appControlDate.KycEnable,
+		SignupMethods:       appControlDate.SignupMethods,
+		ExternSigninMethods: appControlDate.ExternSigninMethods,
+		SigninVerifyEnable:  &appControlDate.SigninVerifyEnable,
+		InvitationCodeMust:  &appControlDate.InvitationCodeMust,
+	}
+)
+
+var info *npool.AppControl
+
+func createAppControl(t *testing.T) {
+	var err error
+	info, err = CreateAppControl(context.Background(), &appControlInfo)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appControlDate)
+	}
+}
+
+func createAppControls(t *testing.T) {
+	appControlDates := []npool.AppControl{
+		{
+			ID:                  uuid.NewString(),
+			AppID:               uuid.NewString(),
+			RecaptchaMethod:     uuid.NewString(),
+			SignupMethods:       []string{uuid.NewString()},
+			ExternSigninMethods: []string{uuid.NewString()},
+			KycEnable:           false,
+			SigninVerifyEnable:  false,
+			InvitationCodeMust:  false,
+		},
+		{
+			ID:                  uuid.NewString(),
+			AppID:               uuid.NewString(),
+			RecaptchaMethod:     uuid.NewString(),
+			SignupMethods:       []string{uuid.NewString()},
+			ExternSigninMethods: []string{uuid.NewString()},
+			KycEnable:           false,
+			SigninVerifyEnable:  false,
+			InvitationCodeMust:  false,
+		},
+	}
+
+	appControls := []*npool.AppControlReq{}
+	for key := range appControlDates {
+		appControls = append(appControls, &npool.AppControlReq{
+			ID:                  &appControlDates[key].ID,
+			AppID:               &appControlDates[key].AppID,
+			RecaptchaMethod:     &appControlDates[key].RecaptchaMethod,
+			SignupMethods:       appControlDates[key].SignupMethods,
+			ExternSigninMethods: appControlDates[key].ExternSigninMethods,
+			KycEnable:           &appControlDates[key].KycEnable,
+			SigninVerifyEnable:  &appControlDates[key].SigninVerifyEnable,
+			InvitationCodeMust:  &appControlDates[key].InvitationCodeMust,
+		})
+	}
+
+	infos, err := CreateAppControls(context.Background(), appControls)
+	if assert.Nil(t, err) {
+		assert.Equal(t, len(infos), 2)
+	}
+}
+
+func updateAppControl(t *testing.T) {
+	var err error
+	info, err = UpdateAppControl(context.Background(), &appControlInfo)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appControlDate)
+	}
+}
+
+func getAppControl(t *testing.T) {
+	var err error
+	info, err = GetAppControl(context.Background(), info.ID)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appControlDate)
+	}
+}
+
+func getAppControls(t *testing.T) {
+	infos, total, err := GetAppControls(context.Background(),
+		&npool.Conds{
+			ID: &val.StringVal{
+				Value: info.ID,
+				Op:    cruder.EQ,
+			},
+		}, 1, 0)
+	if assert.Nil(t, err) {
+		assert.Equal(t, total, uint32(1))
+		assert.Equal(t, infos[0], &appControlDate)
+	}
+}
+
+func getAppControlOnly(t *testing.T) {
+	var err error
+	info, err = GetAppControlOnly(context.Background(),
+		&npool.Conds{
+			ID: &val.StringVal{
+				Value: info.ID,
+				Op:    cruder.EQ,
+			},
+		})
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appControlDate)
+	}
+}
+
+func countAppControls(t *testing.T) {
+	count, err := CountAppControls(context.Background(),
+		&npool.Conds{
+			ID: &val.StringVal{
+				Value: info.ID,
+				Op:    cruder.EQ,
+			},
+		},
+	)
+	if assert.Nil(t, err) {
+		assert.Equal(t, count, uint32(1))
+	}
+}
+
+func existAppControl(t *testing.T) {
+	exist, err := ExistAppControl(context.Background(), info.ID)
+	if assert.Nil(t, err) {
+		assert.Equal(t, exist, true)
+	}
+}
+
+func existAppControlConds(t *testing.T) {
+	exist, err := ExistAppControlConds(context.Background(),
+		&npool.Conds{
+			ID: &val.StringVal{
+				Value: info.ID,
+				Op:    cruder.EQ,
+			},
+		},
+	)
+	if assert.Nil(t, err) {
+		assert.Equal(t, exist, true)
+	}
+}
+
+func deleteAppControl(t *testing.T) {
+	info, err := DeleteAppControl(context.Background(), info.ID)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &appControlDate)
+	}
+}
+
+func TestMainOrder(t *testing.T) {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
-	// Here won't pass test due to we always test with localhost
+
+	gport := config.GetIntValueWithNameSpace("", config.KeyGRPCPort)
+
+	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
+		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithInsecure())
+	})
+
+	t.Run("createAppControl", createAppControl)
+	t.Run("createAppControls", createAppControls)
+	t.Run("getAppControl", getAppControl)
+	t.Run("getAppControls", getAppControls)
+	t.Run("getAppControlOnly", getAppControlOnly)
+	t.Run("updateAppControl", updateAppControl)
+	t.Run("existAppControl", existAppControl)
+	t.Run("existAppControlConds", existAppControlConds)
+	t.Run("count", countAppControls)
+	t.Run("delete", deleteAppControl)
 }

@@ -257,15 +257,15 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.BanApp, error) {
 
 		info, err = stm.Only(_ctx)
 		if err != nil {
+			if ent.IsNotFound(err) {
+				return nil
+			}
 			return err
 		}
 
 		return nil
 	})
 	if err != nil {
-		if ent.IsNotFound(err) {
-			return nil, nil
-		}
 		return nil, err
 	}
 
