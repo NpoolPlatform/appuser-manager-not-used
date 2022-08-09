@@ -347,6 +347,10 @@ func init() {
 	appusersecretDescDeletedAt := appusersecretMixinFields0[2].Descriptor()
 	// appusersecret.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appusersecret.DefaultDeletedAt = appusersecretDescDeletedAt.Default.(func() uint32)
+	// appusersecretDescGoogleSecret is the schema descriptor for google_secret field.
+	appusersecretDescGoogleSecret := appusersecretFields[5].Descriptor()
+	// appusersecret.DefaultGoogleSecret holds the default value on creation for the google_secret field.
+	appusersecret.DefaultGoogleSecret = appusersecretDescGoogleSecret.Default.(string)
 	// appusersecretDescID is the schema descriptor for id field.
 	appusersecretDescID := appusersecretFields[0].Descriptor()
 	// appusersecret.DefaultID holds the default value on creation for the id field.

@@ -95,6 +95,14 @@ func (ausc *AppUserSecretCreate) SetGoogleSecret(s string) *AppUserSecretCreate 
 	return ausc
 }
 
+// SetNillableGoogleSecret sets the "google_secret" field if the given value is not nil.
+func (ausc *AppUserSecretCreate) SetNillableGoogleSecret(s *string) *AppUserSecretCreate {
+	if s != nil {
+		ausc.SetGoogleSecret(*s)
+	}
+	return ausc
+}
+
 // SetID sets the "id" field.
 func (ausc *AppUserSecretCreate) SetID(u uuid.UUID) *AppUserSecretCreate {
 	ausc.mutation.SetID(u)
@@ -208,6 +216,10 @@ func (ausc *AppUserSecretCreate) defaults() error {
 		}
 		v := appusersecret.DefaultDeletedAt()
 		ausc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := ausc.mutation.GoogleSecret(); !ok {
+		v := appusersecret.DefaultGoogleSecret
+		ausc.mutation.SetGoogleSecret(v)
 	}
 	if _, ok := ausc.mutation.ID(); !ok {
 		if appusersecret.DefaultID == nil {

@@ -113,7 +113,7 @@ func GetAppRoleUserOnly(ctx context.Context, conds *npool.Conds) (*npool.AppRole
 	return info.(*npool.AppRoleUser), nil
 }
 
-func GetAppRoleUsers(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppRoleUser, uint32, error) {
+func GetAppRoleUsers(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.AppRoleUser, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleUserMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRoleUsers(ctx, &npool.GetAppRoleUsersRequest{

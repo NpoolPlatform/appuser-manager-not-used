@@ -113,7 +113,7 @@ func GetAppOnly(ctx context.Context, conds *npool.Conds) (*npool.App, error) {
 	return info.(*npool.App), nil
 }
 
-func GetApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.App, uint32, error) {
+func GetApps(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.App, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetApps(ctx, &npool.GetAppsRequest{
