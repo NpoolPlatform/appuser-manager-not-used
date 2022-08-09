@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"testing"
 
+	"google.golang.org/grpc/credentials/insecure"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
 
 	"bou.ke/monkey"

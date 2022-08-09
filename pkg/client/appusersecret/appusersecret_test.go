@@ -12,6 +12,7 @@ import (
 	"bou.ke/monkey"
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	val "github.com/NpoolPlatform/message/npool"
