@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc/credentials/insecure"
 	"os"
 	"strconv"
 	"testing"
@@ -192,7 +193,7 @@ func TestMainOrder(t *testing.T) {
 	gport := config.GetIntValueWithNameSpace("", config.KeyGRPCPort)
 
 	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
-		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithInsecure())
+		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	})
 
 	t.Run("createApp", createApp)
