@@ -113,7 +113,7 @@ func GetAppUserSecretOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUs
 	return info.(*npool.AppUserSecret), nil
 }
 
-func GetAppUserSecrets(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUserSecret, uint32, error) {
+func GetAppUserSecrets(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.AppUserSecret, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserSecretMgrClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserSecrets(ctx, &npool.GetAppUserSecretsRequest{

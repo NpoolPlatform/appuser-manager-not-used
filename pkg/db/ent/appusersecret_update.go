@@ -113,6 +113,14 @@ func (ausu *AppUserSecretUpdate) SetGoogleSecret(s string) *AppUserSecretUpdate 
 	return ausu
 }
 
+// SetNillableGoogleSecret sets the "google_secret" field if the given value is not nil.
+func (ausu *AppUserSecretUpdate) SetNillableGoogleSecret(s *string) *AppUserSecretUpdate {
+	if s != nil {
+		ausu.SetGoogleSecret(*s)
+	}
+	return ausu
+}
+
 // Mutation returns the AppUserSecretMutation object of the builder.
 func (ausu *AppUserSecretUpdate) Mutation() *AppUserSecretMutation {
 	return ausu.mutation
@@ -383,6 +391,14 @@ func (ausuo *AppUserSecretUpdateOne) SetSalt(s string) *AppUserSecretUpdateOne {
 // SetGoogleSecret sets the "google_secret" field.
 func (ausuo *AppUserSecretUpdateOne) SetGoogleSecret(s string) *AppUserSecretUpdateOne {
 	ausuo.mutation.SetGoogleSecret(s)
+	return ausuo
+}
+
+// SetNillableGoogleSecret sets the "google_secret" field if the given value is not nil.
+func (ausuo *AppUserSecretUpdateOne) SetNillableGoogleSecret(s *string) *AppUserSecretUpdateOne {
+	if s != nil {
+		ausuo.SetGoogleSecret(*s)
+	}
 	return ausuo
 }
 

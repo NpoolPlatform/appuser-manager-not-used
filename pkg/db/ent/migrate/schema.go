@@ -170,7 +170,7 @@ var (
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "password_hash", Type: field.TypeString},
 		{Name: "salt", Type: field.TypeString},
-		{Name: "google_secret", Type: field.TypeString},
+		{Name: "google_secret", Type: field.TypeString, Default: ""},
 	}
 	// AppUserSecretsTable holds the schema information for the "app_user_secrets" table.
 	AppUserSecretsTable = &schema.Table{
