@@ -120,7 +120,7 @@ func getAppUserControls(t *testing.T) {
 				Value: info.ID,
 				Op:    cruder.EQ,
 			},
-		}, 1, 0)
+		}, 0, 1)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, uint32(1))
 		assert.Equal(t, infos[0], &appUserControlDate)

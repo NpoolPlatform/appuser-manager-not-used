@@ -133,7 +133,7 @@ func CreateGenesisRole(ctx context.Context, in *npool.CreateGenesisRoleRequest) 
 
 func GetGenesisRole(ctx context.Context, in *npool.GetGenesisRoleRequest) (*npool.GetGenesisRoleResponse, error) {
 	resp, err := approlecrud.GetByAppRole(ctx, &npool.GetAppRoleByAppRoleRequest{
-		AppID: uuid.UUID{}.String(),
+		AppID: constant.GenesisAppID,
 		Role:  constant.GenesisRole,
 	})
 	if err != nil {
@@ -151,7 +151,7 @@ func CreateGenesisRoleUser(ctx context.Context, in *npool.CreateGenesisRoleUserR
 	}
 
 	resp, err := approlecrud.GetByAppRole(ctx, &npool.GetAppRoleByAppRoleRequest{
-		AppID: uuid.UUID{}.String(),
+		AppID: constant.GenesisAppID,
 		Role:  constant.GenesisRole,
 	})
 	if err != nil {
