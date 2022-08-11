@@ -83,9 +83,25 @@ func (aucc *AppUserControlCreate) SetSigninVerifyByGoogleAuthentication(b bool) 
 	return aucc
 }
 
+// SetNillableSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableSigninVerifyByGoogleAuthentication(b *bool) *AppUserControlCreate {
+	if b != nil {
+		aucc.SetSigninVerifyByGoogleAuthentication(*b)
+	}
+	return aucc
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (aucc *AppUserControlCreate) SetGoogleAuthenticationVerified(b bool) *AppUserControlCreate {
 	aucc.mutation.SetGoogleAuthenticationVerified(b)
+	return aucc
+}
+
+// SetNillableGoogleAuthenticationVerified sets the "google_authentication_verified" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableGoogleAuthenticationVerified(b *bool) *AppUserControlCreate {
+	if b != nil {
+		aucc.SetGoogleAuthenticationVerified(*b)
+	}
 	return aucc
 }
 
@@ -202,6 +218,14 @@ func (aucc *AppUserControlCreate) defaults() error {
 		}
 		v := appusercontrol.DefaultDeletedAt()
 		aucc.mutation.SetDeletedAt(v)
+	}
+	if _, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); !ok {
+		v := appusercontrol.DefaultSigninVerifyByGoogleAuthentication
+		aucc.mutation.SetSigninVerifyByGoogleAuthentication(v)
+	}
+	if _, ok := aucc.mutation.GoogleAuthenticationVerified(); !ok {
+		v := appusercontrol.DefaultGoogleAuthenticationVerified
+		aucc.mutation.SetGoogleAuthenticationVerified(v)
 	}
 	if _, ok := aucc.mutation.ID(); !ok {
 		if appusercontrol.DefaultID == nil {

@@ -18,8 +18,9 @@ import (
 // AppUserUpdate is the builder for updating AppUser entities.
 type AppUserUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppUserMutation
+	hooks     []Hook
+	mutation  *AppUserMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppUserUpdate builder.
@@ -197,6 +198,12 @@ func (auu *AppUserUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (auu *AppUserUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserUpdate {
+	auu.modifiers = append(auu.modifiers, modifiers...)
+	return auu
+}
+
 func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -285,6 +292,7 @@ func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appuser.FieldImportFromApp,
 		})
 	}
+	_spec.Modifiers = auu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, auu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appuser.Label}
@@ -299,9 +307,10 @@ func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // AppUserUpdateOne is the builder for updating a single AppUser entity.
 type AppUserUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppUserMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppUserMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -486,6 +495,12 @@ func (auuo *AppUserUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (auuo *AppUserUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserUpdateOne {
+	auuo.modifiers = append(auuo.modifiers, modifiers...)
+	return auuo
+}
+
 func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -591,6 +606,7 @@ func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err 
 			Column: appuser.FieldImportFromApp,
 		})
 	}
+	_spec.Modifiers = auuo.modifiers
 	_node = &AppUser{config: auuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

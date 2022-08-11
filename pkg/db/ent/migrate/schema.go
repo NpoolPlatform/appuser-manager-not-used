@@ -111,8 +111,8 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool},
-		{Name: "google_authentication_verified", Type: field.TypeBool},
+		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool, Default: false},
+		{Name: "google_authentication_verified", Type: field.TypeBool, Default: false},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{

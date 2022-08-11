@@ -205,12 +205,6 @@ func CreatedAtIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldCreatedAt), v...))
 	})
 }
@@ -222,12 +216,6 @@ func CreatedAtNotIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
 	})
 }
@@ -281,12 +269,6 @@ func UpdatedAtIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldUpdatedAt), v...))
 	})
 }
@@ -298,12 +280,6 @@ func UpdatedAtNotIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldUpdatedAt), v...))
 	})
 }
@@ -357,12 +333,6 @@ func DeletedAtIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldDeletedAt), v...))
 	})
 }
@@ -374,12 +344,6 @@ func DeletedAtNotIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldDeletedAt), v...))
 	})
 }
@@ -433,12 +397,6 @@ func AppIDIn(vs ...uuid.UUID) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldAppID), v...))
 	})
 }
@@ -450,12 +408,6 @@ func AppIDNotIn(vs ...uuid.UUID) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldAppID), v...))
 	})
 }
@@ -509,12 +461,6 @@ func UserIDIn(vs ...uuid.UUID) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldUserID), v...))
 	})
 }
@@ -526,12 +472,6 @@ func UserIDNotIn(vs ...uuid.UUID) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldUserID), v...))
 	})
 }
@@ -585,12 +525,6 @@ func UsernameIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldUsername), v...))
 	})
 }
@@ -602,12 +536,6 @@ func UsernameNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldUsername), v...))
 	})
 }
@@ -696,12 +624,6 @@ func FirstNameIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldFirstName), v...))
 	})
 }
@@ -713,12 +635,6 @@ func FirstNameNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldFirstName), v...))
 	})
 }
@@ -807,12 +723,6 @@ func LastNameIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldLastName), v...))
 	})
 }
@@ -824,12 +734,6 @@ func LastNameNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldLastName), v...))
 	})
 }
@@ -918,12 +822,6 @@ func GenderIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldGender), v...))
 	})
 }
@@ -935,12 +833,6 @@ func GenderNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldGender), v...))
 	})
 }
@@ -1029,12 +921,6 @@ func PostalCodeIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldPostalCode), v...))
 	})
 }
@@ -1046,12 +932,6 @@ func PostalCodeNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldPostalCode), v...))
 	})
 }
@@ -1140,12 +1020,6 @@ func AgeIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldAge), v...))
 	})
 }
@@ -1157,12 +1031,6 @@ func AgeNotIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldAge), v...))
 	})
 }
@@ -1216,12 +1084,6 @@ func BirthdayIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldBirthday), v...))
 	})
 }
@@ -1233,12 +1095,6 @@ func BirthdayNotIn(vs ...uint32) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldBirthday), v...))
 	})
 }
@@ -1292,12 +1148,6 @@ func AvatarIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldAvatar), v...))
 	})
 }
@@ -1309,12 +1159,6 @@ func AvatarNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldAvatar), v...))
 	})
 }
@@ -1403,12 +1247,6 @@ func OrganizationIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldOrganization), v...))
 	})
 }
@@ -1420,12 +1258,6 @@ func OrganizationNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldOrganization), v...))
 	})
 }
@@ -1514,12 +1346,6 @@ func IDNumberIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldIDNumber), v...))
 	})
 }
@@ -1531,12 +1357,6 @@ func IDNumberNotIn(vs ...string) predicate.AppUserExtra {
 		v[i] = vs[i]
 	}
 	return predicate.AppUserExtra(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldIDNumber), v...))
 	})
 }

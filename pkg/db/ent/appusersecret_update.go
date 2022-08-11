@@ -18,8 +18,9 @@ import (
 // AppUserSecretUpdate is the builder for updating AppUserSecret entities.
 type AppUserSecretUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppUserSecretMutation
+	hooks     []Hook
+	mutation  *AppUserSecretMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppUserSecretUpdate builder.
@@ -195,6 +196,12 @@ func (ausu *AppUserSecretUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (ausu *AppUserSecretUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserSecretUpdate {
+	ausu.modifiers = append(ausu.modifiers, modifiers...)
+	return ausu
+}
+
 func (ausu *AppUserSecretUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -290,6 +297,7 @@ func (ausu *AppUserSecretUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Column: appusersecret.FieldGoogleSecret,
 		})
 	}
+	_spec.Modifiers = ausu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, ausu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appusersecret.Label}
@@ -304,9 +312,10 @@ func (ausu *AppUserSecretUpdate) sqlSave(ctx context.Context) (n int, err error)
 // AppUserSecretUpdateOne is the builder for updating a single AppUserSecret entity.
 type AppUserSecretUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppUserSecretMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppUserSecretMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -489,6 +498,12 @@ func (ausuo *AppUserSecretUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (ausuo *AppUserSecretUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserSecretUpdateOne {
+	ausuo.modifiers = append(ausuo.modifiers, modifiers...)
+	return ausuo
+}
+
 func (ausuo *AppUserSecretUpdateOne) sqlSave(ctx context.Context) (_node *AppUserSecret, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -601,6 +616,7 @@ func (ausuo *AppUserSecretUpdateOne) sqlSave(ctx context.Context) (_node *AppUse
 			Column: appusersecret.FieldGoogleSecret,
 		})
 	}
+	_spec.Modifiers = ausuo.modifiers
 	_node = &AppUserSecret{config: ausuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

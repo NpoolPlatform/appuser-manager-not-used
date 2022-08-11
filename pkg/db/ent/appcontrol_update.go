@@ -18,8 +18,9 @@ import (
 // AppControlUpdate is the builder for updating AppControl entities.
 type AppControlUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppControlMutation
+	hooks     []Hook
+	mutation  *AppControlMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppControlUpdate builder.
@@ -199,6 +200,12 @@ func (acu *AppControlUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (acu *AppControlUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppControlUpdate {
+	acu.modifiers = append(acu.modifiers, modifiers...)
+	return acu
+}
+
 func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -308,6 +315,7 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}
+	_spec.Modifiers = acu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, acu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appcontrol.Label}
@@ -322,9 +330,10 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // AppControlUpdateOne is the builder for updating a single AppControl entity.
 type AppControlUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppControlMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppControlMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -511,6 +520,12 @@ func (acuo *AppControlUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (acuo *AppControlUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppControlUpdateOne {
+	acuo.modifiers = append(acuo.modifiers, modifiers...)
+	return acuo
+}
+
 func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -637,6 +652,7 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}
+	_spec.Modifiers = acuo.modifiers
 	_node = &AppControl{config: acuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
