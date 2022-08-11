@@ -18,8 +18,9 @@ import (
 // BanAppUpdate is the builder for updating BanApp entities.
 type BanAppUpdate struct {
 	config
-	hooks    []Hook
-	mutation *BanAppMutation
+	hooks     []Hook
+	mutation  *BanAppMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the BanAppUpdate builder.
@@ -177,6 +178,12 @@ func (bau *BanAppUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (bau *BanAppUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *BanAppUpdate {
+	bau.modifiers = append(bau.modifiers, modifiers...)
+	return bau
+}
+
 func (bau *BanAppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -251,6 +258,7 @@ func (bau *BanAppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: banapp.FieldMessage,
 		})
 	}
+	_spec.Modifiers = bau.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, bau.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{banapp.Label}
@@ -265,9 +273,10 @@ func (bau *BanAppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // BanAppUpdateOne is the builder for updating a single BanApp entity.
 type BanAppUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *BanAppMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *BanAppMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -432,6 +441,12 @@ func (bauo *BanAppUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (bauo *BanAppUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *BanAppUpdateOne {
+	bauo.modifiers = append(bauo.modifiers, modifiers...)
+	return bauo
+}
+
 func (bauo *BanAppUpdateOne) sqlSave(ctx context.Context) (_node *BanApp, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -523,6 +538,7 @@ func (bauo *BanAppUpdateOne) sqlSave(ctx context.Context) (_node *BanApp, err er
 			Column: banapp.FieldMessage,
 		})
 	}
+	_spec.Modifiers = bauo.modifiers
 	_node = &BanApp{config: bauo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

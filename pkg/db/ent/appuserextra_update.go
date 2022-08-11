@@ -18,8 +18,9 @@ import (
 // AppUserExtraUpdate is the builder for updating AppUserExtra entities.
 type AppUserExtraUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppUserExtraMutation
+	hooks     []Hook
+	mutation  *AppUserExtraMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppUserExtraUpdate builder.
@@ -329,6 +330,12 @@ func (aueu *AppUserExtraUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (aueu *AppUserExtraUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserExtraUpdate {
+	aueu.modifiers = append(aueu.modifiers, modifiers...)
+	return aueu
+}
+
 func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -494,6 +501,7 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserextra.FieldIDNumber,
 		})
 	}
+	_spec.Modifiers = aueu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aueu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appuserextra.Label}
@@ -508,9 +516,10 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 // AppUserExtraUpdateOne is the builder for updating a single AppUserExtra entity.
 type AppUserExtraUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppUserExtraMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppUserExtraMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -827,6 +836,12 @@ func (aueuo *AppUserExtraUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (aueuo *AppUserExtraUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserExtraUpdateOne {
+	aueuo.modifiers = append(aueuo.modifiers, modifiers...)
+	return aueuo
+}
+
 func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUserExtra, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -1009,6 +1024,7 @@ func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Column: appuserextra.FieldIDNumber,
 		})
 	}
+	_spec.Modifiers = aueuo.modifiers
 	_node = &AppUserExtra{config: aueuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

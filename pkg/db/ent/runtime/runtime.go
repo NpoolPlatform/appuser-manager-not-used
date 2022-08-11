@@ -239,6 +239,14 @@ func init() {
 	appusercontrolDescDeletedAt := appusercontrolMixinFields0[2].Descriptor()
 	// appusercontrol.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appusercontrol.DefaultDeletedAt = appusercontrolDescDeletedAt.Default.(func() uint32)
+	// appusercontrolDescSigninVerifyByGoogleAuthentication is the schema descriptor for signin_verify_by_google_authentication field.
+	appusercontrolDescSigninVerifyByGoogleAuthentication := appusercontrolFields[3].Descriptor()
+	// appusercontrol.DefaultSigninVerifyByGoogleAuthentication holds the default value on creation for the signin_verify_by_google_authentication field.
+	appusercontrol.DefaultSigninVerifyByGoogleAuthentication = appusercontrolDescSigninVerifyByGoogleAuthentication.Default.(bool)
+	// appusercontrolDescGoogleAuthenticationVerified is the schema descriptor for google_authentication_verified field.
+	appusercontrolDescGoogleAuthenticationVerified := appusercontrolFields[4].Descriptor()
+	// appusercontrol.DefaultGoogleAuthenticationVerified holds the default value on creation for the google_authentication_verified field.
+	appusercontrol.DefaultGoogleAuthenticationVerified = appusercontrolDescGoogleAuthenticationVerified.Default.(bool)
 	// appusercontrolDescID is the schema descriptor for id field.
 	appusercontrolDescID := appusercontrolFields[0].Descriptor()
 	// appusercontrol.DefaultID holds the default value on creation for the id field.
@@ -472,6 +480,6 @@ func init() {
 }
 
 const (
-	Version = "v0.11.1"                                         // Version of ent codegen.
-	Sum     = "h1:im67R+2W3Nee2bNS2YnoYz8oAF0Qz4AOlIvKRIAEISY=" // Sum of ent codegen.
+	Version = "v0.11.2"                                         // Version of ent codegen.
+	Sum     = "h1:UM2/BUhF2FfsxPHRxLjQbhqJNaDdVlOwNIAMLs2jyto=" // Sum of ent codegen.
 )
