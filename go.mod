@@ -5,12 +5,11 @@ go 1.17
 require (
 	entgo.io/ent v0.11.2
 	github.com/NpoolPlatform/api-manager v0.0.0-20220328101926-8907b2f76c6d
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20220722111225-08c2156ac8bf
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20220812032117-44ecffa2bb95
 	github.com/NpoolPlatform/message v0.0.0-20220805093355-212c8a7f966b
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
-	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.1
 	github.com/urfave/cli/v2 v2.4.0
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
@@ -94,6 +93,9 @@ require (
 	github.com/spf13/viper v1.11.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.31.0 // indirect
+	go.opentelemetry.io/otel/exporters/jaeger v1.6.3 // indirect
+	go.opentelemetry.io/otel/sdk v1.6.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/ratelimit v0.1.0 // indirect
