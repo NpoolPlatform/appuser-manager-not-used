@@ -113,7 +113,7 @@ func GetBanAppUserOnly(ctx context.Context, conds *npool.Conds) (*npool.BanAppUs
 	return info.(*npool.BanAppUser), nil
 }
 
-func GetBanAppUsers(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.BanAppUser, uint32, error) {
+func GetBanAppUsers(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.BanAppUser, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetBanAppUsers(ctx, &npool.GetBanAppUsersRequest{

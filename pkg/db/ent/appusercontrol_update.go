@@ -18,8 +18,9 @@ import (
 // AppUserControlUpdate is the builder for updating AppUserControl entities.
 type AppUserControlUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppUserControlMutation
+	hooks     []Hook
+	mutation  *AppUserControlMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppUserControlUpdate builder.
@@ -101,9 +102,25 @@ func (aucu *AppUserControlUpdate) SetSigninVerifyByGoogleAuthentication(b bool) 
 	return aucu
 }
 
+// SetNillableSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableSigninVerifyByGoogleAuthentication(b *bool) *AppUserControlUpdate {
+	if b != nil {
+		aucu.SetSigninVerifyByGoogleAuthentication(*b)
+	}
+	return aucu
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (aucu *AppUserControlUpdate) SetGoogleAuthenticationVerified(b bool) *AppUserControlUpdate {
 	aucu.mutation.SetGoogleAuthenticationVerified(b)
+	return aucu
+}
+
+// SetNillableGoogleAuthenticationVerified sets the "google_authentication_verified" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableGoogleAuthenticationVerified(b *bool) *AppUserControlUpdate {
+	if b != nil {
+		aucu.SetGoogleAuthenticationVerified(*b)
+	}
 	return aucu
 }
 
@@ -179,6 +196,12 @@ func (aucu *AppUserControlUpdate) defaults() error {
 		aucu.mutation.SetUpdatedAt(v)
 	}
 	return nil
+}
+
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (aucu *AppUserControlUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserControlUpdate {
+	aucu.modifiers = append(aucu.modifiers, modifiers...)
+	return aucu
 }
 
 func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -269,6 +292,7 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
 		})
 	}
+	_spec.Modifiers = aucu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aucu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appusercontrol.Label}
@@ -283,9 +307,10 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 // AppUserControlUpdateOne is the builder for updating a single AppUserControl entity.
 type AppUserControlUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppUserControlMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppUserControlMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -361,9 +386,25 @@ func (aucuo *AppUserControlUpdateOne) SetSigninVerifyByGoogleAuthentication(b bo
 	return aucuo
 }
 
+// SetNillableSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableSigninVerifyByGoogleAuthentication(b *bool) *AppUserControlUpdateOne {
+	if b != nil {
+		aucuo.SetSigninVerifyByGoogleAuthentication(*b)
+	}
+	return aucuo
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (aucuo *AppUserControlUpdateOne) SetGoogleAuthenticationVerified(b bool) *AppUserControlUpdateOne {
 	aucuo.mutation.SetGoogleAuthenticationVerified(b)
+	return aucuo
+}
+
+// SetNillableGoogleAuthenticationVerified sets the "google_authentication_verified" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableGoogleAuthenticationVerified(b *bool) *AppUserControlUpdateOne {
+	if b != nil {
+		aucuo.SetGoogleAuthenticationVerified(*b)
+	}
 	return aucuo
 }
 
@@ -452,6 +493,12 @@ func (aucuo *AppUserControlUpdateOne) defaults() error {
 		aucuo.mutation.SetUpdatedAt(v)
 	}
 	return nil
+}
+
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (aucuo *AppUserControlUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserControlUpdateOne {
+	aucuo.modifiers = append(aucuo.modifiers, modifiers...)
+	return aucuo
 }
 
 func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUserControl, err error) {
@@ -559,6 +606,7 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
 		})
 	}
+	_spec.Modifiers = aucuo.modifiers
 	_node = &AppUserControl{config: aucuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

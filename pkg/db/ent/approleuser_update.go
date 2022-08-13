@@ -18,8 +18,9 @@ import (
 // AppRoleUserUpdate is the builder for updating AppRoleUser entities.
 type AppRoleUserUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppRoleUserMutation
+	hooks     []Hook
+	mutation  *AppRoleUserMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppRoleUserUpdate builder.
@@ -189,6 +190,12 @@ func (aruu *AppRoleUserUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (aruu *AppRoleUserUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppRoleUserUpdate {
+	aruu.modifiers = append(aruu.modifiers, modifiers...)
+	return aruu
+}
+
 func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -276,6 +283,7 @@ func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approleuser.FieldUserID,
 		})
 	}
+	_spec.Modifiers = aruu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aruu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{approleuser.Label}
@@ -290,9 +298,10 @@ func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // AppRoleUserUpdateOne is the builder for updating a single AppRoleUser entity.
 type AppRoleUserUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppRoleUserMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppRoleUserMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -469,6 +478,12 @@ func (aruuo *AppRoleUserUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (aruuo *AppRoleUserUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppRoleUserUpdateOne {
+	aruuo.modifiers = append(aruuo.modifiers, modifiers...)
+	return aruuo
+}
+
 func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleUser, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -573,6 +588,7 @@ func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleU
 			Column: approleuser.FieldUserID,
 		})
 	}
+	_spec.Modifiers = aruuo.modifiers
 	_node = &AppRoleUser{config: aruuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

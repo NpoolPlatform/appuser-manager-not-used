@@ -18,8 +18,9 @@ import (
 // BanAppUserUpdate is the builder for updating BanAppUser entities.
 type BanAppUserUpdate struct {
 	config
-	hooks    []Hook
-	mutation *BanAppUserMutation
+	hooks     []Hook
+	mutation  *BanAppUserMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the BanAppUserUpdate builder.
@@ -183,6 +184,12 @@ func (bauu *BanAppUserUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (bauu *BanAppUserUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *BanAppUserUpdate {
+	bauu.modifiers = append(bauu.modifiers, modifiers...)
+	return bauu
+}
+
 func (bauu *BanAppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -264,6 +271,7 @@ func (bauu *BanAppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: banappuser.FieldMessage,
 		})
 	}
+	_spec.Modifiers = bauu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, bauu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{banappuser.Label}
@@ -278,9 +286,10 @@ func (bauu *BanAppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // BanAppUserUpdateOne is the builder for updating a single BanAppUser entity.
 type BanAppUserUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *BanAppUserMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *BanAppUserMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -451,6 +460,12 @@ func (bauuo *BanAppUserUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (bauuo *BanAppUserUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *BanAppUserUpdateOne {
+	bauuo.modifiers = append(bauuo.modifiers, modifiers...)
+	return bauuo
+}
+
 func (bauuo *BanAppUserUpdateOne) sqlSave(ctx context.Context) (_node *BanAppUser, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -549,6 +564,7 @@ func (bauuo *BanAppUserUpdateOne) sqlSave(ctx context.Context) (_node *BanAppUse
 			Column: banappuser.FieldMessage,
 		})
 	}
+	_spec.Modifiers = bauuo.modifiers
 	_node = &BanAppUser{config: bauuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

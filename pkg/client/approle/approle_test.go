@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"testing"
 
+	"google.golang.org/grpc/credentials/insecure"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
 
 	"bou.ke/monkey"
@@ -123,7 +125,7 @@ func getAppRoles(t *testing.T) {
 				Value: info.ID,
 				Op:    cruder.EQ,
 			},
-		}, 1, 0)
+		}, 0, 1)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, uint32(1))
 		assert.Equal(t, infos[0], &appRoleDate)
@@ -194,7 +196,7 @@ func TestMainOrder(t *testing.T) {
 	gport := config.GetIntValueWithNameSpace("", config.KeyGRPCPort)
 
 	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
-		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithInsecure())
+		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	})
 
 	t.Run("createAppRole", createAppRole)

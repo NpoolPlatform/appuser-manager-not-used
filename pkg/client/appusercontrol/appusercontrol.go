@@ -113,7 +113,7 @@ func GetAppUserControlOnly(ctx context.Context, conds *npool.Conds) (*npool.AppU
 	return info.(*npool.AppUserControl), nil
 }
 
-func GetAppUserControls(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUserControl, uint32, error) {
+func GetAppUserControls(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.AppUserControl, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserControls(ctx, &npool.GetAppUserControlsRequest{

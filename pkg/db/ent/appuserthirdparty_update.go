@@ -18,8 +18,9 @@ import (
 // AppUserThirdPartyUpdate is the builder for updating AppUserThirdParty entities.
 type AppUserThirdPartyUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppUserThirdPartyMutation
+	hooks     []Hook
+	mutation  *AppUserThirdPartyMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppUserThirdPartyUpdate builder.
@@ -225,6 +226,12 @@ func (autpu *AppUserThirdPartyUpdate) check() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (autpu *AppUserThirdPartyUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserThirdPartyUpdate {
+	autpu.modifiers = append(autpu.modifiers, modifiers...)
+	return autpu
+}
+
 func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -327,6 +334,7 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 			Column: appuserthirdparty.FieldThirdPartyUserAvatar,
 		})
 	}
+	_spec.Modifiers = autpu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, autpu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{appuserthirdparty.Label}
@@ -341,9 +349,10 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 // AppUserThirdPartyUpdateOne is the builder for updating a single AppUserThirdParty entity.
 type AppUserThirdPartyUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppUserThirdPartyMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppUserThirdPartyMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -556,6 +565,12 @@ func (autpuo *AppUserThirdPartyUpdateOne) check() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (autpuo *AppUserThirdPartyUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUserThirdPartyUpdateOne {
+	autpuo.modifiers = append(autpuo.modifiers, modifiers...)
+	return autpuo
+}
+
 func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *AppUserThirdParty, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -675,6 +690,7 @@ func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *A
 			Column: appuserthirdparty.FieldThirdPartyUserAvatar,
 		})
 	}
+	_spec.Modifiers = autpuo.modifiers
 	_node = &AppUserThirdParty{config: autpuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

@@ -30,7 +30,7 @@ func (AppUserSecret) Fields() []ent.Field {
 		field.UUID("user_id", uuid.UUID{}),
 		field.String("password_hash"),
 		field.String("salt"),
-		field.String("google_secret"),
+		field.String("google_secret").Default(""),
 	}
 }
 

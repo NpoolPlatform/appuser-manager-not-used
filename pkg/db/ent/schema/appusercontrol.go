@@ -28,8 +28,10 @@ func (AppUserControl) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("user_id", uuid.UUID{}),
-		field.Bool("signin_verify_by_google_authentication"),
-		field.Bool("google_authentication_verified"),
+		field.Bool("signin_verify_by_google_authentication").
+			Default(false),
+		field.Bool("google_authentication_verified").
+			Default(false),
 	}
 }
 

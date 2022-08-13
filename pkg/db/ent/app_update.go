@@ -18,8 +18,9 @@ import (
 // AppUpdate is the builder for updating App entities.
 type AppUpdate struct {
 	config
-	hooks    []Hook
-	mutation *AppMutation
+	hooks     []Hook
+	mutation  *AppMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the AppUpdate builder.
@@ -237,6 +238,12 @@ func (au *AppUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (au *AppUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUpdate {
+	au.modifiers = append(au.modifiers, modifiers...)
+	return au
+}
+
 func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -349,6 +356,7 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: app.FieldDescription,
 		})
 	}
+	_spec.Modifiers = au.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{app.Label}
@@ -363,9 +371,10 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // AppUpdateOne is the builder for updating a single App entity.
 type AppUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *AppMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *AppMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -590,6 +599,12 @@ func (auo *AppUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (auo *AppUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *AppUpdateOne {
+	auo.modifiers = append(auo.modifiers, modifiers...)
+	return auo
+}
+
 func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -719,6 +734,7 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 			Column: app.FieldDescription,
 		})
 	}
+	_spec.Modifiers = auo.modifiers
 	_node = &App{config: auo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

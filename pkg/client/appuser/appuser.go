@@ -113,7 +113,7 @@ func GetAppUserOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUser, er
 	return info.(*npool.AppUser), nil
 }
 
-func GetAppUsers(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUser, uint32, error) {
+func GetAppUsers(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.AppUser, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUsers(ctx, &npool.GetAppUsersRequest{

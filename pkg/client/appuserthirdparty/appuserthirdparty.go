@@ -113,7 +113,7 @@ func GetAppUserThirdPartyOnly(ctx context.Context, conds *npool.Conds) (*npool.A
 	return info.(*npool.AppUserThirdParty), nil
 }
 
-func GetAppUserThirdParties(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUserThirdParty, uint32, error) {
+func GetAppUserThirdParties(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.AppUserThirdParty, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdParties(ctx, &npool.GetAppUserThirdPartiesRequest{
