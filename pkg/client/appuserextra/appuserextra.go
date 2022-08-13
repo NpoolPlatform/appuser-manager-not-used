@@ -15,7 +15,7 @@ import (
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.AppUserExtraMgrClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -28,13 +28,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewAppUserExtraMgrClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateAppUserExtra(ctx context.Context, in *npool.AppUserExtraReq) (*npool.AppUserExtra, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserExtra(ctx, &npool.CreateAppUserExtraRequest{
 			Info: in,
 		})
@@ -50,7 +50,7 @@ func CreateAppUserExtra(ctx context.Context, in *npool.AppUserExtraReq) (*npool.
 }
 
 func CreateAppUserExtras(ctx context.Context, in []*npool.AppUserExtraReq) ([]*npool.AppUserExtra, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserExtras(ctx, &npool.CreateAppUserExtrasRequest{
 			Infos: in,
 		})
@@ -66,7 +66,7 @@ func CreateAppUserExtras(ctx context.Context, in []*npool.AppUserExtraReq) ([]*n
 }
 
 func UpdateAppUserExtra(ctx context.Context, in *npool.AppUserExtraReq) (*npool.AppUserExtra, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUserExtra(ctx, &npool.UpdateAppUserExtraRequest{
 			Info: in,
 		})
@@ -82,7 +82,7 @@ func UpdateAppUserExtra(ctx context.Context, in *npool.AppUserExtraReq) (*npool.
 }
 
 func GetAppUserExtra(ctx context.Context, id string) (*npool.AppUserExtra, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserExtra(ctx, &npool.GetAppUserExtraRequest{
 			ID: id,
 		})
@@ -98,7 +98,7 @@ func GetAppUserExtra(ctx context.Context, id string) (*npool.AppUserExtra, error
 }
 
 func GetAppUserExtraOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUserExtra, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserExtraOnly(ctx, &npool.GetAppUserExtraOnlyRequest{
 			Conds: conds,
 		})
@@ -115,7 +115,7 @@ func GetAppUserExtraOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUse
 
 func GetAppUserExtras(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUserExtra, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserExtras(ctx, &npool.GetAppUserExtrasRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -134,7 +134,7 @@ func GetAppUserExtras(ctx context.Context, conds *npool.Conds, limit, offset int
 }
 
 func ExistAppUserExtra(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserExtra(ctx, &npool.ExistAppUserExtraRequest{
 			ID: id,
 		})
@@ -150,7 +150,7 @@ func ExistAppUserExtra(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistAppUserExtraConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserExtraConds(ctx, &npool.ExistAppUserExtraCondsRequest{
 			Conds: conds,
 		})
@@ -166,7 +166,7 @@ func ExistAppUserExtraConds(ctx context.Context, conds *npool.Conds) (bool, erro
 }
 
 func CountAppUserExtras(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountAppUserExtras(ctx, &npool.CountAppUserExtrasRequest{
 			Conds: conds,
 		})
@@ -182,7 +182,7 @@ func CountAppUserExtras(ctx context.Context, conds *npool.Conds) (uint32, error)
 }
 
 func DeleteAppUserExtra(ctx context.Context, id string) (*npool.AppUserExtra, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserExtraMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUserExtra(ctx, &npool.DeleteAppUserExtraRequest{
 			ID: id,
 		})

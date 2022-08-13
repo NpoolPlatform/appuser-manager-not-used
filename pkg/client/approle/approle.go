@@ -15,7 +15,7 @@ import (
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.AppRoleMgrClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -28,13 +28,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewAppRoleMgrClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateAppRole(ctx context.Context, in *npool.AppRoleReq) (*npool.AppRole, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppRole(ctx, &npool.CreateAppRoleRequest{
 			Info: in,
 		})
@@ -50,7 +50,7 @@ func CreateAppRole(ctx context.Context, in *npool.AppRoleReq) (*npool.AppRole, e
 }
 
 func CreateAppRoles(ctx context.Context, in []*npool.AppRoleReq) ([]*npool.AppRole, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppRoles(ctx, &npool.CreateAppRolesRequest{
 			Infos: in,
 		})
@@ -66,7 +66,7 @@ func CreateAppRoles(ctx context.Context, in []*npool.AppRoleReq) ([]*npool.AppRo
 }
 
 func UpdateAppRole(ctx context.Context, in *npool.AppRoleReq) (*npool.AppRole, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppRole(ctx, &npool.UpdateAppRoleRequest{
 			Info: in,
 		})
@@ -82,7 +82,7 @@ func UpdateAppRole(ctx context.Context, in *npool.AppRoleReq) (*npool.AppRole, e
 }
 
 func GetAppRole(ctx context.Context, id string) (*npool.AppRole, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRole(ctx, &npool.GetAppRoleRequest{
 			ID: id,
 		})
@@ -98,7 +98,7 @@ func GetAppRole(ctx context.Context, id string) (*npool.AppRole, error) {
 }
 
 func GetAppRoleOnly(ctx context.Context, conds *npool.Conds) (*npool.AppRole, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRoleOnly(ctx, &npool.GetAppRoleOnlyRequest{
 			Conds: conds,
 		})
@@ -115,7 +115,7 @@ func GetAppRoleOnly(ctx context.Context, conds *npool.Conds) (*npool.AppRole, er
 
 func GetAppRoles(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppRole, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppRoles(ctx, &npool.GetAppRolesRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -134,7 +134,7 @@ func GetAppRoles(ctx context.Context, conds *npool.Conds, limit, offset int32) (
 }
 
 func ExistAppRole(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppRole(ctx, &npool.ExistAppRoleRequest{
 			ID: id,
 		})
@@ -150,7 +150,7 @@ func ExistAppRole(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistAppRoleConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppRoleConds(ctx, &npool.ExistAppRoleCondsRequest{
 			Conds: conds,
 		})
@@ -166,7 +166,7 @@ func ExistAppRoleConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func CountAppRoles(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountAppRoles(ctx, &npool.CountAppRolesRequest{
 			Conds: conds,
 		})
@@ -182,7 +182,7 @@ func CountAppRoles(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func DeleteAppRole(ctx context.Context, id string) (*npool.AppRole, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppRoleMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppRole(ctx, &npool.DeleteAppRoleRequest{
 			ID: id,
 		})

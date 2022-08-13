@@ -15,7 +15,7 @@ import (
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.AppUserMgrClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -28,13 +28,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewAppUserMgrClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateAppUser(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUser(ctx, &npool.CreateAppUserRequest{
 			Info: in,
 		})
@@ -50,7 +50,7 @@ func CreateAppUser(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, e
 }
 
 func CreateAppUsers(ctx context.Context, in []*npool.AppUserReq) ([]*npool.AppUser, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUsers(ctx, &npool.CreateAppUsersRequest{
 			Infos: in,
 		})
@@ -66,7 +66,7 @@ func CreateAppUsers(ctx context.Context, in []*npool.AppUserReq) ([]*npool.AppUs
 }
 
 func UpdateAppUser(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUser(ctx, &npool.UpdateAppUserRequest{
 			Info: in,
 		})
@@ -82,7 +82,7 @@ func UpdateAppUser(ctx context.Context, in *npool.AppUserReq) (*npool.AppUser, e
 }
 
 func GetAppUser(ctx context.Context, id string) (*npool.AppUser, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUser(ctx, &npool.GetAppUserRequest{
 			ID: id,
 		})
@@ -98,7 +98,7 @@ func GetAppUser(ctx context.Context, id string) (*npool.AppUser, error) {
 }
 
 func GetAppUserOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUser, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserOnly(ctx, &npool.GetAppUserOnlyRequest{
 			Conds: conds,
 		})
@@ -115,7 +115,7 @@ func GetAppUserOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUser, er
 
 func GetAppUsers(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUser, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUsers(ctx, &npool.GetAppUsersRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -134,7 +134,7 @@ func GetAppUsers(ctx context.Context, conds *npool.Conds, limit, offset int32) (
 }
 
 func ExistAppUser(ctx context.Context, id string) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUser(ctx, &npool.ExistAppUserRequest{
 			ID: id,
 		})
@@ -150,7 +150,7 @@ func ExistAppUser(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistAppUserConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserConds(ctx, &npool.ExistAppUserCondsRequest{
 			Conds: conds,
 		})
@@ -166,7 +166,7 @@ func ExistAppUserConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func CountAppUsers(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountAppUsers(ctx, &npool.CountAppUsersRequest{
 			Conds: conds,
 		})
@@ -182,7 +182,7 @@ func CountAppUsers(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func DeleteAppUser(ctx context.Context, id string) (*npool.AppUser, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUser(ctx, &npool.DeleteAppUserRequest{
 			ID: id,
 		})

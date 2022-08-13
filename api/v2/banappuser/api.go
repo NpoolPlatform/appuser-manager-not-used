@@ -6,9 +6,9 @@ import (
 )
 
 type Server struct {
-	banappuser.UnimplementedBanAppUserMgrServer
+	banappuser.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	banappuser.RegisterBanAppUserMgrServer(server, &Server{})
+	banappuser.RegisterManagerServer(server, &Server{})
 }

@@ -6,9 +6,9 @@ import (
 )
 
 type Server struct {
-	approle.UnimplementedAppRoleMgrServer
+	approle.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	approle.RegisterAppRoleMgrServer(server, &Server{})
+	approle.RegisterManagerServer(server, &Server{})
 }

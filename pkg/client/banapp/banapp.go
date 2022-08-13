@@ -15,7 +15,7 @@ import (
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.BanAppMgrClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -28,13 +28,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewBanAppMgrClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateBanApp(ctx context.Context, in *npool.BanAppReq) (*npool.BanApp, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateBanApp(ctx, &npool.CreateBanAppRequest{
 			Info: in,
 		})
@@ -50,7 +50,7 @@ func CreateBanApp(ctx context.Context, in *npool.BanAppReq) (*npool.BanApp, erro
 }
 
 func CreateBanApps(ctx context.Context, in []*npool.BanAppReq) ([]*npool.BanApp, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateBanApps(ctx, &npool.CreateBanAppsRequest{
 			Infos: in,
 		})
@@ -66,7 +66,7 @@ func CreateBanApps(ctx context.Context, in []*npool.BanAppReq) ([]*npool.BanApp,
 }
 
 func UpdateBanApp(ctx context.Context, in *npool.BanAppReq) (*npool.BanApp, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateBanApp(ctx, &npool.UpdateBanAppRequest{
 			Info: in,
 		})
@@ -82,7 +82,7 @@ func UpdateBanApp(ctx context.Context, in *npool.BanAppReq) (*npool.BanApp, erro
 }
 
 func GetBanApp(ctx context.Context, id string) (*npool.BanApp, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetBanApp(ctx, &npool.GetBanAppRequest{
 			ID: id,
 		})
@@ -98,7 +98,7 @@ func GetBanApp(ctx context.Context, id string) (*npool.BanApp, error) {
 }
 
 func GetBanAppOnly(ctx context.Context, conds *npool.Conds) (*npool.BanApp, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetBanAppOnly(ctx, &npool.GetBanAppOnlyRequest{
 			Conds: conds,
 		})
@@ -115,7 +115,7 @@ func GetBanAppOnly(ctx context.Context, conds *npool.Conds) (*npool.BanApp, erro
 
 func GetBanApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.BanApp, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetBanApps(ctx, &npool.GetBanAppsRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -134,7 +134,7 @@ func GetBanApps(ctx context.Context, conds *npool.Conds, limit, offset int32) ([
 }
 
 func ExistBanApp(ctx context.Context, id string) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistBanApp(ctx, &npool.ExistBanAppRequest{
 			ID: id,
 		})
@@ -150,7 +150,7 @@ func ExistBanApp(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistBanAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistBanAppConds(ctx, &npool.ExistBanAppCondsRequest{
 			Conds: conds,
 		})
@@ -166,7 +166,7 @@ func ExistBanAppConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func CountBanApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountBanApps(ctx, &npool.CountBanAppsRequest{
 			Conds: conds,
 		})
@@ -182,7 +182,7 @@ func CountBanApps(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func DeleteBanApp(ctx context.Context, id string) (*npool.BanApp, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.BanAppMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.DeleteBanApp(ctx, &npool.DeleteBanAppRequest{
 			ID: id,
 		})

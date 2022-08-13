@@ -15,7 +15,7 @@ import (
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.AppUserThirdPartyMgrClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -28,13 +28,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewAppUserThirdPartyMgrClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateAppUserThirdParty(ctx context.Context, in *npool.AppUserThirdPartyReq) (*npool.AppUserThirdParty, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserThirdParty(ctx, &npool.CreateAppUserThirdPartyRequest{
 			Info: in,
 		})
@@ -50,7 +50,7 @@ func CreateAppUserThirdParty(ctx context.Context, in *npool.AppUserThirdPartyReq
 }
 
 func CreateAppUserThirdParties(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*npool.AppUserThirdParty, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppUserThirdParties(ctx, &npool.CreateAppUserThirdPartiesRequest{
 			Infos: in,
 		})
@@ -66,7 +66,7 @@ func CreateAppUserThirdParties(ctx context.Context, in []*npool.AppUserThirdPart
 }
 
 func UpdateAppUserThirdParty(ctx context.Context, in *npool.AppUserThirdPartyReq) (*npool.AppUserThirdParty, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppUserThirdParty(ctx, &npool.UpdateAppUserThirdPartyRequest{
 			Info: in,
 		})
@@ -82,7 +82,7 @@ func UpdateAppUserThirdParty(ctx context.Context, in *npool.AppUserThirdPartyReq
 }
 
 func GetAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdParty(ctx, &npool.GetAppUserThirdPartyRequest{
 			ID: id,
 		})
@@ -98,7 +98,7 @@ func GetAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdPa
 }
 
 func GetAppUserThirdPartyOnly(ctx context.Context, conds *npool.Conds) (*npool.AppUserThirdParty, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdPartyOnly(ctx, &npool.GetAppUserThirdPartyOnlyRequest{
 			Conds: conds,
 		})
@@ -115,7 +115,7 @@ func GetAppUserThirdPartyOnly(ctx context.Context, conds *npool.Conds) (*npool.A
 
 func GetAppUserThirdParties(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppUserThirdParty, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppUserThirdParties(ctx, &npool.GetAppUserThirdPartiesRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -134,7 +134,7 @@ func GetAppUserThirdParties(ctx context.Context, conds *npool.Conds, limit, offs
 }
 
 func ExistAppUserThirdParty(ctx context.Context, id string) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserThirdParty(ctx, &npool.ExistAppUserThirdPartyRequest{
 			ID: id,
 		})
@@ -150,7 +150,7 @@ func ExistAppUserThirdParty(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistAppUserThirdPartyConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppUserThirdPartyConds(ctx, &npool.ExistAppUserThirdPartyCondsRequest{
 			Conds: conds,
 		})
@@ -166,7 +166,7 @@ func ExistAppUserThirdPartyConds(ctx context.Context, conds *npool.Conds) (bool,
 }
 
 func CountAppUserThirdParties(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountAppUserThirdParties(ctx, &npool.CountAppUserThirdPartiesRequest{
 			Conds: conds,
 		})
@@ -182,7 +182,7 @@ func CountAppUserThirdParties(ctx context.Context, conds *npool.Conds) (uint32, 
 }
 
 func DeleteAppUserThirdParty(ctx context.Context, id string) (*npool.AppUserThirdParty, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppUserThirdPartyMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppUserThirdParty(ctx, &npool.DeleteAppUserThirdPartyRequest{
 			ID: id,
 		})

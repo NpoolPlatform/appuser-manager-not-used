@@ -15,7 +15,7 @@ import (
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.AppControlMgrClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -28,13 +28,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewAppControlMgrClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateAppControl(ctx context.Context, in *npool.AppControlReq) (*npool.AppControl, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppControl(ctx, &npool.CreateAppControlRequest{
 			Info: in,
 		})
@@ -50,7 +50,7 @@ func CreateAppControl(ctx context.Context, in *npool.AppControlReq) (*npool.AppC
 }
 
 func CreateAppControls(ctx context.Context, in []*npool.AppControlReq) ([]*npool.AppControl, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateAppControls(ctx, &npool.CreateAppControlsRequest{
 			Infos: in,
 		})
@@ -66,7 +66,7 @@ func CreateAppControls(ctx context.Context, in []*npool.AppControlReq) ([]*npool
 }
 
 func UpdateAppControl(ctx context.Context, in *npool.AppControlReq) (*npool.AppControl, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateAppControl(ctx, &npool.UpdateAppControlRequest{
 			Info: in,
 		})
@@ -82,7 +82,7 @@ func UpdateAppControl(ctx context.Context, in *npool.AppControlReq) (*npool.AppC
 }
 
 func GetAppControl(ctx context.Context, id string) (*npool.AppControl, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppControl(ctx, &npool.GetAppControlRequest{
 			ID: id,
 		})
@@ -98,7 +98,7 @@ func GetAppControl(ctx context.Context, id string) (*npool.AppControl, error) {
 }
 
 func GetAppControlOnly(ctx context.Context, conds *npool.Conds) (*npool.AppControl, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppControlOnly(ctx, &npool.GetAppControlOnlyRequest{
 			Conds: conds,
 		})
@@ -115,7 +115,7 @@ func GetAppControlOnly(ctx context.Context, conds *npool.Conds) (*npool.AppContr
 
 func GetAppControls(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.AppControl, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetAppControls(ctx, &npool.GetAppControlsRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -134,7 +134,7 @@ func GetAppControls(ctx context.Context, conds *npool.Conds, limit, offset int32
 }
 
 func ExistAppControl(ctx context.Context, id string) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppControl(ctx, &npool.ExistAppControlRequest{
 			ID: id,
 		})
@@ -150,7 +150,7 @@ func ExistAppControl(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistAppControlConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistAppControlConds(ctx, &npool.ExistAppControlCondsRequest{
 			Conds: conds,
 		})
@@ -166,7 +166,7 @@ func ExistAppControlConds(ctx context.Context, conds *npool.Conds) (bool, error)
 }
 
 func CountAppControls(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountAppControls(ctx, &npool.CountAppControlsRequest{
 			Conds: conds,
 		})
@@ -182,7 +182,7 @@ func CountAppControls(ctx context.Context, conds *npool.Conds) (uint32, error) {
 }
 
 func DeleteAppControl(ctx context.Context, id string) (*npool.AppControl, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.AppControlMgrClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.DeleteAppControl(ctx, &npool.DeleteAppControlRequest{
 			ID: id,
 		})
