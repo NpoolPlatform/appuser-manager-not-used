@@ -90,9 +90,37 @@ func (aru *AppRoleUpdate) SetCreatedBy(u uuid.UUID) *AppRoleUpdate {
 	return aru
 }
 
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableCreatedBy(u *uuid.UUID) *AppRoleUpdate {
+	if u != nil {
+		aru.SetCreatedBy(*u)
+	}
+	return aru
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (aru *AppRoleUpdate) ClearCreatedBy() *AppRoleUpdate {
+	aru.mutation.ClearCreatedBy()
+	return aru
+}
+
 // SetRole sets the "role" field.
 func (aru *AppRoleUpdate) SetRole(s string) *AppRoleUpdate {
 	aru.mutation.SetRole(s)
+	return aru
+}
+
+// SetNillableRole sets the "role" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableRole(s *string) *AppRoleUpdate {
+	if s != nil {
+		aru.SetRole(*s)
+	}
+	return aru
+}
+
+// ClearRole clears the value of the "role" field.
+func (aru *AppRoleUpdate) ClearRole() *AppRoleUpdate {
+	aru.mutation.ClearRole()
 	return aru
 }
 
@@ -110,15 +138,49 @@ func (aru *AppRoleUpdate) SetNillableDescription(s *string) *AppRoleUpdate {
 	return aru
 }
 
+// ClearDescription clears the value of the "description" field.
+func (aru *AppRoleUpdate) ClearDescription() *AppRoleUpdate {
+	aru.mutation.ClearDescription()
+	return aru
+}
+
 // SetAppID sets the "app_id" field.
 func (aru *AppRoleUpdate) SetAppID(u uuid.UUID) *AppRoleUpdate {
 	aru.mutation.SetAppID(u)
 	return aru
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableAppID(u *uuid.UUID) *AppRoleUpdate {
+	if u != nil {
+		aru.SetAppID(*u)
+	}
+	return aru
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (aru *AppRoleUpdate) ClearAppID() *AppRoleUpdate {
+	aru.mutation.ClearAppID()
+	return aru
+}
+
 // SetDefault sets the "default" field.
 func (aru *AppRoleUpdate) SetDefault(b bool) *AppRoleUpdate {
 	aru.mutation.SetDefault(b)
+	return aru
+}
+
+// SetNillableDefault sets the "default" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableDefault(b *bool) *AppRoleUpdate {
+	if b != nil {
+		aru.SetDefault(*b)
+	}
+	return aru
+}
+
+// ClearDefault clears the value of the "default" field.
+func (aru *AppRoleUpdate) ClearDefault() *AppRoleUpdate {
+	aru.mutation.ClearDefault()
 	return aru
 }
 
@@ -269,10 +331,22 @@ func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approle.FieldCreatedBy,
 		})
 	}
+	if aru.mutation.CreatedByCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approle.FieldCreatedBy,
+		})
+	}
 	if value, ok := aru.mutation.Role(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: approle.FieldRole,
+		})
+	}
+	if aru.mutation.RoleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: approle.FieldRole,
 		})
 	}
@@ -283,6 +357,12 @@ func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approle.FieldDescription,
 		})
 	}
+	if aru.mutation.DescriptionCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: approle.FieldDescription,
+		})
+	}
 	if value, ok := aru.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -290,10 +370,22 @@ func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approle.FieldAppID,
 		})
 	}
+	if aru.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approle.FieldAppID,
+		})
+	}
 	if value, ok := aru.mutation.Default(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
+			Column: approle.FieldDefault,
+		})
+	}
+	if aru.mutation.DefaultCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
 			Column: approle.FieldDefault,
 		})
 	}
@@ -379,9 +471,37 @@ func (aruo *AppRoleUpdateOne) SetCreatedBy(u uuid.UUID) *AppRoleUpdateOne {
 	return aruo
 }
 
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableCreatedBy(u *uuid.UUID) *AppRoleUpdateOne {
+	if u != nil {
+		aruo.SetCreatedBy(*u)
+	}
+	return aruo
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (aruo *AppRoleUpdateOne) ClearCreatedBy() *AppRoleUpdateOne {
+	aruo.mutation.ClearCreatedBy()
+	return aruo
+}
+
 // SetRole sets the "role" field.
 func (aruo *AppRoleUpdateOne) SetRole(s string) *AppRoleUpdateOne {
 	aruo.mutation.SetRole(s)
+	return aruo
+}
+
+// SetNillableRole sets the "role" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableRole(s *string) *AppRoleUpdateOne {
+	if s != nil {
+		aruo.SetRole(*s)
+	}
+	return aruo
+}
+
+// ClearRole clears the value of the "role" field.
+func (aruo *AppRoleUpdateOne) ClearRole() *AppRoleUpdateOne {
+	aruo.mutation.ClearRole()
 	return aruo
 }
 
@@ -399,15 +519,49 @@ func (aruo *AppRoleUpdateOne) SetNillableDescription(s *string) *AppRoleUpdateOn
 	return aruo
 }
 
+// ClearDescription clears the value of the "description" field.
+func (aruo *AppRoleUpdateOne) ClearDescription() *AppRoleUpdateOne {
+	aruo.mutation.ClearDescription()
+	return aruo
+}
+
 // SetAppID sets the "app_id" field.
 func (aruo *AppRoleUpdateOne) SetAppID(u uuid.UUID) *AppRoleUpdateOne {
 	aruo.mutation.SetAppID(u)
 	return aruo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableAppID(u *uuid.UUID) *AppRoleUpdateOne {
+	if u != nil {
+		aruo.SetAppID(*u)
+	}
+	return aruo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (aruo *AppRoleUpdateOne) ClearAppID() *AppRoleUpdateOne {
+	aruo.mutation.ClearAppID()
+	return aruo
+}
+
 // SetDefault sets the "default" field.
 func (aruo *AppRoleUpdateOne) SetDefault(b bool) *AppRoleUpdateOne {
 	aruo.mutation.SetDefault(b)
+	return aruo
+}
+
+// SetNillableDefault sets the "default" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableDefault(b *bool) *AppRoleUpdateOne {
+	if b != nil {
+		aruo.SetDefault(*b)
+	}
+	return aruo
+}
+
+// ClearDefault clears the value of the "default" field.
+func (aruo *AppRoleUpdateOne) ClearDefault() *AppRoleUpdateOne {
+	aruo.mutation.ClearDefault()
 	return aruo
 }
 
@@ -588,10 +742,22 @@ func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err 
 			Column: approle.FieldCreatedBy,
 		})
 	}
+	if aruo.mutation.CreatedByCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approle.FieldCreatedBy,
+		})
+	}
 	if value, ok := aruo.mutation.Role(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: approle.FieldRole,
+		})
+	}
+	if aruo.mutation.RoleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: approle.FieldRole,
 		})
 	}
@@ -602,6 +768,12 @@ func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err 
 			Column: approle.FieldDescription,
 		})
 	}
+	if aruo.mutation.DescriptionCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: approle.FieldDescription,
+		})
+	}
 	if value, ok := aruo.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -609,10 +781,22 @@ func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err 
 			Column: approle.FieldAppID,
 		})
 	}
+	if aruo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approle.FieldAppID,
+		})
+	}
 	if value, ok := aruo.mutation.Default(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
+			Column: approle.FieldDefault,
+		})
+	}
+	if aruo.mutation.DefaultCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
 			Column: approle.FieldDefault,
 		})
 	}

@@ -159,10 +159,26 @@ func init() {
 	approleDescDeletedAt := approleMixinFields0[2].Descriptor()
 	// approle.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	approle.DefaultDeletedAt = approleDescDeletedAt.Default.(func() uint32)
+	// approleDescCreatedBy is the schema descriptor for created_by field.
+	approleDescCreatedBy := approleFields[1].Descriptor()
+	// approle.DefaultCreatedBy holds the default value on creation for the created_by field.
+	approle.DefaultCreatedBy = approleDescCreatedBy.Default.(func() uuid.UUID)
+	// approleDescRole is the schema descriptor for role field.
+	approleDescRole := approleFields[2].Descriptor()
+	// approle.DefaultRole holds the default value on creation for the role field.
+	approle.DefaultRole = approleDescRole.Default.(string)
 	// approleDescDescription is the schema descriptor for description field.
 	approleDescDescription := approleFields[3].Descriptor()
 	// approle.DefaultDescription holds the default value on creation for the description field.
 	approle.DefaultDescription = approleDescDescription.Default.(string)
+	// approleDescAppID is the schema descriptor for app_id field.
+	approleDescAppID := approleFields[4].Descriptor()
+	// approle.DefaultAppID holds the default value on creation for the app_id field.
+	approle.DefaultAppID = approleDescAppID.Default.(func() uuid.UUID)
+	// approleDescDefault is the schema descriptor for default field.
+	approleDescDefault := approleFields[5].Descriptor()
+	// approle.DefaultDefault holds the default value on creation for the default field.
+	approle.DefaultDefault = approleDescDefault.Default.(bool)
 	// approleDescID is the schema descriptor for id field.
 	approleDescID := approleFields[0].Descriptor()
 	// approle.DefaultID holds the default value on creation for the id field.

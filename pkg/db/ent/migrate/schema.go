@@ -51,24 +51,17 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "created_by", Type: field.TypeUUID},
-		{Name: "role", Type: field.TypeString},
-		{Name: "description", Type: field.TypeString, Default: ""},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "default", Type: field.TypeBool},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "role", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "default", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// AppRolesTable holds the schema information for the "app_roles" table.
 	AppRolesTable = &schema.Table{
 		Name:       "app_roles",
 		Columns:    AppRolesColumns,
 		PrimaryKey: []*schema.Column{AppRolesColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "approle_app_id_role",
-				Unique:  true,
-				Columns: []*schema.Column{AppRolesColumns[7], AppRolesColumns[5]},
-			},
-		},
 	}
 	// AppRoleUsersColumns holds the columns for the "app_role_users" table.
 	AppRoleUsersColumns = []*schema.Column{

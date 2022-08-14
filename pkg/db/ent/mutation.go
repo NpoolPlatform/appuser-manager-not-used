@@ -2236,9 +2236,22 @@ func (m *AppRoleMutation) OldCreatedBy(ctx context.Context) (v uuid.UUID, err er
 	return oldValue.CreatedBy, nil
 }
 
+// ClearCreatedBy clears the value of the "created_by" field.
+func (m *AppRoleMutation) ClearCreatedBy() {
+	m.created_by = nil
+	m.clearedFields[approle.FieldCreatedBy] = struct{}{}
+}
+
+// CreatedByCleared returns if the "created_by" field was cleared in this mutation.
+func (m *AppRoleMutation) CreatedByCleared() bool {
+	_, ok := m.clearedFields[approle.FieldCreatedBy]
+	return ok
+}
+
 // ResetCreatedBy resets all changes to the "created_by" field.
 func (m *AppRoleMutation) ResetCreatedBy() {
 	m.created_by = nil
+	delete(m.clearedFields, approle.FieldCreatedBy)
 }
 
 // SetRole sets the "role" field.
@@ -2272,9 +2285,22 @@ func (m *AppRoleMutation) OldRole(ctx context.Context) (v string, err error) {
 	return oldValue.Role, nil
 }
 
+// ClearRole clears the value of the "role" field.
+func (m *AppRoleMutation) ClearRole() {
+	m.role = nil
+	m.clearedFields[approle.FieldRole] = struct{}{}
+}
+
+// RoleCleared returns if the "role" field was cleared in this mutation.
+func (m *AppRoleMutation) RoleCleared() bool {
+	_, ok := m.clearedFields[approle.FieldRole]
+	return ok
+}
+
 // ResetRole resets all changes to the "role" field.
 func (m *AppRoleMutation) ResetRole() {
 	m.role = nil
+	delete(m.clearedFields, approle.FieldRole)
 }
 
 // SetDescription sets the "description" field.
@@ -2308,9 +2334,22 @@ func (m *AppRoleMutation) OldDescription(ctx context.Context) (v string, err err
 	return oldValue.Description, nil
 }
 
+// ClearDescription clears the value of the "description" field.
+func (m *AppRoleMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[approle.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *AppRoleMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[approle.FieldDescription]
+	return ok
+}
+
 // ResetDescription resets all changes to the "description" field.
 func (m *AppRoleMutation) ResetDescription() {
 	m.description = nil
+	delete(m.clearedFields, approle.FieldDescription)
 }
 
 // SetAppID sets the "app_id" field.
@@ -2344,9 +2383,22 @@ func (m *AppRoleMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error)
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppRoleMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[approle.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppRoleMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[approle.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppRoleMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, approle.FieldAppID)
 }
 
 // SetDefault sets the "default" field.
@@ -2380,9 +2432,22 @@ func (m *AppRoleMutation) OldDefault(ctx context.Context) (v bool, err error) {
 	return oldValue.Default, nil
 }
 
+// ClearDefault clears the value of the "default" field.
+func (m *AppRoleMutation) ClearDefault() {
+	m._default = nil
+	m.clearedFields[approle.FieldDefault] = struct{}{}
+}
+
+// DefaultCleared returns if the "default" field was cleared in this mutation.
+func (m *AppRoleMutation) DefaultCleared() bool {
+	_, ok := m.clearedFields[approle.FieldDefault]
+	return ok
+}
+
 // ResetDefault resets all changes to the "default" field.
 func (m *AppRoleMutation) ResetDefault() {
 	m._default = nil
+	delete(m.clearedFields, approle.FieldDefault)
 }
 
 // Where appends a list predicates to the AppRoleMutation builder.
@@ -2611,7 +2676,23 @@ func (m *AppRoleMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppRoleMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(approle.FieldCreatedBy) {
+		fields = append(fields, approle.FieldCreatedBy)
+	}
+	if m.FieldCleared(approle.FieldRole) {
+		fields = append(fields, approle.FieldRole)
+	}
+	if m.FieldCleared(approle.FieldDescription) {
+		fields = append(fields, approle.FieldDescription)
+	}
+	if m.FieldCleared(approle.FieldAppID) {
+		fields = append(fields, approle.FieldAppID)
+	}
+	if m.FieldCleared(approle.FieldDefault) {
+		fields = append(fields, approle.FieldDefault)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -2624,6 +2705,23 @@ func (m *AppRoleMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppRoleMutation) ClearField(name string) error {
+	switch name {
+	case approle.FieldCreatedBy:
+		m.ClearCreatedBy()
+		return nil
+	case approle.FieldRole:
+		m.ClearRole()
+		return nil
+	case approle.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case approle.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case approle.FieldDefault:
+		m.ClearDefault()
+		return nil
+	}
 	return fmt.Errorf("unknown AppRole nullable field %s", name)
 }
 

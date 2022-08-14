@@ -71,9 +71,25 @@ func (arc *AppRoleCreate) SetCreatedBy(u uuid.UUID) *AppRoleCreate {
 	return arc
 }
 
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (arc *AppRoleCreate) SetNillableCreatedBy(u *uuid.UUID) *AppRoleCreate {
+	if u != nil {
+		arc.SetCreatedBy(*u)
+	}
+	return arc
+}
+
 // SetRole sets the "role" field.
 func (arc *AppRoleCreate) SetRole(s string) *AppRoleCreate {
 	arc.mutation.SetRole(s)
+	return arc
+}
+
+// SetNillableRole sets the "role" field if the given value is not nil.
+func (arc *AppRoleCreate) SetNillableRole(s *string) *AppRoleCreate {
+	if s != nil {
+		arc.SetRole(*s)
+	}
 	return arc
 }
 
@@ -97,9 +113,25 @@ func (arc *AppRoleCreate) SetAppID(u uuid.UUID) *AppRoleCreate {
 	return arc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (arc *AppRoleCreate) SetNillableAppID(u *uuid.UUID) *AppRoleCreate {
+	if u != nil {
+		arc.SetAppID(*u)
+	}
+	return arc
+}
+
 // SetDefault sets the "default" field.
 func (arc *AppRoleCreate) SetDefault(b bool) *AppRoleCreate {
 	arc.mutation.SetDefault(b)
+	return arc
+}
+
+// SetNillableDefault sets the "default" field if the given value is not nil.
+func (arc *AppRoleCreate) SetNillableDefault(b *bool) *AppRoleCreate {
+	if b != nil {
+		arc.SetDefault(*b)
+	}
 	return arc
 }
 
@@ -217,9 +249,31 @@ func (arc *AppRoleCreate) defaults() error {
 		v := approle.DefaultDeletedAt()
 		arc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := arc.mutation.CreatedBy(); !ok {
+		if approle.DefaultCreatedBy == nil {
+			return fmt.Errorf("ent: uninitialized approle.DefaultCreatedBy (forgotten import ent/runtime?)")
+		}
+		v := approle.DefaultCreatedBy()
+		arc.mutation.SetCreatedBy(v)
+	}
+	if _, ok := arc.mutation.Role(); !ok {
+		v := approle.DefaultRole
+		arc.mutation.SetRole(v)
+	}
 	if _, ok := arc.mutation.Description(); !ok {
 		v := approle.DefaultDescription
 		arc.mutation.SetDescription(v)
+	}
+	if _, ok := arc.mutation.AppID(); !ok {
+		if approle.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized approle.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := approle.DefaultAppID()
+		arc.mutation.SetAppID(v)
+	}
+	if _, ok := arc.mutation.Default(); !ok {
+		v := approle.DefaultDefault
+		arc.mutation.SetDefault(v)
 	}
 	if _, ok := arc.mutation.ID(); !ok {
 		if approle.DefaultID == nil {
@@ -241,21 +295,6 @@ func (arc *AppRoleCreate) check() error {
 	}
 	if _, ok := arc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppRole.deleted_at"`)}
-	}
-	if _, ok := arc.mutation.CreatedBy(); !ok {
-		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "AppRole.created_by"`)}
-	}
-	if _, ok := arc.mutation.Role(); !ok {
-		return &ValidationError{Name: "role", err: errors.New(`ent: missing required field "AppRole.role"`)}
-	}
-	if _, ok := arc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "AppRole.description"`)}
-	}
-	if _, ok := arc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppRole.app_id"`)}
-	}
-	if _, ok := arc.mutation.Default(); !ok {
-		return &ValidationError{Name: "default", err: errors.New(`ent: missing required field "AppRole.default"`)}
 	}
 	return nil
 }
@@ -478,6 +517,12 @@ func (u *AppRoleUpsert) UpdateCreatedBy() *AppRoleUpsert {
 	return u
 }
 
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *AppRoleUpsert) ClearCreatedBy() *AppRoleUpsert {
+	u.SetNull(approle.FieldCreatedBy)
+	return u
+}
+
 // SetRole sets the "role" field.
 func (u *AppRoleUpsert) SetRole(v string) *AppRoleUpsert {
 	u.Set(approle.FieldRole, v)
@@ -487,6 +532,12 @@ func (u *AppRoleUpsert) SetRole(v string) *AppRoleUpsert {
 // UpdateRole sets the "role" field to the value that was provided on create.
 func (u *AppRoleUpsert) UpdateRole() *AppRoleUpsert {
 	u.SetExcluded(approle.FieldRole)
+	return u
+}
+
+// ClearRole clears the value of the "role" field.
+func (u *AppRoleUpsert) ClearRole() *AppRoleUpsert {
+	u.SetNull(approle.FieldRole)
 	return u
 }
 
@@ -502,6 +553,12 @@ func (u *AppRoleUpsert) UpdateDescription() *AppRoleUpsert {
 	return u
 }
 
+// ClearDescription clears the value of the "description" field.
+func (u *AppRoleUpsert) ClearDescription() *AppRoleUpsert {
+	u.SetNull(approle.FieldDescription)
+	return u
+}
+
 // SetAppID sets the "app_id" field.
 func (u *AppRoleUpsert) SetAppID(v uuid.UUID) *AppRoleUpsert {
 	u.Set(approle.FieldAppID, v)
@@ -514,6 +571,12 @@ func (u *AppRoleUpsert) UpdateAppID() *AppRoleUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppRoleUpsert) ClearAppID() *AppRoleUpsert {
+	u.SetNull(approle.FieldAppID)
+	return u
+}
+
 // SetDefault sets the "default" field.
 func (u *AppRoleUpsert) SetDefault(v bool) *AppRoleUpsert {
 	u.Set(approle.FieldDefault, v)
@@ -523,6 +586,12 @@ func (u *AppRoleUpsert) SetDefault(v bool) *AppRoleUpsert {
 // UpdateDefault sets the "default" field to the value that was provided on create.
 func (u *AppRoleUpsert) UpdateDefault() *AppRoleUpsert {
 	u.SetExcluded(approle.FieldDefault)
+	return u
+}
+
+// ClearDefault clears the value of the "default" field.
+func (u *AppRoleUpsert) ClearDefault() *AppRoleUpsert {
+	u.SetNull(approle.FieldDefault)
 	return u
 }
 
@@ -653,6 +722,13 @@ func (u *AppRoleUpsertOne) UpdateCreatedBy() *AppRoleUpsertOne {
 	})
 }
 
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *AppRoleUpsertOne) ClearCreatedBy() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
 // SetRole sets the "role" field.
 func (u *AppRoleUpsertOne) SetRole(v string) *AppRoleUpsertOne {
 	return u.Update(func(s *AppRoleUpsert) {
@@ -664,6 +740,13 @@ func (u *AppRoleUpsertOne) SetRole(v string) *AppRoleUpsertOne {
 func (u *AppRoleUpsertOne) UpdateRole() *AppRoleUpsertOne {
 	return u.Update(func(s *AppRoleUpsert) {
 		s.UpdateRole()
+	})
+}
+
+// ClearRole clears the value of the "role" field.
+func (u *AppRoleUpsertOne) ClearRole() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearRole()
 	})
 }
 
@@ -681,6 +764,13 @@ func (u *AppRoleUpsertOne) UpdateDescription() *AppRoleUpsertOne {
 	})
 }
 
+// ClearDescription clears the value of the "description" field.
+func (u *AppRoleUpsertOne) ClearDescription() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearDescription()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *AppRoleUpsertOne) SetAppID(v uuid.UUID) *AppRoleUpsertOne {
 	return u.Update(func(s *AppRoleUpsert) {
@@ -695,6 +785,13 @@ func (u *AppRoleUpsertOne) UpdateAppID() *AppRoleUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppRoleUpsertOne) ClearAppID() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetDefault sets the "default" field.
 func (u *AppRoleUpsertOne) SetDefault(v bool) *AppRoleUpsertOne {
 	return u.Update(func(s *AppRoleUpsert) {
@@ -706,6 +803,13 @@ func (u *AppRoleUpsertOne) SetDefault(v bool) *AppRoleUpsertOne {
 func (u *AppRoleUpsertOne) UpdateDefault() *AppRoleUpsertOne {
 	return u.Update(func(s *AppRoleUpsert) {
 		s.UpdateDefault()
+	})
+}
+
+// ClearDefault clears the value of the "default" field.
+func (u *AppRoleUpsertOne) ClearDefault() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearDefault()
 	})
 }
 
@@ -1002,6 +1106,13 @@ func (u *AppRoleUpsertBulk) UpdateCreatedBy() *AppRoleUpsertBulk {
 	})
 }
 
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *AppRoleUpsertBulk) ClearCreatedBy() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
 // SetRole sets the "role" field.
 func (u *AppRoleUpsertBulk) SetRole(v string) *AppRoleUpsertBulk {
 	return u.Update(func(s *AppRoleUpsert) {
@@ -1013,6 +1124,13 @@ func (u *AppRoleUpsertBulk) SetRole(v string) *AppRoleUpsertBulk {
 func (u *AppRoleUpsertBulk) UpdateRole() *AppRoleUpsertBulk {
 	return u.Update(func(s *AppRoleUpsert) {
 		s.UpdateRole()
+	})
+}
+
+// ClearRole clears the value of the "role" field.
+func (u *AppRoleUpsertBulk) ClearRole() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearRole()
 	})
 }
 
@@ -1030,6 +1148,13 @@ func (u *AppRoleUpsertBulk) UpdateDescription() *AppRoleUpsertBulk {
 	})
 }
 
+// ClearDescription clears the value of the "description" field.
+func (u *AppRoleUpsertBulk) ClearDescription() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearDescription()
+	})
+}
+
 // SetAppID sets the "app_id" field.
 func (u *AppRoleUpsertBulk) SetAppID(v uuid.UUID) *AppRoleUpsertBulk {
 	return u.Update(func(s *AppRoleUpsert) {
@@ -1044,6 +1169,13 @@ func (u *AppRoleUpsertBulk) UpdateAppID() *AppRoleUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppRoleUpsertBulk) ClearAppID() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetDefault sets the "default" field.
 func (u *AppRoleUpsertBulk) SetDefault(v bool) *AppRoleUpsertBulk {
 	return u.Update(func(s *AppRoleUpsert) {
@@ -1055,6 +1187,13 @@ func (u *AppRoleUpsertBulk) SetDefault(v bool) *AppRoleUpsertBulk {
 func (u *AppRoleUpsertBulk) UpdateDefault() *AppRoleUpsertBulk {
 	return u.Update(func(s *AppRoleUpsert) {
 		s.UpdateDefault()
+	})
+}
+
+// ClearDefault clears the value of the "default" field.
+func (u *AppRoleUpsertBulk) ClearDefault() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearDefault()
 	})
 }
 
