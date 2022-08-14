@@ -85,10 +85,10 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "email_address", Type: field.TypeString, Default: ""},
-		{Name: "phone_no", Type: field.TypeString, Default: ""},
-		{Name: "import_from_app", Type: field.TypeUUID},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "email_address", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "phone_no", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "import_from_app", Type: field.TypeUUID, Nullable: true},
 	}
 	// AppUsersTable holds the schema information for the "app_users" table.
 	AppUsersTable = &schema.Table{

@@ -71,6 +71,14 @@ func (auc *AppUserCreate) SetAppID(u uuid.UUID) *AppUserCreate {
 	return auc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (auc *AppUserCreate) SetNillableAppID(u *uuid.UUID) *AppUserCreate {
+	if u != nil {
+		auc.SetAppID(*u)
+	}
+	return auc
+}
+
 // SetEmailAddress sets the "email_address" field.
 func (auc *AppUserCreate) SetEmailAddress(s string) *AppUserCreate {
 	auc.mutation.SetEmailAddress(s)
@@ -102,6 +110,14 @@ func (auc *AppUserCreate) SetNillablePhoneNo(s *string) *AppUserCreate {
 // SetImportFromApp sets the "import_from_app" field.
 func (auc *AppUserCreate) SetImportFromApp(u uuid.UUID) *AppUserCreate {
 	auc.mutation.SetImportFromApp(u)
+	return auc
+}
+
+// SetNillableImportFromApp sets the "import_from_app" field if the given value is not nil.
+func (auc *AppUserCreate) SetNillableImportFromApp(u *uuid.UUID) *AppUserCreate {
+	if u != nil {
+		auc.SetImportFromApp(*u)
+	}
 	return auc
 }
 
@@ -219,6 +235,13 @@ func (auc *AppUserCreate) defaults() error {
 		v := appuser.DefaultDeletedAt()
 		auc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := auc.mutation.AppID(); !ok {
+		if appuser.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := appuser.DefaultAppID()
+		auc.mutation.SetAppID(v)
+	}
 	if _, ok := auc.mutation.EmailAddress(); !ok {
 		v := appuser.DefaultEmailAddress
 		auc.mutation.SetEmailAddress(v)
@@ -226,6 +249,13 @@ func (auc *AppUserCreate) defaults() error {
 	if _, ok := auc.mutation.PhoneNo(); !ok {
 		v := appuser.DefaultPhoneNo
 		auc.mutation.SetPhoneNo(v)
+	}
+	if _, ok := auc.mutation.ImportFromApp(); !ok {
+		if appuser.DefaultImportFromApp == nil {
+			return fmt.Errorf("ent: uninitialized appuser.DefaultImportFromApp (forgotten import ent/runtime?)")
+		}
+		v := appuser.DefaultImportFromApp()
+		auc.mutation.SetImportFromApp(v)
 	}
 	if _, ok := auc.mutation.ID(); !ok {
 		if appuser.DefaultID == nil {
@@ -247,18 +277,6 @@ func (auc *AppUserCreate) check() error {
 	}
 	if _, ok := auc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUser.deleted_at"`)}
-	}
-	if _, ok := auc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUser.app_id"`)}
-	}
-	if _, ok := auc.mutation.EmailAddress(); !ok {
-		return &ValidationError{Name: "email_address", err: errors.New(`ent: missing required field "AppUser.email_address"`)}
-	}
-	if _, ok := auc.mutation.PhoneNo(); !ok {
-		return &ValidationError{Name: "phone_no", err: errors.New(`ent: missing required field "AppUser.phone_no"`)}
-	}
-	if _, ok := auc.mutation.ImportFromApp(); !ok {
-		return &ValidationError{Name: "import_from_app", err: errors.New(`ent: missing required field "AppUser.import_from_app"`)}
 	}
 	return nil
 }
@@ -473,6 +491,12 @@ func (u *AppUserUpsert) UpdateAppID() *AppUserUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserUpsert) ClearAppID() *AppUserUpsert {
+	u.SetNull(appuser.FieldAppID)
+	return u
+}
+
 // SetEmailAddress sets the "email_address" field.
 func (u *AppUserUpsert) SetEmailAddress(v string) *AppUserUpsert {
 	u.Set(appuser.FieldEmailAddress, v)
@@ -482,6 +506,12 @@ func (u *AppUserUpsert) SetEmailAddress(v string) *AppUserUpsert {
 // UpdateEmailAddress sets the "email_address" field to the value that was provided on create.
 func (u *AppUserUpsert) UpdateEmailAddress() *AppUserUpsert {
 	u.SetExcluded(appuser.FieldEmailAddress)
+	return u
+}
+
+// ClearEmailAddress clears the value of the "email_address" field.
+func (u *AppUserUpsert) ClearEmailAddress() *AppUserUpsert {
+	u.SetNull(appuser.FieldEmailAddress)
 	return u
 }
 
@@ -497,6 +527,12 @@ func (u *AppUserUpsert) UpdatePhoneNo() *AppUserUpsert {
 	return u
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (u *AppUserUpsert) ClearPhoneNo() *AppUserUpsert {
+	u.SetNull(appuser.FieldPhoneNo)
+	return u
+}
+
 // SetImportFromApp sets the "import_from_app" field.
 func (u *AppUserUpsert) SetImportFromApp(v uuid.UUID) *AppUserUpsert {
 	u.Set(appuser.FieldImportFromApp, v)
@@ -506,6 +542,12 @@ func (u *AppUserUpsert) SetImportFromApp(v uuid.UUID) *AppUserUpsert {
 // UpdateImportFromApp sets the "import_from_app" field to the value that was provided on create.
 func (u *AppUserUpsert) UpdateImportFromApp() *AppUserUpsert {
 	u.SetExcluded(appuser.FieldImportFromApp)
+	return u
+}
+
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (u *AppUserUpsert) ClearImportFromApp() *AppUserUpsert {
+	u.SetNull(appuser.FieldImportFromApp)
 	return u
 }
 
@@ -636,6 +678,13 @@ func (u *AppUserUpsertOne) UpdateAppID() *AppUserUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserUpsertOne) ClearAppID() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetEmailAddress sets the "email_address" field.
 func (u *AppUserUpsertOne) SetEmailAddress(v string) *AppUserUpsertOne {
 	return u.Update(func(s *AppUserUpsert) {
@@ -647,6 +696,13 @@ func (u *AppUserUpsertOne) SetEmailAddress(v string) *AppUserUpsertOne {
 func (u *AppUserUpsertOne) UpdateEmailAddress() *AppUserUpsertOne {
 	return u.Update(func(s *AppUserUpsert) {
 		s.UpdateEmailAddress()
+	})
+}
+
+// ClearEmailAddress clears the value of the "email_address" field.
+func (u *AppUserUpsertOne) ClearEmailAddress() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearEmailAddress()
 	})
 }
 
@@ -664,6 +720,13 @@ func (u *AppUserUpsertOne) UpdatePhoneNo() *AppUserUpsertOne {
 	})
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (u *AppUserUpsertOne) ClearPhoneNo() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearPhoneNo()
+	})
+}
+
 // SetImportFromApp sets the "import_from_app" field.
 func (u *AppUserUpsertOne) SetImportFromApp(v uuid.UUID) *AppUserUpsertOne {
 	return u.Update(func(s *AppUserUpsert) {
@@ -675,6 +738,13 @@ func (u *AppUserUpsertOne) SetImportFromApp(v uuid.UUID) *AppUserUpsertOne {
 func (u *AppUserUpsertOne) UpdateImportFromApp() *AppUserUpsertOne {
 	return u.Update(func(s *AppUserUpsert) {
 		s.UpdateImportFromApp()
+	})
+}
+
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (u *AppUserUpsertOne) ClearImportFromApp() *AppUserUpsertOne {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearImportFromApp()
 	})
 }
 
@@ -971,6 +1041,13 @@ func (u *AppUserUpsertBulk) UpdateAppID() *AppUserUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserUpsertBulk) ClearAppID() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetEmailAddress sets the "email_address" field.
 func (u *AppUserUpsertBulk) SetEmailAddress(v string) *AppUserUpsertBulk {
 	return u.Update(func(s *AppUserUpsert) {
@@ -982,6 +1059,13 @@ func (u *AppUserUpsertBulk) SetEmailAddress(v string) *AppUserUpsertBulk {
 func (u *AppUserUpsertBulk) UpdateEmailAddress() *AppUserUpsertBulk {
 	return u.Update(func(s *AppUserUpsert) {
 		s.UpdateEmailAddress()
+	})
+}
+
+// ClearEmailAddress clears the value of the "email_address" field.
+func (u *AppUserUpsertBulk) ClearEmailAddress() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearEmailAddress()
 	})
 }
 
@@ -999,6 +1083,13 @@ func (u *AppUserUpsertBulk) UpdatePhoneNo() *AppUserUpsertBulk {
 	})
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (u *AppUserUpsertBulk) ClearPhoneNo() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearPhoneNo()
+	})
+}
+
 // SetImportFromApp sets the "import_from_app" field.
 func (u *AppUserUpsertBulk) SetImportFromApp(v uuid.UUID) *AppUserUpsertBulk {
 	return u.Update(func(s *AppUserUpsert) {
@@ -1010,6 +1101,13 @@ func (u *AppUserUpsertBulk) SetImportFromApp(v uuid.UUID) *AppUserUpsertBulk {
 func (u *AppUserUpsertBulk) UpdateImportFromApp() *AppUserUpsertBulk {
 	return u.Update(func(s *AppUserUpsert) {
 		s.UpdateImportFromApp()
+	})
+}
+
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (u *AppUserUpsertBulk) ClearImportFromApp() *AppUserUpsertBulk {
+	return u.Update(func(s *AppUserUpsert) {
+		s.ClearImportFromApp()
 	})
 }
 

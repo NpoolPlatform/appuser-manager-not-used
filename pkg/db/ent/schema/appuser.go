@@ -27,14 +27,24 @@ func (AppUser) Fields() []ent.Field {
 			Default(uuid.New).
 			Unique(),
 		field.
-			UUID("app_id", uuid.UUID{}),
+			UUID("app_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.
 			String("email_address").
+			Optional().
 			Default(""),
 		field.
 			String("phone_no").
+			Optional().
 			Default(""),
 		field.
-			UUID("import_from_app", uuid.UUID{}),
+			UUID("import_from_app", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 	}
 }

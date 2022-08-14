@@ -255,6 +255,10 @@ func init() {
 	appuserDescDeletedAt := appuserMixinFields0[2].Descriptor()
 	// appuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appuser.DefaultDeletedAt = appuserDescDeletedAt.Default.(func() uint32)
+	// appuserDescAppID is the schema descriptor for app_id field.
+	appuserDescAppID := appuserFields[1].Descriptor()
+	// appuser.DefaultAppID holds the default value on creation for the app_id field.
+	appuser.DefaultAppID = appuserDescAppID.Default.(func() uuid.UUID)
 	// appuserDescEmailAddress is the schema descriptor for email_address field.
 	appuserDescEmailAddress := appuserFields[2].Descriptor()
 	// appuser.DefaultEmailAddress holds the default value on creation for the email_address field.
@@ -263,6 +267,10 @@ func init() {
 	appuserDescPhoneNo := appuserFields[3].Descriptor()
 	// appuser.DefaultPhoneNo holds the default value on creation for the phone_no field.
 	appuser.DefaultPhoneNo = appuserDescPhoneNo.Default.(string)
+	// appuserDescImportFromApp is the schema descriptor for import_from_app field.
+	appuserDescImportFromApp := appuserFields[4].Descriptor()
+	// appuser.DefaultImportFromApp holds the default value on creation for the import_from_app field.
+	appuser.DefaultImportFromApp = appuserDescImportFromApp.Default.(func() uuid.UUID)
 	// appuserDescID is the schema descriptor for id field.
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.

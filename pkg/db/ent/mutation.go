@@ -3879,9 +3879,22 @@ func (m *AppUserMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error)
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppUserMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[appuser.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppUserMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppUserMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, appuser.FieldAppID)
 }
 
 // SetEmailAddress sets the "email_address" field.
@@ -3915,9 +3928,22 @@ func (m *AppUserMutation) OldEmailAddress(ctx context.Context) (v string, err er
 	return oldValue.EmailAddress, nil
 }
 
+// ClearEmailAddress clears the value of the "email_address" field.
+func (m *AppUserMutation) ClearEmailAddress() {
+	m.email_address = nil
+	m.clearedFields[appuser.FieldEmailAddress] = struct{}{}
+}
+
+// EmailAddressCleared returns if the "email_address" field was cleared in this mutation.
+func (m *AppUserMutation) EmailAddressCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldEmailAddress]
+	return ok
+}
+
 // ResetEmailAddress resets all changes to the "email_address" field.
 func (m *AppUserMutation) ResetEmailAddress() {
 	m.email_address = nil
+	delete(m.clearedFields, appuser.FieldEmailAddress)
 }
 
 // SetPhoneNo sets the "phone_no" field.
@@ -3951,9 +3977,22 @@ func (m *AppUserMutation) OldPhoneNo(ctx context.Context) (v string, err error) 
 	return oldValue.PhoneNo, nil
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (m *AppUserMutation) ClearPhoneNo() {
+	m.phone_no = nil
+	m.clearedFields[appuser.FieldPhoneNo] = struct{}{}
+}
+
+// PhoneNoCleared returns if the "phone_no" field was cleared in this mutation.
+func (m *AppUserMutation) PhoneNoCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldPhoneNo]
+	return ok
+}
+
 // ResetPhoneNo resets all changes to the "phone_no" field.
 func (m *AppUserMutation) ResetPhoneNo() {
 	m.phone_no = nil
+	delete(m.clearedFields, appuser.FieldPhoneNo)
 }
 
 // SetImportFromApp sets the "import_from_app" field.
@@ -3987,9 +4026,22 @@ func (m *AppUserMutation) OldImportFromApp(ctx context.Context) (v uuid.UUID, er
 	return oldValue.ImportFromApp, nil
 }
 
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (m *AppUserMutation) ClearImportFromApp() {
+	m.import_from_app = nil
+	m.clearedFields[appuser.FieldImportFromApp] = struct{}{}
+}
+
+// ImportFromAppCleared returns if the "import_from_app" field was cleared in this mutation.
+func (m *AppUserMutation) ImportFromAppCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldImportFromApp]
+	return ok
+}
+
 // ResetImportFromApp resets all changes to the "import_from_app" field.
 func (m *AppUserMutation) ResetImportFromApp() {
 	m.import_from_app = nil
+	delete(m.clearedFields, appuser.FieldImportFromApp)
 }
 
 // Where appends a list predicates to the AppUserMutation builder.
@@ -4204,7 +4256,20 @@ func (m *AppUserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppUserMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(appuser.FieldAppID) {
+		fields = append(fields, appuser.FieldAppID)
+	}
+	if m.FieldCleared(appuser.FieldEmailAddress) {
+		fields = append(fields, appuser.FieldEmailAddress)
+	}
+	if m.FieldCleared(appuser.FieldPhoneNo) {
+		fields = append(fields, appuser.FieldPhoneNo)
+	}
+	if m.FieldCleared(appuser.FieldImportFromApp) {
+		fields = append(fields, appuser.FieldImportFromApp)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -4217,6 +4282,20 @@ func (m *AppUserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppUserMutation) ClearField(name string) error {
+	switch name {
+	case appuser.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case appuser.FieldEmailAddress:
+		m.ClearEmailAddress()
+		return nil
+	case appuser.FieldPhoneNo:
+		m.ClearPhoneNo()
+		return nil
+	case appuser.FieldImportFromApp:
+		m.ClearImportFromApp()
+		return nil
+	}
 	return fmt.Errorf("unknown AppUser nullable field %s", name)
 }
 
