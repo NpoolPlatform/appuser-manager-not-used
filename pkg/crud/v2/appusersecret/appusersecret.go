@@ -102,7 +102,9 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUs
 	return rows, nil
 }
 
-func UpdateSet(u *ent.AppUserSecretUpdateOne, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdateOne {
+func UpdateSet(info *ent.AppUserSecret, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdateOne {
+	u := info.Update()
+
 	if in.PasswordHash != nil {
 		u.SetPasswordHash(in.GetPasswordHash())
 	}
@@ -132,9 +134,12 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppUserSecret.UpdateOneID(uuid.MustParse(in.GetID()))
-		info, err = UpdateSet(u, in).Save(_ctx)
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppUserSecret.Query().Where(appusersecret.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
+		}
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
