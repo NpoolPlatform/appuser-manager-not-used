@@ -211,6 +211,18 @@ func init() {
 	approleuserDescDeletedAt := approleuserMixinFields0[2].Descriptor()
 	// approleuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	approleuser.DefaultDeletedAt = approleuserDescDeletedAt.Default.(func() uint32)
+	// approleuserDescAppID is the schema descriptor for app_id field.
+	approleuserDescAppID := approleuserFields[1].Descriptor()
+	// approleuser.DefaultAppID holds the default value on creation for the app_id field.
+	approleuser.DefaultAppID = approleuserDescAppID.Default.(func() uuid.UUID)
+	// approleuserDescRoleID is the schema descriptor for role_id field.
+	approleuserDescRoleID := approleuserFields[2].Descriptor()
+	// approleuser.DefaultRoleID holds the default value on creation for the role_id field.
+	approleuser.DefaultRoleID = approleuserDescRoleID.Default.(func() uuid.UUID)
+	// approleuserDescUserID is the schema descriptor for user_id field.
+	approleuserDescUserID := approleuserFields[3].Descriptor()
+	// approleuser.DefaultUserID holds the default value on creation for the user_id field.
+	approleuser.DefaultUserID = approleuserDescUserID.Default.(func() uuid.UUID)
 	// approleuserDescID is the schema descriptor for id field.
 	approleuserDescID := approleuserFields[0].Descriptor()
 	// approleuser.DefaultID holds the default value on creation for the id field.

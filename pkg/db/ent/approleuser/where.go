@@ -377,6 +377,20 @@ func AppIDLTE(v uuid.UUID) predicate.AppRoleUser {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // RoleIDEQ applies the EQ predicate on the "role_id" field.
 func RoleIDEQ(v uuid.UUID) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
@@ -438,6 +452,20 @@ func RoleIDLT(v uuid.UUID) predicate.AppRoleUser {
 func RoleIDLTE(v uuid.UUID) predicate.AppRoleUser {
 	return predicate.AppRoleUser(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldRoleID), v))
+	})
+}
+
+// RoleIDIsNil applies the IsNil predicate on the "role_id" field.
+func RoleIDIsNil() predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldRoleID)))
+	})
+}
+
+// RoleIDNotNil applies the NotNil predicate on the "role_id" field.
+func RoleIDNotNil() predicate.AppRoleUser {
+	return predicate.AppRoleUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldRoleID)))
 	})
 }
 

@@ -3129,9 +3129,22 @@ func (m *AppRoleUserMutation) OldAppID(ctx context.Context) (v uuid.UUID, err er
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppRoleUserMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[approleuser.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppRoleUserMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[approleuser.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppRoleUserMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, approleuser.FieldAppID)
 }
 
 // SetRoleID sets the "role_id" field.
@@ -3165,9 +3178,22 @@ func (m *AppRoleUserMutation) OldRoleID(ctx context.Context) (v uuid.UUID, err e
 	return oldValue.RoleID, nil
 }
 
+// ClearRoleID clears the value of the "role_id" field.
+func (m *AppRoleUserMutation) ClearRoleID() {
+	m.role_id = nil
+	m.clearedFields[approleuser.FieldRoleID] = struct{}{}
+}
+
+// RoleIDCleared returns if the "role_id" field was cleared in this mutation.
+func (m *AppRoleUserMutation) RoleIDCleared() bool {
+	_, ok := m.clearedFields[approleuser.FieldRoleID]
+	return ok
+}
+
 // ResetRoleID resets all changes to the "role_id" field.
 func (m *AppRoleUserMutation) ResetRoleID() {
 	m.role_id = nil
+	delete(m.clearedFields, approleuser.FieldRoleID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -3418,6 +3444,12 @@ func (m *AppRoleUserMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AppRoleUserMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(approleuser.FieldAppID) {
+		fields = append(fields, approleuser.FieldAppID)
+	}
+	if m.FieldCleared(approleuser.FieldRoleID) {
+		fields = append(fields, approleuser.FieldRoleID)
+	}
 	if m.FieldCleared(approleuser.FieldUserID) {
 		fields = append(fields, approleuser.FieldUserID)
 	}
@@ -3435,6 +3467,12 @@ func (m *AppRoleUserMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppRoleUserMutation) ClearField(name string) error {
 	switch name {
+	case approleuser.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case approleuser.FieldRoleID:
+		m.ClearRoleID()
+		return nil
 	case approleuser.FieldUserID:
 		m.ClearUserID()
 		return nil

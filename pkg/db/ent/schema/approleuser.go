@@ -22,11 +22,27 @@ func (AppRoleUser) Mixin() []ent.Mixin {
 // Fields of the AppRoleUser.
 func (AppRoleUser) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
+		field.
+			UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.UUID("app_id", uuid.UUID{}),
-		field.UUID("role_id", uuid.UUID{}),
-		field.UUID("user_id", uuid.UUID{}).Optional(),
+		field.
+			UUID("app_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("role_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("user_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 	}
 }

@@ -90,9 +90,37 @@ func (aruu *AppRoleUserUpdate) SetAppID(u uuid.UUID) *AppRoleUserUpdate {
 	return aruu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aruu *AppRoleUserUpdate) SetNillableAppID(u *uuid.UUID) *AppRoleUserUpdate {
+	if u != nil {
+		aruu.SetAppID(*u)
+	}
+	return aruu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (aruu *AppRoleUserUpdate) ClearAppID() *AppRoleUserUpdate {
+	aruu.mutation.ClearAppID()
+	return aruu
+}
+
 // SetRoleID sets the "role_id" field.
 func (aruu *AppRoleUserUpdate) SetRoleID(u uuid.UUID) *AppRoleUserUpdate {
 	aruu.mutation.SetRoleID(u)
+	return aruu
+}
+
+// SetNillableRoleID sets the "role_id" field if the given value is not nil.
+func (aruu *AppRoleUserUpdate) SetNillableRoleID(u *uuid.UUID) *AppRoleUserUpdate {
+	if u != nil {
+		aruu.SetRoleID(*u)
+	}
+	return aruu
+}
+
+// ClearRoleID clears the value of the "role_id" field.
+func (aruu *AppRoleUserUpdate) ClearRoleID() *AppRoleUserUpdate {
+	aruu.mutation.ClearRoleID()
 	return aruu
 }
 
@@ -263,10 +291,22 @@ func (aruu *AppRoleUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approleuser.FieldAppID,
 		})
 	}
+	if aruu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approleuser.FieldAppID,
+		})
+	}
 	if value, ok := aruu.mutation.RoleID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: approleuser.FieldRoleID,
+		})
+	}
+	if aruu.mutation.RoleIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: approleuser.FieldRoleID,
 		})
 	}
@@ -365,9 +405,37 @@ func (aruuo *AppRoleUserUpdateOne) SetAppID(u uuid.UUID) *AppRoleUserUpdateOne {
 	return aruuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aruuo *AppRoleUserUpdateOne) SetNillableAppID(u *uuid.UUID) *AppRoleUserUpdateOne {
+	if u != nil {
+		aruuo.SetAppID(*u)
+	}
+	return aruuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (aruuo *AppRoleUserUpdateOne) ClearAppID() *AppRoleUserUpdateOne {
+	aruuo.mutation.ClearAppID()
+	return aruuo
+}
+
 // SetRoleID sets the "role_id" field.
 func (aruuo *AppRoleUserUpdateOne) SetRoleID(u uuid.UUID) *AppRoleUserUpdateOne {
 	aruuo.mutation.SetRoleID(u)
+	return aruuo
+}
+
+// SetNillableRoleID sets the "role_id" field if the given value is not nil.
+func (aruuo *AppRoleUserUpdateOne) SetNillableRoleID(u *uuid.UUID) *AppRoleUserUpdateOne {
+	if u != nil {
+		aruuo.SetRoleID(*u)
+	}
+	return aruuo
+}
+
+// ClearRoleID clears the value of the "role_id" field.
+func (aruuo *AppRoleUserUpdateOne) ClearRoleID() *AppRoleUserUpdateOne {
+	aruuo.mutation.ClearRoleID()
 	return aruuo
 }
 
@@ -568,10 +636,22 @@ func (aruuo *AppRoleUserUpdateOne) sqlSave(ctx context.Context) (_node *AppRoleU
 			Column: approleuser.FieldAppID,
 		})
 	}
+	if aruuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: approleuser.FieldAppID,
+		})
+	}
 	if value, ok := aruuo.mutation.RoleID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: approleuser.FieldRoleID,
+		})
+	}
+	if aruuo.mutation.RoleIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: approleuser.FieldRoleID,
 		})
 	}
