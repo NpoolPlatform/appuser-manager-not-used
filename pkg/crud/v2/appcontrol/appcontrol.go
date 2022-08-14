@@ -116,7 +116,9 @@ func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppContr
 	return rows, nil
 }
 
-func UpdateSet(u *ent.AppControlUpdateOne, in *npool.AppControlReq) *ent.AppControlUpdateOne {
+func UpdateSet(info *ent.AppControl, in *npool.AppControlReq) *ent.AppControlUpdateOne {
+	u := info.Update()
+
 	if in.SignupMethods != nil {
 		methods := []string{}
 		for _, m := range in.GetSignupMethods() {
@@ -162,9 +164,12 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppControl.UpdateOneID(uuid.MustParse(in.GetID()))
-		info, err = UpdateSet(u, in).Save(_ctx)
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppControl.Query().Where(appcontrol.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
+		}
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
