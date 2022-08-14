@@ -106,6 +106,16 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.A
 	return rows, nil
 }
 
+func UpdateSet(u *ent.AppUserThirdPartyUpdateOne, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdateOne {
+	if in.ThirdPartyUsername != nil {
+		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
+	}
+	if in.ThirdPartyAvatar != nil {
+		u.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
+	}
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserThirdParty, error) {
 	var err error
 	var info *ent.AppUserThirdParty
@@ -124,13 +134,7 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppUserThirdParty.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.ThirdPartyUsername != nil {
-			u.SetThirdPartyUsername(in.GetThirdPartyUsername())
-		}
-		if in.ThirdPartyAvatar != nil {
-			u.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(u, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -138,16 +142,6 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppUserThirdPartyUpdate, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdate {
-	if in.ThirdPartyUsername != nil {
-		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
-	}
-	if in.ThirdPartyAvatar != nil {
-		u.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
-	}
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserThirdParty, error) {

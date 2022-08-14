@@ -102,6 +102,20 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserSecretReq) ([]*ent.AppUs
 	return rows, nil
 }
 
+func UpdateSet(u *ent.AppUserSecretUpdateOne, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdateOne {
+	if in.PasswordHash != nil {
+		u.SetPasswordHash(in.GetPasswordHash())
+	}
+	if in.Salt != nil {
+		u.SetSalt(in.GetSalt())
+	}
+	if in.GoogleSecret != nil {
+		u.SetGoogleSecret(in.GetGoogleSecret())
+	}
+
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret, error) {
 	var err error
 	var info *ent.AppUserSecret
@@ -120,16 +134,7 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppUserSecret.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.PasswordHash != nil {
-			u.SetPasswordHash(in.GetPasswordHash())
-		}
-		if in.Salt != nil {
-			u.SetSalt(in.GetSalt())
-		}
-		if in.GoogleSecret != nil {
-			u.SetGoogleSecret(in.GetGoogleSecret())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(u, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -137,20 +142,6 @@ func Update(ctx context.Context, in *npool.AppUserSecretReq) (*ent.AppUserSecret
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppUserSecretUpdate, in *npool.AppUserSecretReq) *ent.AppUserSecretUpdate {
-	if in.PasswordHash != nil {
-		u.SetPasswordHash(in.GetPasswordHash())
-	}
-	if in.Salt != nil {
-		u.SetSalt(in.GetSalt())
-	}
-	if in.GoogleSecret != nil {
-		u.SetGoogleSecret(in.GetGoogleSecret())
-	}
-
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {
