@@ -12,12 +12,11 @@ func Ent2Grpc(row *ent.AppUserControl) *npool.AppUserControl {
 	}
 
 	return &npool.AppUserControl{
-		ID:                                 row.ID.String(),
-		AppID:                              row.AppID.String(),
-		UserID:                             row.UserID.String(),
-		SigninVerifyByGoogleAuthentication: row.SigninVerifyByGoogleAuthentication,
-		GoogleAuthenticationVerified:       row.GoogleAuthenticationVerified,
-		SigninVerifyType:                   sm.SignMethodType(sm.SignMethodType_value[row.SigninVerifyType]),
+		ID:                 row.ID.String(),
+		AppID:              row.AppID.String(),
+		UserID:             row.UserID.String(),
+		GoogleAuthVerified: row.GoogleAuthenticationVerified,
+		SigninVerifyType:   sm.SignMethodType(sm.SignMethodType_value[row.SigninVerifyType]),
 	}
 }
 

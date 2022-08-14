@@ -58,11 +58,11 @@ func CreateSet(c *ent.AppUserControlCreate, in *npool.AppUserControlReq) *ent.Ap
 	if in.UserID != nil {
 		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
-	if in.SigninVerifyByGoogleAuthentication != nil {
-		c.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+	if in.GoogleAuthVerified != nil {
+		c.SetGoogleAuthenticationVerified(in.GetGoogleAuthVerified())
 	}
-	if in.GoogleAuthenticationVerified != nil {
-		c.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+	if in.SigninVerifyType != nil {
+		c.SetSigninVerifyType(in.GetSigninVerifyType().String())
 	}
 
 	return c
@@ -100,11 +100,11 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserControlReq) ([]*ent.AppU
 }
 
 func UpdateSet(u *ent.AppUserControlUpdateOne, in *npool.AppUserControlReq) *ent.AppUserControlUpdateOne {
-	if in.SigninVerifyByGoogleAuthentication != nil {
-		u.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+	if in.GoogleAuthVerified != nil {
+		u.SetGoogleAuthenticationVerified(in.GetGoogleAuthVerified())
 	}
-	if in.GoogleAuthenticationVerified != nil {
-		u.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+	if in.SigninVerifyType != nil {
+		u.SetSigninVerifyType(in.GetSigninVerifyType().String())
 	}
 	return u
 }

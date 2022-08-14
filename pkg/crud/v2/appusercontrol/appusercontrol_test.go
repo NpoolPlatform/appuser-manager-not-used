@@ -44,25 +44,14 @@ var (
 	id     = entAppUserControl.ID.String()
 
 	appusercontrolInfo = npool.AppUserControlReq{
-		ID:                                 &id,
-		AppID:                              &appID,
-		UserID:                             &userID,
-		SigninVerifyByGoogleAuthentication: &entAppUserControl.SigninVerifyByGoogleAuthentication,
-		GoogleAuthenticationVerified:       &entAppUserControl.GoogleAuthenticationVerified,
+		ID:                 &id,
+		AppID:              &appID,
+		UserID:             &userID,
+		GoogleAuthVerified: &entAppUserControl.GoogleAuthenticationVerified,
 	}
 )
 
 var info *ent.AppUserControl
-
-func rowToObject(row *ent.AppUserControl) *ent.AppUserControl {
-	return &ent.AppUserControl{
-		ID:                                 row.ID,
-		AppID:                              row.AppID,
-		UserID:                             row.UserID,
-		SigninVerifyByGoogleAuthentication: row.SigninVerifyByGoogleAuthentication,
-		GoogleAuthenticationVerified:       row.GoogleAuthenticationVerified,
-	}
-}
 
 func create(t *testing.T) {
 	var err error
@@ -71,7 +60,7 @@ func create(t *testing.T) {
 		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
 			entAppUserControl.ID = info.ID
 		}
-		assert.Equal(t, rowToObject(info), &entAppUserControl)
+		assert.Equal(t, info, &entAppUserControl)
 	}
 }
 
@@ -100,11 +89,10 @@ func createBulk(t *testing.T) {
 		id := entAppUserControl[key].ID.String()
 
 		appusercontrols = append(appusercontrols, &npool.AppUserControlReq{
-			ID:                                 &id,
-			AppID:                              &appID,
-			UserID:                             &userID,
-			SigninVerifyByGoogleAuthentication: &entAppUserControl[key].SigninVerifyByGoogleAuthentication,
-			GoogleAuthenticationVerified:       &entAppUserControl[key].GoogleAuthenticationVerified,
+			ID:                 &id,
+			AppID:              &appID,
+			UserID:             &userID,
+			GoogleAuthVerified: &entAppUserControl[key].GoogleAuthenticationVerified,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), appusercontrols)
@@ -119,7 +107,7 @@ func update(t *testing.T) {
 	var err error
 	info, err = Update(context.Background(), &appusercontrolInfo)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserControl)
+		assert.Equal(t, info, &entAppUserControl)
 	}
 }
 
@@ -127,7 +115,7 @@ func row(t *testing.T) {
 	var err error
 	info, err = Row(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserControl)
+		assert.Equal(t, info, &entAppUserControl)
 	}
 }
 
@@ -141,7 +129,7 @@ func rows(t *testing.T) {
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, 1)
-		assert.Equal(t, rowToObject(infos[0]), &entAppUserControl)
+		assert.Equal(t, infos[0], &entAppUserControl)
 	}
 }
 
@@ -155,7 +143,7 @@ func rowOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserControl)
+		assert.Equal(t, info, &entAppUserControl)
 	}
 }
 
@@ -197,7 +185,7 @@ func existConds(t *testing.T) {
 func deleteT(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserControl)
+		assert.Equal(t, info, &entAppUserControl)
 	}
 }
 

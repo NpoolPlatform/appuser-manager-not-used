@@ -14,8 +14,7 @@ func trace(span trace1.Span, in *npool.AppUserControlReq, index int) trace1.Span
 		attribute.String(fmt.Sprintf("ID.%v", index), in.GetID()),
 		attribute.String(fmt.Sprintf("AppID.%v", index), in.GetID()),
 		attribute.String(fmt.Sprintf("UserID.%v", index), in.GetUserID()),
-		attribute.Bool(fmt.Sprintf("SigninVerifyByGoogleAuthentication.%v", index), in.GetSigninVerifyByGoogleAuthentication()),
-		attribute.Bool(fmt.Sprintf("GoogleAuthenticationVerified.%v", index), in.GetGoogleAuthenticationVerified()),
+		attribute.Bool(fmt.Sprintf("GoogleAuthVerified.%v", index), in.GetGoogleAuthVerified()),
 	)
 	return span
 }
@@ -32,10 +31,8 @@ func TraceConds(span trace1.Span, in *npool.Conds) trace1.Span {
 		attribute.String("AppID.Val", in.GetID().GetValue()),
 		attribute.String("UserID.Op", in.GetUserID().GetOp()),
 		attribute.String("UserID.Val", in.GetUserID().GetValue()),
-		attribute.String("SigninVerifyByGoogleAuthentication.Op", in.GetSigninVerifyByGoogleAuthentication().GetOp()),
-		attribute.Bool("SigninVerifyByGoogleAuthentication.Val", in.GetSigninVerifyByGoogleAuthentication().GetValue()),
-		attribute.String("GoogleAuthenticationVerified.Op", in.GetGoogleAuthenticationVerified().GetOp()),
-		attribute.Bool("GoogleAuthenticationVerified.Val", in.GetGoogleAuthenticationVerified().GetValue()),
+		attribute.String("GoogleAuthVerified.Op", in.GetGoogleAuthVerified().GetOp()),
+		attribute.Bool("GoogleAuthVerified.Val", in.GetGoogleAuthVerified().GetValue()),
 	)
 	return span
 }

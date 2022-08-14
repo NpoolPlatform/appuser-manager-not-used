@@ -35,20 +35,18 @@ func init() {
 }
 
 var appUserControlDate = npool.AppUserControl{
-	ID:                                 uuid.NewString(),
-	AppID:                              uuid.NewString(),
-	UserID:                             uuid.NewString(),
-	SigninVerifyByGoogleAuthentication: false,
-	GoogleAuthenticationVerified:       false,
+	ID:                 uuid.NewString(),
+	AppID:              uuid.NewString(),
+	UserID:             uuid.NewString(),
+	GoogleAuthVerified: false,
 }
 
 var (
 	appUserControlInfo = npool.AppUserControlReq{
-		ID:                                 &appUserControlDate.ID,
-		AppID:                              &appUserControlDate.AppID,
-		UserID:                             &appUserControlDate.UserID,
-		SigninVerifyByGoogleAuthentication: &appUserControlDate.SigninVerifyByGoogleAuthentication,
-		GoogleAuthenticationVerified:       &appUserControlDate.GoogleAuthenticationVerified,
+		ID:                 &appUserControlDate.ID,
+		AppID:              &appUserControlDate.AppID,
+		UserID:             &appUserControlDate.UserID,
+		GoogleAuthVerified: &appUserControlDate.GoogleAuthVerified,
 	}
 )
 
@@ -65,29 +63,26 @@ func createAppUserControl(t *testing.T) {
 func createAppUserControls(t *testing.T) {
 	appUserControlDates := []npool.AppUserControl{
 		{
-			ID:                                 uuid.NewString(),
-			AppID:                              uuid.NewString(),
-			UserID:                             uuid.NewString(),
-			SigninVerifyByGoogleAuthentication: false,
-			GoogleAuthenticationVerified:       false,
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			UserID:             uuid.NewString(),
+			GoogleAuthVerified: false,
 		},
 		{
-			ID:                                 uuid.NewString(),
-			AppID:                              uuid.NewString(),
-			UserID:                             uuid.NewString(),
-			SigninVerifyByGoogleAuthentication: false,
-			GoogleAuthenticationVerified:       false,
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			UserID:             uuid.NewString(),
+			GoogleAuthVerified: false,
 		},
 	}
 
 	appUserControls := []*npool.AppUserControlReq{}
 	for key := range appUserControlDates {
 		appUserControls = append(appUserControls, &npool.AppUserControlReq{
-			ID:                                 &appUserControlDates[key].ID,
-			AppID:                              &appUserControlDates[key].AppID,
-			UserID:                             &appUserControlDates[key].UserID,
-			SigninVerifyByGoogleAuthentication: &appUserControlDates[key].SigninVerifyByGoogleAuthentication,
-			GoogleAuthenticationVerified:       &appUserControlDates[key].GoogleAuthenticationVerified,
+			ID:                 &appUserControlDates[key].ID,
+			AppID:              &appUserControlDates[key].AppID,
+			UserID:             &appUserControlDates[key].UserID,
+			GoogleAuthVerified: &appUserControlDates[key].GoogleAuthVerified,
 		})
 	}
 
