@@ -99,7 +99,9 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserControlReq) ([]*ent.AppU
 	return rows, nil
 }
 
-func UpdateSet(u *ent.AppUserControlUpdateOne, in *npool.AppUserControlReq) *ent.AppUserControlUpdateOne {
+func UpdateSet(info *ent.AppUserControl, in *npool.AppUserControlReq) *ent.AppUserControlUpdateOne {
+	u := info.Update()
+
 	if in.GoogleAuthVerified != nil {
 		u.SetGoogleAuthenticationVerified(in.GetGoogleAuthVerified())
 	}
@@ -125,9 +127,12 @@ func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppUserControl.UpdateOneID(uuid.MustParse(in.GetID()))
-		info, err = UpdateSet(u, in).Save(_ctx)
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppUserControl.Query().Where(appusercontrol.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
+		}
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
