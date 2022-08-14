@@ -1197,9 +1197,22 @@ func (m *AppControlMutation) OldAppID(ctx context.Context) (v uuid.UUID, err err
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppControlMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[appcontrol.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppControlMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppControlMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, appcontrol.FieldAppID)
 }
 
 // SetSignupMethods sets the "signup_methods" field.
@@ -1233,9 +1246,22 @@ func (m *AppControlMutation) OldSignupMethods(ctx context.Context) (v []string, 
 	return oldValue.SignupMethods, nil
 }
 
+// ClearSignupMethods clears the value of the "signup_methods" field.
+func (m *AppControlMutation) ClearSignupMethods() {
+	m.signup_methods = nil
+	m.clearedFields[appcontrol.FieldSignupMethods] = struct{}{}
+}
+
+// SignupMethodsCleared returns if the "signup_methods" field was cleared in this mutation.
+func (m *AppControlMutation) SignupMethodsCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldSignupMethods]
+	return ok
+}
+
 // ResetSignupMethods resets all changes to the "signup_methods" field.
 func (m *AppControlMutation) ResetSignupMethods() {
 	m.signup_methods = nil
+	delete(m.clearedFields, appcontrol.FieldSignupMethods)
 }
 
 // SetExternSigninMethods sets the "extern_signin_methods" field.
@@ -1269,9 +1295,22 @@ func (m *AppControlMutation) OldExternSigninMethods(ctx context.Context) (v []st
 	return oldValue.ExternSigninMethods, nil
 }
 
+// ClearExternSigninMethods clears the value of the "extern_signin_methods" field.
+func (m *AppControlMutation) ClearExternSigninMethods() {
+	m.extern_signin_methods = nil
+	m.clearedFields[appcontrol.FieldExternSigninMethods] = struct{}{}
+}
+
+// ExternSigninMethodsCleared returns if the "extern_signin_methods" field was cleared in this mutation.
+func (m *AppControlMutation) ExternSigninMethodsCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldExternSigninMethods]
+	return ok
+}
+
 // ResetExternSigninMethods resets all changes to the "extern_signin_methods" field.
 func (m *AppControlMutation) ResetExternSigninMethods() {
 	m.extern_signin_methods = nil
+	delete(m.clearedFields, appcontrol.FieldExternSigninMethods)
 }
 
 // SetRecaptchaMethod sets the "recaptcha_method" field.
@@ -1305,9 +1344,22 @@ func (m *AppControlMutation) OldRecaptchaMethod(ctx context.Context) (v string, 
 	return oldValue.RecaptchaMethod, nil
 }
 
+// ClearRecaptchaMethod clears the value of the "recaptcha_method" field.
+func (m *AppControlMutation) ClearRecaptchaMethod() {
+	m.recaptcha_method = nil
+	m.clearedFields[appcontrol.FieldRecaptchaMethod] = struct{}{}
+}
+
+// RecaptchaMethodCleared returns if the "recaptcha_method" field was cleared in this mutation.
+func (m *AppControlMutation) RecaptchaMethodCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldRecaptchaMethod]
+	return ok
+}
+
 // ResetRecaptchaMethod resets all changes to the "recaptcha_method" field.
 func (m *AppControlMutation) ResetRecaptchaMethod() {
 	m.recaptcha_method = nil
+	delete(m.clearedFields, appcontrol.FieldRecaptchaMethod)
 }
 
 // SetKycEnable sets the "kyc_enable" field.
@@ -1341,9 +1393,22 @@ func (m *AppControlMutation) OldKycEnable(ctx context.Context) (v bool, err erro
 	return oldValue.KycEnable, nil
 }
 
+// ClearKycEnable clears the value of the "kyc_enable" field.
+func (m *AppControlMutation) ClearKycEnable() {
+	m.kyc_enable = nil
+	m.clearedFields[appcontrol.FieldKycEnable] = struct{}{}
+}
+
+// KycEnableCleared returns if the "kyc_enable" field was cleared in this mutation.
+func (m *AppControlMutation) KycEnableCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldKycEnable]
+	return ok
+}
+
 // ResetKycEnable resets all changes to the "kyc_enable" field.
 func (m *AppControlMutation) ResetKycEnable() {
 	m.kyc_enable = nil
+	delete(m.clearedFields, appcontrol.FieldKycEnable)
 }
 
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
@@ -1377,9 +1442,22 @@ func (m *AppControlMutation) OldSigninVerifyEnable(ctx context.Context) (v bool,
 	return oldValue.SigninVerifyEnable, nil
 }
 
+// ClearSigninVerifyEnable clears the value of the "signin_verify_enable" field.
+func (m *AppControlMutation) ClearSigninVerifyEnable() {
+	m.signin_verify_enable = nil
+	m.clearedFields[appcontrol.FieldSigninVerifyEnable] = struct{}{}
+}
+
+// SigninVerifyEnableCleared returns if the "signin_verify_enable" field was cleared in this mutation.
+func (m *AppControlMutation) SigninVerifyEnableCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldSigninVerifyEnable]
+	return ok
+}
+
 // ResetSigninVerifyEnable resets all changes to the "signin_verify_enable" field.
 func (m *AppControlMutation) ResetSigninVerifyEnable() {
 	m.signin_verify_enable = nil
+	delete(m.clearedFields, appcontrol.FieldSigninVerifyEnable)
 }
 
 // SetInvitationCodeMust sets the "invitation_code_must" field.
@@ -1413,9 +1491,22 @@ func (m *AppControlMutation) OldInvitationCodeMust(ctx context.Context) (v bool,
 	return oldValue.InvitationCodeMust, nil
 }
 
+// ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
+func (m *AppControlMutation) ClearInvitationCodeMust() {
+	m.invitation_code_must = nil
+	m.clearedFields[appcontrol.FieldInvitationCodeMust] = struct{}{}
+}
+
+// InvitationCodeMustCleared returns if the "invitation_code_must" field was cleared in this mutation.
+func (m *AppControlMutation) InvitationCodeMustCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldInvitationCodeMust]
+	return ok
+}
+
 // ResetInvitationCodeMust resets all changes to the "invitation_code_must" field.
 func (m *AppControlMutation) ResetInvitationCodeMust() {
 	m.invitation_code_must = nil
+	delete(m.clearedFields, appcontrol.FieldInvitationCodeMust)
 }
 
 // Where appends a list predicates to the AppControlMutation builder.
@@ -1672,7 +1763,29 @@ func (m *AppControlMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppControlMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(appcontrol.FieldAppID) {
+		fields = append(fields, appcontrol.FieldAppID)
+	}
+	if m.FieldCleared(appcontrol.FieldSignupMethods) {
+		fields = append(fields, appcontrol.FieldSignupMethods)
+	}
+	if m.FieldCleared(appcontrol.FieldExternSigninMethods) {
+		fields = append(fields, appcontrol.FieldExternSigninMethods)
+	}
+	if m.FieldCleared(appcontrol.FieldRecaptchaMethod) {
+		fields = append(fields, appcontrol.FieldRecaptchaMethod)
+	}
+	if m.FieldCleared(appcontrol.FieldKycEnable) {
+		fields = append(fields, appcontrol.FieldKycEnable)
+	}
+	if m.FieldCleared(appcontrol.FieldSigninVerifyEnable) {
+		fields = append(fields, appcontrol.FieldSigninVerifyEnable)
+	}
+	if m.FieldCleared(appcontrol.FieldInvitationCodeMust) {
+		fields = append(fields, appcontrol.FieldInvitationCodeMust)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -1685,6 +1798,29 @@ func (m *AppControlMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppControlMutation) ClearField(name string) error {
+	switch name {
+	case appcontrol.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case appcontrol.FieldSignupMethods:
+		m.ClearSignupMethods()
+		return nil
+	case appcontrol.FieldExternSigninMethods:
+		m.ClearExternSigninMethods()
+		return nil
+	case appcontrol.FieldRecaptchaMethod:
+		m.ClearRecaptchaMethod()
+		return nil
+	case appcontrol.FieldKycEnable:
+		m.ClearKycEnable()
+		return nil
+	case appcontrol.FieldSigninVerifyEnable:
+		m.ClearSigninVerifyEnable()
+		return nil
+	case appcontrol.FieldInvitationCodeMust:
+		m.ClearInvitationCodeMust()
+		return nil
+	}
 	return fmt.Errorf("unknown AppControl nullable field %s", name)
 }
 

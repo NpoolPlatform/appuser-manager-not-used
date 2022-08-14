@@ -78,6 +78,20 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultAppID holds the default value on creation for the "app_id" field.
+	DefaultAppID func() uuid.UUID
+	// DefaultSignupMethods holds the default value on creation for the "signup_methods" field.
+	DefaultSignupMethods func() []string
+	// DefaultExternSigninMethods holds the default value on creation for the "extern_signin_methods" field.
+	DefaultExternSigninMethods func() []string
+	// DefaultRecaptchaMethod holds the default value on creation for the "recaptcha_method" field.
+	DefaultRecaptchaMethod string
+	// DefaultKycEnable holds the default value on creation for the "kyc_enable" field.
+	DefaultKycEnable bool
+	// DefaultSigninVerifyEnable holds the default value on creation for the "signin_verify_enable" field.
+	DefaultSigninVerifyEnable bool
+	// DefaultInvitationCodeMust holds the default value on creation for the "invitation_code_must" field.
+	DefaultInvitationCodeMust bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

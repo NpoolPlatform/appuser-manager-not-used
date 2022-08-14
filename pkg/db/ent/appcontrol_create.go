@@ -71,6 +71,14 @@ func (acc *AppControlCreate) SetAppID(u uuid.UUID) *AppControlCreate {
 	return acc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableAppID(u *uuid.UUID) *AppControlCreate {
+	if u != nil {
+		acc.SetAppID(*u)
+	}
+	return acc
+}
+
 // SetSignupMethods sets the "signup_methods" field.
 func (acc *AppControlCreate) SetSignupMethods(s []string) *AppControlCreate {
 	acc.mutation.SetSignupMethods(s)
@@ -89,9 +97,25 @@ func (acc *AppControlCreate) SetRecaptchaMethod(s string) *AppControlCreate {
 	return acc
 }
 
+// SetNillableRecaptchaMethod sets the "recaptcha_method" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableRecaptchaMethod(s *string) *AppControlCreate {
+	if s != nil {
+		acc.SetRecaptchaMethod(*s)
+	}
+	return acc
+}
+
 // SetKycEnable sets the "kyc_enable" field.
 func (acc *AppControlCreate) SetKycEnable(b bool) *AppControlCreate {
 	acc.mutation.SetKycEnable(b)
+	return acc
+}
+
+// SetNillableKycEnable sets the "kyc_enable" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableKycEnable(b *bool) *AppControlCreate {
+	if b != nil {
+		acc.SetKycEnable(*b)
+	}
 	return acc
 }
 
@@ -101,9 +125,25 @@ func (acc *AppControlCreate) SetSigninVerifyEnable(b bool) *AppControlCreate {
 	return acc
 }
 
+// SetNillableSigninVerifyEnable sets the "signin_verify_enable" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableSigninVerifyEnable(b *bool) *AppControlCreate {
+	if b != nil {
+		acc.SetSigninVerifyEnable(*b)
+	}
+	return acc
+}
+
 // SetInvitationCodeMust sets the "invitation_code_must" field.
 func (acc *AppControlCreate) SetInvitationCodeMust(b bool) *AppControlCreate {
 	acc.mutation.SetInvitationCodeMust(b)
+	return acc
+}
+
+// SetNillableInvitationCodeMust sets the "invitation_code_must" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableInvitationCodeMust(b *bool) *AppControlCreate {
+	if b != nil {
+		acc.SetInvitationCodeMust(*b)
+	}
 	return acc
 }
 
@@ -221,6 +261,43 @@ func (acc *AppControlCreate) defaults() error {
 		v := appcontrol.DefaultDeletedAt()
 		acc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := acc.mutation.AppID(); !ok {
+		if appcontrol.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized appcontrol.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := appcontrol.DefaultAppID()
+		acc.mutation.SetAppID(v)
+	}
+	if _, ok := acc.mutation.SignupMethods(); !ok {
+		if appcontrol.DefaultSignupMethods == nil {
+			return fmt.Errorf("ent: uninitialized appcontrol.DefaultSignupMethods (forgotten import ent/runtime?)")
+		}
+		v := appcontrol.DefaultSignupMethods()
+		acc.mutation.SetSignupMethods(v)
+	}
+	if _, ok := acc.mutation.ExternSigninMethods(); !ok {
+		if appcontrol.DefaultExternSigninMethods == nil {
+			return fmt.Errorf("ent: uninitialized appcontrol.DefaultExternSigninMethods (forgotten import ent/runtime?)")
+		}
+		v := appcontrol.DefaultExternSigninMethods()
+		acc.mutation.SetExternSigninMethods(v)
+	}
+	if _, ok := acc.mutation.RecaptchaMethod(); !ok {
+		v := appcontrol.DefaultRecaptchaMethod
+		acc.mutation.SetRecaptchaMethod(v)
+	}
+	if _, ok := acc.mutation.KycEnable(); !ok {
+		v := appcontrol.DefaultKycEnable
+		acc.mutation.SetKycEnable(v)
+	}
+	if _, ok := acc.mutation.SigninVerifyEnable(); !ok {
+		v := appcontrol.DefaultSigninVerifyEnable
+		acc.mutation.SetSigninVerifyEnable(v)
+	}
+	if _, ok := acc.mutation.InvitationCodeMust(); !ok {
+		v := appcontrol.DefaultInvitationCodeMust
+		acc.mutation.SetInvitationCodeMust(v)
+	}
 	if _, ok := acc.mutation.ID(); !ok {
 		if appcontrol.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appcontrol.DefaultID (forgotten import ent/runtime?)")
@@ -241,27 +318,6 @@ func (acc *AppControlCreate) check() error {
 	}
 	if _, ok := acc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppControl.deleted_at"`)}
-	}
-	if _, ok := acc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppControl.app_id"`)}
-	}
-	if _, ok := acc.mutation.SignupMethods(); !ok {
-		return &ValidationError{Name: "signup_methods", err: errors.New(`ent: missing required field "AppControl.signup_methods"`)}
-	}
-	if _, ok := acc.mutation.ExternSigninMethods(); !ok {
-		return &ValidationError{Name: "extern_signin_methods", err: errors.New(`ent: missing required field "AppControl.extern_signin_methods"`)}
-	}
-	if _, ok := acc.mutation.RecaptchaMethod(); !ok {
-		return &ValidationError{Name: "recaptcha_method", err: errors.New(`ent: missing required field "AppControl.recaptcha_method"`)}
-	}
-	if _, ok := acc.mutation.KycEnable(); !ok {
-		return &ValidationError{Name: "kyc_enable", err: errors.New(`ent: missing required field "AppControl.kyc_enable"`)}
-	}
-	if _, ok := acc.mutation.SigninVerifyEnable(); !ok {
-		return &ValidationError{Name: "signin_verify_enable", err: errors.New(`ent: missing required field "AppControl.signin_verify_enable"`)}
-	}
-	if _, ok := acc.mutation.InvitationCodeMust(); !ok {
-		return &ValidationError{Name: "invitation_code_must", err: errors.New(`ent: missing required field "AppControl.invitation_code_must"`)}
 	}
 	return nil
 }
@@ -500,6 +556,12 @@ func (u *AppControlUpsert) UpdateAppID() *AppControlUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppControlUpsert) ClearAppID() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldAppID)
+	return u
+}
+
 // SetSignupMethods sets the "signup_methods" field.
 func (u *AppControlUpsert) SetSignupMethods(v []string) *AppControlUpsert {
 	u.Set(appcontrol.FieldSignupMethods, v)
@@ -509,6 +571,12 @@ func (u *AppControlUpsert) SetSignupMethods(v []string) *AppControlUpsert {
 // UpdateSignupMethods sets the "signup_methods" field to the value that was provided on create.
 func (u *AppControlUpsert) UpdateSignupMethods() *AppControlUpsert {
 	u.SetExcluded(appcontrol.FieldSignupMethods)
+	return u
+}
+
+// ClearSignupMethods clears the value of the "signup_methods" field.
+func (u *AppControlUpsert) ClearSignupMethods() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldSignupMethods)
 	return u
 }
 
@@ -524,6 +592,12 @@ func (u *AppControlUpsert) UpdateExternSigninMethods() *AppControlUpsert {
 	return u
 }
 
+// ClearExternSigninMethods clears the value of the "extern_signin_methods" field.
+func (u *AppControlUpsert) ClearExternSigninMethods() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldExternSigninMethods)
+	return u
+}
+
 // SetRecaptchaMethod sets the "recaptcha_method" field.
 func (u *AppControlUpsert) SetRecaptchaMethod(v string) *AppControlUpsert {
 	u.Set(appcontrol.FieldRecaptchaMethod, v)
@@ -533,6 +607,12 @@ func (u *AppControlUpsert) SetRecaptchaMethod(v string) *AppControlUpsert {
 // UpdateRecaptchaMethod sets the "recaptcha_method" field to the value that was provided on create.
 func (u *AppControlUpsert) UpdateRecaptchaMethod() *AppControlUpsert {
 	u.SetExcluded(appcontrol.FieldRecaptchaMethod)
+	return u
+}
+
+// ClearRecaptchaMethod clears the value of the "recaptcha_method" field.
+func (u *AppControlUpsert) ClearRecaptchaMethod() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldRecaptchaMethod)
 	return u
 }
 
@@ -548,6 +628,12 @@ func (u *AppControlUpsert) UpdateKycEnable() *AppControlUpsert {
 	return u
 }
 
+// ClearKycEnable clears the value of the "kyc_enable" field.
+func (u *AppControlUpsert) ClearKycEnable() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldKycEnable)
+	return u
+}
+
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
 func (u *AppControlUpsert) SetSigninVerifyEnable(v bool) *AppControlUpsert {
 	u.Set(appcontrol.FieldSigninVerifyEnable, v)
@@ -560,6 +646,12 @@ func (u *AppControlUpsert) UpdateSigninVerifyEnable() *AppControlUpsert {
 	return u
 }
 
+// ClearSigninVerifyEnable clears the value of the "signin_verify_enable" field.
+func (u *AppControlUpsert) ClearSigninVerifyEnable() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldSigninVerifyEnable)
+	return u
+}
+
 // SetInvitationCodeMust sets the "invitation_code_must" field.
 func (u *AppControlUpsert) SetInvitationCodeMust(v bool) *AppControlUpsert {
 	u.Set(appcontrol.FieldInvitationCodeMust, v)
@@ -569,6 +661,12 @@ func (u *AppControlUpsert) SetInvitationCodeMust(v bool) *AppControlUpsert {
 // UpdateInvitationCodeMust sets the "invitation_code_must" field to the value that was provided on create.
 func (u *AppControlUpsert) UpdateInvitationCodeMust() *AppControlUpsert {
 	u.SetExcluded(appcontrol.FieldInvitationCodeMust)
+	return u
+}
+
+// ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
+func (u *AppControlUpsert) ClearInvitationCodeMust() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldInvitationCodeMust)
 	return u
 }
 
@@ -699,6 +797,13 @@ func (u *AppControlUpsertOne) UpdateAppID() *AppControlUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppControlUpsertOne) ClearAppID() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetSignupMethods sets the "signup_methods" field.
 func (u *AppControlUpsertOne) SetSignupMethods(v []string) *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
@@ -710,6 +815,13 @@ func (u *AppControlUpsertOne) SetSignupMethods(v []string) *AppControlUpsertOne 
 func (u *AppControlUpsertOne) UpdateSignupMethods() *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateSignupMethods()
+	})
+}
+
+// ClearSignupMethods clears the value of the "signup_methods" field.
+func (u *AppControlUpsertOne) ClearSignupMethods() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearSignupMethods()
 	})
 }
 
@@ -727,6 +839,13 @@ func (u *AppControlUpsertOne) UpdateExternSigninMethods() *AppControlUpsertOne {
 	})
 }
 
+// ClearExternSigninMethods clears the value of the "extern_signin_methods" field.
+func (u *AppControlUpsertOne) ClearExternSigninMethods() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearExternSigninMethods()
+	})
+}
+
 // SetRecaptchaMethod sets the "recaptcha_method" field.
 func (u *AppControlUpsertOne) SetRecaptchaMethod(v string) *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
@@ -738,6 +857,13 @@ func (u *AppControlUpsertOne) SetRecaptchaMethod(v string) *AppControlUpsertOne 
 func (u *AppControlUpsertOne) UpdateRecaptchaMethod() *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateRecaptchaMethod()
+	})
+}
+
+// ClearRecaptchaMethod clears the value of the "recaptcha_method" field.
+func (u *AppControlUpsertOne) ClearRecaptchaMethod() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearRecaptchaMethod()
 	})
 }
 
@@ -755,6 +881,13 @@ func (u *AppControlUpsertOne) UpdateKycEnable() *AppControlUpsertOne {
 	})
 }
 
+// ClearKycEnable clears the value of the "kyc_enable" field.
+func (u *AppControlUpsertOne) ClearKycEnable() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearKycEnable()
+	})
+}
+
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
 func (u *AppControlUpsertOne) SetSigninVerifyEnable(v bool) *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
@@ -769,6 +902,13 @@ func (u *AppControlUpsertOne) UpdateSigninVerifyEnable() *AppControlUpsertOne {
 	})
 }
 
+// ClearSigninVerifyEnable clears the value of the "signin_verify_enable" field.
+func (u *AppControlUpsertOne) ClearSigninVerifyEnable() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearSigninVerifyEnable()
+	})
+}
+
 // SetInvitationCodeMust sets the "invitation_code_must" field.
 func (u *AppControlUpsertOne) SetInvitationCodeMust(v bool) *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
@@ -780,6 +920,13 @@ func (u *AppControlUpsertOne) SetInvitationCodeMust(v bool) *AppControlUpsertOne
 func (u *AppControlUpsertOne) UpdateInvitationCodeMust() *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateInvitationCodeMust()
+	})
+}
+
+// ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
+func (u *AppControlUpsertOne) ClearInvitationCodeMust() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearInvitationCodeMust()
 	})
 }
 
@@ -1076,6 +1223,13 @@ func (u *AppControlUpsertBulk) UpdateAppID() *AppControlUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppControlUpsertBulk) ClearAppID() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetSignupMethods sets the "signup_methods" field.
 func (u *AppControlUpsertBulk) SetSignupMethods(v []string) *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
@@ -1087,6 +1241,13 @@ func (u *AppControlUpsertBulk) SetSignupMethods(v []string) *AppControlUpsertBul
 func (u *AppControlUpsertBulk) UpdateSignupMethods() *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateSignupMethods()
+	})
+}
+
+// ClearSignupMethods clears the value of the "signup_methods" field.
+func (u *AppControlUpsertBulk) ClearSignupMethods() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearSignupMethods()
 	})
 }
 
@@ -1104,6 +1265,13 @@ func (u *AppControlUpsertBulk) UpdateExternSigninMethods() *AppControlUpsertBulk
 	})
 }
 
+// ClearExternSigninMethods clears the value of the "extern_signin_methods" field.
+func (u *AppControlUpsertBulk) ClearExternSigninMethods() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearExternSigninMethods()
+	})
+}
+
 // SetRecaptchaMethod sets the "recaptcha_method" field.
 func (u *AppControlUpsertBulk) SetRecaptchaMethod(v string) *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
@@ -1115,6 +1283,13 @@ func (u *AppControlUpsertBulk) SetRecaptchaMethod(v string) *AppControlUpsertBul
 func (u *AppControlUpsertBulk) UpdateRecaptchaMethod() *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateRecaptchaMethod()
+	})
+}
+
+// ClearRecaptchaMethod clears the value of the "recaptcha_method" field.
+func (u *AppControlUpsertBulk) ClearRecaptchaMethod() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearRecaptchaMethod()
 	})
 }
 
@@ -1132,6 +1307,13 @@ func (u *AppControlUpsertBulk) UpdateKycEnable() *AppControlUpsertBulk {
 	})
 }
 
+// ClearKycEnable clears the value of the "kyc_enable" field.
+func (u *AppControlUpsertBulk) ClearKycEnable() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearKycEnable()
+	})
+}
+
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
 func (u *AppControlUpsertBulk) SetSigninVerifyEnable(v bool) *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
@@ -1146,6 +1328,13 @@ func (u *AppControlUpsertBulk) UpdateSigninVerifyEnable() *AppControlUpsertBulk 
 	})
 }
 
+// ClearSigninVerifyEnable clears the value of the "signin_verify_enable" field.
+func (u *AppControlUpsertBulk) ClearSigninVerifyEnable() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearSigninVerifyEnable()
+	})
+}
+
 // SetInvitationCodeMust sets the "invitation_code_must" field.
 func (u *AppControlUpsertBulk) SetInvitationCodeMust(v bool) *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
@@ -1157,6 +1346,13 @@ func (u *AppControlUpsertBulk) SetInvitationCodeMust(v bool) *AppControlUpsertBu
 func (u *AppControlUpsertBulk) UpdateInvitationCodeMust() *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
 		s.UpdateInvitationCodeMust()
+	})
+}
+
+// ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
+func (u *AppControlUpsertBulk) ClearInvitationCodeMust() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearInvitationCodeMust()
 	})
 }
 

@@ -99,6 +99,34 @@ func init() {
 	appcontrolDescDeletedAt := appcontrolMixinFields0[2].Descriptor()
 	// appcontrol.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appcontrol.DefaultDeletedAt = appcontrolDescDeletedAt.Default.(func() uint32)
+	// appcontrolDescAppID is the schema descriptor for app_id field.
+	appcontrolDescAppID := appcontrolFields[1].Descriptor()
+	// appcontrol.DefaultAppID holds the default value on creation for the app_id field.
+	appcontrol.DefaultAppID = appcontrolDescAppID.Default.(func() uuid.UUID)
+	// appcontrolDescSignupMethods is the schema descriptor for signup_methods field.
+	appcontrolDescSignupMethods := appcontrolFields[2].Descriptor()
+	// appcontrol.DefaultSignupMethods holds the default value on creation for the signup_methods field.
+	appcontrol.DefaultSignupMethods = appcontrolDescSignupMethods.Default.(func() []string)
+	// appcontrolDescExternSigninMethods is the schema descriptor for extern_signin_methods field.
+	appcontrolDescExternSigninMethods := appcontrolFields[3].Descriptor()
+	// appcontrol.DefaultExternSigninMethods holds the default value on creation for the extern_signin_methods field.
+	appcontrol.DefaultExternSigninMethods = appcontrolDescExternSigninMethods.Default.(func() []string)
+	// appcontrolDescRecaptchaMethod is the schema descriptor for recaptcha_method field.
+	appcontrolDescRecaptchaMethod := appcontrolFields[4].Descriptor()
+	// appcontrol.DefaultRecaptchaMethod holds the default value on creation for the recaptcha_method field.
+	appcontrol.DefaultRecaptchaMethod = appcontrolDescRecaptchaMethod.Default.(string)
+	// appcontrolDescKycEnable is the schema descriptor for kyc_enable field.
+	appcontrolDescKycEnable := appcontrolFields[5].Descriptor()
+	// appcontrol.DefaultKycEnable holds the default value on creation for the kyc_enable field.
+	appcontrol.DefaultKycEnable = appcontrolDescKycEnable.Default.(bool)
+	// appcontrolDescSigninVerifyEnable is the schema descriptor for signin_verify_enable field.
+	appcontrolDescSigninVerifyEnable := appcontrolFields[6].Descriptor()
+	// appcontrol.DefaultSigninVerifyEnable holds the default value on creation for the signin_verify_enable field.
+	appcontrol.DefaultSigninVerifyEnable = appcontrolDescSigninVerifyEnable.Default.(bool)
+	// appcontrolDescInvitationCodeMust is the schema descriptor for invitation_code_must field.
+	appcontrolDescInvitationCodeMust := appcontrolFields[7].Descriptor()
+	// appcontrol.DefaultInvitationCodeMust holds the default value on creation for the invitation_code_must field.
+	appcontrol.DefaultInvitationCodeMust = appcontrolDescInvitationCodeMust.Default.(bool)
 	// appcontrolDescID is the schema descriptor for id field.
 	appcontrolDescID := appcontrolFields[0].Descriptor()
 	// appcontrol.DefaultID holds the default value on creation for the id field.

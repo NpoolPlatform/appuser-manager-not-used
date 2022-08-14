@@ -391,6 +391,48 @@ func AppIDLTE(v uuid.UUID) predicate.AppControl {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
+// SignupMethodsIsNil applies the IsNil predicate on the "signup_methods" field.
+func SignupMethodsIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSignupMethods)))
+	})
+}
+
+// SignupMethodsNotNil applies the NotNil predicate on the "signup_methods" field.
+func SignupMethodsNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSignupMethods)))
+	})
+}
+
+// ExternSigninMethodsIsNil applies the IsNil predicate on the "extern_signin_methods" field.
+func ExternSigninMethodsIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldExternSigninMethods)))
+	})
+}
+
+// ExternSigninMethodsNotNil applies the NotNil predicate on the "extern_signin_methods" field.
+func ExternSigninMethodsNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldExternSigninMethods)))
+	})
+}
+
 // RecaptchaMethodEQ applies the EQ predicate on the "recaptcha_method" field.
 func RecaptchaMethodEQ(v string) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
@@ -476,6 +518,20 @@ func RecaptchaMethodHasSuffix(v string) predicate.AppControl {
 	})
 }
 
+// RecaptchaMethodIsNil applies the IsNil predicate on the "recaptcha_method" field.
+func RecaptchaMethodIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldRecaptchaMethod)))
+	})
+}
+
+// RecaptchaMethodNotNil applies the NotNil predicate on the "recaptcha_method" field.
+func RecaptchaMethodNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldRecaptchaMethod)))
+	})
+}
+
 // RecaptchaMethodEqualFold applies the EqualFold predicate on the "recaptcha_method" field.
 func RecaptchaMethodEqualFold(v string) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
@@ -504,6 +560,20 @@ func KycEnableNEQ(v bool) predicate.AppControl {
 	})
 }
 
+// KycEnableIsNil applies the IsNil predicate on the "kyc_enable" field.
+func KycEnableIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldKycEnable)))
+	})
+}
+
+// KycEnableNotNil applies the NotNil predicate on the "kyc_enable" field.
+func KycEnableNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldKycEnable)))
+	})
+}
+
 // SigninVerifyEnableEQ applies the EQ predicate on the "signin_verify_enable" field.
 func SigninVerifyEnableEQ(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
@@ -518,6 +588,20 @@ func SigninVerifyEnableNEQ(v bool) predicate.AppControl {
 	})
 }
 
+// SigninVerifyEnableIsNil applies the IsNil predicate on the "signin_verify_enable" field.
+func SigninVerifyEnableIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSigninVerifyEnable)))
+	})
+}
+
+// SigninVerifyEnableNotNil applies the NotNil predicate on the "signin_verify_enable" field.
+func SigninVerifyEnableNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSigninVerifyEnable)))
+	})
+}
+
 // InvitationCodeMustEQ applies the EQ predicate on the "invitation_code_must" field.
 func InvitationCodeMustEQ(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
@@ -529,6 +613,20 @@ func InvitationCodeMustEQ(v bool) predicate.AppControl {
 func InvitationCodeMustNEQ(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldInvitationCodeMust), v))
+	})
+}
+
+// InvitationCodeMustIsNil applies the IsNil predicate on the "invitation_code_must" field.
+func InvitationCodeMustIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldInvitationCodeMust)))
+	})
+}
+
+// InvitationCodeMustNotNil applies the NotNil predicate on the "invitation_code_must" field.
+func InvitationCodeMustNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldInvitationCodeMust)))
 	})
 }
 

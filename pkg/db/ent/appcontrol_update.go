@@ -90,9 +90,29 @@ func (acu *AppControlUpdate) SetAppID(u uuid.UUID) *AppControlUpdate {
 	return acu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableAppID(u *uuid.UUID) *AppControlUpdate {
+	if u != nil {
+		acu.SetAppID(*u)
+	}
+	return acu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (acu *AppControlUpdate) ClearAppID() *AppControlUpdate {
+	acu.mutation.ClearAppID()
+	return acu
+}
+
 // SetSignupMethods sets the "signup_methods" field.
 func (acu *AppControlUpdate) SetSignupMethods(s []string) *AppControlUpdate {
 	acu.mutation.SetSignupMethods(s)
+	return acu
+}
+
+// ClearSignupMethods clears the value of the "signup_methods" field.
+func (acu *AppControlUpdate) ClearSignupMethods() *AppControlUpdate {
+	acu.mutation.ClearSignupMethods()
 	return acu
 }
 
@@ -102,9 +122,29 @@ func (acu *AppControlUpdate) SetExternSigninMethods(s []string) *AppControlUpdat
 	return acu
 }
 
+// ClearExternSigninMethods clears the value of the "extern_signin_methods" field.
+func (acu *AppControlUpdate) ClearExternSigninMethods() *AppControlUpdate {
+	acu.mutation.ClearExternSigninMethods()
+	return acu
+}
+
 // SetRecaptchaMethod sets the "recaptcha_method" field.
 func (acu *AppControlUpdate) SetRecaptchaMethod(s string) *AppControlUpdate {
 	acu.mutation.SetRecaptchaMethod(s)
+	return acu
+}
+
+// SetNillableRecaptchaMethod sets the "recaptcha_method" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableRecaptchaMethod(s *string) *AppControlUpdate {
+	if s != nil {
+		acu.SetRecaptchaMethod(*s)
+	}
+	return acu
+}
+
+// ClearRecaptchaMethod clears the value of the "recaptcha_method" field.
+func (acu *AppControlUpdate) ClearRecaptchaMethod() *AppControlUpdate {
+	acu.mutation.ClearRecaptchaMethod()
 	return acu
 }
 
@@ -114,15 +154,57 @@ func (acu *AppControlUpdate) SetKycEnable(b bool) *AppControlUpdate {
 	return acu
 }
 
+// SetNillableKycEnable sets the "kyc_enable" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableKycEnable(b *bool) *AppControlUpdate {
+	if b != nil {
+		acu.SetKycEnable(*b)
+	}
+	return acu
+}
+
+// ClearKycEnable clears the value of the "kyc_enable" field.
+func (acu *AppControlUpdate) ClearKycEnable() *AppControlUpdate {
+	acu.mutation.ClearKycEnable()
+	return acu
+}
+
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
 func (acu *AppControlUpdate) SetSigninVerifyEnable(b bool) *AppControlUpdate {
 	acu.mutation.SetSigninVerifyEnable(b)
 	return acu
 }
 
+// SetNillableSigninVerifyEnable sets the "signin_verify_enable" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableSigninVerifyEnable(b *bool) *AppControlUpdate {
+	if b != nil {
+		acu.SetSigninVerifyEnable(*b)
+	}
+	return acu
+}
+
+// ClearSigninVerifyEnable clears the value of the "signin_verify_enable" field.
+func (acu *AppControlUpdate) ClearSigninVerifyEnable() *AppControlUpdate {
+	acu.mutation.ClearSigninVerifyEnable()
+	return acu
+}
+
 // SetInvitationCodeMust sets the "invitation_code_must" field.
 func (acu *AppControlUpdate) SetInvitationCodeMust(b bool) *AppControlUpdate {
 	acu.mutation.SetInvitationCodeMust(b)
+	return acu
+}
+
+// SetNillableInvitationCodeMust sets the "invitation_code_must" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableInvitationCodeMust(b *bool) *AppControlUpdate {
+	if b != nil {
+		acu.SetInvitationCodeMust(*b)
+	}
+	return acu
+}
+
+// ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
+func (acu *AppControlUpdate) ClearInvitationCodeMust() *AppControlUpdate {
+	acu.mutation.ClearInvitationCodeMust()
 	return acu
 }
 
@@ -273,10 +355,22 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldAppID,
 		})
 	}
+	if acu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appcontrol.FieldAppID,
+		})
+	}
 	if value, ok := acu.mutation.SignupMethods(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
+			Column: appcontrol.FieldSignupMethods,
+		})
+	}
+	if acu.mutation.SignupMethodsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
 			Column: appcontrol.FieldSignupMethods,
 		})
 	}
@@ -287,10 +381,22 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldExternSigninMethods,
 		})
 	}
+	if acu.mutation.ExternSigninMethodsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appcontrol.FieldExternSigninMethods,
+		})
+	}
 	if value, ok := acu.mutation.RecaptchaMethod(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: appcontrol.FieldRecaptchaMethod,
+		})
+	}
+	if acu.mutation.RecaptchaMethodCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: appcontrol.FieldRecaptchaMethod,
 		})
 	}
@@ -301,6 +407,12 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldKycEnable,
 		})
 	}
+	if acu.mutation.KycEnableCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldKycEnable,
+		})
+	}
 	if value, ok := acu.mutation.SigninVerifyEnable(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -308,10 +420,22 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldSigninVerifyEnable,
 		})
 	}
+	if acu.mutation.SigninVerifyEnableCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldSigninVerifyEnable,
+		})
+	}
 	if value, ok := acu.mutation.InvitationCodeMust(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
+			Column: appcontrol.FieldInvitationCodeMust,
+		})
+	}
+	if acu.mutation.InvitationCodeMustCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}
@@ -397,9 +521,29 @@ func (acuo *AppControlUpdateOne) SetAppID(u uuid.UUID) *AppControlUpdateOne {
 	return acuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableAppID(u *uuid.UUID) *AppControlUpdateOne {
+	if u != nil {
+		acuo.SetAppID(*u)
+	}
+	return acuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (acuo *AppControlUpdateOne) ClearAppID() *AppControlUpdateOne {
+	acuo.mutation.ClearAppID()
+	return acuo
+}
+
 // SetSignupMethods sets the "signup_methods" field.
 func (acuo *AppControlUpdateOne) SetSignupMethods(s []string) *AppControlUpdateOne {
 	acuo.mutation.SetSignupMethods(s)
+	return acuo
+}
+
+// ClearSignupMethods clears the value of the "signup_methods" field.
+func (acuo *AppControlUpdateOne) ClearSignupMethods() *AppControlUpdateOne {
+	acuo.mutation.ClearSignupMethods()
 	return acuo
 }
 
@@ -409,9 +553,29 @@ func (acuo *AppControlUpdateOne) SetExternSigninMethods(s []string) *AppControlU
 	return acuo
 }
 
+// ClearExternSigninMethods clears the value of the "extern_signin_methods" field.
+func (acuo *AppControlUpdateOne) ClearExternSigninMethods() *AppControlUpdateOne {
+	acuo.mutation.ClearExternSigninMethods()
+	return acuo
+}
+
 // SetRecaptchaMethod sets the "recaptcha_method" field.
 func (acuo *AppControlUpdateOne) SetRecaptchaMethod(s string) *AppControlUpdateOne {
 	acuo.mutation.SetRecaptchaMethod(s)
+	return acuo
+}
+
+// SetNillableRecaptchaMethod sets the "recaptcha_method" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableRecaptchaMethod(s *string) *AppControlUpdateOne {
+	if s != nil {
+		acuo.SetRecaptchaMethod(*s)
+	}
+	return acuo
+}
+
+// ClearRecaptchaMethod clears the value of the "recaptcha_method" field.
+func (acuo *AppControlUpdateOne) ClearRecaptchaMethod() *AppControlUpdateOne {
+	acuo.mutation.ClearRecaptchaMethod()
 	return acuo
 }
 
@@ -421,15 +585,57 @@ func (acuo *AppControlUpdateOne) SetKycEnable(b bool) *AppControlUpdateOne {
 	return acuo
 }
 
+// SetNillableKycEnable sets the "kyc_enable" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableKycEnable(b *bool) *AppControlUpdateOne {
+	if b != nil {
+		acuo.SetKycEnable(*b)
+	}
+	return acuo
+}
+
+// ClearKycEnable clears the value of the "kyc_enable" field.
+func (acuo *AppControlUpdateOne) ClearKycEnable() *AppControlUpdateOne {
+	acuo.mutation.ClearKycEnable()
+	return acuo
+}
+
 // SetSigninVerifyEnable sets the "signin_verify_enable" field.
 func (acuo *AppControlUpdateOne) SetSigninVerifyEnable(b bool) *AppControlUpdateOne {
 	acuo.mutation.SetSigninVerifyEnable(b)
 	return acuo
 }
 
+// SetNillableSigninVerifyEnable sets the "signin_verify_enable" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableSigninVerifyEnable(b *bool) *AppControlUpdateOne {
+	if b != nil {
+		acuo.SetSigninVerifyEnable(*b)
+	}
+	return acuo
+}
+
+// ClearSigninVerifyEnable clears the value of the "signin_verify_enable" field.
+func (acuo *AppControlUpdateOne) ClearSigninVerifyEnable() *AppControlUpdateOne {
+	acuo.mutation.ClearSigninVerifyEnable()
+	return acuo
+}
+
 // SetInvitationCodeMust sets the "invitation_code_must" field.
 func (acuo *AppControlUpdateOne) SetInvitationCodeMust(b bool) *AppControlUpdateOne {
 	acuo.mutation.SetInvitationCodeMust(b)
+	return acuo
+}
+
+// SetNillableInvitationCodeMust sets the "invitation_code_must" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableInvitationCodeMust(b *bool) *AppControlUpdateOne {
+	if b != nil {
+		acuo.SetInvitationCodeMust(*b)
+	}
+	return acuo
+}
+
+// ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
+func (acuo *AppControlUpdateOne) ClearInvitationCodeMust() *AppControlUpdateOne {
+	acuo.mutation.ClearInvitationCodeMust()
 	return acuo
 }
 
@@ -610,10 +816,22 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Column: appcontrol.FieldAppID,
 		})
 	}
+	if acuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appcontrol.FieldAppID,
+		})
+	}
 	if value, ok := acuo.mutation.SignupMethods(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
+			Column: appcontrol.FieldSignupMethods,
+		})
+	}
+	if acuo.mutation.SignupMethodsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
 			Column: appcontrol.FieldSignupMethods,
 		})
 	}
@@ -624,10 +842,22 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Column: appcontrol.FieldExternSigninMethods,
 		})
 	}
+	if acuo.mutation.ExternSigninMethodsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appcontrol.FieldExternSigninMethods,
+		})
+	}
 	if value, ok := acuo.mutation.RecaptchaMethod(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: appcontrol.FieldRecaptchaMethod,
+		})
+	}
+	if acuo.mutation.RecaptchaMethodCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: appcontrol.FieldRecaptchaMethod,
 		})
 	}
@@ -638,6 +868,12 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Column: appcontrol.FieldKycEnable,
 		})
 	}
+	if acuo.mutation.KycEnableCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldKycEnable,
+		})
+	}
 	if value, ok := acuo.mutation.SigninVerifyEnable(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -645,10 +881,22 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 			Column: appcontrol.FieldSigninVerifyEnable,
 		})
 	}
+	if acuo.mutation.SigninVerifyEnableCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldSigninVerifyEnable,
+		})
+	}
 	if value, ok := acuo.mutation.InvitationCodeMust(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
+			Column: appcontrol.FieldInvitationCodeMust,
+		})
+	}
+	if acuo.mutation.InvitationCodeMustCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}

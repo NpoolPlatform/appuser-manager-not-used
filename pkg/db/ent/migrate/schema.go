@@ -31,13 +31,13 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID, Unique: true},
-		{Name: "signup_methods", Type: field.TypeJSON},
-		{Name: "extern_signin_methods", Type: field.TypeJSON},
-		{Name: "recaptcha_method", Type: field.TypeString},
-		{Name: "kyc_enable", Type: field.TypeBool},
-		{Name: "signin_verify_enable", Type: field.TypeBool},
-		{Name: "invitation_code_must", Type: field.TypeBool},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "signup_methods", Type: field.TypeJSON, Nullable: true},
+		{Name: "extern_signin_methods", Type: field.TypeJSON, Nullable: true},
+		{Name: "recaptcha_method", Type: field.TypeString, Nullable: true, Default: "GoogleRecaptchaV3"},
+		{Name: "kyc_enable", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "signin_verify_enable", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "invitation_code_must", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// AppControlsTable holds the schema information for the "app_controls" table.
 	AppControlsTable = &schema.Table{
