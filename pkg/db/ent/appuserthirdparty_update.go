@@ -90,9 +90,37 @@ func (autpu *AppUserThirdPartyUpdate) SetAppID(u uuid.UUID) *AppUserThirdPartyUp
 	return autpu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableAppID(u *uuid.UUID) *AppUserThirdPartyUpdate {
+	if u != nil {
+		autpu.SetAppID(*u)
+	}
+	return autpu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (autpu *AppUserThirdPartyUpdate) ClearAppID() *AppUserThirdPartyUpdate {
+	autpu.mutation.ClearAppID()
+	return autpu
+}
+
 // SetUserID sets the "user_id" field.
 func (autpu *AppUserThirdPartyUpdate) SetUserID(u uuid.UUID) *AppUserThirdPartyUpdate {
 	autpu.mutation.SetUserID(u)
+	return autpu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableUserID(u *uuid.UUID) *AppUserThirdPartyUpdate {
+	if u != nil {
+		autpu.SetUserID(*u)
+	}
+	return autpu
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (autpu *AppUserThirdPartyUpdate) ClearUserID() *AppUserThirdPartyUpdate {
+	autpu.mutation.ClearUserID()
 	return autpu
 }
 
@@ -102,9 +130,37 @@ func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUserID(s string) *AppUserThir
 	return autpu
 }
 
+// SetNillableThirdPartyUserID sets the "third_party_user_id" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUserID(s *string) *AppUserThirdPartyUpdate {
+	if s != nil {
+		autpu.SetThirdPartyUserID(*s)
+	}
+	return autpu
+}
+
+// ClearThirdPartyUserID clears the value of the "third_party_user_id" field.
+func (autpu *AppUserThirdPartyUpdate) ClearThirdPartyUserID() *AppUserThirdPartyUpdate {
+	autpu.mutation.ClearThirdPartyUserID()
+	return autpu
+}
+
 // SetThirdPartyID sets the "third_party_id" field.
 func (autpu *AppUserThirdPartyUpdate) SetThirdPartyID(s string) *AppUserThirdPartyUpdate {
 	autpu.mutation.SetThirdPartyID(s)
+	return autpu
+}
+
+// SetNillableThirdPartyID sets the "third_party_id" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyID(s *string) *AppUserThirdPartyUpdate {
+	if s != nil {
+		autpu.SetThirdPartyID(*s)
+	}
+	return autpu
+}
+
+// ClearThirdPartyID clears the value of the "third_party_id" field.
+func (autpu *AppUserThirdPartyUpdate) ClearThirdPartyID() *AppUserThirdPartyUpdate {
+	autpu.mutation.ClearThirdPartyID()
 	return autpu
 }
 
@@ -122,17 +178,29 @@ func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUsername(s *string) *
 	return autpu
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (autpu *AppUserThirdPartyUpdate) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyUpdate {
-	autpu.mutation.SetThirdPartyUserAvatar(s)
+// ClearThirdPartyUsername clears the value of the "third_party_username" field.
+func (autpu *AppUserThirdPartyUpdate) ClearThirdPartyUsername() *AppUserThirdPartyUpdate {
+	autpu.mutation.ClearThirdPartyUsername()
 	return autpu
 }
 
-// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
-func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyUpdate {
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (autpu *AppUserThirdPartyUpdate) SetThirdPartyAvatar(s string) *AppUserThirdPartyUpdate {
+	autpu.mutation.SetThirdPartyAvatar(s)
+	return autpu
+}
+
+// SetNillableThirdPartyAvatar sets the "third_party_avatar" field if the given value is not nil.
+func (autpu *AppUserThirdPartyUpdate) SetNillableThirdPartyAvatar(s *string) *AppUserThirdPartyUpdate {
 	if s != nil {
-		autpu.SetThirdPartyUserAvatar(*s)
+		autpu.SetThirdPartyAvatar(*s)
 	}
+	return autpu
+}
+
+// ClearThirdPartyAvatar clears the value of the "third_party_avatar" field.
+func (autpu *AppUserThirdPartyUpdate) ClearThirdPartyAvatar() *AppUserThirdPartyUpdate {
+	autpu.mutation.ClearThirdPartyAvatar()
 	return autpu
 }
 
@@ -218,9 +286,9 @@ func (autpu *AppUserThirdPartyUpdate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (autpu *AppUserThirdPartyUpdate) check() error {
-	if v, ok := autpu.mutation.ThirdPartyUserAvatar(); ok {
-		if err := appuserthirdparty.ThirdPartyUserAvatarValidator(v); err != nil {
-			return &ValidationError{Name: "third_party_user_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThirdParty.third_party_user_avatar": %w`, err)}
+	if v, ok := autpu.mutation.ThirdPartyAvatar(); ok {
+		if err := appuserthirdparty.ThirdPartyAvatarValidator(v); err != nil {
+			return &ValidationError{Name: "third_party_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThirdParty.third_party_avatar": %w`, err)}
 		}
 	}
 	return nil
@@ -299,10 +367,22 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 			Column: appuserthirdparty.FieldAppID,
 		})
 	}
+	if autpu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appuserthirdparty.FieldAppID,
+		})
+	}
 	if value, ok := autpu.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: appuserthirdparty.FieldUserID,
+		})
+	}
+	if autpu.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: appuserthirdparty.FieldUserID,
 		})
 	}
@@ -313,10 +393,22 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 			Column: appuserthirdparty.FieldThirdPartyUserID,
 		})
 	}
+	if autpu.mutation.ThirdPartyUserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuserthirdparty.FieldThirdPartyUserID,
+		})
+	}
 	if value, ok := autpu.mutation.ThirdPartyID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: appuserthirdparty.FieldThirdPartyID,
+		})
+	}
+	if autpu.mutation.ThirdPartyIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: appuserthirdparty.FieldThirdPartyID,
 		})
 	}
@@ -327,11 +419,23 @@ func (autpu *AppUserThirdPartyUpdate) sqlSave(ctx context.Context) (n int, err e
 			Column: appuserthirdparty.FieldThirdPartyUsername,
 		})
 	}
-	if value, ok := autpu.mutation.ThirdPartyUserAvatar(); ok {
+	if autpu.mutation.ThirdPartyUsernameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuserthirdparty.FieldThirdPartyUsername,
+		})
+	}
+	if value, ok := autpu.mutation.ThirdPartyAvatar(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthirdparty.FieldThirdPartyUserAvatar,
+			Column: appuserthirdparty.FieldThirdPartyAvatar,
+		})
+	}
+	if autpu.mutation.ThirdPartyAvatarCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuserthirdparty.FieldThirdPartyAvatar,
 		})
 	}
 	_spec.Modifiers = autpu.modifiers
@@ -416,9 +520,37 @@ func (autpuo *AppUserThirdPartyUpdateOne) SetAppID(u uuid.UUID) *AppUserThirdPar
 	return autpuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableAppID(u *uuid.UUID) *AppUserThirdPartyUpdateOne {
+	if u != nil {
+		autpuo.SetAppID(*u)
+	}
+	return autpuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (autpuo *AppUserThirdPartyUpdateOne) ClearAppID() *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ClearAppID()
+	return autpuo
+}
+
 // SetUserID sets the "user_id" field.
 func (autpuo *AppUserThirdPartyUpdateOne) SetUserID(u uuid.UUID) *AppUserThirdPartyUpdateOne {
 	autpuo.mutation.SetUserID(u)
+	return autpuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableUserID(u *uuid.UUID) *AppUserThirdPartyUpdateOne {
+	if u != nil {
+		autpuo.SetUserID(*u)
+	}
+	return autpuo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (autpuo *AppUserThirdPartyUpdateOne) ClearUserID() *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ClearUserID()
 	return autpuo
 }
 
@@ -428,9 +560,37 @@ func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUserID(s string) *AppUser
 	return autpuo
 }
 
+// SetNillableThirdPartyUserID sets the "third_party_user_id" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUserID(s *string) *AppUserThirdPartyUpdateOne {
+	if s != nil {
+		autpuo.SetThirdPartyUserID(*s)
+	}
+	return autpuo
+}
+
+// ClearThirdPartyUserID clears the value of the "third_party_user_id" field.
+func (autpuo *AppUserThirdPartyUpdateOne) ClearThirdPartyUserID() *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ClearThirdPartyUserID()
+	return autpuo
+}
+
 // SetThirdPartyID sets the "third_party_id" field.
 func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyID(s string) *AppUserThirdPartyUpdateOne {
 	autpuo.mutation.SetThirdPartyID(s)
+	return autpuo
+}
+
+// SetNillableThirdPartyID sets the "third_party_id" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyID(s *string) *AppUserThirdPartyUpdateOne {
+	if s != nil {
+		autpuo.SetThirdPartyID(*s)
+	}
+	return autpuo
+}
+
+// ClearThirdPartyID clears the value of the "third_party_id" field.
+func (autpuo *AppUserThirdPartyUpdateOne) ClearThirdPartyID() *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ClearThirdPartyID()
 	return autpuo
 }
 
@@ -448,17 +608,29 @@ func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUsername(s *strin
 	return autpuo
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyUpdateOne {
-	autpuo.mutation.SetThirdPartyUserAvatar(s)
+// ClearThirdPartyUsername clears the value of the "third_party_username" field.
+func (autpuo *AppUserThirdPartyUpdateOne) ClearThirdPartyUsername() *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ClearThirdPartyUsername()
 	return autpuo
 }
 
-// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
-func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyUpdateOne {
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (autpuo *AppUserThirdPartyUpdateOne) SetThirdPartyAvatar(s string) *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.SetThirdPartyAvatar(s)
+	return autpuo
+}
+
+// SetNillableThirdPartyAvatar sets the "third_party_avatar" field if the given value is not nil.
+func (autpuo *AppUserThirdPartyUpdateOne) SetNillableThirdPartyAvatar(s *string) *AppUserThirdPartyUpdateOne {
 	if s != nil {
-		autpuo.SetThirdPartyUserAvatar(*s)
+		autpuo.SetThirdPartyAvatar(*s)
 	}
+	return autpuo
+}
+
+// ClearThirdPartyAvatar clears the value of the "third_party_avatar" field.
+func (autpuo *AppUserThirdPartyUpdateOne) ClearThirdPartyAvatar() *AppUserThirdPartyUpdateOne {
+	autpuo.mutation.ClearThirdPartyAvatar()
 	return autpuo
 }
 
@@ -557,9 +729,9 @@ func (autpuo *AppUserThirdPartyUpdateOne) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (autpuo *AppUserThirdPartyUpdateOne) check() error {
-	if v, ok := autpuo.mutation.ThirdPartyUserAvatar(); ok {
-		if err := appuserthirdparty.ThirdPartyUserAvatarValidator(v); err != nil {
-			return &ValidationError{Name: "third_party_user_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThirdParty.third_party_user_avatar": %w`, err)}
+	if v, ok := autpuo.mutation.ThirdPartyAvatar(); ok {
+		if err := appuserthirdparty.ThirdPartyAvatarValidator(v); err != nil {
+			return &ValidationError{Name: "third_party_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThirdParty.third_party_avatar": %w`, err)}
 		}
 	}
 	return nil
@@ -655,10 +827,22 @@ func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *A
 			Column: appuserthirdparty.FieldAppID,
 		})
 	}
+	if autpuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appuserthirdparty.FieldAppID,
+		})
+	}
 	if value, ok := autpuo.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: appuserthirdparty.FieldUserID,
+		})
+	}
+	if autpuo.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: appuserthirdparty.FieldUserID,
 		})
 	}
@@ -669,10 +853,22 @@ func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *A
 			Column: appuserthirdparty.FieldThirdPartyUserID,
 		})
 	}
+	if autpuo.mutation.ThirdPartyUserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuserthirdparty.FieldThirdPartyUserID,
+		})
+	}
 	if value, ok := autpuo.mutation.ThirdPartyID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: appuserthirdparty.FieldThirdPartyID,
+		})
+	}
+	if autpuo.mutation.ThirdPartyIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: appuserthirdparty.FieldThirdPartyID,
 		})
 	}
@@ -683,11 +879,23 @@ func (autpuo *AppUserThirdPartyUpdateOne) sqlSave(ctx context.Context) (_node *A
 			Column: appuserthirdparty.FieldThirdPartyUsername,
 		})
 	}
-	if value, ok := autpuo.mutation.ThirdPartyUserAvatar(); ok {
+	if autpuo.mutation.ThirdPartyUsernameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuserthirdparty.FieldThirdPartyUsername,
+		})
+	}
+	if value, ok := autpuo.mutation.ThirdPartyAvatar(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthirdparty.FieldThirdPartyUserAvatar,
+			Column: appuserthirdparty.FieldThirdPartyAvatar,
+		})
+	}
+	if autpuo.mutation.ThirdPartyAvatarCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuserthirdparty.FieldThirdPartyAvatar,
 		})
 	}
 	_spec.Modifiers = autpuo.modifiers

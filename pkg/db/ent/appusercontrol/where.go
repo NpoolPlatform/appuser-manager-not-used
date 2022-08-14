@@ -384,6 +384,20 @@ func AppIDLTE(v uuid.UUID) predicate.AppUserControl {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v uuid.UUID) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
@@ -448,6 +462,20 @@ func UserIDLTE(v uuid.UUID) predicate.AppUserControl {
 	})
 }
 
+// UserIDIsNil applies the IsNil predicate on the "user_id" field.
+func UserIDIsNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUserID)))
+	})
+}
+
+// UserIDNotNil applies the NotNil predicate on the "user_id" field.
+func UserIDNotNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUserID)))
+	})
+}
+
 // SigninVerifyByGoogleAuthenticationEQ applies the EQ predicate on the "signin_verify_by_google_authentication" field.
 func SigninVerifyByGoogleAuthenticationEQ(v bool) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
@@ -462,6 +490,20 @@ func SigninVerifyByGoogleAuthenticationNEQ(v bool) predicate.AppUserControl {
 	})
 }
 
+// SigninVerifyByGoogleAuthenticationIsNil applies the IsNil predicate on the "signin_verify_by_google_authentication" field.
+func SigninVerifyByGoogleAuthenticationIsNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSigninVerifyByGoogleAuthentication)))
+	})
+}
+
+// SigninVerifyByGoogleAuthenticationNotNil applies the NotNil predicate on the "signin_verify_by_google_authentication" field.
+func SigninVerifyByGoogleAuthenticationNotNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSigninVerifyByGoogleAuthentication)))
+	})
+}
+
 // GoogleAuthenticationVerifiedEQ applies the EQ predicate on the "google_authentication_verified" field.
 func GoogleAuthenticationVerifiedEQ(v bool) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
@@ -473,6 +515,20 @@ func GoogleAuthenticationVerifiedEQ(v bool) predicate.AppUserControl {
 func GoogleAuthenticationVerifiedNEQ(v bool) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldGoogleAuthenticationVerified), v))
+	})
+}
+
+// GoogleAuthenticationVerifiedIsNil applies the IsNil predicate on the "google_authentication_verified" field.
+func GoogleAuthenticationVerifiedIsNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGoogleAuthenticationVerified)))
+	})
+}
+
+// GoogleAuthenticationVerifiedNotNil applies the NotNil predicate on the "google_authentication_verified" field.
+func GoogleAuthenticationVerifiedNotNil() predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGoogleAuthenticationVerified)))
 	})
 }
 

@@ -31,13 +31,13 @@ func init() {
 }
 
 var entAppUserThirdParty = ent.AppUserThirdParty{
-	ID:                   uuid.New(),
-	AppID:                uuid.New(),
-	UserID:               uuid.New(),
-	ThirdPartyUserID:     uuid.New().String(),
-	ThirdPartyID:         uuid.New().String(),
-	ThirdPartyUsername:   uuid.New().String(),
-	ThirdPartyUserAvatar: uuid.New().String(),
+	ID:                 uuid.New(),
+	AppID:              uuid.New(),
+	UserID:             uuid.New(),
+	ThirdPartyUserID:   uuid.New().String(),
+	ThirdPartyID:       uuid.New().String(),
+	ThirdPartyUsername: uuid.New().String(),
+	ThirdPartyAvatar:   uuid.New().String(),
 }
 
 var (
@@ -46,13 +46,13 @@ var (
 	appID  = entAppUserThirdParty.AppID.String()
 
 	appuserthirdpartyInfo = npool.AppUserThirdPartyReq{
-		UserID:               &userID,
-		ThirdPartyUserID:     &entAppUserThirdParty.ThirdPartyUserID,
-		ThirdPartyID:         &entAppUserThirdParty.ThirdPartyID,
-		ThirdPartyUsername:   &entAppUserThirdParty.ThirdPartyUsername,
-		ThirdPartyUserAvatar: &entAppUserThirdParty.ThirdPartyUserAvatar,
-		ID:                   &id,
-		AppID:                &appID,
+		UserID:             &userID,
+		ThirdPartyUserID:   &entAppUserThirdParty.ThirdPartyUserID,
+		ThirdPartyID:       &entAppUserThirdParty.ThirdPartyID,
+		ThirdPartyUsername: &entAppUserThirdParty.ThirdPartyUsername,
+		ThirdPartyAvatar:   &entAppUserThirdParty.ThirdPartyAvatar,
+		ID:                 &id,
+		AppID:              &appID,
 	}
 )
 
@@ -60,13 +60,13 @@ var info *ent.AppUserThirdParty
 
 func rowToObject(row *ent.AppUserThirdParty) *ent.AppUserThirdParty {
 	return &ent.AppUserThirdParty{
-		UserID:               row.UserID,
-		ThirdPartyUserID:     row.ThirdPartyUserID,
-		ThirdPartyID:         row.ThirdPartyID,
-		ThirdPartyUsername:   row.ThirdPartyUsername,
-		ThirdPartyUserAvatar: row.ThirdPartyUserAvatar,
-		ID:                   row.ID,
-		AppID:                row.AppID,
+		UserID:             row.UserID,
+		ThirdPartyUserID:   row.ThirdPartyUserID,
+		ThirdPartyID:       row.ThirdPartyID,
+		ThirdPartyUsername: row.ThirdPartyUsername,
+		ThirdPartyAvatar:   row.ThirdPartyAvatar,
+		ID:                 row.ID,
+		AppID:              row.AppID,
 	}
 }
 
@@ -84,22 +84,22 @@ func create(t *testing.T) {
 func createBulk(t *testing.T) {
 	entAppUserThirdParty := []ent.AppUserThirdParty{
 		{
-			ID:                   uuid.New(),
-			AppID:                uuid.New(),
-			UserID:               uuid.New(),
-			ThirdPartyUserID:     uuid.New().String(),
-			ThirdPartyID:         uuid.New().String(),
-			ThirdPartyUsername:   uuid.New().String(),
-			ThirdPartyUserAvatar: uuid.New().String(),
+			ID:                 uuid.New(),
+			AppID:              uuid.New(),
+			UserID:             uuid.New(),
+			ThirdPartyUserID:   uuid.New().String(),
+			ThirdPartyID:       uuid.New().String(),
+			ThirdPartyUsername: uuid.New().String(),
+			ThirdPartyAvatar:   uuid.New().String(),
 		},
 		{
-			ID:                   uuid.New(),
-			AppID:                uuid.New(),
-			UserID:               uuid.New(),
-			ThirdPartyUserID:     uuid.New().String(),
-			ThirdPartyID:         uuid.New().String(),
-			ThirdPartyUsername:   uuid.New().String(),
-			ThirdPartyUserAvatar: uuid.New().String(),
+			ID:                 uuid.New(),
+			AppID:              uuid.New(),
+			UserID:             uuid.New(),
+			ThirdPartyUserID:   uuid.New().String(),
+			ThirdPartyID:       uuid.New().String(),
+			ThirdPartyUsername: uuid.New().String(),
+			ThirdPartyAvatar:   uuid.New().String(),
 		},
 	}
 
@@ -110,13 +110,13 @@ func createBulk(t *testing.T) {
 		appID := entAppUserThirdParty[key].AppID.String()
 
 		appuserthirdpartys = append(appuserthirdpartys, &npool.AppUserThirdPartyReq{
-			UserID:               &userID,
-			ThirdPartyUserID:     &entAppUserThirdParty[key].ThirdPartyUserID,
-			ThirdPartyID:         &entAppUserThirdParty[key].ThirdPartyID,
-			ThirdPartyUsername:   &entAppUserThirdParty[key].ThirdPartyUsername,
-			ThirdPartyUserAvatar: &entAppUserThirdParty[key].ThirdPartyUserAvatar,
-			ID:                   &id,
-			AppID:                &appID,
+			UserID:             &userID,
+			ThirdPartyUserID:   &entAppUserThirdParty[key].ThirdPartyUserID,
+			ThirdPartyID:       &entAppUserThirdParty[key].ThirdPartyID,
+			ThirdPartyUsername: &entAppUserThirdParty[key].ThirdPartyUsername,
+			ThirdPartyAvatar:   &entAppUserThirdParty[key].ThirdPartyAvatar,
+			ID:                 &id,
+			AppID:              &appID,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), appuserthirdpartys)

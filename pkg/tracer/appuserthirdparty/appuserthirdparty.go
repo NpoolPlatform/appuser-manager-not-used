@@ -17,7 +17,7 @@ func trace(span trace1.Span, in *npool.AppUserThirdPartyReq, index int) trace1.S
 		attribute.String(fmt.Sprintf("ThirdPartyUserID.%v", index), in.GetThirdPartyUserID()),
 		attribute.String(fmt.Sprintf("ThirdPartyID.%v", index), in.GetThirdPartyID()),
 		attribute.String(fmt.Sprintf("ThirdPartyUsername.%v", index), in.GetThirdPartyUsername()),
-		attribute.String(fmt.Sprintf("ThirdPartyUserAvatar.%v", index), in.GetThirdPartyUserAvatar()),
+		attribute.String(fmt.Sprintf("ThirdPartyAvatar.%v", index), in.GetThirdPartyAvatar()),
 	)
 	return span
 }
@@ -40,8 +40,8 @@ func TraceConds(span trace1.Span, in *npool.Conds) trace1.Span {
 		attribute.String("ThirdPartyID.Val", in.GetThirdPartyID().GetValue()),
 		attribute.String("ThirdPartyUsername.Op", in.GetThirdPartyUsername().GetOp()),
 		attribute.String("ThirdPartyUsername.Val", in.GetThirdPartyUsername().GetValue()),
-		attribute.String("ThirdPartyUserAvatar.Op", in.GetThirdPartyUserAvatar().GetOp()),
-		attribute.String("ThirdPartyUserAvatar.Val", in.GetThirdPartyUserAvatar().GetValue()),
+		attribute.String("ThirdPartyAvatar.Op", in.GetThirdPartyAvatar().GetOp()),
+		attribute.String("ThirdPartyAvatar.Val", in.GetThirdPartyAvatar().GetValue()),
 	)
 	return span
 }

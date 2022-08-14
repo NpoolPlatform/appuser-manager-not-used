@@ -13,9 +13,6 @@ func trace(span trace1.Span, in *npool.AppControlReq, index int) trace1.Span {
 	span.SetAttributes(
 		attribute.String(fmt.Sprintf("ID.%v", index), in.GetID()),
 		attribute.String(fmt.Sprintf("AppID.%v", index), in.GetAppID()),
-		attribute.StringSlice(fmt.Sprintf("SignupMethods.%v", index), in.GetSignupMethods()),
-		attribute.StringSlice(fmt.Sprintf("ExternSigninMethods.%v", index), in.GetExternSigninMethods()),
-		attribute.String(fmt.Sprintf("RecaptchaMethod.%v", index), in.GetRecaptchaMethod()),
 		attribute.Bool(fmt.Sprintf("KycEnable.%v", index), in.GetKycEnable()),
 		attribute.Bool(fmt.Sprintf("SigninVerifyEnable.%v", index), in.GetSigninVerifyEnable()),
 		attribute.Bool(fmt.Sprintf("InvitationCodeMust.%v", index), in.GetInvitationCodeMust()),
@@ -33,8 +30,6 @@ func TraceConds(span trace1.Span, in *npool.Conds) trace1.Span {
 		attribute.String("ID.Val", in.GetID().GetValue()),
 		attribute.String("AppID.Op", in.GetAppID().GetOp()),
 		attribute.String("AppID.Val", in.GetAppID().GetValue()),
-		attribute.String("RecaptchaMethod.Op", in.GetRecaptchaMethod().GetOp()),
-		attribute.String("RecaptchaMethod.Val", in.GetRecaptchaMethod().GetValue()),
 		attribute.String("KycEnable.Op", in.GetKycEnable().GetOp()),
 		attribute.Bool("KycEnable.Val", in.GetKycEnable().GetValue()),
 		attribute.String("SigninVerifyEnable.Op", in.GetSigninVerifyEnable().GetOp()),

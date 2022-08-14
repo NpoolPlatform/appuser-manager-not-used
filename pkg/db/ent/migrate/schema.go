@@ -18,6 +18,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "logo", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "signin_verify_type", Type: field.TypeString, Nullable: true, Default: "Email"},
 	}
 	// AppsTable holds the schema information for the "apps" table.
 	AppsTable = &schema.Table{
@@ -102,10 +103,10 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool, Default: false},
-		{Name: "google_authentication_verified", Type: field.TypeBool, Default: false},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "google_authentication_verified", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{
@@ -184,12 +185,12 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "third_party_user_id", Type: field.TypeString},
-		{Name: "third_party_id", Type: field.TypeString},
-		{Name: "third_party_username", Type: field.TypeString, Default: ""},
-		{Name: "third_party_user_avatar", Type: field.TypeString, Size: 1024, Default: ""},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "third_party_user_id", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "third_party_id", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "third_party_username", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "third_party_avatar", Type: field.TypeString, Nullable: true, Size: 1024, Default: ""},
 	}
 	// AppUserThirdPartiesTable holds the schema information for the "app_user_third_parties" table.
 	AppUserThirdPartiesTable = &schema.Table{

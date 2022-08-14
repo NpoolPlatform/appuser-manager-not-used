@@ -121,6 +121,20 @@ func (ac *AppCreate) SetNillableDescription(s *string) *AppCreate {
 	return ac
 }
 
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (ac *AppCreate) SetSigninVerifyType(s string) *AppCreate {
+	ac.mutation.SetSigninVerifyType(s)
+	return ac
+}
+
+// SetNillableSigninVerifyType sets the "signin_verify_type" field if the given value is not nil.
+func (ac *AppCreate) SetNillableSigninVerifyType(s *string) *AppCreate {
+	if s != nil {
+		ac.SetSigninVerifyType(*s)
+	}
+	return ac
+}
+
 // SetID sets the "id" field.
 func (ac *AppCreate) SetID(u uuid.UUID) *AppCreate {
 	ac.mutation.SetID(u)
@@ -250,6 +264,10 @@ func (ac *AppCreate) defaults() error {
 		v := app.DefaultDescription
 		ac.mutation.SetDescription(v)
 	}
+	if _, ok := ac.mutation.SigninVerifyType(); !ok {
+		v := app.DefaultSigninVerifyType
+		ac.mutation.SetSigninVerifyType(v)
+	}
 	if _, ok := ac.mutation.ID(); !ok {
 		if app.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized app.DefaultID (forgotten import ent/runtime?)")
@@ -363,6 +381,14 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 			Column: app.FieldDescription,
 		})
 		_node.Description = value
+	}
+	if value, ok := ac.mutation.SigninVerifyType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: app.FieldSigninVerifyType,
+		})
+		_node.SigninVerifyType = value
 	}
 	return _node, _spec
 }
@@ -541,6 +567,24 @@ func (u *AppUpsert) UpdateDescription() *AppUpsert {
 // ClearDescription clears the value of the "description" field.
 func (u *AppUpsert) ClearDescription() *AppUpsert {
 	u.SetNull(app.FieldDescription)
+	return u
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (u *AppUpsert) SetSigninVerifyType(v string) *AppUpsert {
+	u.Set(app.FieldSigninVerifyType, v)
+	return u
+}
+
+// UpdateSigninVerifyType sets the "signin_verify_type" field to the value that was provided on create.
+func (u *AppUpsert) UpdateSigninVerifyType() *AppUpsert {
+	u.SetExcluded(app.FieldSigninVerifyType)
+	return u
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (u *AppUpsert) ClearSigninVerifyType() *AppUpsert {
+	u.SetNull(app.FieldSigninVerifyType)
 	return u
 }
 
@@ -738,6 +782,27 @@ func (u *AppUpsertOne) UpdateDescription() *AppUpsertOne {
 func (u *AppUpsertOne) ClearDescription() *AppUpsertOne {
 	return u.Update(func(s *AppUpsert) {
 		s.ClearDescription()
+	})
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (u *AppUpsertOne) SetSigninVerifyType(v string) *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.SetSigninVerifyType(v)
+	})
+}
+
+// UpdateSigninVerifyType sets the "signin_verify_type" field to the value that was provided on create.
+func (u *AppUpsertOne) UpdateSigninVerifyType() *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateSigninVerifyType()
+	})
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (u *AppUpsertOne) ClearSigninVerifyType() *AppUpsertOne {
+	return u.Update(func(s *AppUpsert) {
+		s.ClearSigninVerifyType()
 	})
 }
 
@@ -1101,6 +1166,27 @@ func (u *AppUpsertBulk) UpdateDescription() *AppUpsertBulk {
 func (u *AppUpsertBulk) ClearDescription() *AppUpsertBulk {
 	return u.Update(func(s *AppUpsert) {
 		s.ClearDescription()
+	})
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (u *AppUpsertBulk) SetSigninVerifyType(v string) *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.SetSigninVerifyType(v)
+	})
+}
+
+// UpdateSigninVerifyType sets the "signin_verify_type" field to the value that was provided on create.
+func (u *AppUpsertBulk) UpdateSigninVerifyType() *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.UpdateSigninVerifyType()
+	})
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (u *AppUpsertBulk) ClearSigninVerifyType() *AppUpsertBulk {
+	return u.Update(func(s *AppUpsert) {
+		s.ClearSigninVerifyType()
 	})
 }
 

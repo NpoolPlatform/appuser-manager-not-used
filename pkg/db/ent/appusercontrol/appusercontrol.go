@@ -69,6 +69,10 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultAppID holds the default value on creation for the "app_id" field.
+	DefaultAppID func() uuid.UUID
+	// DefaultUserID holds the default value on creation for the "user_id" field.
+	DefaultUserID func() uuid.UUID
 	// DefaultSigninVerifyByGoogleAuthentication holds the default value on creation for the "signin_verify_by_google_authentication" field.
 	DefaultSigninVerifyByGoogleAuthentication bool
 	// DefaultGoogleAuthenticationVerified holds the default value on creation for the "google_authentication_verified" field.

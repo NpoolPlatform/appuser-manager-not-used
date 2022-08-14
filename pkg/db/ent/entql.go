@@ -35,13 +35,14 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "App",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			app.FieldCreatedAt:   {Type: field.TypeUint32, Column: app.FieldCreatedAt},
-			app.FieldUpdatedAt:   {Type: field.TypeUint32, Column: app.FieldUpdatedAt},
-			app.FieldDeletedAt:   {Type: field.TypeUint32, Column: app.FieldDeletedAt},
-			app.FieldCreatedBy:   {Type: field.TypeUUID, Column: app.FieldCreatedBy},
-			app.FieldName:        {Type: field.TypeString, Column: app.FieldName},
-			app.FieldLogo:        {Type: field.TypeString, Column: app.FieldLogo},
-			app.FieldDescription: {Type: field.TypeString, Column: app.FieldDescription},
+			app.FieldCreatedAt:        {Type: field.TypeUint32, Column: app.FieldCreatedAt},
+			app.FieldUpdatedAt:        {Type: field.TypeUint32, Column: app.FieldUpdatedAt},
+			app.FieldDeletedAt:        {Type: field.TypeUint32, Column: app.FieldDeletedAt},
+			app.FieldCreatedBy:        {Type: field.TypeUUID, Column: app.FieldCreatedBy},
+			app.FieldName:             {Type: field.TypeString, Column: app.FieldName},
+			app.FieldLogo:             {Type: field.TypeString, Column: app.FieldLogo},
+			app.FieldDescription:      {Type: field.TypeString, Column: app.FieldDescription},
+			app.FieldSigninVerifyType: {Type: field.TypeString, Column: app.FieldSigninVerifyType},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -208,15 +209,15 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppUserThirdParty",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appuserthirdparty.FieldCreatedAt:            {Type: field.TypeUint32, Column: appuserthirdparty.FieldCreatedAt},
-			appuserthirdparty.FieldUpdatedAt:            {Type: field.TypeUint32, Column: appuserthirdparty.FieldUpdatedAt},
-			appuserthirdparty.FieldDeletedAt:            {Type: field.TypeUint32, Column: appuserthirdparty.FieldDeletedAt},
-			appuserthirdparty.FieldAppID:                {Type: field.TypeUUID, Column: appuserthirdparty.FieldAppID},
-			appuserthirdparty.FieldUserID:               {Type: field.TypeUUID, Column: appuserthirdparty.FieldUserID},
-			appuserthirdparty.FieldThirdPartyUserID:     {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserID},
-			appuserthirdparty.FieldThirdPartyID:         {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyID},
-			appuserthirdparty.FieldThirdPartyUsername:   {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUsername},
-			appuserthirdparty.FieldThirdPartyUserAvatar: {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserAvatar},
+			appuserthirdparty.FieldCreatedAt:          {Type: field.TypeUint32, Column: appuserthirdparty.FieldCreatedAt},
+			appuserthirdparty.FieldUpdatedAt:          {Type: field.TypeUint32, Column: appuserthirdparty.FieldUpdatedAt},
+			appuserthirdparty.FieldDeletedAt:          {Type: field.TypeUint32, Column: appuserthirdparty.FieldDeletedAt},
+			appuserthirdparty.FieldAppID:              {Type: field.TypeUUID, Column: appuserthirdparty.FieldAppID},
+			appuserthirdparty.FieldUserID:             {Type: field.TypeUUID, Column: appuserthirdparty.FieldUserID},
+			appuserthirdparty.FieldThirdPartyUserID:   {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUserID},
+			appuserthirdparty.FieldThirdPartyID:       {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyID},
+			appuserthirdparty.FieldThirdPartyUsername: {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyUsername},
+			appuserthirdparty.FieldThirdPartyAvatar:   {Type: field.TypeString, Column: appuserthirdparty.FieldThirdPartyAvatar},
 		},
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
@@ -338,6 +339,11 @@ func (f *AppFilter) WhereLogo(p entql.StringP) {
 // WhereDescription applies the entql string predicate on the description field.
 func (f *AppFilter) WhereDescription(p entql.StringP) {
 	f.Where(p.Field(app.FieldDescription))
+}
+
+// WhereSigninVerifyType applies the entql string predicate on the signin_verify_type field.
+func (f *AppFilter) WhereSigninVerifyType(p entql.StringP) {
+	f.Where(p.Field(app.FieldSigninVerifyType))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1010,9 +1016,9 @@ func (f *AppUserThirdPartyFilter) WhereThirdPartyUsername(p entql.StringP) {
 	f.Where(p.Field(appuserthirdparty.FieldThirdPartyUsername))
 }
 
-// WhereThirdPartyUserAvatar applies the entql string predicate on the third_party_user_avatar field.
-func (f *AppUserThirdPartyFilter) WhereThirdPartyUserAvatar(p entql.StringP) {
-	f.Where(p.Field(appuserthirdparty.FieldThirdPartyUserAvatar))
+// WhereThirdPartyAvatar applies the entql string predicate on the third_party_avatar field.
+func (f *AppUserThirdPartyFilter) WhereThirdPartyAvatar(p entql.StringP) {
+	f.Where(p.Field(appuserthirdparty.FieldThirdPartyAvatar))
 }
 
 // addPredicate implements the predicateAdder interface.

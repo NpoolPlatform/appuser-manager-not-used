@@ -56,13 +56,21 @@ func CreateSet(c *ent.AppControlCreate, info *npool.AppControlReq) *ent.AppContr
 		c.SetAppID(uuid.MustParse(info.GetAppID()))
 	}
 	if info.SignupMethods != nil {
-		c.SetSignupMethods(info.GetSignupMethods())
+		methods := []string{}
+		for _, m := range info.GetSignupMethods() {
+			methods = append(methods, m.String())
+		}
+		c.SetSignupMethods(methods)
 	}
-	if info.ExternSigninMethods != nil {
-		c.SetExternSigninMethods(info.GetExternSigninMethods())
+	if info.ExtSigninMethods != nil {
+		methods := []string{}
+		for _, m := range info.GetExtSigninMethods() {
+			methods = append(methods, m.String())
+		}
+		c.SetExternSigninMethods(methods)
 	}
 	if info.RecaptchaMethod != nil {
-		c.SetRecaptchaMethod(info.GetRecaptchaMethod())
+		c.SetRecaptchaMethod(info.GetRecaptchaMethod().String())
 	}
 	if info.KycEnable != nil {
 		c.SetKycEnable(info.GetKycEnable())
@@ -108,6 +116,36 @@ func CreateBulk(ctx context.Context, in []*npool.AppControlReq) ([]*ent.AppContr
 	return rows, nil
 }
 
+func UpdateSet(u *ent.AppControlUpdateOne, in *npool.AppControlReq) *ent.AppControlUpdateOne {
+	if in.SignupMethods != nil {
+		methods := []string{}
+		for _, m := range in.GetSignupMethods() {
+			methods = append(methods, m.String())
+		}
+		u.SetSignupMethods(methods)
+	}
+	if in.ExtSigninMethods != nil {
+		methods := []string{}
+		for _, m := range in.GetExtSigninMethods() {
+			methods = append(methods, m.String())
+		}
+		u.SetExternSigninMethods(methods)
+	}
+	if in.RecaptchaMethod != nil {
+		u.SetRecaptchaMethod(in.GetRecaptchaMethod().String())
+	}
+	if in.KycEnable != nil {
+		u.SetKycEnable(in.GetKycEnable())
+	}
+	if in.SigninVerifyEnable != nil {
+		u.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
+	}
+	if in.InvitationCodeMust != nil {
+		u.SetInvitationCodeMust(in.GetInvitationCodeMust())
+	}
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, error) {
 	var err error
 	var info *ent.AppControl
@@ -126,25 +164,7 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppControl.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.SignupMethods != nil {
-			u.SetSignupMethods(in.GetSignupMethods())
-		}
-		if in.ExternSigninMethods != nil {
-			u.SetExternSigninMethods(in.GetExternSigninMethods())
-		}
-		if in.RecaptchaMethod != nil {
-			u.SetRecaptchaMethod(in.GetRecaptchaMethod())
-		}
-		if in.KycEnable != nil {
-			u.SetKycEnable(in.GetKycEnable())
-		}
-		if in.SigninVerifyEnable != nil {
-			u.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
-		}
-		if in.InvitationCodeMust != nil {
-			u.SetInvitationCodeMust(in.GetInvitationCodeMust())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(u, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -152,28 +172,6 @@ func Update(ctx context.Context, in *npool.AppControlReq) (*ent.AppControl, erro
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppControlUpdate, in *npool.AppControlReq) *ent.AppControlUpdate {
-	if in.SignupMethods != nil {
-		u.SetSignupMethods(in.GetSignupMethods())
-	}
-	if in.ExternSigninMethods != nil {
-		u.SetExternSigninMethods(in.GetExternSigninMethods())
-	}
-	if in.RecaptchaMethod != nil {
-		u.SetRecaptchaMethod(in.GetRecaptchaMethod())
-	}
-	if in.KycEnable != nil {
-		u.SetKycEnable(in.GetKycEnable())
-	}
-	if in.SigninVerifyEnable != nil {
-		u.SetSigninVerifyEnable(in.GetSigninVerifyEnable())
-	}
-	if in.InvitationCodeMust != nil {
-		u.SetInvitationCodeMust(in.GetInvitationCodeMust())
-	}
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppControl, error) {

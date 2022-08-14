@@ -34,24 +34,24 @@ func init() {
 }
 
 var appUserThirdPartyDate = npool.AppUserThirdParty{
-	ID:                   uuid.NewString(),
-	AppID:                uuid.NewString(),
-	UserID:               uuid.NewString(),
-	ThirdPartyID:         uuid.NewString(),
-	ThirdPartyUserID:     uuid.NewString(),
-	ThirdPartyUsername:   uuid.NewString(),
-	ThirdPartyUserAvatar: uuid.NewString(),
+	ID:                 uuid.NewString(),
+	AppID:              uuid.NewString(),
+	UserID:             uuid.NewString(),
+	ThirdPartyID:       uuid.NewString(),
+	ThirdPartyUserID:   uuid.NewString(),
+	ThirdPartyUsername: uuid.NewString(),
+	ThirdPartyAvatar:   uuid.NewString(),
 }
 
 var (
 	appUserThirdPartyInfo = npool.AppUserThirdPartyReq{
-		ID:                   &appUserThirdPartyDate.ID,
-		AppID:                &appUserThirdPartyDate.AppID,
-		UserID:               &appUserThirdPartyDate.UserID,
-		ThirdPartyID:         &appUserThirdPartyDate.ThirdPartyID,
-		ThirdPartyUserID:     &appUserThirdPartyDate.ThirdPartyUserID,
-		ThirdPartyUsername:   &appUserThirdPartyDate.ThirdPartyUsername,
-		ThirdPartyUserAvatar: &appUserThirdPartyDate.ThirdPartyUserAvatar,
+		ID:                 &appUserThirdPartyDate.ID,
+		AppID:              &appUserThirdPartyDate.AppID,
+		UserID:             &appUserThirdPartyDate.UserID,
+		ThirdPartyID:       &appUserThirdPartyDate.ThirdPartyID,
+		ThirdPartyUserID:   &appUserThirdPartyDate.ThirdPartyUserID,
+		ThirdPartyUsername: &appUserThirdPartyDate.ThirdPartyUsername,
+		ThirdPartyAvatar:   &appUserThirdPartyDate.ThirdPartyAvatar,
 	}
 )
 
@@ -68,35 +68,35 @@ func createAppUserThirdParty(t *testing.T) {
 func createAppUserThirdParties(t *testing.T) {
 	appUserThirdPartyDates := []npool.AppUserThirdParty{
 		{
-			ID:                   uuid.NewString(),
-			AppID:                uuid.NewString(),
-			UserID:               uuid.NewString(),
-			ThirdPartyID:         uuid.NewString(),
-			ThirdPartyUserID:     uuid.NewString(),
-			ThirdPartyUsername:   uuid.NewString(),
-			ThirdPartyUserAvatar: uuid.NewString(),
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			UserID:             uuid.NewString(),
+			ThirdPartyID:       uuid.NewString(),
+			ThirdPartyUserID:   uuid.NewString(),
+			ThirdPartyUsername: uuid.NewString(),
+			ThirdPartyAvatar:   uuid.NewString(),
 		},
 		{
-			ID:                   uuid.NewString(),
-			AppID:                uuid.NewString(),
-			UserID:               uuid.NewString(),
-			ThirdPartyID:         uuid.NewString(),
-			ThirdPartyUserID:     uuid.NewString(),
-			ThirdPartyUsername:   uuid.NewString(),
-			ThirdPartyUserAvatar: uuid.NewString(),
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			UserID:             uuid.NewString(),
+			ThirdPartyID:       uuid.NewString(),
+			ThirdPartyUserID:   uuid.NewString(),
+			ThirdPartyUsername: uuid.NewString(),
+			ThirdPartyAvatar:   uuid.NewString(),
 		},
 	}
 
 	appUserThirdParties := []*npool.AppUserThirdPartyReq{}
 	for key := range appUserThirdPartyDates {
 		appUserThirdParties = append(appUserThirdParties, &npool.AppUserThirdPartyReq{
-			ID:                   &appUserThirdPartyDates[key].ID,
-			AppID:                &appUserThirdPartyDates[key].AppID,
-			UserID:               &appUserThirdPartyDates[key].UserID,
-			ThirdPartyID:         &appUserThirdPartyDates[key].ThirdPartyID,
-			ThirdPartyUserID:     &appUserThirdPartyDates[key].ThirdPartyUserID,
-			ThirdPartyUsername:   &appUserThirdPartyDates[key].ThirdPartyUsername,
-			ThirdPartyUserAvatar: &appUserThirdPartyDates[key].ThirdPartyUserAvatar,
+			ID:                 &appUserThirdPartyDates[key].ID,
+			AppID:              &appUserThirdPartyDates[key].AppID,
+			UserID:             &appUserThirdPartyDates[key].UserID,
+			ThirdPartyID:       &appUserThirdPartyDates[key].ThirdPartyID,
+			ThirdPartyUserID:   &appUserThirdPartyDates[key].ThirdPartyUserID,
+			ThirdPartyUsername: &appUserThirdPartyDates[key].ThirdPartyUsername,
+			ThirdPartyAvatar:   &appUserThirdPartyDates[key].ThirdPartyAvatar,
 		})
 	}
 

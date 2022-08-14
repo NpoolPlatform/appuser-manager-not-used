@@ -67,8 +67,8 @@ func CreateSet(c *ent.AppUserThirdPartyCreate, in *npool.AppUserThirdPartyReq) *
 	if in.ThirdPartyUsername != nil {
 		c.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}
-	if in.ThirdPartyUserAvatar != nil {
-		c.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+	if in.ThirdPartyAvatar != nil {
+		c.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
 	}
 
 	return c
@@ -127,8 +127,8 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 		if in.ThirdPartyUsername != nil {
 			u.SetThirdPartyUsername(in.GetThirdPartyUsername())
 		}
-		if in.ThirdPartyUserAvatar != nil {
-			u.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+		if in.ThirdPartyAvatar != nil {
+			u.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
 		}
 		info, err = u.Save(_ctx)
 		return err
@@ -144,8 +144,8 @@ func UpdateSet(u *ent.AppUserThirdPartyUpdate, in *npool.AppUserThirdPartyReq) *
 	if in.ThirdPartyUsername != nil {
 		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}
-	if in.ThirdPartyUserAvatar != nil {
-		u.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+	if in.ThirdPartyAvatar != nil {
+		u.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
 	}
 	return u
 }

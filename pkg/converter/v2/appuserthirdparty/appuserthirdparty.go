@@ -11,13 +11,13 @@ func Ent2Grpc(row *ent.AppUserThirdParty) *npool.AppUserThirdParty {
 	}
 
 	return &npool.AppUserThirdParty{
-		ID:                   row.ID.String(),
-		AppID:                row.AppID.String(),
-		UserID:               row.UserID.String(),
-		ThirdPartyUserID:     row.ThirdPartyUserID,
-		ThirdPartyID:         row.ThirdPartyID,
-		ThirdPartyUsername:   row.ThirdPartyUsername,
-		ThirdPartyUserAvatar: row.ThirdPartyUserAvatar,
+		ID:                 row.ID.String(),
+		AppID:              row.AppID.String(),
+		UserID:             row.UserID.String(),
+		ThirdPartyUserID:   row.ThirdPartyUserID,
+		ThirdPartyID:       row.ThirdPartyID,
+		ThirdPartyUsername: row.ThirdPartyUsername,
+		ThirdPartyAvatar:   row.ThirdPartyAvatar,
 	}
 }
 

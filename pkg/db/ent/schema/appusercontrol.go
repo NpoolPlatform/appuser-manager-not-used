@@ -23,14 +23,27 @@ func (AppUserControl) Mixin() []ent.Mixin {
 // Fields of the AppUserControl.
 func (AppUserControl) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
+		field.
+			UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.UUID("app_id", uuid.UUID{}),
-		field.UUID("user_id", uuid.UUID{}),
+		field.
+			UUID("app_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("user_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 		field.Bool("signin_verify_by_google_authentication").
+			Optional().
 			Default(false),
 		field.Bool("google_authentication_verified").
+			Optional().
 			Default(false),
 	}
 }

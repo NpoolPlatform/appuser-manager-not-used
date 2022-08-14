@@ -90,9 +90,37 @@ func (aucu *AppUserControlUpdate) SetAppID(u uuid.UUID) *AppUserControlUpdate {
 	return aucu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableAppID(u *uuid.UUID) *AppUserControlUpdate {
+	if u != nil {
+		aucu.SetAppID(*u)
+	}
+	return aucu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (aucu *AppUserControlUpdate) ClearAppID() *AppUserControlUpdate {
+	aucu.mutation.ClearAppID()
+	return aucu
+}
+
 // SetUserID sets the "user_id" field.
 func (aucu *AppUserControlUpdate) SetUserID(u uuid.UUID) *AppUserControlUpdate {
 	aucu.mutation.SetUserID(u)
+	return aucu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableUserID(u *uuid.UUID) *AppUserControlUpdate {
+	if u != nil {
+		aucu.SetUserID(*u)
+	}
+	return aucu
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (aucu *AppUserControlUpdate) ClearUserID() *AppUserControlUpdate {
+	aucu.mutation.ClearUserID()
 	return aucu
 }
 
@@ -110,6 +138,12 @@ func (aucu *AppUserControlUpdate) SetNillableSigninVerifyByGoogleAuthentication(
 	return aucu
 }
 
+// ClearSigninVerifyByGoogleAuthentication clears the value of the "signin_verify_by_google_authentication" field.
+func (aucu *AppUserControlUpdate) ClearSigninVerifyByGoogleAuthentication() *AppUserControlUpdate {
+	aucu.mutation.ClearSigninVerifyByGoogleAuthentication()
+	return aucu
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (aucu *AppUserControlUpdate) SetGoogleAuthenticationVerified(b bool) *AppUserControlUpdate {
 	aucu.mutation.SetGoogleAuthenticationVerified(b)
@@ -121,6 +155,12 @@ func (aucu *AppUserControlUpdate) SetNillableGoogleAuthenticationVerified(b *boo
 	if b != nil {
 		aucu.SetGoogleAuthenticationVerified(*b)
 	}
+	return aucu
+}
+
+// ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
+func (aucu *AppUserControlUpdate) ClearGoogleAuthenticationVerified() *AppUserControlUpdate {
+	aucu.mutation.ClearGoogleAuthenticationVerified()
 	return aucu
 }
 
@@ -271,10 +311,22 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldAppID,
 		})
 	}
+	if aucu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appusercontrol.FieldAppID,
+		})
+	}
 	if value, ok := aucu.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: appusercontrol.FieldUserID,
+		})
+	}
+	if aucu.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: appusercontrol.FieldUserID,
 		})
 	}
@@ -285,10 +337,22 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
 		})
 	}
+	if aucu.mutation.SigninVerifyByGoogleAuthenticationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
+		})
+	}
 	if value, ok := aucu.mutation.GoogleAuthenticationVerified(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
+			Column: appusercontrol.FieldGoogleAuthenticationVerified,
+		})
+	}
+	if aucu.mutation.GoogleAuthenticationVerifiedCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
 		})
 	}
@@ -374,9 +438,37 @@ func (aucuo *AppUserControlUpdateOne) SetAppID(u uuid.UUID) *AppUserControlUpdat
 	return aucuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableAppID(u *uuid.UUID) *AppUserControlUpdateOne {
+	if u != nil {
+		aucuo.SetAppID(*u)
+	}
+	return aucuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (aucuo *AppUserControlUpdateOne) ClearAppID() *AppUserControlUpdateOne {
+	aucuo.mutation.ClearAppID()
+	return aucuo
+}
+
 // SetUserID sets the "user_id" field.
 func (aucuo *AppUserControlUpdateOne) SetUserID(u uuid.UUID) *AppUserControlUpdateOne {
 	aucuo.mutation.SetUserID(u)
+	return aucuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableUserID(u *uuid.UUID) *AppUserControlUpdateOne {
+	if u != nil {
+		aucuo.SetUserID(*u)
+	}
+	return aucuo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (aucuo *AppUserControlUpdateOne) ClearUserID() *AppUserControlUpdateOne {
+	aucuo.mutation.ClearUserID()
 	return aucuo
 }
 
@@ -394,6 +486,12 @@ func (aucuo *AppUserControlUpdateOne) SetNillableSigninVerifyByGoogleAuthenticat
 	return aucuo
 }
 
+// ClearSigninVerifyByGoogleAuthentication clears the value of the "signin_verify_by_google_authentication" field.
+func (aucuo *AppUserControlUpdateOne) ClearSigninVerifyByGoogleAuthentication() *AppUserControlUpdateOne {
+	aucuo.mutation.ClearSigninVerifyByGoogleAuthentication()
+	return aucuo
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (aucuo *AppUserControlUpdateOne) SetGoogleAuthenticationVerified(b bool) *AppUserControlUpdateOne {
 	aucuo.mutation.SetGoogleAuthenticationVerified(b)
@@ -405,6 +503,12 @@ func (aucuo *AppUserControlUpdateOne) SetNillableGoogleAuthenticationVerified(b 
 	if b != nil {
 		aucuo.SetGoogleAuthenticationVerified(*b)
 	}
+	return aucuo
+}
+
+// ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
+func (aucuo *AppUserControlUpdateOne) ClearGoogleAuthenticationVerified() *AppUserControlUpdateOne {
+	aucuo.mutation.ClearGoogleAuthenticationVerified()
 	return aucuo
 }
 
@@ -585,10 +689,22 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 			Column: appusercontrol.FieldAppID,
 		})
 	}
+	if aucuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appusercontrol.FieldAppID,
+		})
+	}
 	if value, ok := aucuo.mutation.UserID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: appusercontrol.FieldUserID,
+		})
+	}
+	if aucuo.mutation.UserIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: appusercontrol.FieldUserID,
 		})
 	}
@@ -599,10 +715,22 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
 		})
 	}
+	if aucuo.mutation.SigninVerifyByGoogleAuthenticationCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication,
+		})
+	}
 	if value, ok := aucuo.mutation.GoogleAuthenticationVerified(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
+			Column: appusercontrol.FieldGoogleAuthenticationVerified,
+		})
+	}
+	if aucuo.mutation.GoogleAuthenticationVerifiedCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
 		})
 	}
