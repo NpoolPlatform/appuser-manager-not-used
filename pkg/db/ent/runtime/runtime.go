@@ -323,6 +323,10 @@ func init() {
 	appusercontrolDescGoogleAuthenticationVerified := appusercontrolFields[4].Descriptor()
 	// appusercontrol.DefaultGoogleAuthenticationVerified holds the default value on creation for the google_authentication_verified field.
 	appusercontrol.DefaultGoogleAuthenticationVerified = appusercontrolDescGoogleAuthenticationVerified.Default.(bool)
+	// appusercontrolDescSigninVerifyType is the schema descriptor for signin_verify_type field.
+	appusercontrolDescSigninVerifyType := appusercontrolFields[5].Descriptor()
+	// appusercontrol.DefaultSigninVerifyType holds the default value on creation for the signin_verify_type field.
+	appusercontrol.DefaultSigninVerifyType = appusercontrolDescSigninVerifyType.Default.(string)
 	// appusercontrolDescID is the schema descriptor for id field.
 	appusercontrolDescID := appusercontrolFields[0].Descriptor()
 	// appusercontrol.DefaultID holds the default value on creation for the id field.

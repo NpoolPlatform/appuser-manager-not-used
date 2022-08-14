@@ -7,6 +7,8 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
+
+	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 // AppUserControl holds the schema definition for the AppUserControl entity.
@@ -45,6 +47,9 @@ func (AppUserControl) Fields() []ent.Field {
 		field.Bool("google_authentication_verified").
 			Optional().
 			Default(false),
+		field.String("signin_verify_type").
+			Optional().
+			Default(sm.SignMethodType_Email.String()),
 	}
 }
 

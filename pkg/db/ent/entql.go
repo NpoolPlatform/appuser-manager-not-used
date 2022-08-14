@@ -146,6 +146,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appusercontrol.FieldUserID:                             {Type: field.TypeUUID, Column: appusercontrol.FieldUserID},
 			appusercontrol.FieldSigninVerifyByGoogleAuthentication: {Type: field.TypeBool, Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication},
 			appusercontrol.FieldGoogleAuthenticationVerified:       {Type: field.TypeBool, Column: appusercontrol.FieldGoogleAuthenticationVerified},
+			appusercontrol.FieldSigninVerifyType:                   {Type: field.TypeString, Column: appusercontrol.FieldSigninVerifyType},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -734,6 +735,11 @@ func (f *AppUserControlFilter) WhereSigninVerifyByGoogleAuthentication(p entql.B
 // WhereGoogleAuthenticationVerified applies the entql bool predicate on the google_authentication_verified field.
 func (f *AppUserControlFilter) WhereGoogleAuthenticationVerified(p entql.BoolP) {
 	f.Where(p.Field(appusercontrol.FieldGoogleAuthenticationVerified))
+}
+
+// WhereSigninVerifyType applies the entql string predicate on the signin_verify_type field.
+func (f *AppUserControlFilter) WhereSigninVerifyType(p entql.StringP) {
+	f.Where(p.Field(appusercontrol.FieldSigninVerifyType))
 }
 
 // addPredicate implements the predicateAdder interface.

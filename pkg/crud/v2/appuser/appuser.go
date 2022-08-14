@@ -98,6 +98,16 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserReq) ([]*ent.AppUser, er
 	return rows, nil
 }
 
+func UpdateSet(u *ent.AppUserUpdateOne, in *npool.AppUserReq) *ent.AppUserUpdateOne {
+	if in.EmailAddress != nil {
+		u.SetEmailAddress(in.GetEmailAddress())
+	}
+	if in.PhoneNo != nil {
+		u.SetPhoneNo(in.GetPhoneNo())
+	}
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	var err error
 	var info *ent.AppUser
@@ -116,13 +126,7 @@ func Update(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		u := cli.AppUser.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.EmailAddress != nil {
-			u.SetEmailAddress(in.GetEmailAddress())
-		}
-		if in.PhoneNo != nil {
-			u.SetPhoneNo(in.GetPhoneNo())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(u, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -130,16 +134,6 @@ func Update(ctx context.Context, in *npool.AppUserReq) (*ent.AppUser, error) {
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppUserUpdateOne, in *npool.AppUserReq) *ent.AppUserUpdateOne {
-	if in.EmailAddress != nil {
-		u.SetEmailAddress(in.GetEmailAddress())
-	}
-	if in.PhoneNo != nil {
-		u.SetPhoneNo(in.GetPhoneNo())
-	}
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUser, error) {

@@ -164,6 +164,26 @@ func (aucu *AppUserControlUpdate) ClearGoogleAuthenticationVerified() *AppUserCo
 	return aucu
 }
 
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (aucu *AppUserControlUpdate) SetSigninVerifyType(s string) *AppUserControlUpdate {
+	aucu.mutation.SetSigninVerifyType(s)
+	return aucu
+}
+
+// SetNillableSigninVerifyType sets the "signin_verify_type" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableSigninVerifyType(s *string) *AppUserControlUpdate {
+	if s != nil {
+		aucu.SetSigninVerifyType(*s)
+	}
+	return aucu
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (aucu *AppUserControlUpdate) ClearSigninVerifyType() *AppUserControlUpdate {
+	aucu.mutation.ClearSigninVerifyType()
+	return aucu
+}
+
 // Mutation returns the AppUserControlMutation object of the builder.
 func (aucu *AppUserControlUpdate) Mutation() *AppUserControlMutation {
 	return aucu.mutation
@@ -356,6 +376,19 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
 		})
 	}
+	if value, ok := aucu.mutation.SigninVerifyType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyType,
+		})
+	}
+	if aucu.mutation.SigninVerifyTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appusercontrol.FieldSigninVerifyType,
+		})
+	}
 	_spec.Modifiers = aucu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aucu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -509,6 +542,26 @@ func (aucuo *AppUserControlUpdateOne) SetNillableGoogleAuthenticationVerified(b 
 // ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
 func (aucuo *AppUserControlUpdateOne) ClearGoogleAuthenticationVerified() *AppUserControlUpdateOne {
 	aucuo.mutation.ClearGoogleAuthenticationVerified()
+	return aucuo
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (aucuo *AppUserControlUpdateOne) SetSigninVerifyType(s string) *AppUserControlUpdateOne {
+	aucuo.mutation.SetSigninVerifyType(s)
+	return aucuo
+}
+
+// SetNillableSigninVerifyType sets the "signin_verify_type" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableSigninVerifyType(s *string) *AppUserControlUpdateOne {
+	if s != nil {
+		aucuo.SetSigninVerifyType(*s)
+	}
+	return aucuo
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (aucuo *AppUserControlUpdateOne) ClearSigninVerifyType() *AppUserControlUpdateOne {
+	aucuo.mutation.ClearSigninVerifyType()
 	return aucuo
 }
 
@@ -732,6 +785,19 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
+		})
+	}
+	if value, ok := aucuo.mutation.SigninVerifyType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyType,
+		})
+	}
+	if aucuo.mutation.SigninVerifyTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appusercontrol.FieldSigninVerifyType,
 		})
 	}
 	_spec.Modifiers = aucuo.modifiers

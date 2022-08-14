@@ -3,6 +3,7 @@ package appusercontrol
 import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appusercontrol"
+	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 func Ent2Grpc(row *ent.AppUserControl) *npool.AppUserControl {
@@ -16,6 +17,7 @@ func Ent2Grpc(row *ent.AppUserControl) *npool.AppUserControl {
 		UserID:                             row.UserID.String(),
 		SigninVerifyByGoogleAuthentication: row.SigninVerifyByGoogleAuthentication,
 		GoogleAuthenticationVerified:       row.GoogleAuthenticationVerified,
+		SigninVerifyType:                   sm.SignMethodType(sm.SignMethodType_value[row.SigninVerifyType]),
 	}
 }
 
