@@ -23,6 +23,8 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
+
+	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 func init() {
@@ -39,6 +41,7 @@ var appUserControlDate = npool.AppUserControl{
 	AppID:              uuid.NewString(),
 	UserID:             uuid.NewString(),
 	GoogleAuthVerified: false,
+	SigninVerifyType:   sm.SignMethodType_Email,
 }
 
 var (
@@ -47,6 +50,7 @@ var (
 		AppID:              &appUserControlDate.AppID,
 		UserID:             &appUserControlDate.UserID,
 		GoogleAuthVerified: &appUserControlDate.GoogleAuthVerified,
+		SigninVerifyType:   &appUserControlDate.SigninVerifyType,
 	}
 )
 
@@ -67,12 +71,14 @@ func createAppUserControls(t *testing.T) {
 			AppID:              uuid.NewString(),
 			UserID:             uuid.NewString(),
 			GoogleAuthVerified: false,
+			SigninVerifyType:   sm.SignMethodType_Email,
 		},
 		{
 			ID:                 uuid.NewString(),
 			AppID:              uuid.NewString(),
 			UserID:             uuid.NewString(),
 			GoogleAuthVerified: false,
+			SigninVerifyType:   sm.SignMethodType_Email,
 		},
 	}
 
@@ -83,6 +89,7 @@ func createAppUserControls(t *testing.T) {
 			AppID:              &appUserControlDates[key].AppID,
 			UserID:             &appUserControlDates[key].UserID,
 			GoogleAuthVerified: &appUserControlDates[key].GoogleAuthVerified,
+			SigninVerifyType:   &appUserControlDates[key].SigninVerifyType,
 		})
 	}
 
