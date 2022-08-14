@@ -106,7 +106,9 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.A
 	return rows, nil
 }
 
-func UpdateSet(u *ent.AppUserThirdPartyUpdateOne, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdateOne {
+func UpdateSet(info *ent.AppUserThirdParty, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdateOne {
+	u := info.Update()
+
 	if in.ThirdPartyUsername != nil {
 		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}
@@ -132,9 +134,12 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppUserThirdParty.UpdateOneID(uuid.MustParse(in.GetID()))
-		info, err = UpdateSet(u, in).Save(_ctx)
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppUserThirdParty.Query().Where(appuserthirdparty.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
+		}
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
