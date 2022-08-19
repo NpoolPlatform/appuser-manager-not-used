@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/NpoolPlatform/appuser-manager/api"
+	"github.com/NpoolPlatform/appuser-manager/pkg/migrator"
 
 	db "github.com/NpoolPlatform/appuser-manager/pkg/db"
 
@@ -32,6 +33,11 @@ var runCmd = &cli.Command{
 		if err := db.Init(); err != nil {
 			return err
 		}
+
+		if err := migrator.Migrate(c.Context); err != nil {
+			return err
+		}
+
 		go func() {
 			if err := grpc2.RunGRPC(rpcRegister); err != nil {
 				logger.Sugar().Errorf("fail to run grpc server: %v", err)
