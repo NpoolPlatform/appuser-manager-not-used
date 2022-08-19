@@ -391,6 +391,20 @@ func CreatedByLTE(v uuid.UUID) predicate.AppRole {
 	})
 }
 
+// CreatedByIsNil applies the IsNil predicate on the "created_by" field.
+func CreatedByIsNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCreatedBy)))
+	})
+}
+
+// CreatedByNotNil applies the NotNil predicate on the "created_by" field.
+func CreatedByNotNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCreatedBy)))
+	})
+}
+
 // RoleEQ applies the EQ predicate on the "role" field.
 func RoleEQ(v string) predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
@@ -473,6 +487,20 @@ func RoleHasPrefix(v string) predicate.AppRole {
 func RoleHasSuffix(v string) predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldRole), v))
+	})
+}
+
+// RoleIsNil applies the IsNil predicate on the "role" field.
+func RoleIsNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldRole)))
+	})
+}
+
+// RoleNotNil applies the NotNil predicate on the "role" field.
+func RoleNotNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldRole)))
 	})
 }
 
@@ -575,6 +603,20 @@ func DescriptionHasSuffix(v string) predicate.AppRole {
 	})
 }
 
+// DescriptionIsNil applies the IsNil predicate on the "description" field.
+func DescriptionIsNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDescription)))
+	})
+}
+
+// DescriptionNotNil applies the NotNil predicate on the "description" field.
+func DescriptionNotNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDescription)))
+	})
+}
+
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
 func DescriptionEqualFold(v string) predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
@@ -653,6 +695,20 @@ func AppIDLTE(v uuid.UUID) predicate.AppRole {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // DefaultEQ applies the EQ predicate on the "default" field.
 func DefaultEQ(v bool) predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
@@ -664,6 +720,20 @@ func DefaultEQ(v bool) predicate.AppRole {
 func DefaultNEQ(v bool) predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldDefault), v))
+	})
+}
+
+// DefaultIsNil applies the IsNil predicate on the "default" field.
+func DefaultIsNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDefault)))
+	})
+}
+
+// DefaultNotNil applies the NotNil predicate on the "default" field.
+func DefaultNotNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDefault)))
 	})
 }
 

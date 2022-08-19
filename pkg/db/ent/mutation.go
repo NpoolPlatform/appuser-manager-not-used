@@ -50,23 +50,24 @@ const (
 // AppMutation represents an operation that mutates the App nodes in the graph.
 type AppMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	created_at    *uint32
-	addcreated_at *int32
-	updated_at    *uint32
-	addupdated_at *int32
-	deleted_at    *uint32
-	adddeleted_at *int32
-	created_by    *uuid.UUID
-	name          *string
-	logo          *string
-	description   *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*App, error)
-	predicates    []predicate.App
+	op                 Op
+	typ                string
+	id                 *uuid.UUID
+	created_at         *uint32
+	addcreated_at      *int32
+	updated_at         *uint32
+	addupdated_at      *int32
+	deleted_at         *uint32
+	adddeleted_at      *int32
+	created_by         *uuid.UUID
+	name               *string
+	logo               *string
+	description        *string
+	signin_verify_type *string
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*App, error)
+	predicates         []predicate.App
 }
 
 var _ ent.Mutation = (*AppMutation)(nil)
@@ -537,6 +538,55 @@ func (m *AppMutation) ResetDescription() {
 	delete(m.clearedFields, app.FieldDescription)
 }
 
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (m *AppMutation) SetSigninVerifyType(s string) {
+	m.signin_verify_type = &s
+}
+
+// SigninVerifyType returns the value of the "signin_verify_type" field in the mutation.
+func (m *AppMutation) SigninVerifyType() (r string, exists bool) {
+	v := m.signin_verify_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSigninVerifyType returns the old "signin_verify_type" field's value of the App entity.
+// If the App object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppMutation) OldSigninVerifyType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSigninVerifyType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSigninVerifyType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSigninVerifyType: %w", err)
+	}
+	return oldValue.SigninVerifyType, nil
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (m *AppMutation) ClearSigninVerifyType() {
+	m.signin_verify_type = nil
+	m.clearedFields[app.FieldSigninVerifyType] = struct{}{}
+}
+
+// SigninVerifyTypeCleared returns if the "signin_verify_type" field was cleared in this mutation.
+func (m *AppMutation) SigninVerifyTypeCleared() bool {
+	_, ok := m.clearedFields[app.FieldSigninVerifyType]
+	return ok
+}
+
+// ResetSigninVerifyType resets all changes to the "signin_verify_type" field.
+func (m *AppMutation) ResetSigninVerifyType() {
+	m.signin_verify_type = nil
+	delete(m.clearedFields, app.FieldSigninVerifyType)
+}
+
 // Where appends a list predicates to the AppMutation builder.
 func (m *AppMutation) Where(ps ...predicate.App) {
 	m.predicates = append(m.predicates, ps...)
@@ -556,7 +606,7 @@ func (m *AppMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, app.FieldCreatedAt)
 	}
@@ -577,6 +627,9 @@ func (m *AppMutation) Fields() []string {
 	}
 	if m.description != nil {
 		fields = append(fields, app.FieldDescription)
+	}
+	if m.signin_verify_type != nil {
+		fields = append(fields, app.FieldSigninVerifyType)
 	}
 	return fields
 }
@@ -600,6 +653,8 @@ func (m *AppMutation) Field(name string) (ent.Value, bool) {
 		return m.Logo()
 	case app.FieldDescription:
 		return m.Description()
+	case app.FieldSigninVerifyType:
+		return m.SigninVerifyType()
 	}
 	return nil, false
 }
@@ -623,6 +678,8 @@ func (m *AppMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldLogo(ctx)
 	case app.FieldDescription:
 		return m.OldDescription(ctx)
+	case app.FieldSigninVerifyType:
+		return m.OldSigninVerifyType(ctx)
 	}
 	return nil, fmt.Errorf("unknown App field %s", name)
 }
@@ -680,6 +737,13 @@ func (m *AppMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDescription(v)
+		return nil
+	case app.FieldSigninVerifyType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSigninVerifyType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown App field %s", name)
@@ -762,6 +826,9 @@ func (m *AppMutation) ClearedFields() []string {
 	if m.FieldCleared(app.FieldDescription) {
 		fields = append(fields, app.FieldDescription)
 	}
+	if m.FieldCleared(app.FieldSigninVerifyType) {
+		fields = append(fields, app.FieldSigninVerifyType)
+	}
 	return fields
 }
 
@@ -787,6 +854,9 @@ func (m *AppMutation) ClearField(name string) error {
 		return nil
 	case app.FieldDescription:
 		m.ClearDescription()
+		return nil
+	case app.FieldSigninVerifyType:
+		m.ClearSigninVerifyType()
 		return nil
 	}
 	return fmt.Errorf("unknown App nullable field %s", name)
@@ -816,6 +886,9 @@ func (m *AppMutation) ResetField(name string) error {
 		return nil
 	case app.FieldDescription:
 		m.ResetDescription()
+		return nil
+	case app.FieldSigninVerifyType:
+		m.ResetSigninVerifyType()
 		return nil
 	}
 	return fmt.Errorf("unknown App field %s", name)
@@ -2236,9 +2309,22 @@ func (m *AppRoleMutation) OldCreatedBy(ctx context.Context) (v uuid.UUID, err er
 	return oldValue.CreatedBy, nil
 }
 
+// ClearCreatedBy clears the value of the "created_by" field.
+func (m *AppRoleMutation) ClearCreatedBy() {
+	m.created_by = nil
+	m.clearedFields[approle.FieldCreatedBy] = struct{}{}
+}
+
+// CreatedByCleared returns if the "created_by" field was cleared in this mutation.
+func (m *AppRoleMutation) CreatedByCleared() bool {
+	_, ok := m.clearedFields[approle.FieldCreatedBy]
+	return ok
+}
+
 // ResetCreatedBy resets all changes to the "created_by" field.
 func (m *AppRoleMutation) ResetCreatedBy() {
 	m.created_by = nil
+	delete(m.clearedFields, approle.FieldCreatedBy)
 }
 
 // SetRole sets the "role" field.
@@ -2272,9 +2358,22 @@ func (m *AppRoleMutation) OldRole(ctx context.Context) (v string, err error) {
 	return oldValue.Role, nil
 }
 
+// ClearRole clears the value of the "role" field.
+func (m *AppRoleMutation) ClearRole() {
+	m.role = nil
+	m.clearedFields[approle.FieldRole] = struct{}{}
+}
+
+// RoleCleared returns if the "role" field was cleared in this mutation.
+func (m *AppRoleMutation) RoleCleared() bool {
+	_, ok := m.clearedFields[approle.FieldRole]
+	return ok
+}
+
 // ResetRole resets all changes to the "role" field.
 func (m *AppRoleMutation) ResetRole() {
 	m.role = nil
+	delete(m.clearedFields, approle.FieldRole)
 }
 
 // SetDescription sets the "description" field.
@@ -2308,9 +2407,22 @@ func (m *AppRoleMutation) OldDescription(ctx context.Context) (v string, err err
 	return oldValue.Description, nil
 }
 
+// ClearDescription clears the value of the "description" field.
+func (m *AppRoleMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[approle.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *AppRoleMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[approle.FieldDescription]
+	return ok
+}
+
 // ResetDescription resets all changes to the "description" field.
 func (m *AppRoleMutation) ResetDescription() {
 	m.description = nil
+	delete(m.clearedFields, approle.FieldDescription)
 }
 
 // SetAppID sets the "app_id" field.
@@ -2344,9 +2456,22 @@ func (m *AppRoleMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error)
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppRoleMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[approle.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppRoleMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[approle.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppRoleMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, approle.FieldAppID)
 }
 
 // SetDefault sets the "default" field.
@@ -2380,9 +2505,22 @@ func (m *AppRoleMutation) OldDefault(ctx context.Context) (v bool, err error) {
 	return oldValue.Default, nil
 }
 
+// ClearDefault clears the value of the "default" field.
+func (m *AppRoleMutation) ClearDefault() {
+	m._default = nil
+	m.clearedFields[approle.FieldDefault] = struct{}{}
+}
+
+// DefaultCleared returns if the "default" field was cleared in this mutation.
+func (m *AppRoleMutation) DefaultCleared() bool {
+	_, ok := m.clearedFields[approle.FieldDefault]
+	return ok
+}
+
 // ResetDefault resets all changes to the "default" field.
 func (m *AppRoleMutation) ResetDefault() {
 	m._default = nil
+	delete(m.clearedFields, approle.FieldDefault)
 }
 
 // Where appends a list predicates to the AppRoleMutation builder.
@@ -2611,7 +2749,23 @@ func (m *AppRoleMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppRoleMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(approle.FieldCreatedBy) {
+		fields = append(fields, approle.FieldCreatedBy)
+	}
+	if m.FieldCleared(approle.FieldRole) {
+		fields = append(fields, approle.FieldRole)
+	}
+	if m.FieldCleared(approle.FieldDescription) {
+		fields = append(fields, approle.FieldDescription)
+	}
+	if m.FieldCleared(approle.FieldAppID) {
+		fields = append(fields, approle.FieldAppID)
+	}
+	if m.FieldCleared(approle.FieldDefault) {
+		fields = append(fields, approle.FieldDefault)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -2624,6 +2778,23 @@ func (m *AppRoleMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppRoleMutation) ClearField(name string) error {
+	switch name {
+	case approle.FieldCreatedBy:
+		m.ClearCreatedBy()
+		return nil
+	case approle.FieldRole:
+		m.ClearRole()
+		return nil
+	case approle.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case approle.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case approle.FieldDefault:
+		m.ClearDefault()
+		return nil
+	}
 	return fmt.Errorf("unknown AppRole nullable field %s", name)
 }
 
@@ -3031,9 +3202,22 @@ func (m *AppRoleUserMutation) OldAppID(ctx context.Context) (v uuid.UUID, err er
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppRoleUserMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[approleuser.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppRoleUserMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[approleuser.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppRoleUserMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, approleuser.FieldAppID)
 }
 
 // SetRoleID sets the "role_id" field.
@@ -3067,9 +3251,22 @@ func (m *AppRoleUserMutation) OldRoleID(ctx context.Context) (v uuid.UUID, err e
 	return oldValue.RoleID, nil
 }
 
+// ClearRoleID clears the value of the "role_id" field.
+func (m *AppRoleUserMutation) ClearRoleID() {
+	m.role_id = nil
+	m.clearedFields[approleuser.FieldRoleID] = struct{}{}
+}
+
+// RoleIDCleared returns if the "role_id" field was cleared in this mutation.
+func (m *AppRoleUserMutation) RoleIDCleared() bool {
+	_, ok := m.clearedFields[approleuser.FieldRoleID]
+	return ok
+}
+
 // ResetRoleID resets all changes to the "role_id" field.
 func (m *AppRoleUserMutation) ResetRoleID() {
 	m.role_id = nil
+	delete(m.clearedFields, approleuser.FieldRoleID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -3320,6 +3517,12 @@ func (m *AppRoleUserMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AppRoleUserMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(approleuser.FieldAppID) {
+		fields = append(fields, approleuser.FieldAppID)
+	}
+	if m.FieldCleared(approleuser.FieldRoleID) {
+		fields = append(fields, approleuser.FieldRoleID)
+	}
 	if m.FieldCleared(approleuser.FieldUserID) {
 		fields = append(fields, approleuser.FieldUserID)
 	}
@@ -3337,6 +3540,12 @@ func (m *AppRoleUserMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AppRoleUserMutation) ClearField(name string) error {
 	switch name {
+	case approleuser.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case approleuser.FieldRoleID:
+		m.ClearRoleID()
+		return nil
 	case approleuser.FieldUserID:
 		m.ClearUserID()
 		return nil
@@ -3743,9 +3952,22 @@ func (m *AppUserMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error)
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppUserMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[appuser.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppUserMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppUserMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, appuser.FieldAppID)
 }
 
 // SetEmailAddress sets the "email_address" field.
@@ -3779,9 +4001,22 @@ func (m *AppUserMutation) OldEmailAddress(ctx context.Context) (v string, err er
 	return oldValue.EmailAddress, nil
 }
 
+// ClearEmailAddress clears the value of the "email_address" field.
+func (m *AppUserMutation) ClearEmailAddress() {
+	m.email_address = nil
+	m.clearedFields[appuser.FieldEmailAddress] = struct{}{}
+}
+
+// EmailAddressCleared returns if the "email_address" field was cleared in this mutation.
+func (m *AppUserMutation) EmailAddressCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldEmailAddress]
+	return ok
+}
+
 // ResetEmailAddress resets all changes to the "email_address" field.
 func (m *AppUserMutation) ResetEmailAddress() {
 	m.email_address = nil
+	delete(m.clearedFields, appuser.FieldEmailAddress)
 }
 
 // SetPhoneNo sets the "phone_no" field.
@@ -3815,9 +4050,22 @@ func (m *AppUserMutation) OldPhoneNo(ctx context.Context) (v string, err error) 
 	return oldValue.PhoneNo, nil
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (m *AppUserMutation) ClearPhoneNo() {
+	m.phone_no = nil
+	m.clearedFields[appuser.FieldPhoneNo] = struct{}{}
+}
+
+// PhoneNoCleared returns if the "phone_no" field was cleared in this mutation.
+func (m *AppUserMutation) PhoneNoCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldPhoneNo]
+	return ok
+}
+
 // ResetPhoneNo resets all changes to the "phone_no" field.
 func (m *AppUserMutation) ResetPhoneNo() {
 	m.phone_no = nil
+	delete(m.clearedFields, appuser.FieldPhoneNo)
 }
 
 // SetImportFromApp sets the "import_from_app" field.
@@ -3851,9 +4099,22 @@ func (m *AppUserMutation) OldImportFromApp(ctx context.Context) (v uuid.UUID, er
 	return oldValue.ImportFromApp, nil
 }
 
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (m *AppUserMutation) ClearImportFromApp() {
+	m.import_from_app = nil
+	m.clearedFields[appuser.FieldImportFromApp] = struct{}{}
+}
+
+// ImportFromAppCleared returns if the "import_from_app" field was cleared in this mutation.
+func (m *AppUserMutation) ImportFromAppCleared() bool {
+	_, ok := m.clearedFields[appuser.FieldImportFromApp]
+	return ok
+}
+
 // ResetImportFromApp resets all changes to the "import_from_app" field.
 func (m *AppUserMutation) ResetImportFromApp() {
 	m.import_from_app = nil
+	delete(m.clearedFields, appuser.FieldImportFromApp)
 }
 
 // Where appends a list predicates to the AppUserMutation builder.
@@ -4068,7 +4329,20 @@ func (m *AppUserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppUserMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(appuser.FieldAppID) {
+		fields = append(fields, appuser.FieldAppID)
+	}
+	if m.FieldCleared(appuser.FieldEmailAddress) {
+		fields = append(fields, appuser.FieldEmailAddress)
+	}
+	if m.FieldCleared(appuser.FieldPhoneNo) {
+		fields = append(fields, appuser.FieldPhoneNo)
+	}
+	if m.FieldCleared(appuser.FieldImportFromApp) {
+		fields = append(fields, appuser.FieldImportFromApp)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -4081,6 +4355,20 @@ func (m *AppUserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppUserMutation) ClearField(name string) error {
+	switch name {
+	case appuser.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case appuser.FieldEmailAddress:
+		m.ClearEmailAddress()
+		return nil
+	case appuser.FieldPhoneNo:
+		m.ClearPhoneNo()
+		return nil
+	case appuser.FieldImportFromApp:
+		m.ClearImportFromApp()
+		return nil
+	}
 	return fmt.Errorf("unknown AppUser nullable field %s", name)
 }
 
@@ -4177,6 +4465,7 @@ type AppUserControlMutation struct {
 	user_id                                *uuid.UUID
 	signin_verify_by_google_authentication *bool
 	google_authentication_verified         *bool
+	signin_verify_type                     *string
 	clearedFields                          map[string]struct{}
 	done                                   bool
 	oldValue                               func(context.Context) (*AppUserControl, error)
@@ -4486,9 +4775,22 @@ func (m *AppUserControlMutation) OldAppID(ctx context.Context) (v uuid.UUID, err
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppUserControlMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[appusercontrol.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppUserControlMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[appusercontrol.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppUserControlMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, appusercontrol.FieldAppID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -4522,9 +4824,22 @@ func (m *AppUserControlMutation) OldUserID(ctx context.Context) (v uuid.UUID, er
 	return oldValue.UserID, nil
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (m *AppUserControlMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[appusercontrol.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *AppUserControlMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[appusercontrol.FieldUserID]
+	return ok
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *AppUserControlMutation) ResetUserID() {
 	m.user_id = nil
+	delete(m.clearedFields, appusercontrol.FieldUserID)
 }
 
 // SetSigninVerifyByGoogleAuthentication sets the "signin_verify_by_google_authentication" field.
@@ -4558,9 +4873,22 @@ func (m *AppUserControlMutation) OldSigninVerifyByGoogleAuthentication(ctx conte
 	return oldValue.SigninVerifyByGoogleAuthentication, nil
 }
 
+// ClearSigninVerifyByGoogleAuthentication clears the value of the "signin_verify_by_google_authentication" field.
+func (m *AppUserControlMutation) ClearSigninVerifyByGoogleAuthentication() {
+	m.signin_verify_by_google_authentication = nil
+	m.clearedFields[appusercontrol.FieldSigninVerifyByGoogleAuthentication] = struct{}{}
+}
+
+// SigninVerifyByGoogleAuthenticationCleared returns if the "signin_verify_by_google_authentication" field was cleared in this mutation.
+func (m *AppUserControlMutation) SigninVerifyByGoogleAuthenticationCleared() bool {
+	_, ok := m.clearedFields[appusercontrol.FieldSigninVerifyByGoogleAuthentication]
+	return ok
+}
+
 // ResetSigninVerifyByGoogleAuthentication resets all changes to the "signin_verify_by_google_authentication" field.
 func (m *AppUserControlMutation) ResetSigninVerifyByGoogleAuthentication() {
 	m.signin_verify_by_google_authentication = nil
+	delete(m.clearedFields, appusercontrol.FieldSigninVerifyByGoogleAuthentication)
 }
 
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
@@ -4594,9 +4922,71 @@ func (m *AppUserControlMutation) OldGoogleAuthenticationVerified(ctx context.Con
 	return oldValue.GoogleAuthenticationVerified, nil
 }
 
+// ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
+func (m *AppUserControlMutation) ClearGoogleAuthenticationVerified() {
+	m.google_authentication_verified = nil
+	m.clearedFields[appusercontrol.FieldGoogleAuthenticationVerified] = struct{}{}
+}
+
+// GoogleAuthenticationVerifiedCleared returns if the "google_authentication_verified" field was cleared in this mutation.
+func (m *AppUserControlMutation) GoogleAuthenticationVerifiedCleared() bool {
+	_, ok := m.clearedFields[appusercontrol.FieldGoogleAuthenticationVerified]
+	return ok
+}
+
 // ResetGoogleAuthenticationVerified resets all changes to the "google_authentication_verified" field.
 func (m *AppUserControlMutation) ResetGoogleAuthenticationVerified() {
 	m.google_authentication_verified = nil
+	delete(m.clearedFields, appusercontrol.FieldGoogleAuthenticationVerified)
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (m *AppUserControlMutation) SetSigninVerifyType(s string) {
+	m.signin_verify_type = &s
+}
+
+// SigninVerifyType returns the value of the "signin_verify_type" field in the mutation.
+func (m *AppUserControlMutation) SigninVerifyType() (r string, exists bool) {
+	v := m.signin_verify_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSigninVerifyType returns the old "signin_verify_type" field's value of the AppUserControl entity.
+// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserControlMutation) OldSigninVerifyType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSigninVerifyType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSigninVerifyType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSigninVerifyType: %w", err)
+	}
+	return oldValue.SigninVerifyType, nil
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (m *AppUserControlMutation) ClearSigninVerifyType() {
+	m.signin_verify_type = nil
+	m.clearedFields[appusercontrol.FieldSigninVerifyType] = struct{}{}
+}
+
+// SigninVerifyTypeCleared returns if the "signin_verify_type" field was cleared in this mutation.
+func (m *AppUserControlMutation) SigninVerifyTypeCleared() bool {
+	_, ok := m.clearedFields[appusercontrol.FieldSigninVerifyType]
+	return ok
+}
+
+// ResetSigninVerifyType resets all changes to the "signin_verify_type" field.
+func (m *AppUserControlMutation) ResetSigninVerifyType() {
+	m.signin_verify_type = nil
+	delete(m.clearedFields, appusercontrol.FieldSigninVerifyType)
 }
 
 // Where appends a list predicates to the AppUserControlMutation builder.
@@ -4618,7 +5008,7 @@ func (m *AppUserControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserControlMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, appusercontrol.FieldCreatedAt)
 	}
@@ -4639,6 +5029,9 @@ func (m *AppUserControlMutation) Fields() []string {
 	}
 	if m.google_authentication_verified != nil {
 		fields = append(fields, appusercontrol.FieldGoogleAuthenticationVerified)
+	}
+	if m.signin_verify_type != nil {
+		fields = append(fields, appusercontrol.FieldSigninVerifyType)
 	}
 	return fields
 }
@@ -4662,6 +5055,8 @@ func (m *AppUserControlMutation) Field(name string) (ent.Value, bool) {
 		return m.SigninVerifyByGoogleAuthentication()
 	case appusercontrol.FieldGoogleAuthenticationVerified:
 		return m.GoogleAuthenticationVerified()
+	case appusercontrol.FieldSigninVerifyType:
+		return m.SigninVerifyType()
 	}
 	return nil, false
 }
@@ -4685,6 +5080,8 @@ func (m *AppUserControlMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldSigninVerifyByGoogleAuthentication(ctx)
 	case appusercontrol.FieldGoogleAuthenticationVerified:
 		return m.OldGoogleAuthenticationVerified(ctx)
+	case appusercontrol.FieldSigninVerifyType:
+		return m.OldSigninVerifyType(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppUserControl field %s", name)
 }
@@ -4742,6 +5139,13 @@ func (m *AppUserControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoogleAuthenticationVerified(v)
+		return nil
+	case appusercontrol.FieldSigninVerifyType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSigninVerifyType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)
@@ -4811,7 +5215,23 @@ func (m *AppUserControlMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppUserControlMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(appusercontrol.FieldAppID) {
+		fields = append(fields, appusercontrol.FieldAppID)
+	}
+	if m.FieldCleared(appusercontrol.FieldUserID) {
+		fields = append(fields, appusercontrol.FieldUserID)
+	}
+	if m.FieldCleared(appusercontrol.FieldSigninVerifyByGoogleAuthentication) {
+		fields = append(fields, appusercontrol.FieldSigninVerifyByGoogleAuthentication)
+	}
+	if m.FieldCleared(appusercontrol.FieldGoogleAuthenticationVerified) {
+		fields = append(fields, appusercontrol.FieldGoogleAuthenticationVerified)
+	}
+	if m.FieldCleared(appusercontrol.FieldSigninVerifyType) {
+		fields = append(fields, appusercontrol.FieldSigninVerifyType)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -4824,6 +5244,23 @@ func (m *AppUserControlMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppUserControlMutation) ClearField(name string) error {
+	switch name {
+	case appusercontrol.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case appusercontrol.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case appusercontrol.FieldSigninVerifyByGoogleAuthentication:
+		m.ClearSigninVerifyByGoogleAuthentication()
+		return nil
+	case appusercontrol.FieldGoogleAuthenticationVerified:
+		m.ClearGoogleAuthenticationVerified()
+		return nil
+	case appusercontrol.FieldSigninVerifyType:
+		m.ClearSigninVerifyType()
+		return nil
+	}
 	return fmt.Errorf("unknown AppUserControl nullable field %s", name)
 }
 
@@ -4851,6 +5288,9 @@ func (m *AppUserControlMutation) ResetField(name string) error {
 		return nil
 	case appusercontrol.FieldGoogleAuthenticationVerified:
 		m.ResetGoogleAuthenticationVerified()
+		return nil
+	case appusercontrol.FieldSigninVerifyType:
+		m.ResetSigninVerifyType()
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)
@@ -6999,25 +7439,25 @@ func (m *AppUserSecretMutation) ResetEdge(name string) error {
 // AppUserThirdPartyMutation represents an operation that mutates the AppUserThirdParty nodes in the graph.
 type AppUserThirdPartyMutation struct {
 	config
-	op                      Op
-	typ                     string
-	id                      *uuid.UUID
-	created_at              *uint32
-	addcreated_at           *int32
-	updated_at              *uint32
-	addupdated_at           *int32
-	deleted_at              *uint32
-	adddeleted_at           *int32
-	app_id                  *uuid.UUID
-	user_id                 *uuid.UUID
-	third_party_user_id     *string
-	third_party_id          *string
-	third_party_username    *string
-	third_party_user_avatar *string
-	clearedFields           map[string]struct{}
-	done                    bool
-	oldValue                func(context.Context) (*AppUserThirdParty, error)
-	predicates              []predicate.AppUserThirdParty
+	op                   Op
+	typ                  string
+	id                   *uuid.UUID
+	created_at           *uint32
+	addcreated_at        *int32
+	updated_at           *uint32
+	addupdated_at        *int32
+	deleted_at           *uint32
+	adddeleted_at        *int32
+	app_id               *uuid.UUID
+	user_id              *uuid.UUID
+	third_party_user_id  *string
+	third_party_id       *string
+	third_party_username *string
+	third_party_avatar   *string
+	clearedFields        map[string]struct{}
+	done                 bool
+	oldValue             func(context.Context) (*AppUserThirdParty, error)
+	predicates           []predicate.AppUserThirdParty
 }
 
 var _ ent.Mutation = (*AppUserThirdPartyMutation)(nil)
@@ -7323,9 +7763,22 @@ func (m *AppUserThirdPartyMutation) OldAppID(ctx context.Context) (v uuid.UUID, 
 	return oldValue.AppID, nil
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (m *AppUserThirdPartyMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[appuserthirdparty.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *AppUserThirdPartyMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[appuserthirdparty.FieldAppID]
+	return ok
+}
+
 // ResetAppID resets all changes to the "app_id" field.
 func (m *AppUserThirdPartyMutation) ResetAppID() {
 	m.app_id = nil
+	delete(m.clearedFields, appuserthirdparty.FieldAppID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -7359,9 +7812,22 @@ func (m *AppUserThirdPartyMutation) OldUserID(ctx context.Context) (v uuid.UUID,
 	return oldValue.UserID, nil
 }
 
+// ClearUserID clears the value of the "user_id" field.
+func (m *AppUserThirdPartyMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[appuserthirdparty.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *AppUserThirdPartyMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[appuserthirdparty.FieldUserID]
+	return ok
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *AppUserThirdPartyMutation) ResetUserID() {
 	m.user_id = nil
+	delete(m.clearedFields, appuserthirdparty.FieldUserID)
 }
 
 // SetThirdPartyUserID sets the "third_party_user_id" field.
@@ -7395,9 +7861,22 @@ func (m *AppUserThirdPartyMutation) OldThirdPartyUserID(ctx context.Context) (v 
 	return oldValue.ThirdPartyUserID, nil
 }
 
+// ClearThirdPartyUserID clears the value of the "third_party_user_id" field.
+func (m *AppUserThirdPartyMutation) ClearThirdPartyUserID() {
+	m.third_party_user_id = nil
+	m.clearedFields[appuserthirdparty.FieldThirdPartyUserID] = struct{}{}
+}
+
+// ThirdPartyUserIDCleared returns if the "third_party_user_id" field was cleared in this mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyUserIDCleared() bool {
+	_, ok := m.clearedFields[appuserthirdparty.FieldThirdPartyUserID]
+	return ok
+}
+
 // ResetThirdPartyUserID resets all changes to the "third_party_user_id" field.
 func (m *AppUserThirdPartyMutation) ResetThirdPartyUserID() {
 	m.third_party_user_id = nil
+	delete(m.clearedFields, appuserthirdparty.FieldThirdPartyUserID)
 }
 
 // SetThirdPartyID sets the "third_party_id" field.
@@ -7431,9 +7910,22 @@ func (m *AppUserThirdPartyMutation) OldThirdPartyID(ctx context.Context) (v stri
 	return oldValue.ThirdPartyID, nil
 }
 
+// ClearThirdPartyID clears the value of the "third_party_id" field.
+func (m *AppUserThirdPartyMutation) ClearThirdPartyID() {
+	m.third_party_id = nil
+	m.clearedFields[appuserthirdparty.FieldThirdPartyID] = struct{}{}
+}
+
+// ThirdPartyIDCleared returns if the "third_party_id" field was cleared in this mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyIDCleared() bool {
+	_, ok := m.clearedFields[appuserthirdparty.FieldThirdPartyID]
+	return ok
+}
+
 // ResetThirdPartyID resets all changes to the "third_party_id" field.
 func (m *AppUserThirdPartyMutation) ResetThirdPartyID() {
 	m.third_party_id = nil
+	delete(m.clearedFields, appuserthirdparty.FieldThirdPartyID)
 }
 
 // SetThirdPartyUsername sets the "third_party_username" field.
@@ -7467,45 +7959,71 @@ func (m *AppUserThirdPartyMutation) OldThirdPartyUsername(ctx context.Context) (
 	return oldValue.ThirdPartyUsername, nil
 }
 
+// ClearThirdPartyUsername clears the value of the "third_party_username" field.
+func (m *AppUserThirdPartyMutation) ClearThirdPartyUsername() {
+	m.third_party_username = nil
+	m.clearedFields[appuserthirdparty.FieldThirdPartyUsername] = struct{}{}
+}
+
+// ThirdPartyUsernameCleared returns if the "third_party_username" field was cleared in this mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyUsernameCleared() bool {
+	_, ok := m.clearedFields[appuserthirdparty.FieldThirdPartyUsername]
+	return ok
+}
+
 // ResetThirdPartyUsername resets all changes to the "third_party_username" field.
 func (m *AppUserThirdPartyMutation) ResetThirdPartyUsername() {
 	m.third_party_username = nil
+	delete(m.clearedFields, appuserthirdparty.FieldThirdPartyUsername)
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (m *AppUserThirdPartyMutation) SetThirdPartyUserAvatar(s string) {
-	m.third_party_user_avatar = &s
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (m *AppUserThirdPartyMutation) SetThirdPartyAvatar(s string) {
+	m.third_party_avatar = &s
 }
 
-// ThirdPartyUserAvatar returns the value of the "third_party_user_avatar" field in the mutation.
-func (m *AppUserThirdPartyMutation) ThirdPartyUserAvatar() (r string, exists bool) {
-	v := m.third_party_user_avatar
+// ThirdPartyAvatar returns the value of the "third_party_avatar" field in the mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyAvatar() (r string, exists bool) {
+	v := m.third_party_avatar
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldThirdPartyUserAvatar returns the old "third_party_user_avatar" field's value of the AppUserThirdParty entity.
+// OldThirdPartyAvatar returns the old "third_party_avatar" field's value of the AppUserThirdParty entity.
 // If the AppUserThirdParty object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserThirdPartyMutation) OldThirdPartyUserAvatar(ctx context.Context) (v string, err error) {
+func (m *AppUserThirdPartyMutation) OldThirdPartyAvatar(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThirdPartyUserAvatar is only allowed on UpdateOne operations")
+		return v, errors.New("OldThirdPartyAvatar is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThirdPartyUserAvatar requires an ID field in the mutation")
+		return v, errors.New("OldThirdPartyAvatar requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThirdPartyUserAvatar: %w", err)
+		return v, fmt.Errorf("querying old value for OldThirdPartyAvatar: %w", err)
 	}
-	return oldValue.ThirdPartyUserAvatar, nil
+	return oldValue.ThirdPartyAvatar, nil
 }
 
-// ResetThirdPartyUserAvatar resets all changes to the "third_party_user_avatar" field.
-func (m *AppUserThirdPartyMutation) ResetThirdPartyUserAvatar() {
-	m.third_party_user_avatar = nil
+// ClearThirdPartyAvatar clears the value of the "third_party_avatar" field.
+func (m *AppUserThirdPartyMutation) ClearThirdPartyAvatar() {
+	m.third_party_avatar = nil
+	m.clearedFields[appuserthirdparty.FieldThirdPartyAvatar] = struct{}{}
+}
+
+// ThirdPartyAvatarCleared returns if the "third_party_avatar" field was cleared in this mutation.
+func (m *AppUserThirdPartyMutation) ThirdPartyAvatarCleared() bool {
+	_, ok := m.clearedFields[appuserthirdparty.FieldThirdPartyAvatar]
+	return ok
+}
+
+// ResetThirdPartyAvatar resets all changes to the "third_party_avatar" field.
+func (m *AppUserThirdPartyMutation) ResetThirdPartyAvatar() {
+	m.third_party_avatar = nil
+	delete(m.clearedFields, appuserthirdparty.FieldThirdPartyAvatar)
 }
 
 // Where appends a list predicates to the AppUserThirdPartyMutation builder.
@@ -7552,8 +8070,8 @@ func (m *AppUserThirdPartyMutation) Fields() []string {
 	if m.third_party_username != nil {
 		fields = append(fields, appuserthirdparty.FieldThirdPartyUsername)
 	}
-	if m.third_party_user_avatar != nil {
-		fields = append(fields, appuserthirdparty.FieldThirdPartyUserAvatar)
+	if m.third_party_avatar != nil {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyAvatar)
 	}
 	return fields
 }
@@ -7579,8 +8097,8 @@ func (m *AppUserThirdPartyMutation) Field(name string) (ent.Value, bool) {
 		return m.ThirdPartyID()
 	case appuserthirdparty.FieldThirdPartyUsername:
 		return m.ThirdPartyUsername()
-	case appuserthirdparty.FieldThirdPartyUserAvatar:
-		return m.ThirdPartyUserAvatar()
+	case appuserthirdparty.FieldThirdPartyAvatar:
+		return m.ThirdPartyAvatar()
 	}
 	return nil, false
 }
@@ -7606,8 +8124,8 @@ func (m *AppUserThirdPartyMutation) OldField(ctx context.Context, name string) (
 		return m.OldThirdPartyID(ctx)
 	case appuserthirdparty.FieldThirdPartyUsername:
 		return m.OldThirdPartyUsername(ctx)
-	case appuserthirdparty.FieldThirdPartyUserAvatar:
-		return m.OldThirdPartyUserAvatar(ctx)
+	case appuserthirdparty.FieldThirdPartyAvatar:
+		return m.OldThirdPartyAvatar(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppUserThirdParty field %s", name)
 }
@@ -7673,12 +8191,12 @@ func (m *AppUserThirdPartyMutation) SetField(name string, value ent.Value) error
 		}
 		m.SetThirdPartyUsername(v)
 		return nil
-	case appuserthirdparty.FieldThirdPartyUserAvatar:
+	case appuserthirdparty.FieldThirdPartyAvatar:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetThirdPartyUserAvatar(v)
+		m.SetThirdPartyAvatar(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserThirdParty field %s", name)
@@ -7748,7 +8266,26 @@ func (m *AppUserThirdPartyMutation) AddField(name string, value ent.Value) error
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AppUserThirdPartyMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(appuserthirdparty.FieldAppID) {
+		fields = append(fields, appuserthirdparty.FieldAppID)
+	}
+	if m.FieldCleared(appuserthirdparty.FieldUserID) {
+		fields = append(fields, appuserthirdparty.FieldUserID)
+	}
+	if m.FieldCleared(appuserthirdparty.FieldThirdPartyUserID) {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyUserID)
+	}
+	if m.FieldCleared(appuserthirdparty.FieldThirdPartyID) {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyID)
+	}
+	if m.FieldCleared(appuserthirdparty.FieldThirdPartyUsername) {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyUsername)
+	}
+	if m.FieldCleared(appuserthirdparty.FieldThirdPartyAvatar) {
+		fields = append(fields, appuserthirdparty.FieldThirdPartyAvatar)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -7761,6 +8298,26 @@ func (m *AppUserThirdPartyMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppUserThirdPartyMutation) ClearField(name string) error {
+	switch name {
+	case appuserthirdparty.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case appuserthirdparty.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case appuserthirdparty.FieldThirdPartyUserID:
+		m.ClearThirdPartyUserID()
+		return nil
+	case appuserthirdparty.FieldThirdPartyID:
+		m.ClearThirdPartyID()
+		return nil
+	case appuserthirdparty.FieldThirdPartyUsername:
+		m.ClearThirdPartyUsername()
+		return nil
+	case appuserthirdparty.FieldThirdPartyAvatar:
+		m.ClearThirdPartyAvatar()
+		return nil
+	}
 	return fmt.Errorf("unknown AppUserThirdParty nullable field %s", name)
 }
 
@@ -7792,8 +8349,8 @@ func (m *AppUserThirdPartyMutation) ResetField(name string) error {
 	case appuserthirdparty.FieldThirdPartyUsername:
 		m.ResetThirdPartyUsername()
 		return nil
-	case appuserthirdparty.FieldThirdPartyUserAvatar:
-		m.ResetThirdPartyUserAvatar()
+	case appuserthirdparty.FieldThirdPartyAvatar:
+		m.ResetThirdPartyAvatar()
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserThirdParty field %s", name)

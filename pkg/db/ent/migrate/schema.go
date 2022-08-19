@@ -18,6 +18,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "logo", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "signin_verify_type", Type: field.TypeString, Nullable: true, Default: "Email"},
 	}
 	// AppsTable holds the schema information for the "apps" table.
 	AppsTable = &schema.Table{
@@ -51,24 +52,17 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "created_by", Type: field.TypeUUID},
-		{Name: "role", Type: field.TypeString},
-		{Name: "description", Type: field.TypeString, Default: ""},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "default", Type: field.TypeBool},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "role", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "default", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// AppRolesTable holds the schema information for the "app_roles" table.
 	AppRolesTable = &schema.Table{
 		Name:       "app_roles",
 		Columns:    AppRolesColumns,
 		PrimaryKey: []*schema.Column{AppRolesColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "approle_app_id_role",
-				Unique:  true,
-				Columns: []*schema.Column{AppRolesColumns[7], AppRolesColumns[5]},
-			},
-		},
 	}
 	// AppRoleUsersColumns holds the columns for the "app_role_users" table.
 	AppRoleUsersColumns = []*schema.Column{
@@ -76,8 +70,8 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "role_id", Type: field.TypeUUID},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "role_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
 	}
 	// AppRoleUsersTable holds the schema information for the "app_role_users" table.
@@ -92,10 +86,10 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "email_address", Type: field.TypeString, Default: ""},
-		{Name: "phone_no", Type: field.TypeString, Default: ""},
-		{Name: "import_from_app", Type: field.TypeUUID},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "email_address", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "phone_no", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "import_from_app", Type: field.TypeUUID, Nullable: true},
 	}
 	// AppUsersTable holds the schema information for the "app_users" table.
 	AppUsersTable = &schema.Table{
@@ -109,10 +103,11 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool, Default: false},
-		{Name: "google_authentication_verified", Type: field.TypeBool, Default: false},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "google_authentication_verified", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "signin_verify_type", Type: field.TypeString, Nullable: true, Default: "Email"},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{
@@ -191,12 +186,12 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "third_party_user_id", Type: field.TypeString},
-		{Name: "third_party_id", Type: field.TypeString},
-		{Name: "third_party_username", Type: field.TypeString, Default: ""},
-		{Name: "third_party_user_avatar", Type: field.TypeString, Size: 1024, Default: ""},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "third_party_user_id", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "third_party_id", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "third_party_username", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "third_party_avatar", Type: field.TypeString, Nullable: true, Size: 1024, Default: ""},
 	}
 	// AppUserThirdPartiesTable holds the schema information for the "app_user_third_parties" table.
 	AppUserThirdPartiesTable = &schema.Table{

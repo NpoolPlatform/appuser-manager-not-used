@@ -71,9 +71,25 @@ func (aucc *AppUserControlCreate) SetAppID(u uuid.UUID) *AppUserControlCreate {
 	return aucc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableAppID(u *uuid.UUID) *AppUserControlCreate {
+	if u != nil {
+		aucc.SetAppID(*u)
+	}
+	return aucc
+}
+
 // SetUserID sets the "user_id" field.
 func (aucc *AppUserControlCreate) SetUserID(u uuid.UUID) *AppUserControlCreate {
 	aucc.mutation.SetUserID(u)
+	return aucc
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableUserID(u *uuid.UUID) *AppUserControlCreate {
+	if u != nil {
+		aucc.SetUserID(*u)
+	}
 	return aucc
 }
 
@@ -101,6 +117,20 @@ func (aucc *AppUserControlCreate) SetGoogleAuthenticationVerified(b bool) *AppUs
 func (aucc *AppUserControlCreate) SetNillableGoogleAuthenticationVerified(b *bool) *AppUserControlCreate {
 	if b != nil {
 		aucc.SetGoogleAuthenticationVerified(*b)
+	}
+	return aucc
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (aucc *AppUserControlCreate) SetSigninVerifyType(s string) *AppUserControlCreate {
+	aucc.mutation.SetSigninVerifyType(s)
+	return aucc
+}
+
+// SetNillableSigninVerifyType sets the "signin_verify_type" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableSigninVerifyType(s *string) *AppUserControlCreate {
+	if s != nil {
+		aucc.SetSigninVerifyType(*s)
 	}
 	return aucc
 }
@@ -219,6 +249,20 @@ func (aucc *AppUserControlCreate) defaults() error {
 		v := appusercontrol.DefaultDeletedAt()
 		aucc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := aucc.mutation.AppID(); !ok {
+		if appusercontrol.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized appusercontrol.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := appusercontrol.DefaultAppID()
+		aucc.mutation.SetAppID(v)
+	}
+	if _, ok := aucc.mutation.UserID(); !ok {
+		if appusercontrol.DefaultUserID == nil {
+			return fmt.Errorf("ent: uninitialized appusercontrol.DefaultUserID (forgotten import ent/runtime?)")
+		}
+		v := appusercontrol.DefaultUserID()
+		aucc.mutation.SetUserID(v)
+	}
 	if _, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); !ok {
 		v := appusercontrol.DefaultSigninVerifyByGoogleAuthentication
 		aucc.mutation.SetSigninVerifyByGoogleAuthentication(v)
@@ -226,6 +270,10 @@ func (aucc *AppUserControlCreate) defaults() error {
 	if _, ok := aucc.mutation.GoogleAuthenticationVerified(); !ok {
 		v := appusercontrol.DefaultGoogleAuthenticationVerified
 		aucc.mutation.SetGoogleAuthenticationVerified(v)
+	}
+	if _, ok := aucc.mutation.SigninVerifyType(); !ok {
+		v := appusercontrol.DefaultSigninVerifyType
+		aucc.mutation.SetSigninVerifyType(v)
 	}
 	if _, ok := aucc.mutation.ID(); !ok {
 		if appusercontrol.DefaultID == nil {
@@ -247,18 +295,6 @@ func (aucc *AppUserControlCreate) check() error {
 	}
 	if _, ok := aucc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUserControl.deleted_at"`)}
-	}
-	if _, ok := aucc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUserControl.app_id"`)}
-	}
-	if _, ok := aucc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppUserControl.user_id"`)}
-	}
-	if _, ok := aucc.mutation.SigninVerifyByGoogleAuthentication(); !ok {
-		return &ValidationError{Name: "signin_verify_by_google_authentication", err: errors.New(`ent: missing required field "AppUserControl.signin_verify_by_google_authentication"`)}
-	}
-	if _, ok := aucc.mutation.GoogleAuthenticationVerified(); !ok {
-		return &ValidationError{Name: "google_authentication_verified", err: errors.New(`ent: missing required field "AppUserControl.google_authentication_verified"`)}
 	}
 	return nil
 }
@@ -352,6 +388,14 @@ func (aucc *AppUserControlCreate) createSpec() (*AppUserControl, *sqlgraph.Creat
 			Column: appusercontrol.FieldGoogleAuthenticationVerified,
 		})
 		_node.GoogleAuthenticationVerified = value
+	}
+	if value, ok := aucc.mutation.SigninVerifyType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appusercontrol.FieldSigninVerifyType,
+		})
+		_node.SigninVerifyType = value
 	}
 	return _node, _spec
 }
@@ -473,6 +517,12 @@ func (u *AppUserControlUpsert) UpdateAppID() *AppUserControlUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserControlUpsert) ClearAppID() *AppUserControlUpsert {
+	u.SetNull(appusercontrol.FieldAppID)
+	return u
+}
+
 // SetUserID sets the "user_id" field.
 func (u *AppUserControlUpsert) SetUserID(v uuid.UUID) *AppUserControlUpsert {
 	u.Set(appusercontrol.FieldUserID, v)
@@ -482,6 +532,12 @@ func (u *AppUserControlUpsert) SetUserID(v uuid.UUID) *AppUserControlUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *AppUserControlUpsert) UpdateUserID() *AppUserControlUpsert {
 	u.SetExcluded(appusercontrol.FieldUserID)
+	return u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppUserControlUpsert) ClearUserID() *AppUserControlUpsert {
+	u.SetNull(appusercontrol.FieldUserID)
 	return u
 }
 
@@ -497,6 +553,12 @@ func (u *AppUserControlUpsert) UpdateSigninVerifyByGoogleAuthentication() *AppUs
 	return u
 }
 
+// ClearSigninVerifyByGoogleAuthentication clears the value of the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsert) ClearSigninVerifyByGoogleAuthentication() *AppUserControlUpsert {
+	u.SetNull(appusercontrol.FieldSigninVerifyByGoogleAuthentication)
+	return u
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (u *AppUserControlUpsert) SetGoogleAuthenticationVerified(v bool) *AppUserControlUpsert {
 	u.Set(appusercontrol.FieldGoogleAuthenticationVerified, v)
@@ -506,6 +568,30 @@ func (u *AppUserControlUpsert) SetGoogleAuthenticationVerified(v bool) *AppUserC
 // UpdateGoogleAuthenticationVerified sets the "google_authentication_verified" field to the value that was provided on create.
 func (u *AppUserControlUpsert) UpdateGoogleAuthenticationVerified() *AppUserControlUpsert {
 	u.SetExcluded(appusercontrol.FieldGoogleAuthenticationVerified)
+	return u
+}
+
+// ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
+func (u *AppUserControlUpsert) ClearGoogleAuthenticationVerified() *AppUserControlUpsert {
+	u.SetNull(appusercontrol.FieldGoogleAuthenticationVerified)
+	return u
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (u *AppUserControlUpsert) SetSigninVerifyType(v string) *AppUserControlUpsert {
+	u.Set(appusercontrol.FieldSigninVerifyType, v)
+	return u
+}
+
+// UpdateSigninVerifyType sets the "signin_verify_type" field to the value that was provided on create.
+func (u *AppUserControlUpsert) UpdateSigninVerifyType() *AppUserControlUpsert {
+	u.SetExcluded(appusercontrol.FieldSigninVerifyType)
+	return u
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (u *AppUserControlUpsert) ClearSigninVerifyType() *AppUserControlUpsert {
+	u.SetNull(appusercontrol.FieldSigninVerifyType)
 	return u
 }
 
@@ -636,6 +722,13 @@ func (u *AppUserControlUpsertOne) UpdateAppID() *AppUserControlUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserControlUpsertOne) ClearAppID() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetUserID sets the "user_id" field.
 func (u *AppUserControlUpsertOne) SetUserID(v uuid.UUID) *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
@@ -647,6 +740,13 @@ func (u *AppUserControlUpsertOne) SetUserID(v uuid.UUID) *AppUserControlUpsertOn
 func (u *AppUserControlUpsertOne) UpdateUserID() *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppUserControlUpsertOne) ClearUserID() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -664,6 +764,13 @@ func (u *AppUserControlUpsertOne) UpdateSigninVerifyByGoogleAuthentication() *Ap
 	})
 }
 
+// ClearSigninVerifyByGoogleAuthentication clears the value of the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsertOne) ClearSigninVerifyByGoogleAuthentication() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearSigninVerifyByGoogleAuthentication()
+	})
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (u *AppUserControlUpsertOne) SetGoogleAuthenticationVerified(v bool) *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
@@ -675,6 +782,34 @@ func (u *AppUserControlUpsertOne) SetGoogleAuthenticationVerified(v bool) *AppUs
 func (u *AppUserControlUpsertOne) UpdateGoogleAuthenticationVerified() *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateGoogleAuthenticationVerified()
+	})
+}
+
+// ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
+func (u *AppUserControlUpsertOne) ClearGoogleAuthenticationVerified() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearGoogleAuthenticationVerified()
+	})
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (u *AppUserControlUpsertOne) SetSigninVerifyType(v string) *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetSigninVerifyType(v)
+	})
+}
+
+// UpdateSigninVerifyType sets the "signin_verify_type" field to the value that was provided on create.
+func (u *AppUserControlUpsertOne) UpdateSigninVerifyType() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateSigninVerifyType()
+	})
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (u *AppUserControlUpsertOne) ClearSigninVerifyType() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearSigninVerifyType()
 	})
 }
 
@@ -971,6 +1106,13 @@ func (u *AppUserControlUpsertBulk) UpdateAppID() *AppUserControlUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserControlUpsertBulk) ClearAppID() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetUserID sets the "user_id" field.
 func (u *AppUserControlUpsertBulk) SetUserID(v uuid.UUID) *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
@@ -982,6 +1124,13 @@ func (u *AppUserControlUpsertBulk) SetUserID(v uuid.UUID) *AppUserControlUpsertB
 func (u *AppUserControlUpsertBulk) UpdateUserID() *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppUserControlUpsertBulk) ClearUserID() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -999,6 +1148,13 @@ func (u *AppUserControlUpsertBulk) UpdateSigninVerifyByGoogleAuthentication() *A
 	})
 }
 
+// ClearSigninVerifyByGoogleAuthentication clears the value of the "signin_verify_by_google_authentication" field.
+func (u *AppUserControlUpsertBulk) ClearSigninVerifyByGoogleAuthentication() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearSigninVerifyByGoogleAuthentication()
+	})
+}
+
 // SetGoogleAuthenticationVerified sets the "google_authentication_verified" field.
 func (u *AppUserControlUpsertBulk) SetGoogleAuthenticationVerified(v bool) *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
@@ -1010,6 +1166,34 @@ func (u *AppUserControlUpsertBulk) SetGoogleAuthenticationVerified(v bool) *AppU
 func (u *AppUserControlUpsertBulk) UpdateGoogleAuthenticationVerified() *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateGoogleAuthenticationVerified()
+	})
+}
+
+// ClearGoogleAuthenticationVerified clears the value of the "google_authentication_verified" field.
+func (u *AppUserControlUpsertBulk) ClearGoogleAuthenticationVerified() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearGoogleAuthenticationVerified()
+	})
+}
+
+// SetSigninVerifyType sets the "signin_verify_type" field.
+func (u *AppUserControlUpsertBulk) SetSigninVerifyType(v string) *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetSigninVerifyType(v)
+	})
+}
+
+// UpdateSigninVerifyType sets the "signin_verify_type" field to the value that was provided on create.
+func (u *AppUserControlUpsertBulk) UpdateSigninVerifyType() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateSigninVerifyType()
+	})
+}
+
+// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
+func (u *AppUserControlUpsertBulk) ClearSigninVerifyType() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.ClearSigninVerifyType()
 	})
 }
 

@@ -25,6 +25,6 @@ const (
 	ChurchAppName = "Church Dashboard"
 	ChurchAppID   = "ab4d1208-7da9-11ec-a6ea-fb41bda845cd"
 
-	CreateAppUserWithSecret       = "CreateAppUserWithSecret"
-	CreateAppUserWithSecretRevert = "CreateAppUserWithSecretRevert"
+	KeyGenesisApp  = "genesis_app"
+	KeyGenesisRole = "genesis_role"
 )

@@ -90,6 +90,20 @@ func (auu *AppUserUpdate) SetAppID(u uuid.UUID) *AppUserUpdate {
 	return auu
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (auu *AppUserUpdate) SetNillableAppID(u *uuid.UUID) *AppUserUpdate {
+	if u != nil {
+		auu.SetAppID(*u)
+	}
+	return auu
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (auu *AppUserUpdate) ClearAppID() *AppUserUpdate {
+	auu.mutation.ClearAppID()
+	return auu
+}
+
 // SetEmailAddress sets the "email_address" field.
 func (auu *AppUserUpdate) SetEmailAddress(s string) *AppUserUpdate {
 	auu.mutation.SetEmailAddress(s)
@@ -101,6 +115,12 @@ func (auu *AppUserUpdate) SetNillableEmailAddress(s *string) *AppUserUpdate {
 	if s != nil {
 		auu.SetEmailAddress(*s)
 	}
+	return auu
+}
+
+// ClearEmailAddress clears the value of the "email_address" field.
+func (auu *AppUserUpdate) ClearEmailAddress() *AppUserUpdate {
+	auu.mutation.ClearEmailAddress()
 	return auu
 }
 
@@ -118,9 +138,29 @@ func (auu *AppUserUpdate) SetNillablePhoneNo(s *string) *AppUserUpdate {
 	return auu
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (auu *AppUserUpdate) ClearPhoneNo() *AppUserUpdate {
+	auu.mutation.ClearPhoneNo()
+	return auu
+}
+
 // SetImportFromApp sets the "import_from_app" field.
 func (auu *AppUserUpdate) SetImportFromApp(u uuid.UUID) *AppUserUpdate {
 	auu.mutation.SetImportFromApp(u)
+	return auu
+}
+
+// SetNillableImportFromApp sets the "import_from_app" field if the given value is not nil.
+func (auu *AppUserUpdate) SetNillableImportFromApp(u *uuid.UUID) *AppUserUpdate {
+	if u != nil {
+		auu.SetImportFromApp(*u)
+	}
+	return auu
+}
+
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (auu *AppUserUpdate) ClearImportFromApp() *AppUserUpdate {
+	auu.mutation.ClearImportFromApp()
 	return auu
 }
 
@@ -271,10 +311,22 @@ func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appuser.FieldAppID,
 		})
 	}
+	if auu.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appuser.FieldAppID,
+		})
+	}
 	if value, ok := auu.mutation.EmailAddress(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: appuser.FieldEmailAddress,
+		})
+	}
+	if auu.mutation.EmailAddressCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: appuser.FieldEmailAddress,
 		})
 	}
@@ -285,10 +337,22 @@ func (auu *AppUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appuser.FieldPhoneNo,
 		})
 	}
+	if auu.mutation.PhoneNoCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuser.FieldPhoneNo,
+		})
+	}
 	if value, ok := auu.mutation.ImportFromApp(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: appuser.FieldImportFromApp,
+		})
+	}
+	if auu.mutation.ImportFromAppCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: appuser.FieldImportFromApp,
 		})
 	}
@@ -374,6 +438,20 @@ func (auuo *AppUserUpdateOne) SetAppID(u uuid.UUID) *AppUserUpdateOne {
 	return auuo
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (auuo *AppUserUpdateOne) SetNillableAppID(u *uuid.UUID) *AppUserUpdateOne {
+	if u != nil {
+		auuo.SetAppID(*u)
+	}
+	return auuo
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (auuo *AppUserUpdateOne) ClearAppID() *AppUserUpdateOne {
+	auuo.mutation.ClearAppID()
+	return auuo
+}
+
 // SetEmailAddress sets the "email_address" field.
 func (auuo *AppUserUpdateOne) SetEmailAddress(s string) *AppUserUpdateOne {
 	auuo.mutation.SetEmailAddress(s)
@@ -385,6 +463,12 @@ func (auuo *AppUserUpdateOne) SetNillableEmailAddress(s *string) *AppUserUpdateO
 	if s != nil {
 		auuo.SetEmailAddress(*s)
 	}
+	return auuo
+}
+
+// ClearEmailAddress clears the value of the "email_address" field.
+func (auuo *AppUserUpdateOne) ClearEmailAddress() *AppUserUpdateOne {
+	auuo.mutation.ClearEmailAddress()
 	return auuo
 }
 
@@ -402,9 +486,29 @@ func (auuo *AppUserUpdateOne) SetNillablePhoneNo(s *string) *AppUserUpdateOne {
 	return auuo
 }
 
+// ClearPhoneNo clears the value of the "phone_no" field.
+func (auuo *AppUserUpdateOne) ClearPhoneNo() *AppUserUpdateOne {
+	auuo.mutation.ClearPhoneNo()
+	return auuo
+}
+
 // SetImportFromApp sets the "import_from_app" field.
 func (auuo *AppUserUpdateOne) SetImportFromApp(u uuid.UUID) *AppUserUpdateOne {
 	auuo.mutation.SetImportFromApp(u)
+	return auuo
+}
+
+// SetNillableImportFromApp sets the "import_from_app" field if the given value is not nil.
+func (auuo *AppUserUpdateOne) SetNillableImportFromApp(u *uuid.UUID) *AppUserUpdateOne {
+	if u != nil {
+		auuo.SetImportFromApp(*u)
+	}
+	return auuo
+}
+
+// ClearImportFromApp clears the value of the "import_from_app" field.
+func (auuo *AppUserUpdateOne) ClearImportFromApp() *AppUserUpdateOne {
+	auuo.mutation.ClearImportFromApp()
 	return auuo
 }
 
@@ -585,10 +689,22 @@ func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err 
 			Column: appuser.FieldAppID,
 		})
 	}
+	if auuo.mutation.AppIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: appuser.FieldAppID,
+		})
+	}
 	if value, ok := auuo.mutation.EmailAddress(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: appuser.FieldEmailAddress,
+		})
+	}
+	if auuo.mutation.EmailAddressCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: appuser.FieldEmailAddress,
 		})
 	}
@@ -599,10 +715,22 @@ func (auuo *AppUserUpdateOne) sqlSave(ctx context.Context) (_node *AppUser, err 
 			Column: appuser.FieldPhoneNo,
 		})
 	}
+	if auuo.mutation.PhoneNoCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appuser.FieldPhoneNo,
+		})
+	}
 	if value, ok := auuo.mutation.ImportFromApp(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
+			Column: appuser.FieldImportFromApp,
+		})
+	}
+	if auuo.mutation.ImportFromAppCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
 			Column: appuser.FieldImportFromApp,
 		})
 	}

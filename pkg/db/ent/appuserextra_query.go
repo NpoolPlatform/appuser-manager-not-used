@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -451,6 +452,32 @@ func (aueq *AppUserExtraQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// ForUpdate locks the selected rows against concurrent updates, and prevent them from being
+// updated, deleted or "selected ... for update" by other sessions, until the transaction is
+// either committed or rolled-back.
+func (aueq *AppUserExtraQuery) ForUpdate(opts ...sql.LockOption) *AppUserExtraQuery {
+	if aueq.driver.Dialect() == dialect.Postgres {
+		aueq.Unique(false)
+	}
+	aueq.modifiers = append(aueq.modifiers, func(s *sql.Selector) {
+		s.ForUpdate(opts...)
+	})
+	return aueq
+}
+
+// ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
+// on any rows that are read. Other sessions can read the rows, but cannot modify them
+// until your transaction commits.
+func (aueq *AppUserExtraQuery) ForShare(opts ...sql.LockOption) *AppUserExtraQuery {
+	if aueq.driver.Dialect() == dialect.Postgres {
+		aueq.Unique(false)
+	}
+	aueq.modifiers = append(aueq.modifiers, func(s *sql.Selector) {
+		s.ForShare(opts...)
+	})
+	return aueq
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.

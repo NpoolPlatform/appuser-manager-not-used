@@ -6,6 +6,8 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
+
+	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 // App holds the schema definition for the App entity.
@@ -44,6 +46,10 @@ func (App) Fields() []ent.Field {
 			String("description").
 			Optional().
 			Default(""),
+		field.
+			String("signin_verify_type").
+			Optional().
+			Default(sm.SignMethodType_Email.String()),
 	}
 }
 

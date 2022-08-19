@@ -72,8 +72,16 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
+	DefaultCreatedBy func() uuid.UUID
+	// DefaultRole holds the default value on creation for the "role" field.
+	DefaultRole string
 	// DefaultDescription holds the default value on creation for the "description" field.
 	DefaultDescription string
+	// DefaultAppID holds the default value on creation for the "app_id" field.
+	DefaultAppID func() uuid.UUID
+	// DefaultDefault holds the default value on creation for the "default" field.
+	DefaultDefault bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

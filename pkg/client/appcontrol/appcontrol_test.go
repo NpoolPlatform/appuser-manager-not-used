@@ -22,6 +22,9 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
+
+	rcpt "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/recaptcha"
+	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 func init() {
@@ -34,26 +37,26 @@ func init() {
 }
 
 var appControlDate = npool.AppControl{
-	ID:                  uuid.NewString(),
-	AppID:               uuid.NewString(),
-	RecaptchaMethod:     uuid.NewString(),
-	SignupMethods:       []string{uuid.NewString()},
-	ExternSigninMethods: []string{uuid.NewString()},
-	KycEnable:           false,
-	SigninVerifyEnable:  false,
-	InvitationCodeMust:  false,
+	ID:                 uuid.NewString(),
+	AppID:              uuid.NewString(),
+	RecaptchaMethod:    rcpt.RecaptchaType_GoogleRecaptchaV3,
+	SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
+	ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+	KycEnable:          false,
+	SigninVerifyEnable: false,
+	InvitationCodeMust: false,
 }
 
 var (
 	appControlInfo = npool.AppControlReq{
-		ID:                  &appControlDate.ID,
-		AppID:               &appControlDate.AppID,
-		RecaptchaMethod:     &appControlDate.RecaptchaMethod,
-		KycEnable:           &appControlDate.KycEnable,
-		SignupMethods:       appControlDate.SignupMethods,
-		ExternSigninMethods: appControlDate.ExternSigninMethods,
-		SigninVerifyEnable:  &appControlDate.SigninVerifyEnable,
-		InvitationCodeMust:  &appControlDate.InvitationCodeMust,
+		ID:                 &appControlDate.ID,
+		AppID:              &appControlDate.AppID,
+		RecaptchaMethod:    &appControlDate.RecaptchaMethod,
+		KycEnable:          &appControlDate.KycEnable,
+		SignupMethods:      appControlDate.SignupMethods,
+		ExtSigninMethods:   appControlDate.ExtSigninMethods,
+		SigninVerifyEnable: &appControlDate.SigninVerifyEnable,
+		InvitationCodeMust: &appControlDate.InvitationCodeMust,
 	}
 )
 
@@ -70,38 +73,38 @@ func createAppControl(t *testing.T) {
 func createAppControls(t *testing.T) {
 	appControlDates := []npool.AppControl{
 		{
-			ID:                  uuid.NewString(),
-			AppID:               uuid.NewString(),
-			RecaptchaMethod:     uuid.NewString(),
-			SignupMethods:       []string{uuid.NewString()},
-			ExternSigninMethods: []string{uuid.NewString()},
-			KycEnable:           false,
-			SigninVerifyEnable:  false,
-			InvitationCodeMust:  false,
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			RecaptchaMethod:    rcpt.RecaptchaType_GoogleRecaptchaV3,
+			SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
+			ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+			KycEnable:          false,
+			SigninVerifyEnable: false,
+			InvitationCodeMust: false,
 		},
 		{
-			ID:                  uuid.NewString(),
-			AppID:               uuid.NewString(),
-			RecaptchaMethod:     uuid.NewString(),
-			SignupMethods:       []string{uuid.NewString()},
-			ExternSigninMethods: []string{uuid.NewString()},
-			KycEnable:           false,
-			SigninVerifyEnable:  false,
-			InvitationCodeMust:  false,
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			RecaptchaMethod:    rcpt.RecaptchaType_GoogleRecaptchaV3,
+			SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
+			ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+			KycEnable:          false,
+			SigninVerifyEnable: false,
+			InvitationCodeMust: false,
 		},
 	}
 
 	appControls := []*npool.AppControlReq{}
 	for key := range appControlDates {
 		appControls = append(appControls, &npool.AppControlReq{
-			ID:                  &appControlDates[key].ID,
-			AppID:               &appControlDates[key].AppID,
-			RecaptchaMethod:     &appControlDates[key].RecaptchaMethod,
-			SignupMethods:       appControlDates[key].SignupMethods,
-			ExternSigninMethods: appControlDates[key].ExternSigninMethods,
-			KycEnable:           &appControlDates[key].KycEnable,
-			SigninVerifyEnable:  &appControlDates[key].SigninVerifyEnable,
-			InvitationCodeMust:  &appControlDates[key].InvitationCodeMust,
+			ID:                 &appControlDates[key].ID,
+			AppID:              &appControlDates[key].AppID,
+			RecaptchaMethod:    &appControlDates[key].RecaptchaMethod,
+			SignupMethods:      appControlDates[key].SignupMethods,
+			ExtSigninMethods:   appControlDates[key].ExtSigninMethods,
+			KycEnable:          &appControlDates[key].KycEnable,
+			SigninVerifyEnable: &appControlDates[key].SigninVerifyEnable,
+			InvitationCodeMust: &appControlDates[key].InvitationCodeMust,
 		})
 	}
 

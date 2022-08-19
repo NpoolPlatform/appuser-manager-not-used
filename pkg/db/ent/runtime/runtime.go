@@ -67,6 +67,10 @@ func init() {
 	appDescDescription := appFields[4].Descriptor()
 	// app.DefaultDescription holds the default value on creation for the description field.
 	app.DefaultDescription = appDescDescription.Default.(string)
+	// appDescSigninVerifyType is the schema descriptor for signin_verify_type field.
+	appDescSigninVerifyType := appFields[5].Descriptor()
+	// app.DefaultSigninVerifyType holds the default value on creation for the signin_verify_type field.
+	app.DefaultSigninVerifyType = appDescSigninVerifyType.Default.(string)
 	// appDescID is the schema descriptor for id field.
 	appDescID := appFields[0].Descriptor()
 	// app.DefaultID holds the default value on creation for the id field.
@@ -159,10 +163,26 @@ func init() {
 	approleDescDeletedAt := approleMixinFields0[2].Descriptor()
 	// approle.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	approle.DefaultDeletedAt = approleDescDeletedAt.Default.(func() uint32)
+	// approleDescCreatedBy is the schema descriptor for created_by field.
+	approleDescCreatedBy := approleFields[1].Descriptor()
+	// approle.DefaultCreatedBy holds the default value on creation for the created_by field.
+	approle.DefaultCreatedBy = approleDescCreatedBy.Default.(func() uuid.UUID)
+	// approleDescRole is the schema descriptor for role field.
+	approleDescRole := approleFields[2].Descriptor()
+	// approle.DefaultRole holds the default value on creation for the role field.
+	approle.DefaultRole = approleDescRole.Default.(string)
 	// approleDescDescription is the schema descriptor for description field.
 	approleDescDescription := approleFields[3].Descriptor()
 	// approle.DefaultDescription holds the default value on creation for the description field.
 	approle.DefaultDescription = approleDescDescription.Default.(string)
+	// approleDescAppID is the schema descriptor for app_id field.
+	approleDescAppID := approleFields[4].Descriptor()
+	// approle.DefaultAppID holds the default value on creation for the app_id field.
+	approle.DefaultAppID = approleDescAppID.Default.(func() uuid.UUID)
+	// approleDescDefault is the schema descriptor for default field.
+	approleDescDefault := approleFields[5].Descriptor()
+	// approle.DefaultDefault holds the default value on creation for the default field.
+	approle.DefaultDefault = approleDescDefault.Default.(bool)
 	// approleDescID is the schema descriptor for id field.
 	approleDescID := approleFields[0].Descriptor()
 	// approle.DefaultID holds the default value on creation for the id field.
@@ -195,6 +215,18 @@ func init() {
 	approleuserDescDeletedAt := approleuserMixinFields0[2].Descriptor()
 	// approleuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	approleuser.DefaultDeletedAt = approleuserDescDeletedAt.Default.(func() uint32)
+	// approleuserDescAppID is the schema descriptor for app_id field.
+	approleuserDescAppID := approleuserFields[1].Descriptor()
+	// approleuser.DefaultAppID holds the default value on creation for the app_id field.
+	approleuser.DefaultAppID = approleuserDescAppID.Default.(func() uuid.UUID)
+	// approleuserDescRoleID is the schema descriptor for role_id field.
+	approleuserDescRoleID := approleuserFields[2].Descriptor()
+	// approleuser.DefaultRoleID holds the default value on creation for the role_id field.
+	approleuser.DefaultRoleID = approleuserDescRoleID.Default.(func() uuid.UUID)
+	// approleuserDescUserID is the schema descriptor for user_id field.
+	approleuserDescUserID := approleuserFields[3].Descriptor()
+	// approleuser.DefaultUserID holds the default value on creation for the user_id field.
+	approleuser.DefaultUserID = approleuserDescUserID.Default.(func() uuid.UUID)
 	// approleuserDescID is the schema descriptor for id field.
 	approleuserDescID := approleuserFields[0].Descriptor()
 	// approleuser.DefaultID holds the default value on creation for the id field.
@@ -227,6 +259,10 @@ func init() {
 	appuserDescDeletedAt := appuserMixinFields0[2].Descriptor()
 	// appuser.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appuser.DefaultDeletedAt = appuserDescDeletedAt.Default.(func() uint32)
+	// appuserDescAppID is the schema descriptor for app_id field.
+	appuserDescAppID := appuserFields[1].Descriptor()
+	// appuser.DefaultAppID holds the default value on creation for the app_id field.
+	appuser.DefaultAppID = appuserDescAppID.Default.(func() uuid.UUID)
 	// appuserDescEmailAddress is the schema descriptor for email_address field.
 	appuserDescEmailAddress := appuserFields[2].Descriptor()
 	// appuser.DefaultEmailAddress holds the default value on creation for the email_address field.
@@ -235,6 +271,10 @@ func init() {
 	appuserDescPhoneNo := appuserFields[3].Descriptor()
 	// appuser.DefaultPhoneNo holds the default value on creation for the phone_no field.
 	appuser.DefaultPhoneNo = appuserDescPhoneNo.Default.(string)
+	// appuserDescImportFromApp is the schema descriptor for import_from_app field.
+	appuserDescImportFromApp := appuserFields[4].Descriptor()
+	// appuser.DefaultImportFromApp holds the default value on creation for the import_from_app field.
+	appuser.DefaultImportFromApp = appuserDescImportFromApp.Default.(func() uuid.UUID)
 	// appuserDescID is the schema descriptor for id field.
 	appuserDescID := appuserFields[0].Descriptor()
 	// appuser.DefaultID holds the default value on creation for the id field.
@@ -267,6 +307,14 @@ func init() {
 	appusercontrolDescDeletedAt := appusercontrolMixinFields0[2].Descriptor()
 	// appusercontrol.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appusercontrol.DefaultDeletedAt = appusercontrolDescDeletedAt.Default.(func() uint32)
+	// appusercontrolDescAppID is the schema descriptor for app_id field.
+	appusercontrolDescAppID := appusercontrolFields[1].Descriptor()
+	// appusercontrol.DefaultAppID holds the default value on creation for the app_id field.
+	appusercontrol.DefaultAppID = appusercontrolDescAppID.Default.(func() uuid.UUID)
+	// appusercontrolDescUserID is the schema descriptor for user_id field.
+	appusercontrolDescUserID := appusercontrolFields[2].Descriptor()
+	// appusercontrol.DefaultUserID holds the default value on creation for the user_id field.
+	appusercontrol.DefaultUserID = appusercontrolDescUserID.Default.(func() uuid.UUID)
 	// appusercontrolDescSigninVerifyByGoogleAuthentication is the schema descriptor for signin_verify_by_google_authentication field.
 	appusercontrolDescSigninVerifyByGoogleAuthentication := appusercontrolFields[3].Descriptor()
 	// appusercontrol.DefaultSigninVerifyByGoogleAuthentication holds the default value on creation for the signin_verify_by_google_authentication field.
@@ -275,6 +323,10 @@ func init() {
 	appusercontrolDescGoogleAuthenticationVerified := appusercontrolFields[4].Descriptor()
 	// appusercontrol.DefaultGoogleAuthenticationVerified holds the default value on creation for the google_authentication_verified field.
 	appusercontrol.DefaultGoogleAuthenticationVerified = appusercontrolDescGoogleAuthenticationVerified.Default.(bool)
+	// appusercontrolDescSigninVerifyType is the schema descriptor for signin_verify_type field.
+	appusercontrolDescSigninVerifyType := appusercontrolFields[5].Descriptor()
+	// appusercontrol.DefaultSigninVerifyType holds the default value on creation for the signin_verify_type field.
+	appusercontrol.DefaultSigninVerifyType = appusercontrolDescSigninVerifyType.Default.(string)
 	// appusercontrolDescID is the schema descriptor for id field.
 	appusercontrolDescID := appusercontrolFields[0].Descriptor()
 	// appusercontrol.DefaultID holds the default value on creation for the id field.
@@ -419,16 +471,32 @@ func init() {
 	appuserthirdpartyDescDeletedAt := appuserthirdpartyMixinFields0[2].Descriptor()
 	// appuserthirdparty.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	appuserthirdparty.DefaultDeletedAt = appuserthirdpartyDescDeletedAt.Default.(func() uint32)
+	// appuserthirdpartyDescAppID is the schema descriptor for app_id field.
+	appuserthirdpartyDescAppID := appuserthirdpartyFields[1].Descriptor()
+	// appuserthirdparty.DefaultAppID holds the default value on creation for the app_id field.
+	appuserthirdparty.DefaultAppID = appuserthirdpartyDescAppID.Default.(func() uuid.UUID)
+	// appuserthirdpartyDescUserID is the schema descriptor for user_id field.
+	appuserthirdpartyDescUserID := appuserthirdpartyFields[2].Descriptor()
+	// appuserthirdparty.DefaultUserID holds the default value on creation for the user_id field.
+	appuserthirdparty.DefaultUserID = appuserthirdpartyDescUserID.Default.(func() uuid.UUID)
+	// appuserthirdpartyDescThirdPartyUserID is the schema descriptor for third_party_user_id field.
+	appuserthirdpartyDescThirdPartyUserID := appuserthirdpartyFields[3].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyUserID holds the default value on creation for the third_party_user_id field.
+	appuserthirdparty.DefaultThirdPartyUserID = appuserthirdpartyDescThirdPartyUserID.Default.(string)
+	// appuserthirdpartyDescThirdPartyID is the schema descriptor for third_party_id field.
+	appuserthirdpartyDescThirdPartyID := appuserthirdpartyFields[4].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyID holds the default value on creation for the third_party_id field.
+	appuserthirdparty.DefaultThirdPartyID = appuserthirdpartyDescThirdPartyID.Default.(string)
 	// appuserthirdpartyDescThirdPartyUsername is the schema descriptor for third_party_username field.
 	appuserthirdpartyDescThirdPartyUsername := appuserthirdpartyFields[5].Descriptor()
 	// appuserthirdparty.DefaultThirdPartyUsername holds the default value on creation for the third_party_username field.
 	appuserthirdparty.DefaultThirdPartyUsername = appuserthirdpartyDescThirdPartyUsername.Default.(string)
-	// appuserthirdpartyDescThirdPartyUserAvatar is the schema descriptor for third_party_user_avatar field.
-	appuserthirdpartyDescThirdPartyUserAvatar := appuserthirdpartyFields[6].Descriptor()
-	// appuserthirdparty.DefaultThirdPartyUserAvatar holds the default value on creation for the third_party_user_avatar field.
-	appuserthirdparty.DefaultThirdPartyUserAvatar = appuserthirdpartyDescThirdPartyUserAvatar.Default.(string)
-	// appuserthirdparty.ThirdPartyUserAvatarValidator is a validator for the "third_party_user_avatar" field. It is called by the builders before save.
-	appuserthirdparty.ThirdPartyUserAvatarValidator = appuserthirdpartyDescThirdPartyUserAvatar.Validators[0].(func(string) error)
+	// appuserthirdpartyDescThirdPartyAvatar is the schema descriptor for third_party_avatar field.
+	appuserthirdpartyDescThirdPartyAvatar := appuserthirdpartyFields[6].Descriptor()
+	// appuserthirdparty.DefaultThirdPartyAvatar holds the default value on creation for the third_party_avatar field.
+	appuserthirdparty.DefaultThirdPartyAvatar = appuserthirdpartyDescThirdPartyAvatar.Default.(string)
+	// appuserthirdparty.ThirdPartyAvatarValidator is a validator for the "third_party_avatar" field. It is called by the builders before save.
+	appuserthirdparty.ThirdPartyAvatarValidator = appuserthirdpartyDescThirdPartyAvatar.Validators[0].(func(string) error)
 	// appuserthirdpartyDescID is the schema descriptor for id field.
 	appuserthirdpartyDescID := appuserthirdpartyFields[0].Descriptor()
 	// appuserthirdparty.DefaultID holds the default value on creation for the id field.

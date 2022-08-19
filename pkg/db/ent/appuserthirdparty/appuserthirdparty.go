@@ -28,8 +28,8 @@ const (
 	FieldThirdPartyID = "third_party_id"
 	// FieldThirdPartyUsername holds the string denoting the third_party_username field in the database.
 	FieldThirdPartyUsername = "third_party_username"
-	// FieldThirdPartyUserAvatar holds the string denoting the third_party_user_avatar field in the database.
-	FieldThirdPartyUserAvatar = "third_party_user_avatar"
+	// FieldThirdPartyAvatar holds the string denoting the third_party_avatar field in the database.
+	FieldThirdPartyAvatar = "third_party_avatar"
 	// Table holds the table name of the appuserthirdparty in the database.
 	Table = "app_user_third_parties"
 )
@@ -45,7 +45,7 @@ var Columns = []string{
 	FieldThirdPartyUserID,
 	FieldThirdPartyID,
 	FieldThirdPartyUsername,
-	FieldThirdPartyUserAvatar,
+	FieldThirdPartyAvatar,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -75,12 +75,20 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultAppID holds the default value on creation for the "app_id" field.
+	DefaultAppID func() uuid.UUID
+	// DefaultUserID holds the default value on creation for the "user_id" field.
+	DefaultUserID func() uuid.UUID
+	// DefaultThirdPartyUserID holds the default value on creation for the "third_party_user_id" field.
+	DefaultThirdPartyUserID string
+	// DefaultThirdPartyID holds the default value on creation for the "third_party_id" field.
+	DefaultThirdPartyID string
 	// DefaultThirdPartyUsername holds the default value on creation for the "third_party_username" field.
 	DefaultThirdPartyUsername string
-	// DefaultThirdPartyUserAvatar holds the default value on creation for the "third_party_user_avatar" field.
-	DefaultThirdPartyUserAvatar string
-	// ThirdPartyUserAvatarValidator is a validator for the "third_party_user_avatar" field. It is called by the builders before save.
-	ThirdPartyUserAvatarValidator func(string) error
+	// DefaultThirdPartyAvatar holds the default value on creation for the "third_party_avatar" field.
+	DefaultThirdPartyAvatar string
+	// ThirdPartyAvatarValidator is a validator for the "third_party_avatar" field. It is called by the builders before save.
+	ThirdPartyAvatarValidator func(string) error
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

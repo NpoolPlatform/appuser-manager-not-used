@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 
-	appusermgrv1 "github.com/NpoolPlatform/appuser-manager/api/v1"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/app"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/approle"
@@ -26,7 +25,6 @@ type Server struct {
 
 func Register(server grpc.ServiceRegistrar) {
 	appusermgr.RegisterManagerServer(server, &Server{})
-	appusermgrv1.Register(server)
 	app.Register(server)
 	appcontrol.Register(server)
 	approle.Register(server)
@@ -41,9 +39,6 @@ func Register(server grpc.ServiceRegistrar) {
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	if err := appusermgrv1.RegisterGateway(mux, endpoint, opts); err != nil {
-		return err
-	}
 	if err := appusermgr.RegisterManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
 		return err
 	}

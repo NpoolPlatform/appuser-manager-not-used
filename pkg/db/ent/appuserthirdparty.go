@@ -32,8 +32,8 @@ type AppUserThirdParty struct {
 	ThirdPartyID string `json:"third_party_id,omitempty"`
 	// ThirdPartyUsername holds the value of the "third_party_username" field.
 	ThirdPartyUsername string `json:"third_party_username,omitempty"`
-	// ThirdPartyUserAvatar holds the value of the "third_party_user_avatar" field.
-	ThirdPartyUserAvatar string `json:"third_party_user_avatar,omitempty"`
+	// ThirdPartyAvatar holds the value of the "third_party_avatar" field.
+	ThirdPartyAvatar string `json:"third_party_avatar,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -43,7 +43,7 @@ func (*AppUserThirdParty) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appuserthirdparty.FieldCreatedAt, appuserthirdparty.FieldUpdatedAt, appuserthirdparty.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case appuserthirdparty.FieldThirdPartyUserID, appuserthirdparty.FieldThirdPartyID, appuserthirdparty.FieldThirdPartyUsername, appuserthirdparty.FieldThirdPartyUserAvatar:
+		case appuserthirdparty.FieldThirdPartyUserID, appuserthirdparty.FieldThirdPartyID, appuserthirdparty.FieldThirdPartyUsername, appuserthirdparty.FieldThirdPartyAvatar:
 			values[i] = new(sql.NullString)
 		case appuserthirdparty.FieldID, appuserthirdparty.FieldAppID, appuserthirdparty.FieldUserID:
 			values[i] = new(uuid.UUID)
@@ -116,11 +116,11 @@ func (autp *AppUserThirdParty) assignValues(columns []string, values []interface
 			} else if value.Valid {
 				autp.ThirdPartyUsername = value.String
 			}
-		case appuserthirdparty.FieldThirdPartyUserAvatar:
+		case appuserthirdparty.FieldThirdPartyAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field third_party_user_avatar", values[i])
+				return fmt.Errorf("unexpected type %T for field third_party_avatar", values[i])
 			} else if value.Valid {
-				autp.ThirdPartyUserAvatar = value.String
+				autp.ThirdPartyAvatar = value.String
 			}
 		}
 	}
@@ -174,8 +174,8 @@ func (autp *AppUserThirdParty) String() string {
 	builder.WriteString("third_party_username=")
 	builder.WriteString(autp.ThirdPartyUsername)
 	builder.WriteString(", ")
-	builder.WriteString("third_party_user_avatar=")
-	builder.WriteString(autp.ThirdPartyUserAvatar)
+	builder.WriteString("third_party_avatar=")
+	builder.WriteString(autp.ThirdPartyAvatar)
 	builder.WriteByte(')')
 	return builder.String()
 }

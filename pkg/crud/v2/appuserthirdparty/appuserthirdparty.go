@@ -67,8 +67,8 @@ func CreateSet(c *ent.AppUserThirdPartyCreate, in *npool.AppUserThirdPartyReq) *
 	if in.ThirdPartyUsername != nil {
 		c.SetThirdPartyUsername(in.GetThirdPartyUsername())
 	}
-	if in.ThirdPartyUserAvatar != nil {
-		c.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
+	if in.ThirdPartyAvatar != nil {
+		c.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
 	}
 
 	return c
@@ -106,6 +106,18 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserThirdPartyReq) ([]*ent.A
 	return rows, nil
 }
 
+func UpdateSet(info *ent.AppUserThirdParty, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdateOne {
+	u := info.Update()
+
+	if in.ThirdPartyUsername != nil {
+		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
+	}
+	if in.ThirdPartyAvatar != nil {
+		u.SetThirdPartyAvatar(in.GetThirdPartyAvatar())
+	}
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserThirdParty, error) {
 	var err error
 	var info *ent.AppUserThirdParty
@@ -122,15 +134,12 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppUserThirdParty.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.ThirdPartyUsername != nil {
-			u.SetThirdPartyUsername(in.GetThirdPartyUsername())
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppUserThirdParty.Query().Where(appuserthirdparty.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
 		}
-		if in.ThirdPartyUserAvatar != nil {
-			u.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -138,16 +147,6 @@ func Update(ctx context.Context, in *npool.AppUserThirdPartyReq) (*ent.AppUserTh
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppUserThirdPartyUpdate, in *npool.AppUserThirdPartyReq) *ent.AppUserThirdPartyUpdate {
-	if in.ThirdPartyUsername != nil {
-		u.SetThirdPartyUsername(in.GetThirdPartyUsername())
-	}
-	if in.ThirdPartyUserAvatar != nil {
-		u.SetThirdPartyUserAvatar(in.GetThirdPartyUserAvatar())
-	}
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserThirdParty, error) {

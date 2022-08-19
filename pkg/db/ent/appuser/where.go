@@ -384,6 +384,20 @@ func AppIDLTE(v uuid.UUID) predicate.AppUser {
 	})
 }
 
+// AppIDIsNil applies the IsNil predicate on the "app_id" field.
+func AppIDIsNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldAppID)))
+	})
+}
+
+// AppIDNotNil applies the NotNil predicate on the "app_id" field.
+func AppIDNotNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldAppID)))
+	})
+}
+
 // EmailAddressEQ applies the EQ predicate on the "email_address" field.
 func EmailAddressEQ(v string) predicate.AppUser {
 	return predicate.AppUser(func(s *sql.Selector) {
@@ -466,6 +480,20 @@ func EmailAddressHasPrefix(v string) predicate.AppUser {
 func EmailAddressHasSuffix(v string) predicate.AppUser {
 	return predicate.AppUser(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldEmailAddress), v))
+	})
+}
+
+// EmailAddressIsNil applies the IsNil predicate on the "email_address" field.
+func EmailAddressIsNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldEmailAddress)))
+	})
+}
+
+// EmailAddressNotNil applies the NotNil predicate on the "email_address" field.
+func EmailAddressNotNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldEmailAddress)))
 	})
 }
 
@@ -568,6 +596,20 @@ func PhoneNoHasSuffix(v string) predicate.AppUser {
 	})
 }
 
+// PhoneNoIsNil applies the IsNil predicate on the "phone_no" field.
+func PhoneNoIsNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPhoneNo)))
+	})
+}
+
+// PhoneNoNotNil applies the NotNil predicate on the "phone_no" field.
+func PhoneNoNotNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPhoneNo)))
+	})
+}
+
 // PhoneNoEqualFold applies the EqualFold predicate on the "phone_no" field.
 func PhoneNoEqualFold(v string) predicate.AppUser {
 	return predicate.AppUser(func(s *sql.Selector) {
@@ -643,6 +685,20 @@ func ImportFromAppLT(v uuid.UUID) predicate.AppUser {
 func ImportFromAppLTE(v uuid.UUID) predicate.AppUser {
 	return predicate.AppUser(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldImportFromApp), v))
+	})
+}
+
+// ImportFromAppIsNil applies the IsNil predicate on the "import_from_app" field.
+func ImportFromAppIsNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldImportFromApp)))
+	})
+}
+
+// ImportFromAppNotNil applies the NotNil predicate on the "import_from_app" field.
+func ImportFromAppNotNil() predicate.AppUser {
+	return predicate.AppUser(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldImportFromApp)))
 	})
 }
 

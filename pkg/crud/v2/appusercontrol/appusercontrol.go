@@ -58,11 +58,11 @@ func CreateSet(c *ent.AppUserControlCreate, in *npool.AppUserControlReq) *ent.Ap
 	if in.UserID != nil {
 		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
-	if in.SigninVerifyByGoogleAuthentication != nil {
-		c.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+	if in.GoogleAuthVerified != nil {
+		c.SetGoogleAuthenticationVerified(in.GetGoogleAuthVerified())
 	}
-	if in.GoogleAuthenticationVerified != nil {
-		c.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
+	if in.SigninVerifyType != nil {
+		c.SetSigninVerifyType(in.GetSigninVerifyType().String())
 	}
 
 	return c
@@ -99,6 +99,18 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserControlReq) ([]*ent.AppU
 	return rows, nil
 }
 
+func UpdateSet(info *ent.AppUserControl, in *npool.AppUserControlReq) *ent.AppUserControlUpdateOne {
+	u := info.Update()
+
+	if in.GoogleAuthVerified != nil {
+		u.SetGoogleAuthenticationVerified(in.GetGoogleAuthVerified())
+	}
+	if in.SigninVerifyType != nil {
+		u.SetSigninVerifyType(in.GetSigninVerifyType().String())
+	}
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserControl, error) {
 	var err error
 	var info *ent.AppUserControl
@@ -115,15 +127,12 @@ func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppUserControl.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.SigninVerifyByGoogleAuthentication != nil {
-			u.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppUserControl.Query().Where(appusercontrol.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
 		}
-		if in.GoogleAuthenticationVerified != nil {
-			u.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -131,16 +140,6 @@ func Update(ctx context.Context, in *npool.AppUserControlReq) (*ent.AppUserContr
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppUserControlUpdate, in *npool.AppUserControlReq) *ent.AppUserControlUpdate {
-	if in.SigninVerifyByGoogleAuthentication != nil {
-		u.SetSigninVerifyByGoogleAuthentication(in.GetSigninVerifyByGoogleAuthentication())
-	}
-	if in.GoogleAuthenticationVerified != nil {
-		u.SetGoogleAuthenticationVerified(in.GetGoogleAuthenticationVerified())
-	}
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserControl, error) {

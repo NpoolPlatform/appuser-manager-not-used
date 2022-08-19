@@ -69,10 +69,14 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultAppID holds the default value on creation for the "app_id" field.
+	DefaultAppID func() uuid.UUID
 	// DefaultEmailAddress holds the default value on creation for the "email_address" field.
 	DefaultEmailAddress string
 	// DefaultPhoneNo holds the default value on creation for the "phone_no" field.
 	DefaultPhoneNo string
+	// DefaultImportFromApp holds the default value on creation for the "import_from_app" field.
+	DefaultImportFromApp func() uuid.UUID
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

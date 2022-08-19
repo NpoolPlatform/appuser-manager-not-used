@@ -23,6 +23,8 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
+
+	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 func init() {
@@ -35,20 +37,20 @@ func init() {
 }
 
 var appUserControlDate = npool.AppUserControl{
-	ID:                                 uuid.NewString(),
-	AppID:                              uuid.NewString(),
-	UserID:                             uuid.NewString(),
-	SigninVerifyByGoogleAuthentication: false,
-	GoogleAuthenticationVerified:       false,
+	ID:                 uuid.NewString(),
+	AppID:              uuid.NewString(),
+	UserID:             uuid.NewString(),
+	GoogleAuthVerified: false,
+	SigninVerifyType:   sm.SignMethodType_Email,
 }
 
 var (
 	appUserControlInfo = npool.AppUserControlReq{
-		ID:                                 &appUserControlDate.ID,
-		AppID:                              &appUserControlDate.AppID,
-		UserID:                             &appUserControlDate.UserID,
-		SigninVerifyByGoogleAuthentication: &appUserControlDate.SigninVerifyByGoogleAuthentication,
-		GoogleAuthenticationVerified:       &appUserControlDate.GoogleAuthenticationVerified,
+		ID:                 &appUserControlDate.ID,
+		AppID:              &appUserControlDate.AppID,
+		UserID:             &appUserControlDate.UserID,
+		GoogleAuthVerified: &appUserControlDate.GoogleAuthVerified,
+		SigninVerifyType:   &appUserControlDate.SigninVerifyType,
 	}
 )
 
@@ -65,29 +67,29 @@ func createAppUserControl(t *testing.T) {
 func createAppUserControls(t *testing.T) {
 	appUserControlDates := []npool.AppUserControl{
 		{
-			ID:                                 uuid.NewString(),
-			AppID:                              uuid.NewString(),
-			UserID:                             uuid.NewString(),
-			SigninVerifyByGoogleAuthentication: false,
-			GoogleAuthenticationVerified:       false,
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			UserID:             uuid.NewString(),
+			GoogleAuthVerified: false,
+			SigninVerifyType:   sm.SignMethodType_Email,
 		},
 		{
-			ID:                                 uuid.NewString(),
-			AppID:                              uuid.NewString(),
-			UserID:                             uuid.NewString(),
-			SigninVerifyByGoogleAuthentication: false,
-			GoogleAuthenticationVerified:       false,
+			ID:                 uuid.NewString(),
+			AppID:              uuid.NewString(),
+			UserID:             uuid.NewString(),
+			GoogleAuthVerified: false,
+			SigninVerifyType:   sm.SignMethodType_Email,
 		},
 	}
 
 	appUserControls := []*npool.AppUserControlReq{}
 	for key := range appUserControlDates {
 		appUserControls = append(appUserControls, &npool.AppUserControlReq{
-			ID:                                 &appUserControlDates[key].ID,
-			AppID:                              &appUserControlDates[key].AppID,
-			UserID:                             &appUserControlDates[key].UserID,
-			SigninVerifyByGoogleAuthentication: &appUserControlDates[key].SigninVerifyByGoogleAuthentication,
-			GoogleAuthenticationVerified:       &appUserControlDates[key].GoogleAuthenticationVerified,
+			ID:                 &appUserControlDates[key].ID,
+			AppID:              &appUserControlDates[key].AppID,
+			UserID:             &appUserControlDates[key].UserID,
+			GoogleAuthVerified: &appUserControlDates[key].GoogleAuthVerified,
+			SigninVerifyType:   &appUserControlDates[key].SigninVerifyType,
 		})
 	}
 

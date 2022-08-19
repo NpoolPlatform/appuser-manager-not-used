@@ -20,19 +20,39 @@ func (AppUserThirdParty) Mixin() []ent.Mixin {
 
 // Fields of the AppUserThirdParty.
 func (AppUserThirdParty) Fields() []ent.Field {
-	var userAvatarMaxLen = 1024
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
+		field.
+			UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.UUID("app_id", uuid.UUID{}),
-		field.UUID("user_id", uuid.UUID{}),
-		field.String("third_party_user_id"),
-		field.String("third_party_id"),
-		field.String("third_party_username").
+		field.
+			UUID("app_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("user_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.String("third_party_user_id").
+			Optional().
 			Default(""),
-		field.String("third_party_user_avatar").
-			Default("").MaxLen(userAvatarMaxLen),
+		field.
+			String("third_party_id").
+			Optional().
+			Default(""),
+		field.
+			String("third_party_username").
+			Optional().
+			Default(""),
+		field.
+			String("third_party_avatar").
+			Optional().
+			Default("").
+			MaxLen(1024), // nolint
 	}
 }
 

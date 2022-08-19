@@ -71,9 +71,25 @@ func (aruc *AppRoleUserCreate) SetAppID(u uuid.UUID) *AppRoleUserCreate {
 	return aruc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (aruc *AppRoleUserCreate) SetNillableAppID(u *uuid.UUID) *AppRoleUserCreate {
+	if u != nil {
+		aruc.SetAppID(*u)
+	}
+	return aruc
+}
+
 // SetRoleID sets the "role_id" field.
 func (aruc *AppRoleUserCreate) SetRoleID(u uuid.UUID) *AppRoleUserCreate {
 	aruc.mutation.SetRoleID(u)
+	return aruc
+}
+
+// SetNillableRoleID sets the "role_id" field if the given value is not nil.
+func (aruc *AppRoleUserCreate) SetNillableRoleID(u *uuid.UUID) *AppRoleUserCreate {
+	if u != nil {
+		aruc.SetRoleID(*u)
+	}
 	return aruc
 }
 
@@ -205,6 +221,27 @@ func (aruc *AppRoleUserCreate) defaults() error {
 		v := approleuser.DefaultDeletedAt()
 		aruc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := aruc.mutation.AppID(); !ok {
+		if approleuser.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := approleuser.DefaultAppID()
+		aruc.mutation.SetAppID(v)
+	}
+	if _, ok := aruc.mutation.RoleID(); !ok {
+		if approleuser.DefaultRoleID == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultRoleID (forgotten import ent/runtime?)")
+		}
+		v := approleuser.DefaultRoleID()
+		aruc.mutation.SetRoleID(v)
+	}
+	if _, ok := aruc.mutation.UserID(); !ok {
+		if approleuser.DefaultUserID == nil {
+			return fmt.Errorf("ent: uninitialized approleuser.DefaultUserID (forgotten import ent/runtime?)")
+		}
+		v := approleuser.DefaultUserID()
+		aruc.mutation.SetUserID(v)
+	}
 	if _, ok := aruc.mutation.ID(); !ok {
 		if approleuser.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized approleuser.DefaultID (forgotten import ent/runtime?)")
@@ -225,12 +262,6 @@ func (aruc *AppRoleUserCreate) check() error {
 	}
 	if _, ok := aruc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppRoleUser.deleted_at"`)}
-	}
-	if _, ok := aruc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppRoleUser.app_id"`)}
-	}
-	if _, ok := aruc.mutation.RoleID(); !ok {
-		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "AppRoleUser.role_id"`)}
 	}
 	return nil
 }
@@ -437,6 +468,12 @@ func (u *AppRoleUserUpsert) UpdateAppID() *AppRoleUserUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppRoleUserUpsert) ClearAppID() *AppRoleUserUpsert {
+	u.SetNull(approleuser.FieldAppID)
+	return u
+}
+
 // SetRoleID sets the "role_id" field.
 func (u *AppRoleUserUpsert) SetRoleID(v uuid.UUID) *AppRoleUserUpsert {
 	u.Set(approleuser.FieldRoleID, v)
@@ -446,6 +483,12 @@ func (u *AppRoleUserUpsert) SetRoleID(v uuid.UUID) *AppRoleUserUpsert {
 // UpdateRoleID sets the "role_id" field to the value that was provided on create.
 func (u *AppRoleUserUpsert) UpdateRoleID() *AppRoleUserUpsert {
 	u.SetExcluded(approleuser.FieldRoleID)
+	return u
+}
+
+// ClearRoleID clears the value of the "role_id" field.
+func (u *AppRoleUserUpsert) ClearRoleID() *AppRoleUserUpsert {
+	u.SetNull(approleuser.FieldRoleID)
 	return u
 }
 
@@ -594,6 +637,13 @@ func (u *AppRoleUserUpsertOne) UpdateAppID() *AppRoleUserUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppRoleUserUpsertOne) ClearAppID() *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetRoleID sets the "role_id" field.
 func (u *AppRoleUserUpsertOne) SetRoleID(v uuid.UUID) *AppRoleUserUpsertOne {
 	return u.Update(func(s *AppRoleUserUpsert) {
@@ -605,6 +655,13 @@ func (u *AppRoleUserUpsertOne) SetRoleID(v uuid.UUID) *AppRoleUserUpsertOne {
 func (u *AppRoleUserUpsertOne) UpdateRoleID() *AppRoleUserUpsertOne {
 	return u.Update(func(s *AppRoleUserUpsert) {
 		s.UpdateRoleID()
+	})
+}
+
+// ClearRoleID clears the value of the "role_id" field.
+func (u *AppRoleUserUpsertOne) ClearRoleID() *AppRoleUserUpsertOne {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.ClearRoleID()
 	})
 }
 
@@ -922,6 +979,13 @@ func (u *AppRoleUserUpsertBulk) UpdateAppID() *AppRoleUserUpsertBulk {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppRoleUserUpsertBulk) ClearAppID() *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetRoleID sets the "role_id" field.
 func (u *AppRoleUserUpsertBulk) SetRoleID(v uuid.UUID) *AppRoleUserUpsertBulk {
 	return u.Update(func(s *AppRoleUserUpsert) {
@@ -933,6 +997,13 @@ func (u *AppRoleUserUpsertBulk) SetRoleID(v uuid.UUID) *AppRoleUserUpsertBulk {
 func (u *AppRoleUserUpsertBulk) UpdateRoleID() *AppRoleUserUpsertBulk {
 	return u.Update(func(s *AppRoleUserUpsert) {
 		s.UpdateRoleID()
+	})
+}
+
+// ClearRoleID clears the value of the "role_id" field.
+func (u *AppRoleUserUpsertBulk) ClearRoleID() *AppRoleUserUpsertBulk {
+	return u.Update(func(s *AppRoleUserUpsert) {
+		s.ClearRoleID()
 	})
 }
 

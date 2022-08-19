@@ -127,6 +127,25 @@ func CreateBulk(ctx context.Context, in []*npool.AppUserExtraReq) ([]*ent.AppUse
 	return rows, nil
 }
 
+func UpdateSet(info *ent.AppUserExtra, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdateOne {
+	u := info.Update()
+
+	if in.Username != nil {
+		u.SetUsername(in.GetUsername())
+	}
+	if in.FirstName != nil {
+		u.SetFirstName(in.GetFirstName())
+	}
+	if in.LastName != nil {
+		u.SetLastName(in.GetLastName())
+	}
+	if in.AddressFields != nil {
+		u.SetAddressFields(in.GetAddressFields())
+	}
+
+	return u
+}
+
 func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, error) {
 	var err error
 	var info *ent.AppUserExtra
@@ -143,21 +162,12 @@ func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 
 	span = tracer.Trace(span, in)
 
-	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		u := cli.AppUserExtra.UpdateOneID(uuid.MustParse(in.GetID()))
-		if in.Username != nil {
-			u.SetUsername(in.GetUsername())
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.AppUserExtra.Query().Where(appuserextra.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
 		}
-		if in.FirstName != nil {
-			u.SetFirstName(in.GetFirstName())
-		}
-		if in.LastName != nil {
-			u.SetLastName(in.GetLastName())
-		}
-		if in.AddressFields != nil {
-			u.SetAddressFields(in.GetAddressFields())
-		}
-		info, err = u.Save(_ctx)
+		info, err = UpdateSet(info, in).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -165,23 +175,6 @@ func Update(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	}
 
 	return info, nil
-}
-
-func UpdateSet(u *ent.AppUserExtraUpdate, in *npool.AppUserExtraReq) *ent.AppUserExtraUpdate {
-	if in.Username != nil {
-		u.SetUsername(in.GetUsername())
-	}
-	if in.FirstName != nil {
-		u.SetFirstName(in.GetFirstName())
-	}
-	if in.LastName != nil {
-		u.SetLastName(in.GetLastName())
-	}
-	if in.AddressFields != nil {
-		u.SetAddressFields(in.GetAddressFields())
-	}
-
-	return u
 }
 
 func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {

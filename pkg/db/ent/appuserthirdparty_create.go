@@ -71,9 +71,25 @@ func (autpc *AppUserThirdPartyCreate) SetAppID(u uuid.UUID) *AppUserThirdPartyCr
 	return autpc
 }
 
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableAppID(u *uuid.UUID) *AppUserThirdPartyCreate {
+	if u != nil {
+		autpc.SetAppID(*u)
+	}
+	return autpc
+}
+
 // SetUserID sets the "user_id" field.
 func (autpc *AppUserThirdPartyCreate) SetUserID(u uuid.UUID) *AppUserThirdPartyCreate {
 	autpc.mutation.SetUserID(u)
+	return autpc
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableUserID(u *uuid.UUID) *AppUserThirdPartyCreate {
+	if u != nil {
+		autpc.SetUserID(*u)
+	}
 	return autpc
 }
 
@@ -83,9 +99,25 @@ func (autpc *AppUserThirdPartyCreate) SetThirdPartyUserID(s string) *AppUserThir
 	return autpc
 }
 
+// SetNillableThirdPartyUserID sets the "third_party_user_id" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUserID(s *string) *AppUserThirdPartyCreate {
+	if s != nil {
+		autpc.SetThirdPartyUserID(*s)
+	}
+	return autpc
+}
+
 // SetThirdPartyID sets the "third_party_id" field.
 func (autpc *AppUserThirdPartyCreate) SetThirdPartyID(s string) *AppUserThirdPartyCreate {
 	autpc.mutation.SetThirdPartyID(s)
+	return autpc
+}
+
+// SetNillableThirdPartyID sets the "third_party_id" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyID(s *string) *AppUserThirdPartyCreate {
+	if s != nil {
+		autpc.SetThirdPartyID(*s)
+	}
 	return autpc
 }
 
@@ -103,16 +135,16 @@ func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUsername(s *string) *
 	return autpc
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (autpc *AppUserThirdPartyCreate) SetThirdPartyUserAvatar(s string) *AppUserThirdPartyCreate {
-	autpc.mutation.SetThirdPartyUserAvatar(s)
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (autpc *AppUserThirdPartyCreate) SetThirdPartyAvatar(s string) *AppUserThirdPartyCreate {
+	autpc.mutation.SetThirdPartyAvatar(s)
 	return autpc
 }
 
-// SetNillableThirdPartyUserAvatar sets the "third_party_user_avatar" field if the given value is not nil.
-func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyUserAvatar(s *string) *AppUserThirdPartyCreate {
+// SetNillableThirdPartyAvatar sets the "third_party_avatar" field if the given value is not nil.
+func (autpc *AppUserThirdPartyCreate) SetNillableThirdPartyAvatar(s *string) *AppUserThirdPartyCreate {
 	if s != nil {
-		autpc.SetThirdPartyUserAvatar(*s)
+		autpc.SetThirdPartyAvatar(*s)
 	}
 	return autpc
 }
@@ -231,13 +263,35 @@ func (autpc *AppUserThirdPartyCreate) defaults() error {
 		v := appuserthirdparty.DefaultDeletedAt()
 		autpc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := autpc.mutation.AppID(); !ok {
+		if appuserthirdparty.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultAppID (forgotten import ent/runtime?)")
+		}
+		v := appuserthirdparty.DefaultAppID()
+		autpc.mutation.SetAppID(v)
+	}
+	if _, ok := autpc.mutation.UserID(); !ok {
+		if appuserthirdparty.DefaultUserID == nil {
+			return fmt.Errorf("ent: uninitialized appuserthirdparty.DefaultUserID (forgotten import ent/runtime?)")
+		}
+		v := appuserthirdparty.DefaultUserID()
+		autpc.mutation.SetUserID(v)
+	}
+	if _, ok := autpc.mutation.ThirdPartyUserID(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyUserID
+		autpc.mutation.SetThirdPartyUserID(v)
+	}
+	if _, ok := autpc.mutation.ThirdPartyID(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyID
+		autpc.mutation.SetThirdPartyID(v)
+	}
 	if _, ok := autpc.mutation.ThirdPartyUsername(); !ok {
 		v := appuserthirdparty.DefaultThirdPartyUsername
 		autpc.mutation.SetThirdPartyUsername(v)
 	}
-	if _, ok := autpc.mutation.ThirdPartyUserAvatar(); !ok {
-		v := appuserthirdparty.DefaultThirdPartyUserAvatar
-		autpc.mutation.SetThirdPartyUserAvatar(v)
+	if _, ok := autpc.mutation.ThirdPartyAvatar(); !ok {
+		v := appuserthirdparty.DefaultThirdPartyAvatar
+		autpc.mutation.SetThirdPartyAvatar(v)
 	}
 	if _, ok := autpc.mutation.ID(); !ok {
 		if appuserthirdparty.DefaultID == nil {
@@ -260,27 +314,9 @@ func (autpc *AppUserThirdPartyCreate) check() error {
 	if _, ok := autpc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUserThirdParty.deleted_at"`)}
 	}
-	if _, ok := autpc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppUserThirdParty.app_id"`)}
-	}
-	if _, ok := autpc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AppUserThirdParty.user_id"`)}
-	}
-	if _, ok := autpc.mutation.ThirdPartyUserID(); !ok {
-		return &ValidationError{Name: "third_party_user_id", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_user_id"`)}
-	}
-	if _, ok := autpc.mutation.ThirdPartyID(); !ok {
-		return &ValidationError{Name: "third_party_id", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_id"`)}
-	}
-	if _, ok := autpc.mutation.ThirdPartyUsername(); !ok {
-		return &ValidationError{Name: "third_party_username", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_username"`)}
-	}
-	if _, ok := autpc.mutation.ThirdPartyUserAvatar(); !ok {
-		return &ValidationError{Name: "third_party_user_avatar", err: errors.New(`ent: missing required field "AppUserThirdParty.third_party_user_avatar"`)}
-	}
-	if v, ok := autpc.mutation.ThirdPartyUserAvatar(); ok {
-		if err := appuserthirdparty.ThirdPartyUserAvatarValidator(v); err != nil {
-			return &ValidationError{Name: "third_party_user_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThirdParty.third_party_user_avatar": %w`, err)}
+	if v, ok := autpc.mutation.ThirdPartyAvatar(); ok {
+		if err := appuserthirdparty.ThirdPartyAvatarValidator(v); err != nil {
+			return &ValidationError{Name: "third_party_avatar", err: fmt.Errorf(`ent: validator failed for field "AppUserThirdParty.third_party_avatar": %w`, err)}
 		}
 	}
 	return nil
@@ -384,13 +420,13 @@ func (autpc *AppUserThirdPartyCreate) createSpec() (*AppUserThirdParty, *sqlgrap
 		})
 		_node.ThirdPartyUsername = value
 	}
-	if value, ok := autpc.mutation.ThirdPartyUserAvatar(); ok {
+	if value, ok := autpc.mutation.ThirdPartyAvatar(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: appuserthirdparty.FieldThirdPartyUserAvatar,
+			Column: appuserthirdparty.FieldThirdPartyAvatar,
 		})
-		_node.ThirdPartyUserAvatar = value
+		_node.ThirdPartyAvatar = value
 	}
 	return _node, _spec
 }
@@ -512,6 +548,12 @@ func (u *AppUserThirdPartyUpsert) UpdateAppID() *AppUserThirdPartyUpsert {
 	return u
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserThirdPartyUpsert) ClearAppID() *AppUserThirdPartyUpsert {
+	u.SetNull(appuserthirdparty.FieldAppID)
+	return u
+}
+
 // SetUserID sets the "user_id" field.
 func (u *AppUserThirdPartyUpsert) SetUserID(v uuid.UUID) *AppUserThirdPartyUpsert {
 	u.Set(appuserthirdparty.FieldUserID, v)
@@ -521,6 +563,12 @@ func (u *AppUserThirdPartyUpsert) SetUserID(v uuid.UUID) *AppUserThirdPartyUpser
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *AppUserThirdPartyUpsert) UpdateUserID() *AppUserThirdPartyUpsert {
 	u.SetExcluded(appuserthirdparty.FieldUserID)
+	return u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppUserThirdPartyUpsert) ClearUserID() *AppUserThirdPartyUpsert {
+	u.SetNull(appuserthirdparty.FieldUserID)
 	return u
 }
 
@@ -536,6 +584,12 @@ func (u *AppUserThirdPartyUpsert) UpdateThirdPartyUserID() *AppUserThirdPartyUps
 	return u
 }
 
+// ClearThirdPartyUserID clears the value of the "third_party_user_id" field.
+func (u *AppUserThirdPartyUpsert) ClearThirdPartyUserID() *AppUserThirdPartyUpsert {
+	u.SetNull(appuserthirdparty.FieldThirdPartyUserID)
+	return u
+}
+
 // SetThirdPartyID sets the "third_party_id" field.
 func (u *AppUserThirdPartyUpsert) SetThirdPartyID(v string) *AppUserThirdPartyUpsert {
 	u.Set(appuserthirdparty.FieldThirdPartyID, v)
@@ -545,6 +599,12 @@ func (u *AppUserThirdPartyUpsert) SetThirdPartyID(v string) *AppUserThirdPartyUp
 // UpdateThirdPartyID sets the "third_party_id" field to the value that was provided on create.
 func (u *AppUserThirdPartyUpsert) UpdateThirdPartyID() *AppUserThirdPartyUpsert {
 	u.SetExcluded(appuserthirdparty.FieldThirdPartyID)
+	return u
+}
+
+// ClearThirdPartyID clears the value of the "third_party_id" field.
+func (u *AppUserThirdPartyUpsert) ClearThirdPartyID() *AppUserThirdPartyUpsert {
+	u.SetNull(appuserthirdparty.FieldThirdPartyID)
 	return u
 }
 
@@ -560,15 +620,27 @@ func (u *AppUserThirdPartyUpsert) UpdateThirdPartyUsername() *AppUserThirdPartyU
 	return u
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (u *AppUserThirdPartyUpsert) SetThirdPartyUserAvatar(v string) *AppUserThirdPartyUpsert {
-	u.Set(appuserthirdparty.FieldThirdPartyUserAvatar, v)
+// ClearThirdPartyUsername clears the value of the "third_party_username" field.
+func (u *AppUserThirdPartyUpsert) ClearThirdPartyUsername() *AppUserThirdPartyUpsert {
+	u.SetNull(appuserthirdparty.FieldThirdPartyUsername)
 	return u
 }
 
-// UpdateThirdPartyUserAvatar sets the "third_party_user_avatar" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsert) UpdateThirdPartyUserAvatar() *AppUserThirdPartyUpsert {
-	u.SetExcluded(appuserthirdparty.FieldThirdPartyUserAvatar)
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (u *AppUserThirdPartyUpsert) SetThirdPartyAvatar(v string) *AppUserThirdPartyUpsert {
+	u.Set(appuserthirdparty.FieldThirdPartyAvatar, v)
+	return u
+}
+
+// UpdateThirdPartyAvatar sets the "third_party_avatar" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsert) UpdateThirdPartyAvatar() *AppUserThirdPartyUpsert {
+	u.SetExcluded(appuserthirdparty.FieldThirdPartyAvatar)
+	return u
+}
+
+// ClearThirdPartyAvatar clears the value of the "third_party_avatar" field.
+func (u *AppUserThirdPartyUpsert) ClearThirdPartyAvatar() *AppUserThirdPartyUpsert {
+	u.SetNull(appuserthirdparty.FieldThirdPartyAvatar)
 	return u
 }
 
@@ -699,6 +771,13 @@ func (u *AppUserThirdPartyUpsertOne) UpdateAppID() *AppUserThirdPartyUpsertOne {
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserThirdPartyUpsertOne) ClearAppID() *AppUserThirdPartyUpsertOne {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetUserID sets the "user_id" field.
 func (u *AppUserThirdPartyUpsertOne) SetUserID(v uuid.UUID) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
@@ -710,6 +789,13 @@ func (u *AppUserThirdPartyUpsertOne) SetUserID(v uuid.UUID) *AppUserThirdPartyUp
 func (u *AppUserThirdPartyUpsertOne) UpdateUserID() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppUserThirdPartyUpsertOne) ClearUserID() *AppUserThirdPartyUpsertOne {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -727,6 +813,13 @@ func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyUserID() *AppUserThirdParty
 	})
 }
 
+// ClearThirdPartyUserID clears the value of the "third_party_user_id" field.
+func (u *AppUserThirdPartyUpsertOne) ClearThirdPartyUserID() *AppUserThirdPartyUpsertOne {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearThirdPartyUserID()
+	})
+}
+
 // SetThirdPartyID sets the "third_party_id" field.
 func (u *AppUserThirdPartyUpsertOne) SetThirdPartyID(v string) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
@@ -738,6 +831,13 @@ func (u *AppUserThirdPartyUpsertOne) SetThirdPartyID(v string) *AppUserThirdPart
 func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyID() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
 		s.UpdateThirdPartyID()
+	})
+}
+
+// ClearThirdPartyID clears the value of the "third_party_id" field.
+func (u *AppUserThirdPartyUpsertOne) ClearThirdPartyID() *AppUserThirdPartyUpsertOne {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearThirdPartyID()
 	})
 }
 
@@ -755,17 +855,31 @@ func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyUsername() *AppUserThirdPar
 	})
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (u *AppUserThirdPartyUpsertOne) SetThirdPartyUserAvatar(v string) *AppUserThirdPartyUpsertOne {
+// ClearThirdPartyUsername clears the value of the "third_party_username" field.
+func (u *AppUserThirdPartyUpsertOne) ClearThirdPartyUsername() *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetThirdPartyUserAvatar(v)
+		s.ClearThirdPartyUsername()
 	})
 }
 
-// UpdateThirdPartyUserAvatar sets the "third_party_user_avatar" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyUserAvatar() *AppUserThirdPartyUpsertOne {
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (u *AppUserThirdPartyUpsertOne) SetThirdPartyAvatar(v string) *AppUserThirdPartyUpsertOne {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateThirdPartyUserAvatar()
+		s.SetThirdPartyAvatar(v)
+	})
+}
+
+// UpdateThirdPartyAvatar sets the "third_party_avatar" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertOne) UpdateThirdPartyAvatar() *AppUserThirdPartyUpsertOne {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.UpdateThirdPartyAvatar()
+	})
+}
+
+// ClearThirdPartyAvatar clears the value of the "third_party_avatar" field.
+func (u *AppUserThirdPartyUpsertOne) ClearThirdPartyAvatar() *AppUserThirdPartyUpsertOne {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearThirdPartyAvatar()
 	})
 }
 
@@ -1062,6 +1176,13 @@ func (u *AppUserThirdPartyUpsertBulk) UpdateAppID() *AppUserThirdPartyUpsertBulk
 	})
 }
 
+// ClearAppID clears the value of the "app_id" field.
+func (u *AppUserThirdPartyUpsertBulk) ClearAppID() *AppUserThirdPartyUpsertBulk {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearAppID()
+	})
+}
+
 // SetUserID sets the "user_id" field.
 func (u *AppUserThirdPartyUpsertBulk) SetUserID(v uuid.UUID) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
@@ -1073,6 +1194,13 @@ func (u *AppUserThirdPartyUpsertBulk) SetUserID(v uuid.UUID) *AppUserThirdPartyU
 func (u *AppUserThirdPartyUpsertBulk) UpdateUserID() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *AppUserThirdPartyUpsertBulk) ClearUserID() *AppUserThirdPartyUpsertBulk {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearUserID()
 	})
 }
 
@@ -1090,6 +1218,13 @@ func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyUserID() *AppUserThirdPart
 	})
 }
 
+// ClearThirdPartyUserID clears the value of the "third_party_user_id" field.
+func (u *AppUserThirdPartyUpsertBulk) ClearThirdPartyUserID() *AppUserThirdPartyUpsertBulk {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearThirdPartyUserID()
+	})
+}
+
 // SetThirdPartyID sets the "third_party_id" field.
 func (u *AppUserThirdPartyUpsertBulk) SetThirdPartyID(v string) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
@@ -1101,6 +1236,13 @@ func (u *AppUserThirdPartyUpsertBulk) SetThirdPartyID(v string) *AppUserThirdPar
 func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyID() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
 		s.UpdateThirdPartyID()
+	})
+}
+
+// ClearThirdPartyID clears the value of the "third_party_id" field.
+func (u *AppUserThirdPartyUpsertBulk) ClearThirdPartyID() *AppUserThirdPartyUpsertBulk {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearThirdPartyID()
 	})
 }
 
@@ -1118,17 +1260,31 @@ func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyUsername() *AppUserThirdPa
 	})
 }
 
-// SetThirdPartyUserAvatar sets the "third_party_user_avatar" field.
-func (u *AppUserThirdPartyUpsertBulk) SetThirdPartyUserAvatar(v string) *AppUserThirdPartyUpsertBulk {
+// ClearThirdPartyUsername clears the value of the "third_party_username" field.
+func (u *AppUserThirdPartyUpsertBulk) ClearThirdPartyUsername() *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.SetThirdPartyUserAvatar(v)
+		s.ClearThirdPartyUsername()
 	})
 }
 
-// UpdateThirdPartyUserAvatar sets the "third_party_user_avatar" field to the value that was provided on create.
-func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyUserAvatar() *AppUserThirdPartyUpsertBulk {
+// SetThirdPartyAvatar sets the "third_party_avatar" field.
+func (u *AppUserThirdPartyUpsertBulk) SetThirdPartyAvatar(v string) *AppUserThirdPartyUpsertBulk {
 	return u.Update(func(s *AppUserThirdPartyUpsert) {
-		s.UpdateThirdPartyUserAvatar()
+		s.SetThirdPartyAvatar(v)
+	})
+}
+
+// UpdateThirdPartyAvatar sets the "third_party_avatar" field to the value that was provided on create.
+func (u *AppUserThirdPartyUpsertBulk) UpdateThirdPartyAvatar() *AppUserThirdPartyUpsertBulk {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.UpdateThirdPartyAvatar()
+	})
+}
+
+// ClearThirdPartyAvatar clears the value of the "third_party_avatar" field.
+func (u *AppUserThirdPartyUpsertBulk) ClearThirdPartyAvatar() *AppUserThirdPartyUpsertBulk {
+	return u.Update(func(s *AppUserThirdPartyUpsert) {
+		s.ClearThirdPartyAvatar()
 	})
 }
 
