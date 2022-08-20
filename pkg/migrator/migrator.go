@@ -4,13 +4,17 @@ import (
 	"context"
 	"encoding/json"
 
-	constant "github.com/NpoolPlatform/appuser-manager/pkg/const"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
-	constantser "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
+
+	"github.com/NpoolPlatform/appuser-manager/pkg/db"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
+
+	constant1 "github.com/NpoolPlatform/appuser-manager/pkg/const"
+	constant2 "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 	approlepb "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/approle"
 	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+
 	"github.com/google/uuid"
 )
 
@@ -50,8 +54,8 @@ func setSigninVerifyTypeVal(ctx context.Context) error {
 }
 
 func updateAdminRoleAppID(ctx context.Context) error {
-	hostname := config.GetStringValueWithNameSpace(constantser.ServiceName, config.KeyHostname)
-	genesisRoleStr := config.GetStringValueWithNameSpace(hostname, constant.KeyGenesisRole)
+	hostname := config.GetStringValueWithNameSpace(constant2.ServiceName, config.KeyHostname)
+	genesisRoleStr := config.GetStringValueWithNameSpace(hostname, constant1.KeyGenesisRole)
 
 	appRoles := []*approlepb.AppRole{}
 
@@ -66,19 +70,26 @@ func updateAdminRoleAppID(ctx context.Context) error {
 	}
 
 	for _, val := range appRoles {
-		role, err := cli.AppRole.
+		role, err := cli.
+			AppRole.
 			Query().
 			Where(
 				approle.Role(val.Role),
-			).Only(ctx)
+			).
+			Only(ctx)
 		if err != nil {
+			if ent.IsNotFound(err) {
+				continue
+			}
 			return err
 		}
 
-		if _, err = role.Update().
+		if _, err = role.
+			Update().
 			SetAppID(
 				uuid.MustParse(val.GetAppID()),
-			).Save(ctx); err != nil {
+			).
+			Save(ctx); err != nil {
 			return err
 		}
 	}
