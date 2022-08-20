@@ -81,7 +81,7 @@ pipeline {
 
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_appid ab4d1208-7da9-11ec-a6ea-fb41bda845cd
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_appname "Church Dashboard"
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_app_description "Church dashbaord for platform super user"
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_app_description "Church dashboard for platform super user"
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_role_name church
           done
         '''.stripIndent())
