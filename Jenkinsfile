@@ -73,9 +73,16 @@ pipeline {
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name appuser_manager
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost genesis_app "[{\"ID\":\"7203f5c0-7da9-11ec-a3ee-069013a3cb9a\",\"Name\":\"Genesis Dashboard\",\"Description\":\"NOT SET\"},{\"ID\":\"ab4d1208-7da9-11ec-a6ea-fb41bda845cd\",\"Name\":\"Church Dashboard\",\"Description\":\"NOT SET\"}]"
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost genesis_role '[{"AppID":"7203f5c0-7da9-11ec-a3ee-069013a3cb9a","Role":"genesis"},{"AppID":"ab4d1208-7da9-11ec-a6ea-fb41bda845cd","Role":"church"}]'
-            cd -
+
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost genesis_appid 7203f5c0-7da9-11ec-a3ee-069013a3cb9a
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost genesis_appname "Genesis Dashboard"
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost genesis_app_description "Bootstrap application"
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost genesis_role_name genesis
+
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_appid ab4d1208-7da9-11ec-a6ea-fb41bda845cd
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_appname "Church Dashboard"
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_app_description "Church dashbaord for platform super user"
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost church_role_name church
           done
         '''.stripIndent())
       }
