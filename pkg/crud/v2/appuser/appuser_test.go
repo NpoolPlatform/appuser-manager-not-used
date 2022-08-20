@@ -47,7 +47,7 @@ var (
 		ID:            &id,
 		AppID:         &appID,
 		EmailAddress:  &entAppUser.EmailAddress,
-		PhoneNo:       &entAppUser.PhoneNo,
+		PhoneNO:       &entAppUser.PhoneNo,
 		ImportFromApp: &importFromApp,
 	}
 )
@@ -103,7 +103,7 @@ func createBulk(t *testing.T) {
 			ID:            &id,
 			AppID:         &appID,
 			EmailAddress:  &entAppUser[key].EmailAddress,
-			PhoneNo:       &entAppUser[key].PhoneNo,
+			PhoneNO:       &entAppUser[key].PhoneNo,
 			ImportFromApp: &importFromApp,
 		})
 	}

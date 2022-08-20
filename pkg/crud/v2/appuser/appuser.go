@@ -58,8 +58,8 @@ func CreateSet(c *ent.AppUserCreate, in *npool.AppUserReq) *ent.AppUserCreate {
 	if in.EmailAddress != nil {
 		c.SetEmailAddress(in.GetEmailAddress())
 	}
-	if in.PhoneNo != nil {
-		c.SetPhoneNo(in.GetPhoneNo())
+	if in.PhoneNO != nil {
+		c.SetPhoneNo(in.GetPhoneNO())
 	}
 	if in.ImportFromApp != nil {
 		c.SetImportFromApp(uuid.MustParse(in.GetImportFromApp()))
@@ -102,8 +102,8 @@ func UpdateSet(u *ent.AppUserUpdateOne, in *npool.AppUserReq) *ent.AppUserUpdate
 	if in.EmailAddress != nil {
 		u.SetEmailAddress(in.GetEmailAddress())
 	}
-	if in.PhoneNo != nil {
-		u.SetPhoneNo(in.GetPhoneNo())
+	if in.PhoneNO != nil {
+		u.SetPhoneNo(in.GetPhoneNO())
 	}
 	return u
 }
@@ -210,10 +210,10 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserQuery, erro
 		}
 	}
 
-	if conds.PhoneNo != nil {
-		switch conds.GetPhoneNo().GetOp() {
+	if conds.PhoneNO != nil {
+		switch conds.GetPhoneNO().GetOp() {
 		case cruder.EQ:
-			stm.Where(appuser.PhoneNo(conds.GetPhoneNo().GetValue()))
+			stm.Where(appuser.PhoneNo(conds.GetPhoneNO().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid appuser field")
 		}

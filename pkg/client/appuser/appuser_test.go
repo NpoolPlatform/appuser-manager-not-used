@@ -36,7 +36,7 @@ func init() {
 var appDate = npool.AppUser{
 	ID:            uuid.NewString(),
 	AppID:         uuid.NewString(),
-	PhoneNo:       uuid.NewString(),
+	PhoneNO:       uuid.NewString(),
 	EmailAddress:  uuid.NewString(),
 	ImportFromApp: uuid.NewString(),
 }
@@ -45,7 +45,7 @@ var (
 	appInfo = npool.AppUserReq{
 		ID:            &appDate.ID,
 		AppID:         &appDate.AppID,
-		PhoneNo:       &appDate.PhoneNo,
+		PhoneNO:       &appDate.PhoneNO,
 		EmailAddress:  &appDate.EmailAddress,
 		ImportFromApp: &appDate.ImportFromApp,
 	}
@@ -66,14 +66,14 @@ func createAppUsers(t *testing.T) {
 		{
 			ID:            uuid.NewString(),
 			AppID:         uuid.NewString(),
-			PhoneNo:       uuid.NewString(),
+			PhoneNO:       uuid.NewString(),
 			EmailAddress:  uuid.NewString(),
 			ImportFromApp: uuid.NewString(),
 		},
 		{
 			ID:            uuid.NewString(),
 			AppID:         uuid.NewString(),
-			PhoneNo:       uuid.NewString(),
+			PhoneNO:       uuid.NewString(),
 			EmailAddress:  uuid.NewString(),
 			ImportFromApp: uuid.NewString(),
 		},
@@ -84,7 +84,7 @@ func createAppUsers(t *testing.T) {
 		appUsers = append(appUsers, &npool.AppUserReq{
 			ID:            &appDates[key].ID,
 			AppID:         &appDates[key].AppID,
-			PhoneNo:       &appDates[key].PhoneNo,
+			PhoneNO:       &appDates[key].PhoneNO,
 			EmailAddress:  &appDates[key].EmailAddress,
 			ImportFromApp: &appDates[key].ImportFromApp,
 		})

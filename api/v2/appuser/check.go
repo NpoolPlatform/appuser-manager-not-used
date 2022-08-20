@@ -18,6 +18,24 @@ func validate(info *npool.AppUserReq) error {
 		logger.Sugar().Errorw("validate", "AppID", info.GetAppID(), "error", err)
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
+
+	if info.ImportFromApp != nil {
+		if _, err := uuid.Parse(info.GetImportFromApp()); err != nil {
+			logger.Sugar().Errorw("validate", "ImportFromApp", info.GetImportFromApp(), "error", err)
+			return status.Error(codes.InvalidArgument, "ImportFromApp is invalid")
+		}
+	}
+
+	if info.EmailAddress == nil && info.PhoneNO == nil {
+		logger.Sugar().Errorw("validate", "EmailAddress", info.EmailAddress, "PhoneNO", info.PhoneNO)
+		return status.Error(codes.InvalidArgument, "EmailAddress and PhoneNO are empty")
+	}
+
+	if info.GetEmailAddress() == "" && info.GetPhoneNO() == "" {
+		logger.Sugar().Errorw("validate", "EmailAddress", info.EmailAddress, "PhoneNO", info.PhoneNO)
+		return status.Error(codes.InvalidArgument, "EmailAddress and PhoneNO are invalid")
+	}
+
 	return nil
 }
 

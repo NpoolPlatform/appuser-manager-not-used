@@ -14,7 +14,7 @@ func Ent2Grpc(row *ent.AppUser) *npool.AppUser {
 		ID:            row.ID.String(),
 		AppID:         row.AppID.String(),
 		EmailAddress:  row.EmailAddress,
-		PhoneNo:       row.PhoneNo,
+		PhoneNO:       row.PhoneNo,
 		ImportFromApp: row.ImportFromApp.String(),
 	}
 }

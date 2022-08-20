@@ -14,7 +14,7 @@ func trace(span trace1.Span, in *npool.AppUserReq, index int) trace1.Span {
 		attribute.String(fmt.Sprintf("ID.%v", index), in.GetID()),
 		attribute.String(fmt.Sprintf("AppID.%v", index), in.GetAppID()),
 		attribute.String(fmt.Sprintf("EmailAddress.%v", index), in.GetEmailAddress()),
-		attribute.String(fmt.Sprintf("PhoneNo.%v", index), in.GetPhoneNo()),
+		attribute.String(fmt.Sprintf("PhoneNO.%v", index), in.GetPhoneNO()),
 		attribute.String(fmt.Sprintf("ImportFromApp.%v", index), in.GetImportFromApp()),
 	)
 	return span
@@ -32,8 +32,8 @@ func TraceConds(span trace1.Span, in *npool.Conds) trace1.Span {
 		attribute.String("AppID.Val", in.GetAppID().GetValue()),
 		attribute.String("EmailAddress.Op", in.GetEmailAddress().GetOp()),
 		attribute.String("EmailAddress.Val", in.GetEmailAddress().GetValue()),
-		attribute.String("PhoneNo.Op", in.GetPhoneNo().GetOp()),
-		attribute.String("PhoneNo.Val", in.GetPhoneNo().GetValue()),
+		attribute.String("PhoneNO.Op", in.GetPhoneNO().GetOp()),
+		attribute.String("PhoneNO.Val", in.GetPhoneNO().GetValue()),
 		attribute.String("ImportFromApp.Op", in.GetImportFromApp().GetOp()),
 		attribute.String("ImportFromApp.Val", in.GetImportFromApp().GetValue()),
 	)
