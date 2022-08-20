@@ -126,6 +126,32 @@ func (f AppUserThirdPartyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.
 	return f(ctx, mv)
 }
 
+// The AuthFunc type is an adapter to allow the use of ordinary
+// function as Auth mutator.
+type AuthFunc func(context.Context, *ent.AuthMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AuthFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AuthMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AuthMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AuthHistoryFunc type is an adapter to allow the use of ordinary
+// function as AuthHistory mutator.
+type AuthHistoryFunc func(context.Context, *ent.AuthHistoryMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AuthHistoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AuthHistoryMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AuthHistoryMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The BanAppFunc type is an adapter to allow the use of ordinary
 // function as BanApp mutator.
 type BanAppFunc func(context.Context, *ent.BanAppMutation) (ent.Value, error)

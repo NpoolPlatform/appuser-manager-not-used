@@ -12,9 +12,13 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appuserthirdparty"
+	"github.com/NpoolPlatform/appuser-manager/api/v2/authing/auth"
+	"github.com/NpoolPlatform/appuser-manager/api/v2/authing/history"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/banapp"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/banappuser"
+
 	appusermgr "github.com/NpoolPlatform/message/npool/appuser/mgr/v2"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
@@ -36,6 +40,8 @@ func Register(server grpc.ServiceRegistrar) {
 	appuserthirdparty.Register(server)
 	banapp.Register(server)
 	banappuser.Register(server)
+	auth.Register(server)
+	history.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

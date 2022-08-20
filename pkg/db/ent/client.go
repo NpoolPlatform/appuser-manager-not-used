@@ -20,6 +20,8 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/auth"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 
@@ -50,6 +52,10 @@ type Client struct {
 	AppUserSecret *AppUserSecretClient
 	// AppUserThirdParty is the client for interacting with the AppUserThirdParty builders.
 	AppUserThirdParty *AppUserThirdPartyClient
+	// Auth is the client for interacting with the Auth builders.
+	Auth *AuthClient
+	// AuthHistory is the client for interacting with the AuthHistory builders.
+	AuthHistory *AuthHistoryClient
 	// BanApp is the client for interacting with the BanApp builders.
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
@@ -76,6 +82,8 @@ func (c *Client) init() {
 	c.AppUserExtra = NewAppUserExtraClient(c.config)
 	c.AppUserSecret = NewAppUserSecretClient(c.config)
 	c.AppUserThirdParty = NewAppUserThirdPartyClient(c.config)
+	c.Auth = NewAuthClient(c.config)
+	c.AuthHistory = NewAuthHistoryClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 	c.BanAppUser = NewBanAppUserClient(c.config)
 }
@@ -120,6 +128,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AppUserExtra:      NewAppUserExtraClient(cfg),
 		AppUserSecret:     NewAppUserSecretClient(cfg),
 		AppUserThirdParty: NewAppUserThirdPartyClient(cfg),
+		Auth:              NewAuthClient(cfg),
+		AuthHistory:       NewAuthHistoryClient(cfg),
 		BanApp:            NewBanAppClient(cfg),
 		BanAppUser:        NewBanAppUserClient(cfg),
 	}, nil
@@ -150,6 +160,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AppUserExtra:      NewAppUserExtraClient(cfg),
 		AppUserSecret:     NewAppUserSecretClient(cfg),
 		AppUserThirdParty: NewAppUserThirdPartyClient(cfg),
+		Auth:              NewAuthClient(cfg),
+		AuthHistory:       NewAuthHistoryClient(cfg),
 		BanApp:            NewBanAppClient(cfg),
 		BanAppUser:        NewBanAppUserClient(cfg),
 	}, nil
@@ -190,6 +202,8 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AppUserExtra.Use(hooks...)
 	c.AppUserSecret.Use(hooks...)
 	c.AppUserThirdParty.Use(hooks...)
+	c.Auth.Use(hooks...)
+	c.AuthHistory.Use(hooks...)
 	c.BanApp.Use(hooks...)
 	c.BanAppUser.Use(hooks...)
 }
@@ -1011,6 +1025,188 @@ func (c *AppUserThirdPartyClient) GetX(ctx context.Context, id uuid.UUID) *AppUs
 func (c *AppUserThirdPartyClient) Hooks() []Hook {
 	hooks := c.hooks.AppUserThirdParty
 	return append(hooks[:len(hooks):len(hooks)], appuserthirdparty.Hooks[:]...)
+}
+
+// AuthClient is a client for the Auth schema.
+type AuthClient struct {
+	config
+}
+
+// NewAuthClient returns a client for the Auth from the given config.
+func NewAuthClient(c config) *AuthClient {
+	return &AuthClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `auth.Hooks(f(g(h())))`.
+func (c *AuthClient) Use(hooks ...Hook) {
+	c.hooks.Auth = append(c.hooks.Auth, hooks...)
+}
+
+// Create returns a builder for creating a Auth entity.
+func (c *AuthClient) Create() *AuthCreate {
+	mutation := newAuthMutation(c.config, OpCreate)
+	return &AuthCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Auth entities.
+func (c *AuthClient) CreateBulk(builders ...*AuthCreate) *AuthCreateBulk {
+	return &AuthCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Auth.
+func (c *AuthClient) Update() *AuthUpdate {
+	mutation := newAuthMutation(c.config, OpUpdate)
+	return &AuthUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AuthClient) UpdateOne(a *Auth) *AuthUpdateOne {
+	mutation := newAuthMutation(c.config, OpUpdateOne, withAuth(a))
+	return &AuthUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AuthClient) UpdateOneID(id uuid.UUID) *AuthUpdateOne {
+	mutation := newAuthMutation(c.config, OpUpdateOne, withAuthID(id))
+	return &AuthUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Auth.
+func (c *AuthClient) Delete() *AuthDelete {
+	mutation := newAuthMutation(c.config, OpDelete)
+	return &AuthDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AuthClient) DeleteOne(a *Auth) *AuthDeleteOne {
+	return c.DeleteOneID(a.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AuthClient) DeleteOneID(id uuid.UUID) *AuthDeleteOne {
+	builder := c.Delete().Where(auth.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AuthDeleteOne{builder}
+}
+
+// Query returns a query builder for Auth.
+func (c *AuthClient) Query() *AuthQuery {
+	return &AuthQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Auth entity by its id.
+func (c *AuthClient) Get(ctx context.Context, id uuid.UUID) (*Auth, error) {
+	return c.Query().Where(auth.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AuthClient) GetX(ctx context.Context, id uuid.UUID) *Auth {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AuthClient) Hooks() []Hook {
+	hooks := c.hooks.Auth
+	return append(hooks[:len(hooks):len(hooks)], auth.Hooks[:]...)
+}
+
+// AuthHistoryClient is a client for the AuthHistory schema.
+type AuthHistoryClient struct {
+	config
+}
+
+// NewAuthHistoryClient returns a client for the AuthHistory from the given config.
+func NewAuthHistoryClient(c config) *AuthHistoryClient {
+	return &AuthHistoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `authhistory.Hooks(f(g(h())))`.
+func (c *AuthHistoryClient) Use(hooks ...Hook) {
+	c.hooks.AuthHistory = append(c.hooks.AuthHistory, hooks...)
+}
+
+// Create returns a builder for creating a AuthHistory entity.
+func (c *AuthHistoryClient) Create() *AuthHistoryCreate {
+	mutation := newAuthHistoryMutation(c.config, OpCreate)
+	return &AuthHistoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AuthHistory entities.
+func (c *AuthHistoryClient) CreateBulk(builders ...*AuthHistoryCreate) *AuthHistoryCreateBulk {
+	return &AuthHistoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AuthHistory.
+func (c *AuthHistoryClient) Update() *AuthHistoryUpdate {
+	mutation := newAuthHistoryMutation(c.config, OpUpdate)
+	return &AuthHistoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AuthHistoryClient) UpdateOne(ah *AuthHistory) *AuthHistoryUpdateOne {
+	mutation := newAuthHistoryMutation(c.config, OpUpdateOne, withAuthHistory(ah))
+	return &AuthHistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AuthHistoryClient) UpdateOneID(id uuid.UUID) *AuthHistoryUpdateOne {
+	mutation := newAuthHistoryMutation(c.config, OpUpdateOne, withAuthHistoryID(id))
+	return &AuthHistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AuthHistory.
+func (c *AuthHistoryClient) Delete() *AuthHistoryDelete {
+	mutation := newAuthHistoryMutation(c.config, OpDelete)
+	return &AuthHistoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AuthHistoryClient) DeleteOne(ah *AuthHistory) *AuthHistoryDeleteOne {
+	return c.DeleteOneID(ah.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AuthHistoryClient) DeleteOneID(id uuid.UUID) *AuthHistoryDeleteOne {
+	builder := c.Delete().Where(authhistory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AuthHistoryDeleteOne{builder}
+}
+
+// Query returns a query builder for AuthHistory.
+func (c *AuthHistoryClient) Query() *AuthHistoryQuery {
+	return &AuthHistoryQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AuthHistory entity by its id.
+func (c *AuthHistoryClient) Get(ctx context.Context, id uuid.UUID) (*AuthHistory, error) {
+	return c.Query().Where(authhistory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AuthHistoryClient) GetX(ctx context.Context, id uuid.UUID) *AuthHistory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AuthHistoryClient) Hooks() []Hook {
+	hooks := c.hooks.AuthHistory
+	return append(hooks[:len(hooks):len(hooks)], authhistory.Hooks[:]...)
 }
 
 // BanAppClient is a client for the BanApp schema.

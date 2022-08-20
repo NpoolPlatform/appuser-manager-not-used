@@ -14,6 +14,8 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/auth"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
@@ -501,6 +503,110 @@ func init() {
 	appuserthirdpartyDescID := appuserthirdpartyFields[0].Descriptor()
 	// appuserthirdparty.DefaultID holds the default value on creation for the id field.
 	appuserthirdparty.DefaultID = appuserthirdpartyDescID.Default.(func() uuid.UUID)
+	authMixin := schema.Auth{}.Mixin()
+	auth.Policy = privacy.NewPolicies(authMixin[0], schema.Auth{})
+	auth.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := auth.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	authMixinFields0 := authMixin[0].Fields()
+	_ = authMixinFields0
+	authFields := schema.Auth{}.Fields()
+	_ = authFields
+	// authDescCreatedAt is the schema descriptor for created_at field.
+	authDescCreatedAt := authMixinFields0[0].Descriptor()
+	// auth.DefaultCreatedAt holds the default value on creation for the created_at field.
+	auth.DefaultCreatedAt = authDescCreatedAt.Default.(func() uint32)
+	// authDescUpdatedAt is the schema descriptor for updated_at field.
+	authDescUpdatedAt := authMixinFields0[1].Descriptor()
+	// auth.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	auth.DefaultUpdatedAt = authDescUpdatedAt.Default.(func() uint32)
+	// auth.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	auth.UpdateDefaultUpdatedAt = authDescUpdatedAt.UpdateDefault.(func() uint32)
+	// authDescDeletedAt is the schema descriptor for deleted_at field.
+	authDescDeletedAt := authMixinFields0[2].Descriptor()
+	// auth.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	auth.DefaultDeletedAt = authDescDeletedAt.Default.(func() uint32)
+	// authDescAppID is the schema descriptor for app_id field.
+	authDescAppID := authFields[1].Descriptor()
+	// auth.DefaultAppID holds the default value on creation for the app_id field.
+	auth.DefaultAppID = authDescAppID.Default.(func() uuid.UUID)
+	// authDescRoleID is the schema descriptor for role_id field.
+	authDescRoleID := authFields[2].Descriptor()
+	// auth.DefaultRoleID holds the default value on creation for the role_id field.
+	auth.DefaultRoleID = authDescRoleID.Default.(func() uuid.UUID)
+	// authDescUserID is the schema descriptor for user_id field.
+	authDescUserID := authFields[3].Descriptor()
+	// auth.DefaultUserID holds the default value on creation for the user_id field.
+	auth.DefaultUserID = authDescUserID.Default.(func() uuid.UUID)
+	// authDescResource is the schema descriptor for resource field.
+	authDescResource := authFields[4].Descriptor()
+	// auth.DefaultResource holds the default value on creation for the resource field.
+	auth.DefaultResource = authDescResource.Default.(string)
+	// authDescMethod is the schema descriptor for method field.
+	authDescMethod := authFields[5].Descriptor()
+	// auth.DefaultMethod holds the default value on creation for the method field.
+	auth.DefaultMethod = authDescMethod.Default.(string)
+	// authDescID is the schema descriptor for id field.
+	authDescID := authFields[0].Descriptor()
+	// auth.DefaultID holds the default value on creation for the id field.
+	auth.DefaultID = authDescID.Default.(func() uuid.UUID)
+	authhistoryMixin := schema.AuthHistory{}.Mixin()
+	authhistory.Policy = privacy.NewPolicies(authhistoryMixin[0], schema.AuthHistory{})
+	authhistory.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := authhistory.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	authhistoryMixinFields0 := authhistoryMixin[0].Fields()
+	_ = authhistoryMixinFields0
+	authhistoryFields := schema.AuthHistory{}.Fields()
+	_ = authhistoryFields
+	// authhistoryDescCreatedAt is the schema descriptor for created_at field.
+	authhistoryDescCreatedAt := authhistoryMixinFields0[0].Descriptor()
+	// authhistory.DefaultCreatedAt holds the default value on creation for the created_at field.
+	authhistory.DefaultCreatedAt = authhistoryDescCreatedAt.Default.(func() uint32)
+	// authhistoryDescUpdatedAt is the schema descriptor for updated_at field.
+	authhistoryDescUpdatedAt := authhistoryMixinFields0[1].Descriptor()
+	// authhistory.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	authhistory.DefaultUpdatedAt = authhistoryDescUpdatedAt.Default.(func() uint32)
+	// authhistory.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	authhistory.UpdateDefaultUpdatedAt = authhistoryDescUpdatedAt.UpdateDefault.(func() uint32)
+	// authhistoryDescDeletedAt is the schema descriptor for deleted_at field.
+	authhistoryDescDeletedAt := authhistoryMixinFields0[2].Descriptor()
+	// authhistory.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	authhistory.DefaultDeletedAt = authhistoryDescDeletedAt.Default.(func() uint32)
+	// authhistoryDescAppID is the schema descriptor for app_id field.
+	authhistoryDescAppID := authhistoryFields[1].Descriptor()
+	// authhistory.DefaultAppID holds the default value on creation for the app_id field.
+	authhistory.DefaultAppID = authhistoryDescAppID.Default.(func() uuid.UUID)
+	// authhistoryDescUserID is the schema descriptor for user_id field.
+	authhistoryDescUserID := authhistoryFields[2].Descriptor()
+	// authhistory.DefaultUserID holds the default value on creation for the user_id field.
+	authhistory.DefaultUserID = authhistoryDescUserID.Default.(func() uuid.UUID)
+	// authhistoryDescResource is the schema descriptor for resource field.
+	authhistoryDescResource := authhistoryFields[3].Descriptor()
+	// authhistory.DefaultResource holds the default value on creation for the resource field.
+	authhistory.DefaultResource = authhistoryDescResource.Default.(string)
+	// authhistoryDescMethod is the schema descriptor for method field.
+	authhistoryDescMethod := authhistoryFields[4].Descriptor()
+	// authhistory.DefaultMethod holds the default value on creation for the method field.
+	authhistory.DefaultMethod = authhistoryDescMethod.Default.(string)
+	// authhistoryDescAllowed is the schema descriptor for allowed field.
+	authhistoryDescAllowed := authhistoryFields[5].Descriptor()
+	// authhistory.DefaultAllowed holds the default value on creation for the allowed field.
+	authhistory.DefaultAllowed = authhistoryDescAllowed.Default.(bool)
+	// authhistoryDescID is the schema descriptor for id field.
+	authhistoryDescID := authhistoryFields[0].Descriptor()
+	// authhistory.DefaultID holds the default value on creation for the id field.
+	authhistory.DefaultID = authhistoryDescID.Default.(func() uuid.UUID)
 	banappMixin := schema.BanApp{}.Mixin()
 	banapp.Policy = privacy.NewPolicies(banappMixin[0], schema.BanApp{})
 	banapp.Hooks[0] = func(next ent.Mutator) ent.Mutator {

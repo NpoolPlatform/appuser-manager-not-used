@@ -366,6 +366,54 @@ func (f AppUserThirdPartyMutationRuleFunc) EvalMutation(ctx context.Context, m e
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppUserThirdPartyMutation", m)
 }
 
+// The AuthQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AuthQueryRuleFunc func(context.Context, *ent.AuthQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AuthQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AuthQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AuthQuery", q)
+}
+
+// The AuthMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AuthMutationRuleFunc func(context.Context, *ent.AuthMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AuthMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AuthMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AuthMutation", m)
+}
+
+// The AuthHistoryQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type AuthHistoryQueryRuleFunc func(context.Context, *ent.AuthHistoryQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f AuthHistoryQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.AuthHistoryQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AuthHistoryQuery", q)
+}
+
+// The AuthHistoryMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type AuthHistoryMutationRuleFunc func(context.Context, *ent.AuthHistoryMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f AuthHistoryMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.AuthHistoryMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AuthHistoryMutation", m)
+}
+
 // The BanAppQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type BanAppQueryRuleFunc func(context.Context, *ent.BanAppQuery) error
@@ -467,6 +515,10 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.AppUserThirdPartyQuery:
 		return q.Filter(), nil
+	case *ent.AuthQuery:
+		return q.Filter(), nil
+	case *ent.AuthHistoryQuery:
+		return q.Filter(), nil
 	case *ent.BanAppQuery:
 		return q.Filter(), nil
 	case *ent.BanAppUserQuery:
@@ -495,6 +547,10 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.AppUserSecretMutation:
 		return m.Filter(), nil
 	case *ent.AppUserThirdPartyMutation:
+		return m.Filter(), nil
+	case *ent.AuthMutation:
+		return m.Filter(), nil
+	case *ent.AuthHistoryMutation:
 		return m.Filter(), nil
 	case *ent.BanAppMutation:
 		return m.Filter(), nil

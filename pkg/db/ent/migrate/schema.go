@@ -199,6 +199,42 @@ var (
 		Columns:    AppUserThirdPartiesColumns,
 		PrimaryKey: []*schema.Column{AppUserThirdPartiesColumns[0]},
 	}
+	// AuthsColumns holds the columns for the "auths" table.
+	AuthsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "role_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "resource", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "method", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// AuthsTable holds the schema information for the "auths" table.
+	AuthsTable = &schema.Table{
+		Name:       "auths",
+		Columns:    AuthsColumns,
+		PrimaryKey: []*schema.Column{AuthsColumns[0]},
+	}
+	// AuthHistoriesColumns holds the columns for the "auth_histories" table.
+	AuthHistoriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "resource", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "method", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "allowed", Type: field.TypeBool, Nullable: true, Default: false},
+	}
+	// AuthHistoriesTable holds the schema information for the "auth_histories" table.
+	AuthHistoriesTable = &schema.Table{
+		Name:       "auth_histories",
+		Columns:    AuthHistoriesColumns,
+		PrimaryKey: []*schema.Column{AuthHistoriesColumns[0]},
+	}
 	// BanAppsColumns holds the columns for the "ban_apps" table.
 	BanAppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -241,6 +277,8 @@ var (
 		AppUserExtrasTable,
 		AppUserSecretsTable,
 		AppUserThirdPartiesTable,
+		AuthsTable,
+		AuthHistoriesTable,
 		BanAppsTable,
 		BanAppUsersTable,
 	}

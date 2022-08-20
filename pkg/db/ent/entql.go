@@ -12,6 +12,8 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserthirdparty"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/auth"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 
@@ -23,7 +25,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 11)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 13)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   app.Table,
@@ -223,6 +225,48 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[9] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   auth.Table,
+			Columns: auth.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: auth.FieldID,
+			},
+		},
+		Type: "Auth",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			auth.FieldCreatedAt: {Type: field.TypeUint32, Column: auth.FieldCreatedAt},
+			auth.FieldUpdatedAt: {Type: field.TypeUint32, Column: auth.FieldUpdatedAt},
+			auth.FieldDeletedAt: {Type: field.TypeUint32, Column: auth.FieldDeletedAt},
+			auth.FieldAppID:     {Type: field.TypeUUID, Column: auth.FieldAppID},
+			auth.FieldRoleID:    {Type: field.TypeUUID, Column: auth.FieldRoleID},
+			auth.FieldUserID:    {Type: field.TypeUUID, Column: auth.FieldUserID},
+			auth.FieldResource:  {Type: field.TypeString, Column: auth.FieldResource},
+			auth.FieldMethod:    {Type: field.TypeString, Column: auth.FieldMethod},
+		},
+	}
+	graph.Nodes[10] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   authhistory.Table,
+			Columns: authhistory.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: authhistory.FieldID,
+			},
+		},
+		Type: "AuthHistory",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			authhistory.FieldCreatedAt: {Type: field.TypeUint32, Column: authhistory.FieldCreatedAt},
+			authhistory.FieldUpdatedAt: {Type: field.TypeUint32, Column: authhistory.FieldUpdatedAt},
+			authhistory.FieldDeletedAt: {Type: field.TypeUint32, Column: authhistory.FieldDeletedAt},
+			authhistory.FieldAppID:     {Type: field.TypeUUID, Column: authhistory.FieldAppID},
+			authhistory.FieldUserID:    {Type: field.TypeUUID, Column: authhistory.FieldUserID},
+			authhistory.FieldResource:  {Type: field.TypeString, Column: authhistory.FieldResource},
+			authhistory.FieldMethod:    {Type: field.TypeString, Column: authhistory.FieldMethod},
+			authhistory.FieldAllowed:   {Type: field.TypeBool, Column: authhistory.FieldAllowed},
+		},
+	}
+	graph.Nodes[11] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   banapp.Table,
 			Columns: banapp.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -239,7 +283,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			banapp.FieldMessage:   {Type: field.TypeString, Column: banapp.FieldMessage},
 		},
 	}
-	graph.Nodes[10] = &sqlgraph.Node{
+	graph.Nodes[12] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   banappuser.Table,
 			Columns: banappuser.Columns,
@@ -1028,6 +1072,166 @@ func (f *AppUserThirdPartyFilter) WhereThirdPartyAvatar(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (aq *AuthQuery) addPredicate(pred func(s *sql.Selector)) {
+	aq.predicates = append(aq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AuthQuery builder.
+func (aq *AuthQuery) Filter() *AuthFilter {
+	return &AuthFilter{config: aq.config, predicateAdder: aq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AuthMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AuthMutation builder.
+func (m *AuthMutation) Filter() *AuthFilter {
+	return &AuthFilter{config: m.config, predicateAdder: m}
+}
+
+// AuthFilter provides a generic filtering capability at runtime for AuthQuery.
+type AuthFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AuthFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[9].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *AuthFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(auth.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AuthFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(auth.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AuthFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(auth.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AuthFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(auth.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *AuthFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(auth.FieldAppID))
+}
+
+// WhereRoleID applies the entql [16]byte predicate on the role_id field.
+func (f *AuthFilter) WhereRoleID(p entql.ValueP) {
+	f.Where(p.Field(auth.FieldRoleID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *AuthFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(auth.FieldUserID))
+}
+
+// WhereResource applies the entql string predicate on the resource field.
+func (f *AuthFilter) WhereResource(p entql.StringP) {
+	f.Where(p.Field(auth.FieldResource))
+}
+
+// WhereMethod applies the entql string predicate on the method field.
+func (f *AuthFilter) WhereMethod(p entql.StringP) {
+	f.Where(p.Field(auth.FieldMethod))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (ahq *AuthHistoryQuery) addPredicate(pred func(s *sql.Selector)) {
+	ahq.predicates = append(ahq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the AuthHistoryQuery builder.
+func (ahq *AuthHistoryQuery) Filter() *AuthHistoryFilter {
+	return &AuthHistoryFilter{config: ahq.config, predicateAdder: ahq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *AuthHistoryMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the AuthHistoryMutation builder.
+func (m *AuthHistoryMutation) Filter() *AuthHistoryFilter {
+	return &AuthHistoryFilter{config: m.config, predicateAdder: m}
+}
+
+// AuthHistoryFilter provides a generic filtering capability at runtime for AuthHistoryQuery.
+type AuthHistoryFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *AuthHistoryFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *AuthHistoryFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(authhistory.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *AuthHistoryFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(authhistory.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *AuthHistoryFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(authhistory.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *AuthHistoryFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(authhistory.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *AuthHistoryFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(authhistory.FieldAppID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *AuthHistoryFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(authhistory.FieldUserID))
+}
+
+// WhereResource applies the entql string predicate on the resource field.
+func (f *AuthHistoryFilter) WhereResource(p entql.StringP) {
+	f.Where(p.Field(authhistory.FieldResource))
+}
+
+// WhereMethod applies the entql string predicate on the method field.
+func (f *AuthHistoryFilter) WhereMethod(p entql.StringP) {
+	f.Where(p.Field(authhistory.FieldMethod))
+}
+
+// WhereAllowed applies the entql bool predicate on the allowed field.
+func (f *AuthHistoryFilter) WhereAllowed(p entql.BoolP) {
+	f.Where(p.Field(authhistory.FieldAllowed))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (baq *BanAppQuery) addPredicate(pred func(s *sql.Selector)) {
 	baq.predicates = append(baq.predicates, pred)
 }
@@ -1056,7 +1260,7 @@ type BanAppFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *BanAppFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[9].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[11].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1121,7 +1325,7 @@ type BanAppUserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *BanAppUserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[10].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[12].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
