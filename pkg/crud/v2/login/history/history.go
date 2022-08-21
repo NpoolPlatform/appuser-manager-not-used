@@ -214,6 +214,17 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.LoginHistoryQuery,
 		}
 	}
 
+	if conds.Location != nil {
+		switch conds.GetLocation().GetOp() {
+		case cruder.EQ:
+			stm.Where(loginhistory.Location(conds.GetLocation().GetValue()))
+		case cruder.NEQ:
+			stm.Where(loginhistory.LocationNEQ(conds.GetLocation().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid app field")
+		}
+	}
+
 	return stm, nil
 }
 
