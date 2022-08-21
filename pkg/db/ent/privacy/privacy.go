@@ -462,6 +462,30 @@ func (f BanAppUserMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.BanAppUserMutation", m)
 }
 
+// The KycQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type KycQueryRuleFunc func(context.Context, *ent.KycQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f KycQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.KycQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.KycQuery", q)
+}
+
+// The KycMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type KycMutationRuleFunc func(context.Context, *ent.KycMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f KycMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.KycMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.KycMutation", m)
+}
+
 // The LoginHistoryQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type LoginHistoryQueryRuleFunc func(context.Context, *ent.LoginHistoryQuery) error
@@ -547,6 +571,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.BanAppUserQuery:
 		return q.Filter(), nil
+	case *ent.KycQuery:
+		return q.Filter(), nil
 	case *ent.LoginHistoryQuery:
 		return q.Filter(), nil
 	default:
@@ -581,6 +607,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.BanAppMutation:
 		return m.Filter(), nil
 	case *ent.BanAppUserMutation:
+		return m.Filter(), nil
+	case *ent.KycMutation:
 		return m.Filter(), nil
 	case *ent.LoginHistoryMutation:
 		return m.Filter(), nil

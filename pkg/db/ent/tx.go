@@ -40,6 +40,8 @@ type Tx struct {
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
 	BanAppUser *BanAppUserClient
+	// Kyc is the client for interacting with the Kyc builders.
+	Kyc *KycClient
 	// LoginHistory is the client for interacting with the LoginHistory builders.
 	LoginHistory *LoginHistoryClient
 
@@ -190,6 +192,7 @@ func (tx *Tx) init() {
 	tx.AuthHistory = NewAuthHistoryClient(tx.config)
 	tx.BanApp = NewBanAppClient(tx.config)
 	tx.BanAppUser = NewBanAppUserClient(tx.config)
+	tx.Kyc = NewKycClient(tx.config)
 	tx.LoginHistory = NewLoginHistoryClient(tx.config)
 }
 

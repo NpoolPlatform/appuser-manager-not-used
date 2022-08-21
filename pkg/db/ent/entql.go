@@ -16,6 +16,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 
 	"entgo.io/ent/dialect/sql"
@@ -26,7 +27,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 14)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 15)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   app.Table,
@@ -304,6 +305,29 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 	}
 	graph.Nodes[13] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   kyc.Table,
+			Columns: kyc.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: kyc.FieldID,
+			},
+		},
+		Type: "Kyc",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			kyc.FieldCreatedAt:    {Type: field.TypeUint32, Column: kyc.FieldCreatedAt},
+			kyc.FieldUpdatedAt:    {Type: field.TypeUint32, Column: kyc.FieldUpdatedAt},
+			kyc.FieldDeletedAt:    {Type: field.TypeUint32, Column: kyc.FieldDeletedAt},
+			kyc.FieldAppID:        {Type: field.TypeUUID, Column: kyc.FieldAppID},
+			kyc.FieldUserID:       {Type: field.TypeUUID, Column: kyc.FieldUserID},
+			kyc.FieldDocumentType: {Type: field.TypeString, Column: kyc.FieldDocumentType},
+			kyc.FieldIDNumber:     {Type: field.TypeString, Column: kyc.FieldIDNumber},
+			kyc.FieldFrontImg:     {Type: field.TypeString, Column: kyc.FieldFrontImg},
+			kyc.FieldBackImg:      {Type: field.TypeString, Column: kyc.FieldBackImg},
+			kyc.FieldSelfieImg:    {Type: field.TypeString, Column: kyc.FieldSelfieImg},
+		},
+	}
+	graph.Nodes[14] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   loginhistory.Table,
 			Columns: loginhistory.Columns,
@@ -1389,6 +1413,96 @@ func (f *BanAppUserFilter) WhereMessage(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (kq *KycQuery) addPredicate(pred func(s *sql.Selector)) {
+	kq.predicates = append(kq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the KycQuery builder.
+func (kq *KycQuery) Filter() *KycFilter {
+	return &KycFilter{config: kq.config, predicateAdder: kq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *KycMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the KycMutation builder.
+func (m *KycMutation) Filter() *KycFilter {
+	return &KycFilter{config: m.config, predicateAdder: m}
+}
+
+// KycFilter provides a generic filtering capability at runtime for KycQuery.
+type KycFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *KycFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *KycFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(kyc.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *KycFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(kyc.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *KycFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(kyc.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *KycFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(kyc.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *KycFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(kyc.FieldAppID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *KycFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(kyc.FieldUserID))
+}
+
+// WhereDocumentType applies the entql string predicate on the document_type field.
+func (f *KycFilter) WhereDocumentType(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldDocumentType))
+}
+
+// WhereIDNumber applies the entql string predicate on the id_number field.
+func (f *KycFilter) WhereIDNumber(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldIDNumber))
+}
+
+// WhereFrontImg applies the entql string predicate on the front_img field.
+func (f *KycFilter) WhereFrontImg(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldFrontImg))
+}
+
+// WhereBackImg applies the entql string predicate on the back_img field.
+func (f *KycFilter) WhereBackImg(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldBackImg))
+}
+
+// WhereSelfieImg applies the entql string predicate on the selfie_img field.
+func (f *KycFilter) WhereSelfieImg(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldSelfieImg))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (lhq *LoginHistoryQuery) addPredicate(pred func(s *sql.Selector)) {
 	lhq.predicates = append(lhq.predicates, pred)
 }
@@ -1417,7 +1531,7 @@ type LoginHistoryFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LoginHistoryFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[14].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

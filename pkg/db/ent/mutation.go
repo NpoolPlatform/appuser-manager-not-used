@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
@@ -50,6 +51,7 @@ const (
 	TypeAuthHistory       = "AuthHistory"
 	TypeBanApp            = "BanApp"
 	TypeBanAppUser        = "BanAppUser"
+	TypeKyc               = "Kyc"
 	TypeLoginHistory      = "LoginHistory"
 )
 
@@ -11522,6 +11524,1047 @@ func (m *BanAppUserMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *BanAppUserMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown BanAppUser edge %s", name)
+}
+
+// KycMutation represents an operation that mutates the Kyc nodes in the graph.
+type KycMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	app_id        *uuid.UUID
+	user_id       *uuid.UUID
+	document_type *string
+	id_number     *string
+	front_img     *string
+	back_img      *string
+	selfie_img    *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Kyc, error)
+	predicates    []predicate.Kyc
+}
+
+var _ ent.Mutation = (*KycMutation)(nil)
+
+// kycOption allows management of the mutation configuration using functional options.
+type kycOption func(*KycMutation)
+
+// newKycMutation creates new mutation for the Kyc entity.
+func newKycMutation(c config, op Op, opts ...kycOption) *KycMutation {
+	m := &KycMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeKyc,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withKycID sets the ID field of the mutation.
+func withKycID(id uuid.UUID) kycOption {
+	return func(m *KycMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Kyc
+		)
+		m.oldValue = func(ctx context.Context) (*Kyc, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Kyc.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withKyc sets the old Kyc of the mutation.
+func withKyc(node *Kyc) kycOption {
+	return func(m *KycMutation) {
+		m.oldValue = func(context.Context) (*Kyc, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m KycMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m KycMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Kyc entities.
+func (m *KycMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *KycMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *KycMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Kyc.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *KycMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *KycMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *KycMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *KycMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *KycMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *KycMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *KycMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *KycMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *KycMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *KycMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *KycMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *KycMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *KycMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *KycMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *KycMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAppID sets the "app_id" field.
+func (m *KycMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *KycMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (m *KycMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[kyc.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *KycMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldAppID]
+	return ok
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *KycMutation) ResetAppID() {
+	m.app_id = nil
+	delete(m.clearedFields, kyc.FieldAppID)
+}
+
+// SetUserID sets the "user_id" field.
+func (m *KycMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *KycMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *KycMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[kyc.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *KycMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *KycMutation) ResetUserID() {
+	m.user_id = nil
+	delete(m.clearedFields, kyc.FieldUserID)
+}
+
+// SetDocumentType sets the "document_type" field.
+func (m *KycMutation) SetDocumentType(s string) {
+	m.document_type = &s
+}
+
+// DocumentType returns the value of the "document_type" field in the mutation.
+func (m *KycMutation) DocumentType() (r string, exists bool) {
+	v := m.document_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDocumentType returns the old "document_type" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldDocumentType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDocumentType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDocumentType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDocumentType: %w", err)
+	}
+	return oldValue.DocumentType, nil
+}
+
+// ClearDocumentType clears the value of the "document_type" field.
+func (m *KycMutation) ClearDocumentType() {
+	m.document_type = nil
+	m.clearedFields[kyc.FieldDocumentType] = struct{}{}
+}
+
+// DocumentTypeCleared returns if the "document_type" field was cleared in this mutation.
+func (m *KycMutation) DocumentTypeCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldDocumentType]
+	return ok
+}
+
+// ResetDocumentType resets all changes to the "document_type" field.
+func (m *KycMutation) ResetDocumentType() {
+	m.document_type = nil
+	delete(m.clearedFields, kyc.FieldDocumentType)
+}
+
+// SetIDNumber sets the "id_number" field.
+func (m *KycMutation) SetIDNumber(s string) {
+	m.id_number = &s
+}
+
+// IDNumber returns the value of the "id_number" field in the mutation.
+func (m *KycMutation) IDNumber() (r string, exists bool) {
+	v := m.id_number
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIDNumber returns the old "id_number" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldIDNumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIDNumber is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIDNumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIDNumber: %w", err)
+	}
+	return oldValue.IDNumber, nil
+}
+
+// ClearIDNumber clears the value of the "id_number" field.
+func (m *KycMutation) ClearIDNumber() {
+	m.id_number = nil
+	m.clearedFields[kyc.FieldIDNumber] = struct{}{}
+}
+
+// IDNumberCleared returns if the "id_number" field was cleared in this mutation.
+func (m *KycMutation) IDNumberCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldIDNumber]
+	return ok
+}
+
+// ResetIDNumber resets all changes to the "id_number" field.
+func (m *KycMutation) ResetIDNumber() {
+	m.id_number = nil
+	delete(m.clearedFields, kyc.FieldIDNumber)
+}
+
+// SetFrontImg sets the "front_img" field.
+func (m *KycMutation) SetFrontImg(s string) {
+	m.front_img = &s
+}
+
+// FrontImg returns the value of the "front_img" field in the mutation.
+func (m *KycMutation) FrontImg() (r string, exists bool) {
+	v := m.front_img
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFrontImg returns the old "front_img" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldFrontImg(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFrontImg is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFrontImg requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFrontImg: %w", err)
+	}
+	return oldValue.FrontImg, nil
+}
+
+// ClearFrontImg clears the value of the "front_img" field.
+func (m *KycMutation) ClearFrontImg() {
+	m.front_img = nil
+	m.clearedFields[kyc.FieldFrontImg] = struct{}{}
+}
+
+// FrontImgCleared returns if the "front_img" field was cleared in this mutation.
+func (m *KycMutation) FrontImgCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldFrontImg]
+	return ok
+}
+
+// ResetFrontImg resets all changes to the "front_img" field.
+func (m *KycMutation) ResetFrontImg() {
+	m.front_img = nil
+	delete(m.clearedFields, kyc.FieldFrontImg)
+}
+
+// SetBackImg sets the "back_img" field.
+func (m *KycMutation) SetBackImg(s string) {
+	m.back_img = &s
+}
+
+// BackImg returns the value of the "back_img" field in the mutation.
+func (m *KycMutation) BackImg() (r string, exists bool) {
+	v := m.back_img
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBackImg returns the old "back_img" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldBackImg(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBackImg is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBackImg requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBackImg: %w", err)
+	}
+	return oldValue.BackImg, nil
+}
+
+// ClearBackImg clears the value of the "back_img" field.
+func (m *KycMutation) ClearBackImg() {
+	m.back_img = nil
+	m.clearedFields[kyc.FieldBackImg] = struct{}{}
+}
+
+// BackImgCleared returns if the "back_img" field was cleared in this mutation.
+func (m *KycMutation) BackImgCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldBackImg]
+	return ok
+}
+
+// ResetBackImg resets all changes to the "back_img" field.
+func (m *KycMutation) ResetBackImg() {
+	m.back_img = nil
+	delete(m.clearedFields, kyc.FieldBackImg)
+}
+
+// SetSelfieImg sets the "selfie_img" field.
+func (m *KycMutation) SetSelfieImg(s string) {
+	m.selfie_img = &s
+}
+
+// SelfieImg returns the value of the "selfie_img" field in the mutation.
+func (m *KycMutation) SelfieImg() (r string, exists bool) {
+	v := m.selfie_img
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSelfieImg returns the old "selfie_img" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldSelfieImg(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSelfieImg is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSelfieImg requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSelfieImg: %w", err)
+	}
+	return oldValue.SelfieImg, nil
+}
+
+// ClearSelfieImg clears the value of the "selfie_img" field.
+func (m *KycMutation) ClearSelfieImg() {
+	m.selfie_img = nil
+	m.clearedFields[kyc.FieldSelfieImg] = struct{}{}
+}
+
+// SelfieImgCleared returns if the "selfie_img" field was cleared in this mutation.
+func (m *KycMutation) SelfieImgCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldSelfieImg]
+	return ok
+}
+
+// ResetSelfieImg resets all changes to the "selfie_img" field.
+func (m *KycMutation) ResetSelfieImg() {
+	m.selfie_img = nil
+	delete(m.clearedFields, kyc.FieldSelfieImg)
+}
+
+// Where appends a list predicates to the KycMutation builder.
+func (m *KycMutation) Where(ps ...predicate.Kyc) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *KycMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Kyc).
+func (m *KycMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *KycMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.created_at != nil {
+		fields = append(fields, kyc.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, kyc.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, kyc.FieldDeletedAt)
+	}
+	if m.app_id != nil {
+		fields = append(fields, kyc.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, kyc.FieldUserID)
+	}
+	if m.document_type != nil {
+		fields = append(fields, kyc.FieldDocumentType)
+	}
+	if m.id_number != nil {
+		fields = append(fields, kyc.FieldIDNumber)
+	}
+	if m.front_img != nil {
+		fields = append(fields, kyc.FieldFrontImg)
+	}
+	if m.back_img != nil {
+		fields = append(fields, kyc.FieldBackImg)
+	}
+	if m.selfie_img != nil {
+		fields = append(fields, kyc.FieldSelfieImg)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *KycMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case kyc.FieldCreatedAt:
+		return m.CreatedAt()
+	case kyc.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case kyc.FieldDeletedAt:
+		return m.DeletedAt()
+	case kyc.FieldAppID:
+		return m.AppID()
+	case kyc.FieldUserID:
+		return m.UserID()
+	case kyc.FieldDocumentType:
+		return m.DocumentType()
+	case kyc.FieldIDNumber:
+		return m.IDNumber()
+	case kyc.FieldFrontImg:
+		return m.FrontImg()
+	case kyc.FieldBackImg:
+		return m.BackImg()
+	case kyc.FieldSelfieImg:
+		return m.SelfieImg()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *KycMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case kyc.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case kyc.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case kyc.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case kyc.FieldAppID:
+		return m.OldAppID(ctx)
+	case kyc.FieldUserID:
+		return m.OldUserID(ctx)
+	case kyc.FieldDocumentType:
+		return m.OldDocumentType(ctx)
+	case kyc.FieldIDNumber:
+		return m.OldIDNumber(ctx)
+	case kyc.FieldFrontImg:
+		return m.OldFrontImg(ctx)
+	case kyc.FieldBackImg:
+		return m.OldBackImg(ctx)
+	case kyc.FieldSelfieImg:
+		return m.OldSelfieImg(ctx)
+	}
+	return nil, fmt.Errorf("unknown Kyc field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *KycMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case kyc.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case kyc.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case kyc.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case kyc.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case kyc.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case kyc.FieldDocumentType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDocumentType(v)
+		return nil
+	case kyc.FieldIDNumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIDNumber(v)
+		return nil
+	case kyc.FieldFrontImg:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFrontImg(v)
+		return nil
+	case kyc.FieldBackImg:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBackImg(v)
+		return nil
+	case kyc.FieldSelfieImg:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSelfieImg(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Kyc field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *KycMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, kyc.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, kyc.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, kyc.FieldDeletedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *KycMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case kyc.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case kyc.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case kyc.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *KycMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case kyc.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case kyc.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case kyc.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Kyc numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *KycMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(kyc.FieldAppID) {
+		fields = append(fields, kyc.FieldAppID)
+	}
+	if m.FieldCleared(kyc.FieldUserID) {
+		fields = append(fields, kyc.FieldUserID)
+	}
+	if m.FieldCleared(kyc.FieldDocumentType) {
+		fields = append(fields, kyc.FieldDocumentType)
+	}
+	if m.FieldCleared(kyc.FieldIDNumber) {
+		fields = append(fields, kyc.FieldIDNumber)
+	}
+	if m.FieldCleared(kyc.FieldFrontImg) {
+		fields = append(fields, kyc.FieldFrontImg)
+	}
+	if m.FieldCleared(kyc.FieldBackImg) {
+		fields = append(fields, kyc.FieldBackImg)
+	}
+	if m.FieldCleared(kyc.FieldSelfieImg) {
+		fields = append(fields, kyc.FieldSelfieImg)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *KycMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *KycMutation) ClearField(name string) error {
+	switch name {
+	case kyc.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case kyc.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case kyc.FieldDocumentType:
+		m.ClearDocumentType()
+		return nil
+	case kyc.FieldIDNumber:
+		m.ClearIDNumber()
+		return nil
+	case kyc.FieldFrontImg:
+		m.ClearFrontImg()
+		return nil
+	case kyc.FieldBackImg:
+		m.ClearBackImg()
+		return nil
+	case kyc.FieldSelfieImg:
+		m.ClearSelfieImg()
+		return nil
+	}
+	return fmt.Errorf("unknown Kyc nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *KycMutation) ResetField(name string) error {
+	switch name {
+	case kyc.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case kyc.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case kyc.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case kyc.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case kyc.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case kyc.FieldDocumentType:
+		m.ResetDocumentType()
+		return nil
+	case kyc.FieldIDNumber:
+		m.ResetIDNumber()
+		return nil
+	case kyc.FieldFrontImg:
+		m.ResetFrontImg()
+		return nil
+	case kyc.FieldBackImg:
+		m.ResetBackImg()
+		return nil
+	case kyc.FieldSelfieImg:
+		m.ResetSelfieImg()
+		return nil
+	}
+	return fmt.Errorf("unknown Kyc field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *KycMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *KycMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *KycMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *KycMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *KycMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *KycMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *KycMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Kyc unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *KycMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Kyc edge %s", name)
 }
 
 // LoginHistoryMutation represents an operation that mutates the LoginHistory nodes in the graph.

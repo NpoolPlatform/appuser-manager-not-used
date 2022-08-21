@@ -266,6 +266,26 @@ var (
 		Columns:    BanAppUsersColumns,
 		PrimaryKey: []*schema.Column{BanAppUsersColumns[0]},
 	}
+	// KycsColumns holds the columns for the "kycs" table.
+	KycsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "document_type", Type: field.TypeString, Nullable: true, Default: "DefaultKycDocumentType"},
+		{Name: "id_number", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "front_img", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "back_img", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "selfie_img", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// KycsTable holds the schema information for the "kycs" table.
+	KycsTable = &schema.Table{
+		Name:       "kycs",
+		Columns:    KycsColumns,
+		PrimaryKey: []*schema.Column{KycsColumns[0]},
+	}
 	// LoginHistoriesColumns holds the columns for the "login_histories" table.
 	LoginHistoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -299,6 +319,7 @@ var (
 		AuthHistoriesTable,
 		BanAppsTable,
 		BanAppUsersTable,
+		KycsTable,
 		LoginHistoriesTable,
 	}
 )

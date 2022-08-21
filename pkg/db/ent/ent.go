@@ -23,6 +23,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 )
 
@@ -57,6 +58,7 @@ func columnChecker(table string) func(string) error {
 		authhistory.Table:       authhistory.ValidColumn,
 		banapp.Table:            banapp.ValidColumn,
 		banappuser.Table:        banappuser.ValidColumn,
+		kyc.Table:               kyc.ValidColumn,
 		loginhistory.Table:      loginhistory.ValidColumn,
 	}
 	check, ok := checks[table]

@@ -41,6 +41,7 @@ type hooks struct {
 	AuthHistory       []ent.Hook
 	BanApp            []ent.Hook
 	BanAppUser        []ent.Hook
+	Kyc               []ent.Hook
 	LoginHistory      []ent.Hook
 }
 

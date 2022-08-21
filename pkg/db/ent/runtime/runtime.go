@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
@@ -680,6 +681,66 @@ func init() {
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.
 	banappuser.DefaultID = banappuserDescID.Default.(func() uuid.UUID)
+	kycMixin := schema.Kyc{}.Mixin()
+	kyc.Policy = privacy.NewPolicies(kycMixin[0], schema.Kyc{})
+	kyc.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := kyc.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	kycMixinFields0 := kycMixin[0].Fields()
+	_ = kycMixinFields0
+	kycFields := schema.Kyc{}.Fields()
+	_ = kycFields
+	// kycDescCreatedAt is the schema descriptor for created_at field.
+	kycDescCreatedAt := kycMixinFields0[0].Descriptor()
+	// kyc.DefaultCreatedAt holds the default value on creation for the created_at field.
+	kyc.DefaultCreatedAt = kycDescCreatedAt.Default.(func() uint32)
+	// kycDescUpdatedAt is the schema descriptor for updated_at field.
+	kycDescUpdatedAt := kycMixinFields0[1].Descriptor()
+	// kyc.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	kyc.DefaultUpdatedAt = kycDescUpdatedAt.Default.(func() uint32)
+	// kyc.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	kyc.UpdateDefaultUpdatedAt = kycDescUpdatedAt.UpdateDefault.(func() uint32)
+	// kycDescDeletedAt is the schema descriptor for deleted_at field.
+	kycDescDeletedAt := kycMixinFields0[2].Descriptor()
+	// kyc.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	kyc.DefaultDeletedAt = kycDescDeletedAt.Default.(func() uint32)
+	// kycDescAppID is the schema descriptor for app_id field.
+	kycDescAppID := kycFields[1].Descriptor()
+	// kyc.DefaultAppID holds the default value on creation for the app_id field.
+	kyc.DefaultAppID = kycDescAppID.Default.(func() uuid.UUID)
+	// kycDescUserID is the schema descriptor for user_id field.
+	kycDescUserID := kycFields[2].Descriptor()
+	// kyc.DefaultUserID holds the default value on creation for the user_id field.
+	kyc.DefaultUserID = kycDescUserID.Default.(func() uuid.UUID)
+	// kycDescDocumentType is the schema descriptor for document_type field.
+	kycDescDocumentType := kycFields[3].Descriptor()
+	// kyc.DefaultDocumentType holds the default value on creation for the document_type field.
+	kyc.DefaultDocumentType = kycDescDocumentType.Default.(string)
+	// kycDescIDNumber is the schema descriptor for id_number field.
+	kycDescIDNumber := kycFields[4].Descriptor()
+	// kyc.DefaultIDNumber holds the default value on creation for the id_number field.
+	kyc.DefaultIDNumber = kycDescIDNumber.Default.(string)
+	// kycDescFrontImg is the schema descriptor for front_img field.
+	kycDescFrontImg := kycFields[5].Descriptor()
+	// kyc.DefaultFrontImg holds the default value on creation for the front_img field.
+	kyc.DefaultFrontImg = kycDescFrontImg.Default.(string)
+	// kycDescBackImg is the schema descriptor for back_img field.
+	kycDescBackImg := kycFields[6].Descriptor()
+	// kyc.DefaultBackImg holds the default value on creation for the back_img field.
+	kyc.DefaultBackImg = kycDescBackImg.Default.(string)
+	// kycDescSelfieImg is the schema descriptor for selfie_img field.
+	kycDescSelfieImg := kycFields[7].Descriptor()
+	// kyc.DefaultSelfieImg holds the default value on creation for the selfie_img field.
+	kyc.DefaultSelfieImg = kycDescSelfieImg.Default.(string)
+	// kycDescID is the schema descriptor for id field.
+	kycDescID := kycFields[0].Descriptor()
+	// kyc.DefaultID holds the default value on creation for the id field.
+	kyc.DefaultID = kycDescID.Default.(func() uuid.UUID)
 	loginhistoryMixin := schema.LoginHistory{}.Mixin()
 	loginhistory.Policy = privacy.NewPolicies(loginhistoryMixin[0], schema.LoginHistory{})
 	loginhistory.Hooks[0] = func(next ent.Mutator) ent.Mutator {

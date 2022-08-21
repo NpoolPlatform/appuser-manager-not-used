@@ -24,6 +24,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 
 	"entgo.io/ent/dialect"
@@ -61,6 +62,8 @@ type Client struct {
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
 	BanAppUser *BanAppUserClient
+	// Kyc is the client for interacting with the Kyc builders.
+	Kyc *KycClient
 	// LoginHistory is the client for interacting with the LoginHistory builders.
 	LoginHistory *LoginHistoryClient
 }
@@ -89,6 +92,7 @@ func (c *Client) init() {
 	c.AuthHistory = NewAuthHistoryClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 	c.BanAppUser = NewBanAppUserClient(c.config)
+	c.Kyc = NewKycClient(c.config)
 	c.LoginHistory = NewLoginHistoryClient(c.config)
 }
 
@@ -136,6 +140,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AuthHistory:       NewAuthHistoryClient(cfg),
 		BanApp:            NewBanAppClient(cfg),
 		BanAppUser:        NewBanAppUserClient(cfg),
+		Kyc:               NewKycClient(cfg),
 		LoginHistory:      NewLoginHistoryClient(cfg),
 	}, nil
 }
@@ -169,6 +174,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AuthHistory:       NewAuthHistoryClient(cfg),
 		BanApp:            NewBanAppClient(cfg),
 		BanAppUser:        NewBanAppUserClient(cfg),
+		Kyc:               NewKycClient(cfg),
 		LoginHistory:      NewLoginHistoryClient(cfg),
 	}, nil
 }
@@ -212,6 +218,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AuthHistory.Use(hooks...)
 	c.BanApp.Use(hooks...)
 	c.BanAppUser.Use(hooks...)
+	c.Kyc.Use(hooks...)
 	c.LoginHistory.Use(hooks...)
 }
 
@@ -1396,6 +1403,97 @@ func (c *BanAppUserClient) GetX(ctx context.Context, id uuid.UUID) *BanAppUser {
 func (c *BanAppUserClient) Hooks() []Hook {
 	hooks := c.hooks.BanAppUser
 	return append(hooks[:len(hooks):len(hooks)], banappuser.Hooks[:]...)
+}
+
+// KycClient is a client for the Kyc schema.
+type KycClient struct {
+	config
+}
+
+// NewKycClient returns a client for the Kyc from the given config.
+func NewKycClient(c config) *KycClient {
+	return &KycClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `kyc.Hooks(f(g(h())))`.
+func (c *KycClient) Use(hooks ...Hook) {
+	c.hooks.Kyc = append(c.hooks.Kyc, hooks...)
+}
+
+// Create returns a builder for creating a Kyc entity.
+func (c *KycClient) Create() *KycCreate {
+	mutation := newKycMutation(c.config, OpCreate)
+	return &KycCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Kyc entities.
+func (c *KycClient) CreateBulk(builders ...*KycCreate) *KycCreateBulk {
+	return &KycCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Kyc.
+func (c *KycClient) Update() *KycUpdate {
+	mutation := newKycMutation(c.config, OpUpdate)
+	return &KycUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *KycClient) UpdateOne(k *Kyc) *KycUpdateOne {
+	mutation := newKycMutation(c.config, OpUpdateOne, withKyc(k))
+	return &KycUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *KycClient) UpdateOneID(id uuid.UUID) *KycUpdateOne {
+	mutation := newKycMutation(c.config, OpUpdateOne, withKycID(id))
+	return &KycUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Kyc.
+func (c *KycClient) Delete() *KycDelete {
+	mutation := newKycMutation(c.config, OpDelete)
+	return &KycDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *KycClient) DeleteOne(k *Kyc) *KycDeleteOne {
+	return c.DeleteOneID(k.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *KycClient) DeleteOneID(id uuid.UUID) *KycDeleteOne {
+	builder := c.Delete().Where(kyc.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &KycDeleteOne{builder}
+}
+
+// Query returns a query builder for Kyc.
+func (c *KycClient) Query() *KycQuery {
+	return &KycQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Kyc entity by its id.
+func (c *KycClient) Get(ctx context.Context, id uuid.UUID) (*Kyc, error) {
+	return c.Query().Where(kyc.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *KycClient) GetX(ctx context.Context, id uuid.UUID) *Kyc {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *KycClient) Hooks() []Hook {
+	hooks := c.hooks.Kyc
+	return append(hooks[:len(hooks):len(hooks)], kyc.Hooks[:]...)
 }
 
 // LoginHistoryClient is a client for the LoginHistory schema.
