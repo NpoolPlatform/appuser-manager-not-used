@@ -40,6 +40,8 @@ type Tx struct {
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
 	BanAppUser *BanAppUserClient
+	// LoginHistory is the client for interacting with the LoginHistory builders.
+	LoginHistory *LoginHistoryClient
 
 	// lazily loaded.
 	client     *Client
@@ -188,6 +190,7 @@ func (tx *Tx) init() {
 	tx.AuthHistory = NewAuthHistoryClient(tx.config)
 	tx.BanApp = NewBanAppClient(tx.config)
 	tx.BanAppUser = NewBanAppUserClient(tx.config)
+	tx.LoginHistory = NewLoginHistoryClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

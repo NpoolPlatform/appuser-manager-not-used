@@ -16,6 +16,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -25,7 +26,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 13)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 14)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   app.Table,
@@ -300,6 +301,24 @@ var schemaGraph = func() *sqlgraph.Schema {
 			banappuser.FieldAppID:     {Type: field.TypeUUID, Column: banappuser.FieldAppID},
 			banappuser.FieldUserID:    {Type: field.TypeUUID, Column: banappuser.FieldUserID},
 			banappuser.FieldMessage:   {Type: field.TypeString, Column: banappuser.FieldMessage},
+		},
+	}
+	graph.Nodes[13] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   loginhistory.Table,
+			Columns: loginhistory.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: loginhistory.FieldID,
+			},
+		},
+		Type: "LoginHistory",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			loginhistory.FieldAppID:     {Type: field.TypeUUID, Column: loginhistory.FieldAppID},
+			loginhistory.FieldUserID:    {Type: field.TypeUUID, Column: loginhistory.FieldUserID},
+			loginhistory.FieldClientIP:  {Type: field.TypeString, Column: loginhistory.FieldClientIP},
+			loginhistory.FieldUserAgent: {Type: field.TypeString, Column: loginhistory.FieldUserAgent},
+			loginhistory.FieldLocation:  {Type: field.TypeString, Column: loginhistory.FieldLocation},
 		},
 	}
 	return graph
@@ -1364,4 +1383,69 @@ func (f *BanAppUserFilter) WhereUserID(p entql.ValueP) {
 // WhereMessage applies the entql string predicate on the message field.
 func (f *BanAppUserFilter) WhereMessage(p entql.StringP) {
 	f.Where(p.Field(banappuser.FieldMessage))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (lhq *LoginHistoryQuery) addPredicate(pred func(s *sql.Selector)) {
+	lhq.predicates = append(lhq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the LoginHistoryQuery builder.
+func (lhq *LoginHistoryQuery) Filter() *LoginHistoryFilter {
+	return &LoginHistoryFilter{config: lhq.config, predicateAdder: lhq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *LoginHistoryMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the LoginHistoryMutation builder.
+func (m *LoginHistoryMutation) Filter() *LoginHistoryFilter {
+	return &LoginHistoryFilter{config: m.config, predicateAdder: m}
+}
+
+// LoginHistoryFilter provides a generic filtering capability at runtime for LoginHistoryQuery.
+type LoginHistoryFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *LoginHistoryFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[13].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *LoginHistoryFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(loginhistory.FieldID))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *LoginHistoryFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(loginhistory.FieldAppID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *LoginHistoryFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(loginhistory.FieldUserID))
+}
+
+// WhereClientIP applies the entql string predicate on the client_ip field.
+func (f *LoginHistoryFilter) WhereClientIP(p entql.StringP) {
+	f.Where(p.Field(loginhistory.FieldClientIP))
+}
+
+// WhereUserAgent applies the entql string predicate on the user_agent field.
+func (f *LoginHistoryFilter) WhereUserAgent(p entql.StringP) {
+	f.Where(p.Field(loginhistory.FieldUserAgent))
+}
+
+// WhereLocation applies the entql string predicate on the location field.
+func (f *LoginHistoryFilter) WhereLocation(p entql.StringP) {
+	f.Where(p.Field(loginhistory.FieldLocation))
 }

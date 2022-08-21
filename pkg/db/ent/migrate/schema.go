@@ -266,6 +266,21 @@ var (
 		Columns:    BanAppUsersColumns,
 		PrimaryKey: []*schema.Column{BanAppUsersColumns[0]},
 	}
+	// LoginHistoriesColumns holds the columns for the "login_histories" table.
+	LoginHistoriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "client_ip", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "user_agent", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "location", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// LoginHistoriesTable holds the schema information for the "login_histories" table.
+	LoginHistoriesTable = &schema.Table{
+		Name:       "login_histories",
+		Columns:    LoginHistoriesColumns,
+		PrimaryKey: []*schema.Column{LoginHistoriesColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
@@ -281,6 +296,7 @@ var (
 		AuthHistoriesTable,
 		BanAppsTable,
 		BanAppUsersTable,
+		LoginHistoriesTable,
 	}
 )
 

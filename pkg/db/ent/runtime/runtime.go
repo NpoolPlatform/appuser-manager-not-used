@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/google/uuid"
 
@@ -679,6 +680,32 @@ func init() {
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.
 	banappuser.DefaultID = banappuserDescID.Default.(func() uuid.UUID)
+	loginhistoryFields := schema.LoginHistory{}.Fields()
+	_ = loginhistoryFields
+	// loginhistoryDescAppID is the schema descriptor for app_id field.
+	loginhistoryDescAppID := loginhistoryFields[1].Descriptor()
+	// loginhistory.DefaultAppID holds the default value on creation for the app_id field.
+	loginhistory.DefaultAppID = loginhistoryDescAppID.Default.(func() uuid.UUID)
+	// loginhistoryDescUserID is the schema descriptor for user_id field.
+	loginhistoryDescUserID := loginhistoryFields[2].Descriptor()
+	// loginhistory.DefaultUserID holds the default value on creation for the user_id field.
+	loginhistory.DefaultUserID = loginhistoryDescUserID.Default.(func() uuid.UUID)
+	// loginhistoryDescClientIP is the schema descriptor for client_ip field.
+	loginhistoryDescClientIP := loginhistoryFields[3].Descriptor()
+	// loginhistory.DefaultClientIP holds the default value on creation for the client_ip field.
+	loginhistory.DefaultClientIP = loginhistoryDescClientIP.Default.(string)
+	// loginhistoryDescUserAgent is the schema descriptor for user_agent field.
+	loginhistoryDescUserAgent := loginhistoryFields[4].Descriptor()
+	// loginhistory.DefaultUserAgent holds the default value on creation for the user_agent field.
+	loginhistory.DefaultUserAgent = loginhistoryDescUserAgent.Default.(string)
+	// loginhistoryDescLocation is the schema descriptor for location field.
+	loginhistoryDescLocation := loginhistoryFields[5].Descriptor()
+	// loginhistory.DefaultLocation holds the default value on creation for the location field.
+	loginhistory.DefaultLocation = loginhistoryDescLocation.Default.(string)
+	// loginhistoryDescID is the schema descriptor for id field.
+	loginhistoryDescID := loginhistoryFields[0].Descriptor()
+	// loginhistory.DefaultID holds the default value on creation for the id field.
+	loginhistory.DefaultID = loginhistoryDescID.Default.(func() uuid.UUID)
 }
 
 const (

@@ -44,3 +44,6 @@ type BanApp func(*sql.Selector)
 
 // BanAppUser is the predicate function for banappuser builders.
 type BanAppUser func(*sql.Selector)
+
+// LoginHistory is the predicate function for loginhistory builders.
+type LoginHistory func(*sql.Selector)

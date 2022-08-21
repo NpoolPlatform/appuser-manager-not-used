@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
 
@@ -49,6 +50,7 @@ const (
 	TypeAuthHistory       = "AuthHistory"
 	TypeBanApp            = "BanApp"
 	TypeBanAppUser        = "BanAppUser"
+	TypeLoginHistory      = "LoginHistory"
 )
 
 // AppMutation represents an operation that mutates the App nodes in the graph.
@@ -11520,4 +11522,635 @@ func (m *BanAppUserMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *BanAppUserMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown BanAppUser edge %s", name)
+}
+
+// LoginHistoryMutation represents an operation that mutates the LoginHistory nodes in the graph.
+type LoginHistoryMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	app_id        *uuid.UUID
+	user_id       *uuid.UUID
+	client_ip     *string
+	user_agent    *string
+	location      *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*LoginHistory, error)
+	predicates    []predicate.LoginHistory
+}
+
+var _ ent.Mutation = (*LoginHistoryMutation)(nil)
+
+// loginhistoryOption allows management of the mutation configuration using functional options.
+type loginhistoryOption func(*LoginHistoryMutation)
+
+// newLoginHistoryMutation creates new mutation for the LoginHistory entity.
+func newLoginHistoryMutation(c config, op Op, opts ...loginhistoryOption) *LoginHistoryMutation {
+	m := &LoginHistoryMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeLoginHistory,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withLoginHistoryID sets the ID field of the mutation.
+func withLoginHistoryID(id uuid.UUID) loginhistoryOption {
+	return func(m *LoginHistoryMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *LoginHistory
+		)
+		m.oldValue = func(ctx context.Context) (*LoginHistory, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().LoginHistory.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withLoginHistory sets the old LoginHistory of the mutation.
+func withLoginHistory(node *LoginHistory) loginhistoryOption {
+	return func(m *LoginHistoryMutation) {
+		m.oldValue = func(context.Context) (*LoginHistory, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m LoginHistoryMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m LoginHistoryMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of LoginHistory entities.
+func (m *LoginHistoryMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *LoginHistoryMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *LoginHistoryMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().LoginHistory.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetAppID sets the "app_id" field.
+func (m *LoginHistoryMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *LoginHistoryMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the LoginHistory entity.
+// If the LoginHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LoginHistoryMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ClearAppID clears the value of the "app_id" field.
+func (m *LoginHistoryMutation) ClearAppID() {
+	m.app_id = nil
+	m.clearedFields[loginhistory.FieldAppID] = struct{}{}
+}
+
+// AppIDCleared returns if the "app_id" field was cleared in this mutation.
+func (m *LoginHistoryMutation) AppIDCleared() bool {
+	_, ok := m.clearedFields[loginhistory.FieldAppID]
+	return ok
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *LoginHistoryMutation) ResetAppID() {
+	m.app_id = nil
+	delete(m.clearedFields, loginhistory.FieldAppID)
+}
+
+// SetUserID sets the "user_id" field.
+func (m *LoginHistoryMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *LoginHistoryMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the LoginHistory entity.
+// If the LoginHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LoginHistoryMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *LoginHistoryMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[loginhistory.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *LoginHistoryMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[loginhistory.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *LoginHistoryMutation) ResetUserID() {
+	m.user_id = nil
+	delete(m.clearedFields, loginhistory.FieldUserID)
+}
+
+// SetClientIP sets the "client_ip" field.
+func (m *LoginHistoryMutation) SetClientIP(s string) {
+	m.client_ip = &s
+}
+
+// ClientIP returns the value of the "client_ip" field in the mutation.
+func (m *LoginHistoryMutation) ClientIP() (r string, exists bool) {
+	v := m.client_ip
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClientIP returns the old "client_ip" field's value of the LoginHistory entity.
+// If the LoginHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LoginHistoryMutation) OldClientIP(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClientIP is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClientIP requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClientIP: %w", err)
+	}
+	return oldValue.ClientIP, nil
+}
+
+// ClearClientIP clears the value of the "client_ip" field.
+func (m *LoginHistoryMutation) ClearClientIP() {
+	m.client_ip = nil
+	m.clearedFields[loginhistory.FieldClientIP] = struct{}{}
+}
+
+// ClientIPCleared returns if the "client_ip" field was cleared in this mutation.
+func (m *LoginHistoryMutation) ClientIPCleared() bool {
+	_, ok := m.clearedFields[loginhistory.FieldClientIP]
+	return ok
+}
+
+// ResetClientIP resets all changes to the "client_ip" field.
+func (m *LoginHistoryMutation) ResetClientIP() {
+	m.client_ip = nil
+	delete(m.clearedFields, loginhistory.FieldClientIP)
+}
+
+// SetUserAgent sets the "user_agent" field.
+func (m *LoginHistoryMutation) SetUserAgent(s string) {
+	m.user_agent = &s
+}
+
+// UserAgent returns the value of the "user_agent" field in the mutation.
+func (m *LoginHistoryMutation) UserAgent() (r string, exists bool) {
+	v := m.user_agent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserAgent returns the old "user_agent" field's value of the LoginHistory entity.
+// If the LoginHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LoginHistoryMutation) OldUserAgent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserAgent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserAgent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserAgent: %w", err)
+	}
+	return oldValue.UserAgent, nil
+}
+
+// ClearUserAgent clears the value of the "user_agent" field.
+func (m *LoginHistoryMutation) ClearUserAgent() {
+	m.user_agent = nil
+	m.clearedFields[loginhistory.FieldUserAgent] = struct{}{}
+}
+
+// UserAgentCleared returns if the "user_agent" field was cleared in this mutation.
+func (m *LoginHistoryMutation) UserAgentCleared() bool {
+	_, ok := m.clearedFields[loginhistory.FieldUserAgent]
+	return ok
+}
+
+// ResetUserAgent resets all changes to the "user_agent" field.
+func (m *LoginHistoryMutation) ResetUserAgent() {
+	m.user_agent = nil
+	delete(m.clearedFields, loginhistory.FieldUserAgent)
+}
+
+// SetLocation sets the "location" field.
+func (m *LoginHistoryMutation) SetLocation(s string) {
+	m.location = &s
+}
+
+// Location returns the value of the "location" field in the mutation.
+func (m *LoginHistoryMutation) Location() (r string, exists bool) {
+	v := m.location
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocation returns the old "location" field's value of the LoginHistory entity.
+// If the LoginHistory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *LoginHistoryMutation) OldLocation(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLocation is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLocation requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocation: %w", err)
+	}
+	return oldValue.Location, nil
+}
+
+// ClearLocation clears the value of the "location" field.
+func (m *LoginHistoryMutation) ClearLocation() {
+	m.location = nil
+	m.clearedFields[loginhistory.FieldLocation] = struct{}{}
+}
+
+// LocationCleared returns if the "location" field was cleared in this mutation.
+func (m *LoginHistoryMutation) LocationCleared() bool {
+	_, ok := m.clearedFields[loginhistory.FieldLocation]
+	return ok
+}
+
+// ResetLocation resets all changes to the "location" field.
+func (m *LoginHistoryMutation) ResetLocation() {
+	m.location = nil
+	delete(m.clearedFields, loginhistory.FieldLocation)
+}
+
+// Where appends a list predicates to the LoginHistoryMutation builder.
+func (m *LoginHistoryMutation) Where(ps ...predicate.LoginHistory) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *LoginHistoryMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (LoginHistory).
+func (m *LoginHistoryMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *LoginHistoryMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.app_id != nil {
+		fields = append(fields, loginhistory.FieldAppID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, loginhistory.FieldUserID)
+	}
+	if m.client_ip != nil {
+		fields = append(fields, loginhistory.FieldClientIP)
+	}
+	if m.user_agent != nil {
+		fields = append(fields, loginhistory.FieldUserAgent)
+	}
+	if m.location != nil {
+		fields = append(fields, loginhistory.FieldLocation)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *LoginHistoryMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case loginhistory.FieldAppID:
+		return m.AppID()
+	case loginhistory.FieldUserID:
+		return m.UserID()
+	case loginhistory.FieldClientIP:
+		return m.ClientIP()
+	case loginhistory.FieldUserAgent:
+		return m.UserAgent()
+	case loginhistory.FieldLocation:
+		return m.Location()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *LoginHistoryMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case loginhistory.FieldAppID:
+		return m.OldAppID(ctx)
+	case loginhistory.FieldUserID:
+		return m.OldUserID(ctx)
+	case loginhistory.FieldClientIP:
+		return m.OldClientIP(ctx)
+	case loginhistory.FieldUserAgent:
+		return m.OldUserAgent(ctx)
+	case loginhistory.FieldLocation:
+		return m.OldLocation(ctx)
+	}
+	return nil, fmt.Errorf("unknown LoginHistory field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *LoginHistoryMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case loginhistory.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case loginhistory.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case loginhistory.FieldClientIP:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClientIP(v)
+		return nil
+	case loginhistory.FieldUserAgent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserAgent(v)
+		return nil
+	case loginhistory.FieldLocation:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocation(v)
+		return nil
+	}
+	return fmt.Errorf("unknown LoginHistory field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *LoginHistoryMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *LoginHistoryMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *LoginHistoryMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown LoginHistory numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *LoginHistoryMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(loginhistory.FieldAppID) {
+		fields = append(fields, loginhistory.FieldAppID)
+	}
+	if m.FieldCleared(loginhistory.FieldUserID) {
+		fields = append(fields, loginhistory.FieldUserID)
+	}
+	if m.FieldCleared(loginhistory.FieldClientIP) {
+		fields = append(fields, loginhistory.FieldClientIP)
+	}
+	if m.FieldCleared(loginhistory.FieldUserAgent) {
+		fields = append(fields, loginhistory.FieldUserAgent)
+	}
+	if m.FieldCleared(loginhistory.FieldLocation) {
+		fields = append(fields, loginhistory.FieldLocation)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *LoginHistoryMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *LoginHistoryMutation) ClearField(name string) error {
+	switch name {
+	case loginhistory.FieldAppID:
+		m.ClearAppID()
+		return nil
+	case loginhistory.FieldUserID:
+		m.ClearUserID()
+		return nil
+	case loginhistory.FieldClientIP:
+		m.ClearClientIP()
+		return nil
+	case loginhistory.FieldUserAgent:
+		m.ClearUserAgent()
+		return nil
+	case loginhistory.FieldLocation:
+		m.ClearLocation()
+		return nil
+	}
+	return fmt.Errorf("unknown LoginHistory nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *LoginHistoryMutation) ResetField(name string) error {
+	switch name {
+	case loginhistory.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case loginhistory.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case loginhistory.FieldClientIP:
+		m.ResetClientIP()
+		return nil
+	case loginhistory.FieldUserAgent:
+		m.ResetUserAgent()
+		return nil
+	case loginhistory.FieldLocation:
+		m.ResetLocation()
+		return nil
+	}
+	return fmt.Errorf("unknown LoginHistory field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *LoginHistoryMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *LoginHistoryMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *LoginHistoryMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *LoginHistoryMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *LoginHistoryMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *LoginHistoryMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *LoginHistoryMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown LoginHistory unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *LoginHistoryMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown LoginHistory edge %s", name)
 }

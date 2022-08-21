@@ -41,6 +41,7 @@ type hooks struct {
 	AuthHistory       []ent.Hook
 	BanApp            []ent.Hook
 	BanAppUser        []ent.Hook
+	LoginHistory      []ent.Hook
 }
 
 // Options applies the options on the config object.

@@ -24,6 +24,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/authhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banapp"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -60,6 +61,8 @@ type Client struct {
 	BanApp *BanAppClient
 	// BanAppUser is the client for interacting with the BanAppUser builders.
 	BanAppUser *BanAppUserClient
+	// LoginHistory is the client for interacting with the LoginHistory builders.
+	LoginHistory *LoginHistoryClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -86,6 +89,7 @@ func (c *Client) init() {
 	c.AuthHistory = NewAuthHistoryClient(c.config)
 	c.BanApp = NewBanAppClient(c.config)
 	c.BanAppUser = NewBanAppUserClient(c.config)
+	c.LoginHistory = NewLoginHistoryClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -132,6 +136,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AuthHistory:       NewAuthHistoryClient(cfg),
 		BanApp:            NewBanAppClient(cfg),
 		BanAppUser:        NewBanAppUserClient(cfg),
+		LoginHistory:      NewLoginHistoryClient(cfg),
 	}, nil
 }
 
@@ -164,6 +169,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AuthHistory:       NewAuthHistoryClient(cfg),
 		BanApp:            NewBanAppClient(cfg),
 		BanAppUser:        NewBanAppUserClient(cfg),
+		LoginHistory:      NewLoginHistoryClient(cfg),
 	}, nil
 }
 
@@ -206,6 +212,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.AuthHistory.Use(hooks...)
 	c.BanApp.Use(hooks...)
 	c.BanAppUser.Use(hooks...)
+	c.LoginHistory.Use(hooks...)
 }
 
 // AppClient is a client for the App schema.
@@ -1389,4 +1396,94 @@ func (c *BanAppUserClient) GetX(ctx context.Context, id uuid.UUID) *BanAppUser {
 func (c *BanAppUserClient) Hooks() []Hook {
 	hooks := c.hooks.BanAppUser
 	return append(hooks[:len(hooks):len(hooks)], banappuser.Hooks[:]...)
+}
+
+// LoginHistoryClient is a client for the LoginHistory schema.
+type LoginHistoryClient struct {
+	config
+}
+
+// NewLoginHistoryClient returns a client for the LoginHistory from the given config.
+func NewLoginHistoryClient(c config) *LoginHistoryClient {
+	return &LoginHistoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `loginhistory.Hooks(f(g(h())))`.
+func (c *LoginHistoryClient) Use(hooks ...Hook) {
+	c.hooks.LoginHistory = append(c.hooks.LoginHistory, hooks...)
+}
+
+// Create returns a builder for creating a LoginHistory entity.
+func (c *LoginHistoryClient) Create() *LoginHistoryCreate {
+	mutation := newLoginHistoryMutation(c.config, OpCreate)
+	return &LoginHistoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of LoginHistory entities.
+func (c *LoginHistoryClient) CreateBulk(builders ...*LoginHistoryCreate) *LoginHistoryCreateBulk {
+	return &LoginHistoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for LoginHistory.
+func (c *LoginHistoryClient) Update() *LoginHistoryUpdate {
+	mutation := newLoginHistoryMutation(c.config, OpUpdate)
+	return &LoginHistoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *LoginHistoryClient) UpdateOne(lh *LoginHistory) *LoginHistoryUpdateOne {
+	mutation := newLoginHistoryMutation(c.config, OpUpdateOne, withLoginHistory(lh))
+	return &LoginHistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *LoginHistoryClient) UpdateOneID(id uuid.UUID) *LoginHistoryUpdateOne {
+	mutation := newLoginHistoryMutation(c.config, OpUpdateOne, withLoginHistoryID(id))
+	return &LoginHistoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for LoginHistory.
+func (c *LoginHistoryClient) Delete() *LoginHistoryDelete {
+	mutation := newLoginHistoryMutation(c.config, OpDelete)
+	return &LoginHistoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *LoginHistoryClient) DeleteOne(lh *LoginHistory) *LoginHistoryDeleteOne {
+	return c.DeleteOneID(lh.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *LoginHistoryClient) DeleteOneID(id uuid.UUID) *LoginHistoryDeleteOne {
+	builder := c.Delete().Where(loginhistory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &LoginHistoryDeleteOne{builder}
+}
+
+// Query returns a query builder for LoginHistory.
+func (c *LoginHistoryClient) Query() *LoginHistoryQuery {
+	return &LoginHistoryQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a LoginHistory entity by its id.
+func (c *LoginHistoryClient) Get(ctx context.Context, id uuid.UUID) (*LoginHistory, error) {
+	return c.Query().Where(loginhistory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *LoginHistoryClient) GetX(ctx context.Context, id uuid.UUID) *LoginHistory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *LoginHistoryClient) Hooks() []Hook {
+	return c.hooks.LoginHistory
 }
