@@ -680,8 +680,34 @@ func init() {
 	banappuserDescID := banappuserFields[0].Descriptor()
 	// banappuser.DefaultID holds the default value on creation for the id field.
 	banappuser.DefaultID = banappuserDescID.Default.(func() uuid.UUID)
+	loginhistoryMixin := schema.LoginHistory{}.Mixin()
+	loginhistory.Policy = privacy.NewPolicies(loginhistoryMixin[0], schema.LoginHistory{})
+	loginhistory.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := loginhistory.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	loginhistoryMixinFields0 := loginhistoryMixin[0].Fields()
+	_ = loginhistoryMixinFields0
 	loginhistoryFields := schema.LoginHistory{}.Fields()
 	_ = loginhistoryFields
+	// loginhistoryDescCreatedAt is the schema descriptor for created_at field.
+	loginhistoryDescCreatedAt := loginhistoryMixinFields0[0].Descriptor()
+	// loginhistory.DefaultCreatedAt holds the default value on creation for the created_at field.
+	loginhistory.DefaultCreatedAt = loginhistoryDescCreatedAt.Default.(func() uint32)
+	// loginhistoryDescUpdatedAt is the schema descriptor for updated_at field.
+	loginhistoryDescUpdatedAt := loginhistoryMixinFields0[1].Descriptor()
+	// loginhistory.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	loginhistory.DefaultUpdatedAt = loginhistoryDescUpdatedAt.Default.(func() uint32)
+	// loginhistory.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	loginhistory.UpdateDefaultUpdatedAt = loginhistoryDescUpdatedAt.UpdateDefault.(func() uint32)
+	// loginhistoryDescDeletedAt is the schema descriptor for deleted_at field.
+	loginhistoryDescDeletedAt := loginhistoryMixinFields0[2].Descriptor()
+	// loginhistory.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	loginhistory.DefaultDeletedAt = loginhistoryDescDeletedAt.Default.(func() uint32)
 	// loginhistoryDescAppID is the schema descriptor for app_id field.
 	loginhistoryDescAppID := loginhistoryFields[1].Descriptor()
 	// loginhistory.DefaultAppID holds the default value on creation for the app_id field.

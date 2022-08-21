@@ -23,6 +23,48 @@ type LoginHistoryCreate struct {
 	conflict []sql.ConflictOption
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (lhc *LoginHistoryCreate) SetCreatedAt(u uint32) *LoginHistoryCreate {
+	lhc.mutation.SetCreatedAt(u)
+	return lhc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (lhc *LoginHistoryCreate) SetNillableCreatedAt(u *uint32) *LoginHistoryCreate {
+	if u != nil {
+		lhc.SetCreatedAt(*u)
+	}
+	return lhc
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (lhc *LoginHistoryCreate) SetUpdatedAt(u uint32) *LoginHistoryCreate {
+	lhc.mutation.SetUpdatedAt(u)
+	return lhc
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (lhc *LoginHistoryCreate) SetNillableUpdatedAt(u *uint32) *LoginHistoryCreate {
+	if u != nil {
+		lhc.SetUpdatedAt(*u)
+	}
+	return lhc
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (lhc *LoginHistoryCreate) SetDeletedAt(u uint32) *LoginHistoryCreate {
+	lhc.mutation.SetDeletedAt(u)
+	return lhc
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (lhc *LoginHistoryCreate) SetNillableDeletedAt(u *uint32) *LoginHistoryCreate {
+	if u != nil {
+		lhc.SetDeletedAt(*u)
+	}
+	return lhc
+}
+
 // SetAppID sets the "app_id" field.
 func (lhc *LoginHistoryCreate) SetAppID(u uuid.UUID) *LoginHistoryCreate {
 	lhc.mutation.SetAppID(u)
@@ -118,7 +160,9 @@ func (lhc *LoginHistoryCreate) Save(ctx context.Context) (*LoginHistory, error) 
 		err  error
 		node *LoginHistory
 	)
-	lhc.defaults()
+	if err := lhc.defaults(); err != nil {
+		return nil, err
+	}
 	if len(lhc.hooks) == 0 {
 		if err = lhc.check(); err != nil {
 			return nil, err
@@ -183,12 +227,39 @@ func (lhc *LoginHistoryCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (lhc *LoginHistoryCreate) defaults() {
+func (lhc *LoginHistoryCreate) defaults() error {
+	if _, ok := lhc.mutation.CreatedAt(); !ok {
+		if loginhistory.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := loginhistory.DefaultCreatedAt()
+		lhc.mutation.SetCreatedAt(v)
+	}
+	if _, ok := lhc.mutation.UpdatedAt(); !ok {
+		if loginhistory.DefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.DefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := loginhistory.DefaultUpdatedAt()
+		lhc.mutation.SetUpdatedAt(v)
+	}
+	if _, ok := lhc.mutation.DeletedAt(); !ok {
+		if loginhistory.DefaultDeletedAt == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.DefaultDeletedAt (forgotten import ent/runtime?)")
+		}
+		v := loginhistory.DefaultDeletedAt()
+		lhc.mutation.SetDeletedAt(v)
+	}
 	if _, ok := lhc.mutation.AppID(); !ok {
+		if loginhistory.DefaultAppID == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.DefaultAppID (forgotten import ent/runtime?)")
+		}
 		v := loginhistory.DefaultAppID()
 		lhc.mutation.SetAppID(v)
 	}
 	if _, ok := lhc.mutation.UserID(); !ok {
+		if loginhistory.DefaultUserID == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.DefaultUserID (forgotten import ent/runtime?)")
+		}
 		v := loginhistory.DefaultUserID()
 		lhc.mutation.SetUserID(v)
 	}
@@ -205,13 +276,26 @@ func (lhc *LoginHistoryCreate) defaults() {
 		lhc.mutation.SetLocation(v)
 	}
 	if _, ok := lhc.mutation.ID(); !ok {
+		if loginhistory.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := loginhistory.DefaultID()
 		lhc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (lhc *LoginHistoryCreate) check() error {
+	if _, ok := lhc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "LoginHistory.created_at"`)}
+	}
+	if _, ok := lhc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "LoginHistory.updated_at"`)}
+	}
+	if _, ok := lhc.mutation.DeletedAt(); !ok {
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "LoginHistory.deleted_at"`)}
+	}
 	return nil
 }
 
@@ -248,6 +332,30 @@ func (lhc *LoginHistoryCreate) createSpec() (*LoginHistory, *sqlgraph.CreateSpec
 	if id, ok := lhc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := lhc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := lhc.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
+	if value, ok := lhc.mutation.DeletedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldDeletedAt,
+		})
+		_node.DeletedAt = value
 	}
 	if value, ok := lhc.mutation.AppID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -296,7 +404,7 @@ func (lhc *LoginHistoryCreate) createSpec() (*LoginHistory, *sqlgraph.CreateSpec
 // of the `INSERT` statement. For example:
 //
 //	client.LoginHistory.Create().
-//		SetAppID(v).
+//		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -305,7 +413,7 @@ func (lhc *LoginHistoryCreate) createSpec() (*LoginHistory, *sqlgraph.CreateSpec
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.LoginHistoryUpsert) {
-//			SetAppID(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -342,6 +450,60 @@ type (
 		*sql.UpdateSet
 	}
 )
+
+// SetCreatedAt sets the "created_at" field.
+func (u *LoginHistoryUpsert) SetCreatedAt(v uint32) *LoginHistoryUpsert {
+	u.Set(loginhistory.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsert) UpdateCreatedAt() *LoginHistoryUpsert {
+	u.SetExcluded(loginhistory.FieldCreatedAt)
+	return u
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *LoginHistoryUpsert) AddCreatedAt(v uint32) *LoginHistoryUpsert {
+	u.Add(loginhistory.FieldCreatedAt, v)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *LoginHistoryUpsert) SetUpdatedAt(v uint32) *LoginHistoryUpsert {
+	u.Set(loginhistory.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsert) UpdateUpdatedAt() *LoginHistoryUpsert {
+	u.SetExcluded(loginhistory.FieldUpdatedAt)
+	return u
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *LoginHistoryUpsert) AddUpdatedAt(v uint32) *LoginHistoryUpsert {
+	u.Add(loginhistory.FieldUpdatedAt, v)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *LoginHistoryUpsert) SetDeletedAt(v uint32) *LoginHistoryUpsert {
+	u.Set(loginhistory.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsert) UpdateDeletedAt() *LoginHistoryUpsert {
+	u.SetExcluded(loginhistory.FieldDeletedAt)
+	return u
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *LoginHistoryUpsert) AddDeletedAt(v uint32) *LoginHistoryUpsert {
+	u.Add(loginhistory.FieldDeletedAt, v)
+	return u
+}
 
 // SetAppID sets the "app_id" field.
 func (u *LoginHistoryUpsert) SetAppID(v uuid.UUID) *LoginHistoryUpsert {
@@ -481,6 +643,69 @@ func (u *LoginHistoryUpsertOne) Update(set func(*LoginHistoryUpsert)) *LoginHist
 		set(&LoginHistoryUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *LoginHistoryUpsertOne) SetCreatedAt(v uint32) *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *LoginHistoryUpsertOne) AddCreatedAt(v uint32) *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.AddCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsertOne) UpdateCreatedAt() *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *LoginHistoryUpsertOne) SetUpdatedAt(v uint32) *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *LoginHistoryUpsertOne) AddUpdatedAt(v uint32) *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsertOne) UpdateUpdatedAt() *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *LoginHistoryUpsertOne) SetDeletedAt(v uint32) *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *LoginHistoryUpsertOne) AddDeletedAt(v uint32) *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.AddDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsertOne) UpdateDeletedAt() *LoginHistoryUpsertOne {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.UpdateDeletedAt()
+	})
 }
 
 // SetAppID sets the "app_id" field.
@@ -720,7 +945,7 @@ func (lhcb *LoginHistoryCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.LoginHistoryUpsert) {
-//			SetAppID(v+v).
+//			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -802,6 +1027,69 @@ func (u *LoginHistoryUpsertBulk) Update(set func(*LoginHistoryUpsert)) *LoginHis
 		set(&LoginHistoryUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *LoginHistoryUpsertBulk) SetCreatedAt(v uint32) *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *LoginHistoryUpsertBulk) AddCreatedAt(v uint32) *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.AddCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsertBulk) UpdateCreatedAt() *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *LoginHistoryUpsertBulk) SetUpdatedAt(v uint32) *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *LoginHistoryUpsertBulk) AddUpdatedAt(v uint32) *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.AddUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsertBulk) UpdateUpdatedAt() *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *LoginHistoryUpsertBulk) SetDeletedAt(v uint32) *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *LoginHistoryUpsertBulk) AddDeletedAt(v uint32) *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.AddDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *LoginHistoryUpsertBulk) UpdateDeletedAt() *LoginHistoryUpsertBulk {
+	return u.Update(func(s *LoginHistoryUpsert) {
+		s.UpdateDeletedAt()
+	})
 }
 
 // SetAppID sets the "app_id" field.

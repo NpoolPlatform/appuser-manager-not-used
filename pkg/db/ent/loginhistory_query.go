@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
@@ -256,12 +257,12 @@ func (lhq *LoginHistoryQuery) Clone() *LoginHistoryQuery {
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.LoginHistory.Query().
-//		GroupBy(loginhistory.FieldAppID).
+//		GroupBy(loginhistory.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -285,11 +286,11 @@ func (lhq *LoginHistoryQuery) GroupBy(field string, fields ...string) *LoginHist
 // Example:
 //
 //	var v []struct {
-//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		CreatedAt uint32 `json:"created_at,omitempty"`
 //	}
 //
 //	client.LoginHistory.Query().
-//		Select(loginhistory.FieldAppID).
+//		Select(loginhistory.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (lhq *LoginHistoryQuery) Select(fields ...string) *LoginHistorySelect {
@@ -312,6 +313,12 @@ func (lhq *LoginHistoryQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		lhq.sql = prev
+	}
+	if loginhistory.Policy == nil {
+		return errors.New("ent: uninitialized loginhistory.Policy (forgotten import ent/runtime?)")
+	}
+	if err := loginhistory.Policy.EvalQuery(ctx, lhq); err != nil {
+		return err
 	}
 	return nil
 }

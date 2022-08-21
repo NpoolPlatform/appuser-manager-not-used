@@ -19,7 +19,7 @@ import (
 	val "github.com/NpoolPlatform/message/npool"
 
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/authing/history"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/login/history"
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
@@ -35,22 +35,20 @@ func init() {
 }
 
 var historyDate = npool.History{
-	ID:       uuid.New().String(),
-	AppID:    uuid.New().String(),
-	UserID:   uuid.New().String(),
-	Resource: uuid.New().String(),
-	Method:   uuid.New().String(),
-	Allowed:  true,
+	ID:        uuid.New().String(),
+	AppID:     uuid.New().String(),
+	UserID:    uuid.New().String(),
+	ClientIP:  uuid.New().String(),
+	UserAgent: uuid.New().String(),
 }
 
 var (
 	historyInfo = npool.HistoryReq{
-		ID:       &historyDate.ID,
-		AppID:    &historyDate.AppID,
-		UserID:   &historyDate.UserID,
-		Resource: &historyDate.Resource,
-		Method:   &historyDate.Method,
-		Allowed:  &historyDate.Allowed,
+		ID:        &historyDate.ID,
+		AppID:     &historyDate.AppID,
+		UserID:    &historyDate.UserID,
+		ClientIP:  &historyDate.ClientIP,
+		UserAgent: &historyDate.UserAgent,
 	}
 )
 
@@ -68,32 +66,29 @@ func createHistory(t *testing.T) {
 func createHistories(t *testing.T) {
 	historyDates := []npool.History{
 		{
-			ID:       uuid.New().String(),
-			AppID:    uuid.NewString(),
-			UserID:   uuid.NewString(),
-			Resource: uuid.New().String(),
-			Method:   uuid.New().String(),
-			Allowed:  true,
+			ID:        uuid.New().String(),
+			AppID:     uuid.NewString(),
+			UserID:    uuid.NewString(),
+			ClientIP:  uuid.New().String(),
+			UserAgent: uuid.New().String(),
 		},
 		{
-			ID:       uuid.New().String(),
-			AppID:    uuid.NewString(),
-			UserID:   uuid.NewString(),
-			Resource: uuid.New().String(),
-			Method:   uuid.New().String(),
-			Allowed:  true,
+			ID:        uuid.New().String(),
+			AppID:     uuid.NewString(),
+			UserID:    uuid.NewString(),
+			ClientIP:  uuid.New().String(),
+			UserAgent: uuid.New().String(),
 		},
 	}
 
 	histories := []*npool.HistoryReq{}
 	for key := range historyDates {
 		histories = append(histories, &npool.HistoryReq{
-			ID:       &historyDates[key].ID,
-			AppID:    &historyDates[key].AppID,
-			UserID:   &historyDates[key].UserID,
-			Resource: &historyDates[key].Resource,
-			Method:   &historyDates[key].Method,
-			Allowed:  &historyDates[key].Allowed,
+			ID:        &historyDates[key].ID,
+			AppID:     &historyDates[key].AppID,
+			UserID:    &historyDates[key].UserID,
+			ClientIP:  &historyDates[key].ClientIP,
+			UserAgent: &historyDates[key].UserAgent,
 		})
 	}
 
@@ -105,6 +100,11 @@ func createHistories(t *testing.T) {
 
 func updateHistory(t *testing.T) {
 	var err error
+
+	location := "HI9hkjjhjk"
+	historyInfo.Location = &location
+	historyDate.Location = location
+
 	info, err = UpdateHistory(context.Background(), &historyInfo)
 	if assert.Nil(t, err) {
 		assert.Equal(t, info, &historyDate)

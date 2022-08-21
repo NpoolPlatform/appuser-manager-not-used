@@ -29,6 +29,61 @@ func (lhu *LoginHistoryUpdate) Where(ps ...predicate.LoginHistory) *LoginHistory
 	return lhu
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (lhu *LoginHistoryUpdate) SetCreatedAt(u uint32) *LoginHistoryUpdate {
+	lhu.mutation.ResetCreatedAt()
+	lhu.mutation.SetCreatedAt(u)
+	return lhu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (lhu *LoginHistoryUpdate) SetNillableCreatedAt(u *uint32) *LoginHistoryUpdate {
+	if u != nil {
+		lhu.SetCreatedAt(*u)
+	}
+	return lhu
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (lhu *LoginHistoryUpdate) AddCreatedAt(u int32) *LoginHistoryUpdate {
+	lhu.mutation.AddCreatedAt(u)
+	return lhu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (lhu *LoginHistoryUpdate) SetUpdatedAt(u uint32) *LoginHistoryUpdate {
+	lhu.mutation.ResetUpdatedAt()
+	lhu.mutation.SetUpdatedAt(u)
+	return lhu
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (lhu *LoginHistoryUpdate) AddUpdatedAt(u int32) *LoginHistoryUpdate {
+	lhu.mutation.AddUpdatedAt(u)
+	return lhu
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (lhu *LoginHistoryUpdate) SetDeletedAt(u uint32) *LoginHistoryUpdate {
+	lhu.mutation.ResetDeletedAt()
+	lhu.mutation.SetDeletedAt(u)
+	return lhu
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (lhu *LoginHistoryUpdate) SetNillableDeletedAt(u *uint32) *LoginHistoryUpdate {
+	if u != nil {
+		lhu.SetDeletedAt(*u)
+	}
+	return lhu
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (lhu *LoginHistoryUpdate) AddDeletedAt(u int32) *LoginHistoryUpdate {
+	lhu.mutation.AddDeletedAt(u)
+	return lhu
+}
+
 // SetAppID sets the "app_id" field.
 func (lhu *LoginHistoryUpdate) SetAppID(u uuid.UUID) *LoginHistoryUpdate {
 	lhu.mutation.SetAppID(u)
@@ -140,6 +195,9 @@ func (lhu *LoginHistoryUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	if err := lhu.defaults(); err != nil {
+		return 0, err
+	}
 	if len(lhu.hooks) == 0 {
 		affected, err = lhu.sqlSave(ctx)
 	} else {
@@ -188,6 +246,18 @@ func (lhu *LoginHistoryUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (lhu *LoginHistoryUpdate) defaults() error {
+	if _, ok := lhu.mutation.UpdatedAt(); !ok {
+		if loginhistory.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := loginhistory.UpdateDefaultUpdatedAt()
+		lhu.mutation.SetUpdatedAt(v)
+	}
+	return nil
+}
+
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
 func (lhu *LoginHistoryUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *LoginHistoryUpdate {
 	lhu.modifiers = append(lhu.modifiers, modifiers...)
@@ -211,6 +281,48 @@ func (lhu *LoginHistoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := lhu.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldCreatedAt,
+		})
+	}
+	if value, ok := lhu.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldCreatedAt,
+		})
+	}
+	if value, ok := lhu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldUpdatedAt,
+		})
+	}
+	if value, ok := lhu.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldUpdatedAt,
+		})
+	}
+	if value, ok := lhu.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldDeletedAt,
+		})
+	}
+	if value, ok := lhu.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldDeletedAt,
+		})
 	}
 	if value, ok := lhu.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -296,6 +408,61 @@ type LoginHistoryUpdateOne struct {
 	hooks     []Hook
 	mutation  *LoginHistoryMutation
 	modifiers []func(*sql.UpdateBuilder)
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (lhuo *LoginHistoryUpdateOne) SetCreatedAt(u uint32) *LoginHistoryUpdateOne {
+	lhuo.mutation.ResetCreatedAt()
+	lhuo.mutation.SetCreatedAt(u)
+	return lhuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (lhuo *LoginHistoryUpdateOne) SetNillableCreatedAt(u *uint32) *LoginHistoryUpdateOne {
+	if u != nil {
+		lhuo.SetCreatedAt(*u)
+	}
+	return lhuo
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (lhuo *LoginHistoryUpdateOne) AddCreatedAt(u int32) *LoginHistoryUpdateOne {
+	lhuo.mutation.AddCreatedAt(u)
+	return lhuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (lhuo *LoginHistoryUpdateOne) SetUpdatedAt(u uint32) *LoginHistoryUpdateOne {
+	lhuo.mutation.ResetUpdatedAt()
+	lhuo.mutation.SetUpdatedAt(u)
+	return lhuo
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (lhuo *LoginHistoryUpdateOne) AddUpdatedAt(u int32) *LoginHistoryUpdateOne {
+	lhuo.mutation.AddUpdatedAt(u)
+	return lhuo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (lhuo *LoginHistoryUpdateOne) SetDeletedAt(u uint32) *LoginHistoryUpdateOne {
+	lhuo.mutation.ResetDeletedAt()
+	lhuo.mutation.SetDeletedAt(u)
+	return lhuo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (lhuo *LoginHistoryUpdateOne) SetNillableDeletedAt(u *uint32) *LoginHistoryUpdateOne {
+	if u != nil {
+		lhuo.SetDeletedAt(*u)
+	}
+	return lhuo
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (lhuo *LoginHistoryUpdateOne) AddDeletedAt(u int32) *LoginHistoryUpdateOne {
+	lhuo.mutation.AddDeletedAt(u)
+	return lhuo
 }
 
 // SetAppID sets the "app_id" field.
@@ -416,6 +583,9 @@ func (lhuo *LoginHistoryUpdateOne) Save(ctx context.Context) (*LoginHistory, err
 		err  error
 		node *LoginHistory
 	)
+	if err := lhuo.defaults(); err != nil {
+		return nil, err
+	}
 	if len(lhuo.hooks) == 0 {
 		node, err = lhuo.sqlSave(ctx)
 	} else {
@@ -470,6 +640,18 @@ func (lhuo *LoginHistoryUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (lhuo *LoginHistoryUpdateOne) defaults() error {
+	if _, ok := lhuo.mutation.UpdatedAt(); !ok {
+		if loginhistory.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized loginhistory.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		}
+		v := loginhistory.UpdateDefaultUpdatedAt()
+		lhuo.mutation.SetUpdatedAt(v)
+	}
+	return nil
+}
+
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
 func (lhuo *LoginHistoryUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *LoginHistoryUpdateOne {
 	lhuo.modifiers = append(lhuo.modifiers, modifiers...)
@@ -510,6 +692,48 @@ func (lhuo *LoginHistoryUpdateOne) sqlSave(ctx context.Context) (_node *LoginHis
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := lhuo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldCreatedAt,
+		})
+	}
+	if value, ok := lhuo.mutation.AddedCreatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldCreatedAt,
+		})
+	}
+	if value, ok := lhuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldUpdatedAt,
+		})
+	}
+	if value, ok := lhuo.mutation.AddedUpdatedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldUpdatedAt,
+		})
+	}
+	if value, ok := lhuo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldDeletedAt,
+		})
+	}
+	if value, ok := lhuo.mutation.AddedDeletedAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: loginhistory.FieldDeletedAt,
+		})
 	}
 	if value, ok := lhuo.mutation.AppID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

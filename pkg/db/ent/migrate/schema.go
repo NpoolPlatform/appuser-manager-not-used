@@ -269,6 +269,9 @@ var (
 	// LoginHistoriesColumns holds the columns for the "login_histories" table.
 	LoginHistoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "client_ip", Type: field.TypeString, Nullable: true, Default: ""},

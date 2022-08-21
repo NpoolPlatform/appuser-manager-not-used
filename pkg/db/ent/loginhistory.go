@@ -16,6 +16,12 @@ type LoginHistory struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AppID holds the value of the "app_id" field.
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -33,6 +39,8 @@ func (*LoginHistory) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case loginhistory.FieldCreatedAt, loginhistory.FieldUpdatedAt, loginhistory.FieldDeletedAt:
+			values[i] = new(sql.NullInt64)
 		case loginhistory.FieldClientIP, loginhistory.FieldUserAgent, loginhistory.FieldLocation:
 			values[i] = new(sql.NullString)
 		case loginhistory.FieldID, loginhistory.FieldAppID, loginhistory.FieldUserID:
@@ -57,6 +65,24 @@ func (lh *LoginHistory) assignValues(columns []string, values []interface{}) err
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				lh.ID = *value
+			}
+		case loginhistory.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				lh.CreatedAt = uint32(value.Int64)
+			}
+		case loginhistory.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				lh.UpdatedAt = uint32(value.Int64)
+			}
+		case loginhistory.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				lh.DeletedAt = uint32(value.Int64)
 			}
 		case loginhistory.FieldAppID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -116,6 +142,15 @@ func (lh *LoginHistory) String() string {
 	var builder strings.Builder
 	builder.WriteString("LoginHistory(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", lh.ID))
+	builder.WriteString("created_at=")
+	builder.WriteString(fmt.Sprintf("%v", lh.CreatedAt))
+	builder.WriteString(", ")
+	builder.WriteString("updated_at=")
+	builder.WriteString(fmt.Sprintf("%v", lh.UpdatedAt))
+	builder.WriteString(", ")
+	builder.WriteString("deleted_at=")
+	builder.WriteString(fmt.Sprintf("%v", lh.DeletedAt))
+	builder.WriteString(", ")
 	builder.WriteString("app_id=")
 	builder.WriteString(fmt.Sprintf("%v", lh.AppID))
 	builder.WriteString(", ")

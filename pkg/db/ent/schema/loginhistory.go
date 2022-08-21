@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 )
@@ -10,6 +11,12 @@ import (
 // LoginHistory holds the schema definition for the LoginHistory entity.
 type LoginHistory struct {
 	ent.Schema
+}
+
+func (LoginHistory) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.TimeMixin{},
+	}
 }
 
 // Fields of the LoginHistory.

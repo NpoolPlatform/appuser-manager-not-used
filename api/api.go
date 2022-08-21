@@ -13,9 +13,10 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appusersecret"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/appuserthirdparty"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/authing/auth"
-	"github.com/NpoolPlatform/appuser-manager/api/v2/authing/history"
+	authhis "github.com/NpoolPlatform/appuser-manager/api/v2/authing/history"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/banapp"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/banappuser"
+	loginhis "github.com/NpoolPlatform/appuser-manager/api/v2/login/history"
 
 	appusermgr "github.com/NpoolPlatform/message/npool/appuser/mgr/v2"
 
@@ -41,7 +42,8 @@ func Register(server grpc.ServiceRegistrar) {
 	banapp.Register(server)
 	banappuser.Register(server)
 	auth.Register(server)
-	history.Register(server)
+	authhis.Register(server)
+	loginhis.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

@@ -1485,5 +1485,6 @@ func (c *LoginHistoryClient) GetX(ctx context.Context, id uuid.UUID) *LoginHisto
 
 // Hooks returns the client hooks.
 func (c *LoginHistoryClient) Hooks() []Hook {
-	return c.hooks.LoginHistory
+	hooks := c.hooks.LoginHistory
+	return append(hooks[:len(hooks):len(hooks)], loginhistory.Hooks[:]...)
 }

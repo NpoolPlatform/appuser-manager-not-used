@@ -4,10 +4,10 @@ package history
 import (
 	"context"
 
-	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/authing/history"
-	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/authing/history"
+	converter "github.com/NpoolPlatform/appuser-manager/pkg/converter/v2/login/history"
+	crud "github.com/NpoolPlatform/appuser-manager/pkg/crud/v2/login/history"
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
-	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/authing/history"
+	tracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer/login/history"
 
 	commontracer "github.com/NpoolPlatform/appuser-manager/pkg/tracer"
 
@@ -17,7 +17,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/authing/history"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/login/history"
 
 	"github.com/google/uuid"
 )

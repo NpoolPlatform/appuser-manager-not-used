@@ -8,7 +8,7 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/authing/history"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/login/history"
 
 	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
 )
