@@ -3,9 +3,11 @@ package migrator
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"time"
+
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	"fmt"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	authingent "github.com/NpoolPlatform/authing-gateway/pkg/db/ent"
@@ -14,7 +16,6 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	constant "github.com/NpoolPlatform/go-service-framework/pkg/mysql/const"
 	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
-	"time"
 )
 
 func Migrate(ctx context.Context) error {
@@ -56,6 +57,8 @@ const (
 	keyUsername = "username"
 	keyPassword = "password"
 	keyDBName   = "database_name"
+	maxOpen     = 10
+	maxIdle     = 10
 )
 
 func dsn(hostname string) (string, error) {
@@ -90,15 +93,15 @@ func open(hostname string) (conn *sql.DB, err error) {
 
 	// https://github.com/go-sql-driver/mysql
 	// See "Important settings" section.
+
 	conn.SetConnMaxLifetime(time.Minute * 3)
-	conn.SetMaxOpenConns(10)
-	conn.SetMaxIdleConns(10)
+	conn.SetMaxOpenConns(maxOpen)
+	conn.SetMaxIdleConns(maxIdle)
 
 	return conn, nil
 }
 
 func migrationAuthingGateway(ctx context.Context) (err error) {
-
 	logger.Sugar().Infow("Migrate", "Start", "...")
 	defer func() {
 		logger.Sugar().Infow("Migrate", "Done", "...", "error", err)
@@ -192,6 +195,6 @@ func migrationAuthingGateway(ctx context.Context) (err error) {
 	if err != nil {
 		return err
 	}
-	return tx.Commit()
 
+	return tx.Commit()
 }
