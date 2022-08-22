@@ -177,7 +177,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserThirdParty, error) {
 }
 
 //nolint:nolintlint,gocyclo
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQuery, error) {
+func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserThirdPartyQuery, error) {
 	stm := cli.AppUserThirdParty.Query()
 	if conds.ID != nil {
 		id := uuid.MustParse(conds.GetID().GetValue())
@@ -245,7 +245,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ap
 	span = commontracer.TraceOffsetLimit(span, offset, limit)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
@@ -289,7 +289,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.AppUserThirdParty, e
 	span = tracer.TraceConds(span, conds)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
@@ -327,7 +327,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
@@ -390,7 +390,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
