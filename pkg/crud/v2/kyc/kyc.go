@@ -242,6 +242,33 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 			return nil, fmt.Errorf("invalid kyc field")
 		}
 	}
+
+	if conds.IDNumber != nil {
+		switch conds.GetIDNumber().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.IDNumber(conds.GetIDNumber().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
+
+	if conds.DocumentType != nil {
+		switch conds.GetDocumentType().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.DocumentType(conds.GetDocumentType().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
+
+	if conds.EntityType != nil {
+		switch conds.GetEntityType().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.EntityType(conds.GetEntityType().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
 	return stm, nil
 }
 
