@@ -51,6 +51,9 @@ func CreateSet(c *ent.KycCreate, info *npool.KycReq) *ent.KycCreate {
 	if info.EntityType != nil {
 		c.SetEntityType(info.GetEntityType().String())
 	}
+	if info.ReviewID != nil {
+		c.SetReviewID(uuid.MustParse(info.GetReviewID()))
+	}
 	return c
 }
 func Create(ctx context.Context, in *npool.KycReq) (*ent.Kyc, error) {
@@ -164,6 +167,9 @@ func UpdateSet(info *ent.Kyc, in *npool.KycReq) *ent.KycUpdateOne {
 	if in.EntityType != nil {
 		u.SetEntityType(in.GetEntityType().String())
 	}
+	if in.ReviewID != nil {
+		u.SetReviewID(uuid.MustParse(in.GetReviewID()))
+	}
 	return u
 }
 
@@ -208,20 +214,30 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 	}
 
 	if conds.AppID != nil {
-		createdBy := uuid.MustParse(conds.GetAppID().GetValue())
+		appID := uuid.MustParse(conds.GetAppID().GetValue())
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(kyc.AppID(createdBy))
+			stm.Where(kyc.AppID(appID))
 		default:
 			return nil, fmt.Errorf("invalid kyc field")
 		}
 	}
 
 	if conds.UserID != nil {
-		createdBy := uuid.MustParse(conds.GetUserID().GetValue())
+		userID := uuid.MustParse(conds.GetUserID().GetValue())
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
-			stm.Where(kyc.UserID(createdBy))
+			stm.Where(kyc.UserID(userID))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
+
+	if conds.ReviewID != nil {
+		reviewID := uuid.MustParse(conds.GetReviewID().GetValue())
+		switch conds.GetReviewID().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.ReviewID(reviewID))
 		default:
 			return nil, fmt.Errorf("invalid kyc field")
 		}

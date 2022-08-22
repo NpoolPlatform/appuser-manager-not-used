@@ -38,6 +38,8 @@ type Kyc struct {
 	SelfieImg string `json:"selfie_img,omitempty"`
 	// EntityType holds the value of the "entity_type" field.
 	EntityType string `json:"entity_type,omitempty"`
+	// ReviewID holds the value of the "review_id" field.
+	ReviewID uuid.UUID `json:"review_id,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -49,7 +51,7 @@ func (*Kyc) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case kyc.FieldDocumentType, kyc.FieldIDNumber, kyc.FieldFrontImg, kyc.FieldBackImg, kyc.FieldSelfieImg, kyc.FieldEntityType:
 			values[i] = new(sql.NullString)
-		case kyc.FieldID, kyc.FieldAppID, kyc.FieldUserID:
+		case kyc.FieldID, kyc.FieldAppID, kyc.FieldUserID, kyc.FieldReviewID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Kyc", columns[i])
@@ -138,6 +140,12 @@ func (k *Kyc) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				k.EntityType = value.String
 			}
+		case kyc.FieldReviewID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field review_id", values[i])
+			} else if value != nil {
+				k.ReviewID = *value
+			}
 		}
 	}
 	return nil
@@ -198,6 +206,9 @@ func (k *Kyc) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("entity_type=")
 	builder.WriteString(k.EntityType)
+	builder.WriteString(", ")
+	builder.WriteString("review_id=")
+	builder.WriteString(fmt.Sprintf("%v", k.ReviewID))
 	builder.WriteByte(')')
 	return builder.String()
 }
