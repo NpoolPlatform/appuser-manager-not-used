@@ -1,4 +1,4 @@
-package history
+package kyc
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	val "github.com/NpoolPlatform/message/npool"
-	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/authing/history"
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/kyc"
 
 	"github.com/google/uuid"
 
@@ -29,73 +29,93 @@ func init() {
 	}
 }
 
-var entHistory = ent.AuthHistory{
-	ID:       uuid.New(),
-	AppID:    uuid.New(),
-	UserID:   uuid.New(),
-	Resource: uuid.New().String(),
-	Method:   uuid.New().String(),
+var entKyc = ent.Kyc{
+	ID:           uuid.New(),
+	AppID:        uuid.New(),
+	UserID:       uuid.New(),
+	DocumentType: npool.KycDocumentType_IDCard.String(),
+	IDNumber:     uuid.NewString(),
+	FrontImg:     uuid.NewString(),
+	BackImg:      uuid.NewString(),
+	SelfieImg:    uuid.NewString(),
+	EntityType:   npool.KycEntityType_Individual.String(),
 }
 
 var (
-	id     = entHistory.ID.String()
-	appID  = entHistory.AppID.String()
-	userID = entHistory.UserID.String()
+	id           = entKyc.ID.String()
+	appID        = entKyc.AppID.String()
+	userID       = entKyc.UserID.String()
+	documentType = npool.KycDocumentType_IDCard
+	entityType   = npool.KycEntityType_Individual
 
-	appInfo = npool.HistoryReq{
-		ID:       &id,
-		AppID:    &appID,
-		UserID:   &userID,
-		Resource: &entHistory.Resource,
-		Method:   &entHistory.Method,
+	kycInfo = npool.KycReq{
+		ID:           &id,
+		AppID:        &appID,
+		UserID:       &userID,
+		DocumentType: &documentType,
+		IDNumber:     &entKyc.IDNumber,
+		FrontImg:     &entKyc.FrontImg,
+		BackImg:      &entKyc.BackImg,
+		SelfieImg:    &entKyc.SelfieImg,
+		EntityType:   &entityType,
 	}
 )
 
-var info *ent.AuthHistory
+var info *ent.Kyc
 
 func create(t *testing.T) {
 	var err error
-	info, err = Create(context.Background(), &appInfo)
+	info, err = Create(context.Background(), &kycInfo)
 	if assert.Nil(t, err) {
 		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
-			entHistory.ID = info.ID
-			entHistory.CreatedAt = info.CreatedAt
-			entHistory.UpdatedAt = info.UpdatedAt
+			entKyc.ID = info.ID
+			entKyc.CreatedAt = info.CreatedAt
+			entKyc.UpdatedAt = info.UpdatedAt
 		}
-		assert.Equal(t, info.String(), entHistory.String())
+		assert.Equal(t, info.String(), entKyc.String())
 	}
 }
 
 func createBulk(t *testing.T) {
-	entHistory := []ent.AuthHistory{
+	entKyc := []ent.Kyc{
 		{
-			ID:       uuid.New(),
-			AppID:    uuid.New(),
-			UserID:   uuid.New(),
-			Resource: uuid.New().String(),
-			Method:   uuid.New().String(),
+			ID:           uuid.New(),
+			AppID:        uuid.New(),
+			UserID:       uuid.New(),
+			DocumentType: npool.KycDocumentType_IDCard.String(),
+			IDNumber:     uuid.NewString(),
+			FrontImg:     uuid.NewString(),
+			BackImg:      uuid.NewString(),
+			SelfieImg:    uuid.NewString(),
 		},
 		{
-			ID:       uuid.New(),
-			AppID:    uuid.New(),
-			UserID:   uuid.New(),
-			Resource: uuid.New().String(),
-			Method:   uuid.New().String(),
+			ID:           uuid.New(),
+			AppID:        uuid.New(),
+			UserID:       uuid.New(),
+			DocumentType: npool.KycDocumentType_IDCard.String(),
+			IDNumber:     uuid.NewString(),
+			FrontImg:     uuid.NewString(),
+			BackImg:      uuid.NewString(),
+			SelfieImg:    uuid.NewString(),
 		},
 	}
 
-	apps := []*npool.HistoryReq{}
-	for key := range entHistory {
-		id := entHistory[key].ID.String()
-		appID := entHistory[key].AppID.String()
-		userID := entHistory[key].UserID.String()
+	apps := []*npool.KycReq{}
+	for key := range entKyc {
+		id := entKyc[key].ID.String()
+		appID := entKyc[key].AppID.String()
+		userID := entKyc[key].UserID.String()
+		documentType = npool.KycDocumentType_IDCard
 
-		apps = append(apps, &npool.HistoryReq{
-			ID:       &id,
-			AppID:    &appID,
-			UserID:   &userID,
-			Resource: &entHistory[key].Resource,
-			Method:   &entHistory[key].Method,
+		apps = append(apps, &npool.KycReq{
+			ID:           &id,
+			AppID:        &appID,
+			UserID:       &userID,
+			DocumentType: &documentType,
+			IDNumber:     &entKyc[key].IDNumber,
+			FrontImg:     &entKyc[key].FrontImg,
+			BackImg:      &entKyc[key].BackImg,
+			SelfieImg:    &entKyc[key].SelfieImg,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), apps)
@@ -108,10 +128,10 @@ func createBulk(t *testing.T) {
 
 func update(t *testing.T) {
 	var err error
-	info, err = Update(context.Background(), &appInfo)
+	info, err = Update(context.Background(), &kycInfo)
 	if assert.Nil(t, err) {
-		entHistory.DeletedAt = info.DeletedAt
-		assert.Equal(t, info.String(), entHistory.String())
+		entKyc.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, info.String(), entKyc.String())
 	}
 }
 
@@ -119,7 +139,7 @@ func row(t *testing.T) {
 	var err error
 	info, err = Row(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info.String(), entHistory.String())
+		assert.Equal(t, info.String(), entKyc.String())
 	}
 }
 
@@ -133,7 +153,7 @@ func rows(t *testing.T) {
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, 1)
-		assert.Equal(t, infos[0].String(), entHistory.String())
+		assert.Equal(t, infos[0].String(), entKyc.String())
 	}
 }
 
@@ -147,7 +167,7 @@ func rowOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, info.String(), entHistory.String())
+		assert.Equal(t, info.String(), entKyc.String())
 	}
 }
 
@@ -189,9 +209,8 @@ func existConds(t *testing.T) {
 func deleteT(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		entHistory.DeletedAt = info.DeletedAt
-		entHistory.UpdatedAt = info.UpdatedAt
-		assert.Equal(t, info.String(), entHistory.String())
+		entKyc.DeletedAt = info.DeletedAt
+		assert.Equal(t, info.String(), entKyc.String())
 	}
 }
 

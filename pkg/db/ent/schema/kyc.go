@@ -60,6 +60,10 @@ func (Kyc) Fields() []ent.Field {
 			String("selfie_img").
 			Optional().
 			Default(""),
+		field.
+			String("entity_type").
+			Optional().
+			Default(npool.KycEntityType_Individual.String()),
 	}
 }
 

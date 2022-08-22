@@ -149,6 +149,13 @@ func SelfieImg(v string) predicate.Kyc {
 	})
 }
 
+// EntityType applies equality check predicate on the "entity_type" field. It's identical to EntityTypeEQ.
+func EntityType(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEntityType), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
@@ -1059,6 +1066,119 @@ func SelfieImgEqualFold(v string) predicate.Kyc {
 func SelfieImgContainsFold(v string) predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldSelfieImg), v))
+	})
+}
+
+// EntityTypeEQ applies the EQ predicate on the "entity_type" field.
+func EntityTypeEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeNEQ applies the NEQ predicate on the "entity_type" field.
+func EntityTypeNEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeIn applies the In predicate on the "entity_type" field.
+func EntityTypeIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldEntityType), v...))
+	})
+}
+
+// EntityTypeNotIn applies the NotIn predicate on the "entity_type" field.
+func EntityTypeNotIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldEntityType), v...))
+	})
+}
+
+// EntityTypeGT applies the GT predicate on the "entity_type" field.
+func EntityTypeGT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeGTE applies the GTE predicate on the "entity_type" field.
+func EntityTypeGTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeLT applies the LT predicate on the "entity_type" field.
+func EntityTypeLT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeLTE applies the LTE predicate on the "entity_type" field.
+func EntityTypeLTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeContains applies the Contains predicate on the "entity_type" field.
+func EntityTypeContains(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeHasPrefix applies the HasPrefix predicate on the "entity_type" field.
+func EntityTypeHasPrefix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeHasSuffix applies the HasSuffix predicate on the "entity_type" field.
+func EntityTypeHasSuffix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeIsNil applies the IsNil predicate on the "entity_type" field.
+func EntityTypeIsNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldEntityType)))
+	})
+}
+
+// EntityTypeNotNil applies the NotNil predicate on the "entity_type" field.
+func EntityTypeNotNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldEntityType)))
+	})
+}
+
+// EntityTypeEqualFold applies the EqualFold predicate on the "entity_type" field.
+func EntityTypeEqualFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEntityType), v))
+	})
+}
+
+// EntityTypeContainsFold applies the ContainsFold predicate on the "entity_type" field.
+func EntityTypeContainsFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEntityType), v))
 	})
 }
 

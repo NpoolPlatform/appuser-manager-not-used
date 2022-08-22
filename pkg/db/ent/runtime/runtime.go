@@ -737,6 +737,10 @@ func init() {
 	kycDescSelfieImg := kycFields[7].Descriptor()
 	// kyc.DefaultSelfieImg holds the default value on creation for the selfie_img field.
 	kyc.DefaultSelfieImg = kycDescSelfieImg.Default.(string)
+	// kycDescEntityType is the schema descriptor for entity_type field.
+	kycDescEntityType := kycFields[8].Descriptor()
+	// kyc.DefaultEntityType holds the default value on creation for the entity_type field.
+	kyc.DefaultEntityType = kycDescEntityType.Default.(string)
 	// kycDescID is the schema descriptor for id field.
 	kycDescID := kycFields[0].Descriptor()
 	// kyc.DefaultID holds the default value on creation for the id field.

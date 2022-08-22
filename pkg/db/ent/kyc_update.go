@@ -224,6 +224,26 @@ func (ku *KycUpdate) ClearSelfieImg() *KycUpdate {
 	return ku
 }
 
+// SetEntityType sets the "entity_type" field.
+func (ku *KycUpdate) SetEntityType(s string) *KycUpdate {
+	ku.mutation.SetEntityType(s)
+	return ku
+}
+
+// SetNillableEntityType sets the "entity_type" field if the given value is not nil.
+func (ku *KycUpdate) SetNillableEntityType(s *string) *KycUpdate {
+	if s != nil {
+		ku.SetEntityType(*s)
+	}
+	return ku
+}
+
+// ClearEntityType clears the value of the "entity_type" field.
+func (ku *KycUpdate) ClearEntityType() *KycUpdate {
+	ku.mutation.ClearEntityType()
+	return ku
+}
+
 // Mutation returns the KycMutation object of the builder.
 func (ku *KycUpdate) Mutation() *KycMutation {
 	return ku.mutation
@@ -455,6 +475,19 @@ func (ku *KycUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: kyc.FieldSelfieImg,
 		})
 	}
+	if value, ok := ku.mutation.EntityType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldEntityType,
+		})
+	}
+	if ku.mutation.EntityTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldEntityType,
+		})
+	}
 	_spec.Modifiers = ku.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, ku.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -668,6 +701,26 @@ func (kuo *KycUpdateOne) SetNillableSelfieImg(s *string) *KycUpdateOne {
 // ClearSelfieImg clears the value of the "selfie_img" field.
 func (kuo *KycUpdateOne) ClearSelfieImg() *KycUpdateOne {
 	kuo.mutation.ClearSelfieImg()
+	return kuo
+}
+
+// SetEntityType sets the "entity_type" field.
+func (kuo *KycUpdateOne) SetEntityType(s string) *KycUpdateOne {
+	kuo.mutation.SetEntityType(s)
+	return kuo
+}
+
+// SetNillableEntityType sets the "entity_type" field if the given value is not nil.
+func (kuo *KycUpdateOne) SetNillableEntityType(s *string) *KycUpdateOne {
+	if s != nil {
+		kuo.SetEntityType(*s)
+	}
+	return kuo
+}
+
+// ClearEntityType clears the value of the "entity_type" field.
+func (kuo *KycUpdateOne) ClearEntityType() *KycUpdateOne {
+	kuo.mutation.ClearEntityType()
 	return kuo
 }
 
@@ -930,6 +983,19 @@ func (kuo *KycUpdateOne) sqlSave(ctx context.Context) (_node *Kyc, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: kyc.FieldSelfieImg,
+		})
+	}
+	if value, ok := kuo.mutation.EntityType(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldEntityType,
+		})
+	}
+	if kuo.mutation.EntityTypeCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldEntityType,
 		})
 	}
 	_spec.Modifiers = kuo.modifiers
