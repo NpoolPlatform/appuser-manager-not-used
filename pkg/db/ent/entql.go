@@ -325,6 +325,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			kyc.FieldFrontImg:     {Type: field.TypeString, Column: kyc.FieldFrontImg},
 			kyc.FieldBackImg:      {Type: field.TypeString, Column: kyc.FieldBackImg},
 			kyc.FieldSelfieImg:    {Type: field.TypeString, Column: kyc.FieldSelfieImg},
+			kyc.FieldEntityType:   {Type: field.TypeString, Column: kyc.FieldEntityType},
 		},
 	}
 	graph.Nodes[14] = &sqlgraph.Node{
@@ -1500,6 +1501,11 @@ func (f *KycFilter) WhereBackImg(p entql.StringP) {
 // WhereSelfieImg applies the entql string predicate on the selfie_img field.
 func (f *KycFilter) WhereSelfieImg(p entql.StringP) {
 	f.Where(p.Field(kyc.FieldSelfieImg))
+}
+
+// WhereEntityType applies the entql string predicate on the entity_type field.
+func (f *KycFilter) WhereEntityType(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldEntityType))
 }
 
 // addPredicate implements the predicateAdder interface.

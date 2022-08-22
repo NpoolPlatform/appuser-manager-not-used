@@ -163,6 +163,20 @@ func (kc *KycCreate) SetNillableSelfieImg(s *string) *KycCreate {
 	return kc
 }
 
+// SetEntityType sets the "entity_type" field.
+func (kc *KycCreate) SetEntityType(s string) *KycCreate {
+	kc.mutation.SetEntityType(s)
+	return kc
+}
+
+// SetNillableEntityType sets the "entity_type" field if the given value is not nil.
+func (kc *KycCreate) SetNillableEntityType(s *string) *KycCreate {
+	if s != nil {
+		kc.SetEntityType(*s)
+	}
+	return kc
+}
+
 // SetID sets the "id" field.
 func (kc *KycCreate) SetID(u uuid.UUID) *KycCreate {
 	kc.mutation.SetID(u)
@@ -311,6 +325,10 @@ func (kc *KycCreate) defaults() error {
 		v := kyc.DefaultSelfieImg
 		kc.mutation.SetSelfieImg(v)
 	}
+	if _, ok := kc.mutation.EntityType(); !ok {
+		v := kyc.DefaultEntityType
+		kc.mutation.SetEntityType(v)
+	}
 	if _, ok := kc.mutation.ID(); !ok {
 		if kyc.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized kyc.DefaultID (forgotten import ent/runtime?)")
@@ -448,6 +466,14 @@ func (kc *KycCreate) createSpec() (*Kyc, *sqlgraph.CreateSpec) {
 			Column: kyc.FieldSelfieImg,
 		})
 		_node.SelfieImg = value
+	}
+	if value, ok := kc.mutation.EntityType(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldEntityType,
+		})
+		_node.EntityType = value
 	}
 	return _node, _spec
 }
@@ -680,6 +706,24 @@ func (u *KycUpsert) UpdateSelfieImg() *KycUpsert {
 // ClearSelfieImg clears the value of the "selfie_img" field.
 func (u *KycUpsert) ClearSelfieImg() *KycUpsert {
 	u.SetNull(kyc.FieldSelfieImg)
+	return u
+}
+
+// SetEntityType sets the "entity_type" field.
+func (u *KycUpsert) SetEntityType(v string) *KycUpsert {
+	u.Set(kyc.FieldEntityType, v)
+	return u
+}
+
+// UpdateEntityType sets the "entity_type" field to the value that was provided on create.
+func (u *KycUpsert) UpdateEntityType() *KycUpsert {
+	u.SetExcluded(kyc.FieldEntityType)
+	return u
+}
+
+// ClearEntityType clears the value of the "entity_type" field.
+func (u *KycUpsert) ClearEntityType() *KycUpsert {
+	u.SetNull(kyc.FieldEntityType)
 	return u
 }
 
@@ -940,6 +984,27 @@ func (u *KycUpsertOne) UpdateSelfieImg() *KycUpsertOne {
 func (u *KycUpsertOne) ClearSelfieImg() *KycUpsertOne {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearSelfieImg()
+	})
+}
+
+// SetEntityType sets the "entity_type" field.
+func (u *KycUpsertOne) SetEntityType(v string) *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.SetEntityType(v)
+	})
+}
+
+// UpdateEntityType sets the "entity_type" field to the value that was provided on create.
+func (u *KycUpsertOne) UpdateEntityType() *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.UpdateEntityType()
+	})
+}
+
+// ClearEntityType clears the value of the "entity_type" field.
+func (u *KycUpsertOne) ClearEntityType() *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.ClearEntityType()
 	})
 }
 
@@ -1366,6 +1431,27 @@ func (u *KycUpsertBulk) UpdateSelfieImg() *KycUpsertBulk {
 func (u *KycUpsertBulk) ClearSelfieImg() *KycUpsertBulk {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearSelfieImg()
+	})
+}
+
+// SetEntityType sets the "entity_type" field.
+func (u *KycUpsertBulk) SetEntityType(v string) *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.SetEntityType(v)
+	})
+}
+
+// UpdateEntityType sets the "entity_type" field to the value that was provided on create.
+func (u *KycUpsertBulk) UpdateEntityType() *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.UpdateEntityType()
+	})
+}
+
+// ClearEntityType clears the value of the "entity_type" field.
+func (u *KycUpsertBulk) ClearEntityType() *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.ClearEntityType()
 	})
 }
 

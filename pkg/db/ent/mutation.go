@@ -11545,6 +11545,7 @@ type KycMutation struct {
 	front_img     *string
 	back_img      *string
 	selfie_img    *string
+	entity_type   *string
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Kyc, error)
@@ -12166,6 +12167,55 @@ func (m *KycMutation) ResetSelfieImg() {
 	delete(m.clearedFields, kyc.FieldSelfieImg)
 }
 
+// SetEntityType sets the "entity_type" field.
+func (m *KycMutation) SetEntityType(s string) {
+	m.entity_type = &s
+}
+
+// EntityType returns the value of the "entity_type" field in the mutation.
+func (m *KycMutation) EntityType() (r string, exists bool) {
+	v := m.entity_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntityType returns the old "entity_type" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldEntityType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntityType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntityType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntityType: %w", err)
+	}
+	return oldValue.EntityType, nil
+}
+
+// ClearEntityType clears the value of the "entity_type" field.
+func (m *KycMutation) ClearEntityType() {
+	m.entity_type = nil
+	m.clearedFields[kyc.FieldEntityType] = struct{}{}
+}
+
+// EntityTypeCleared returns if the "entity_type" field was cleared in this mutation.
+func (m *KycMutation) EntityTypeCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldEntityType]
+	return ok
+}
+
+// ResetEntityType resets all changes to the "entity_type" field.
+func (m *KycMutation) ResetEntityType() {
+	m.entity_type = nil
+	delete(m.clearedFields, kyc.FieldEntityType)
+}
+
 // Where appends a list predicates to the KycMutation builder.
 func (m *KycMutation) Where(ps ...predicate.Kyc) {
 	m.predicates = append(m.predicates, ps...)
@@ -12185,7 +12235,7 @@ func (m *KycMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *KycMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, kyc.FieldCreatedAt)
 	}
@@ -12216,6 +12266,9 @@ func (m *KycMutation) Fields() []string {
 	if m.selfie_img != nil {
 		fields = append(fields, kyc.FieldSelfieImg)
 	}
+	if m.entity_type != nil {
+		fields = append(fields, kyc.FieldEntityType)
+	}
 	return fields
 }
 
@@ -12244,6 +12297,8 @@ func (m *KycMutation) Field(name string) (ent.Value, bool) {
 		return m.BackImg()
 	case kyc.FieldSelfieImg:
 		return m.SelfieImg()
+	case kyc.FieldEntityType:
+		return m.EntityType()
 	}
 	return nil, false
 }
@@ -12273,6 +12328,8 @@ func (m *KycMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldBackImg(ctx)
 	case kyc.FieldSelfieImg:
 		return m.OldSelfieImg(ctx)
+	case kyc.FieldEntityType:
+		return m.OldEntityType(ctx)
 	}
 	return nil, fmt.Errorf("unknown Kyc field %s", name)
 }
@@ -12351,6 +12408,13 @@ func (m *KycMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSelfieImg(v)
+		return nil
+	case kyc.FieldEntityType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntityType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Kyc field %s", name)
@@ -12442,6 +12506,9 @@ func (m *KycMutation) ClearedFields() []string {
 	if m.FieldCleared(kyc.FieldSelfieImg) {
 		fields = append(fields, kyc.FieldSelfieImg)
 	}
+	if m.FieldCleared(kyc.FieldEntityType) {
+		fields = append(fields, kyc.FieldEntityType)
+	}
 	return fields
 }
 
@@ -12476,6 +12543,9 @@ func (m *KycMutation) ClearField(name string) error {
 		return nil
 	case kyc.FieldSelfieImg:
 		m.ClearSelfieImg()
+		return nil
+	case kyc.FieldEntityType:
+		m.ClearEntityType()
 		return nil
 	}
 	return fmt.Errorf("unknown Kyc nullable field %s", name)
@@ -12514,6 +12584,9 @@ func (m *KycMutation) ResetField(name string) error {
 		return nil
 	case kyc.FieldSelfieImg:
 		m.ResetSelfieImg()
+		return nil
+	case kyc.FieldEntityType:
+		m.ResetEntityType()
 		return nil
 	}
 	return fmt.Errorf("unknown Kyc field %s", name)
