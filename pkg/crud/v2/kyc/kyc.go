@@ -201,7 +201,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.Kyc, error) {
 }
 
 //nolint:nolintlint,gocyclo
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
+func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 	stm := cli.Kyc.Query()
 
 	if conds.ID != nil {
@@ -242,6 +242,33 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 			return nil, fmt.Errorf("invalid kyc field")
 		}
 	}
+
+	if conds.IDNumber != nil {
+		switch conds.GetIDNumber().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.IDNumber(conds.GetIDNumber().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
+
+	if conds.DocumentType != nil {
+		switch conds.GetDocumentType().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.DocumentType(conds.GetDocumentType().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
+
+	if conds.EntityType != nil {
+		switch conds.GetEntityType().GetOp() {
+		case cruder.EQ:
+			stm.Where(kyc.EntityType(conds.GetEntityType().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid kyc field")
+		}
+	}
 	return stm, nil
 }
 
@@ -264,7 +291,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Ky
 	span = commontracer.TraceOffsetLimit(span, offset, limit)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
@@ -308,7 +335,7 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.Kyc, error) {
 	span = tracer.TraceConds(span, conds)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
@@ -346,7 +373,7 @@ func Count(ctx context.Context, conds *npool.Conds) (uint32, error) {
 	var total int
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
@@ -409,7 +436,7 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	exist := false
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		stm, err := setQueryConds(conds, cli)
+		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
 		}
