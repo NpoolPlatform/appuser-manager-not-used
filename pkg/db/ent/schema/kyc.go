@@ -64,6 +64,12 @@ func (Kyc) Fields() []ent.Field {
 			String("entity_type").
 			Optional().
 			Default(npool.KycEntityType_Individual.String()),
+		field.
+			UUID("review_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
 	}
 }
 

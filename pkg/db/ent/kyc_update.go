@@ -244,6 +244,26 @@ func (ku *KycUpdate) ClearEntityType() *KycUpdate {
 	return ku
 }
 
+// SetReviewID sets the "review_id" field.
+func (ku *KycUpdate) SetReviewID(u uuid.UUID) *KycUpdate {
+	ku.mutation.SetReviewID(u)
+	return ku
+}
+
+// SetNillableReviewID sets the "review_id" field if the given value is not nil.
+func (ku *KycUpdate) SetNillableReviewID(u *uuid.UUID) *KycUpdate {
+	if u != nil {
+		ku.SetReviewID(*u)
+	}
+	return ku
+}
+
+// ClearReviewID clears the value of the "review_id" field.
+func (ku *KycUpdate) ClearReviewID() *KycUpdate {
+	ku.mutation.ClearReviewID()
+	return ku
+}
+
 // Mutation returns the KycMutation object of the builder.
 func (ku *KycUpdate) Mutation() *KycMutation {
 	return ku.mutation
@@ -488,6 +508,19 @@ func (ku *KycUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: kyc.FieldEntityType,
 		})
 	}
+	if value, ok := ku.mutation.ReviewID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: kyc.FieldReviewID,
+		})
+	}
+	if ku.mutation.ReviewIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: kyc.FieldReviewID,
+		})
+	}
 	_spec.Modifiers = ku.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, ku.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -721,6 +754,26 @@ func (kuo *KycUpdateOne) SetNillableEntityType(s *string) *KycUpdateOne {
 // ClearEntityType clears the value of the "entity_type" field.
 func (kuo *KycUpdateOne) ClearEntityType() *KycUpdateOne {
 	kuo.mutation.ClearEntityType()
+	return kuo
+}
+
+// SetReviewID sets the "review_id" field.
+func (kuo *KycUpdateOne) SetReviewID(u uuid.UUID) *KycUpdateOne {
+	kuo.mutation.SetReviewID(u)
+	return kuo
+}
+
+// SetNillableReviewID sets the "review_id" field if the given value is not nil.
+func (kuo *KycUpdateOne) SetNillableReviewID(u *uuid.UUID) *KycUpdateOne {
+	if u != nil {
+		kuo.SetReviewID(*u)
+	}
+	return kuo
+}
+
+// ClearReviewID clears the value of the "review_id" field.
+func (kuo *KycUpdateOne) ClearReviewID() *KycUpdateOne {
+	kuo.mutation.ClearReviewID()
 	return kuo
 }
 
@@ -996,6 +1049,19 @@ func (kuo *KycUpdateOne) sqlSave(ctx context.Context) (_node *Kyc, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: kyc.FieldEntityType,
+		})
+	}
+	if value, ok := kuo.mutation.ReviewID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: kyc.FieldReviewID,
+		})
+	}
+	if kuo.mutation.ReviewIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Column: kyc.FieldReviewID,
 		})
 	}
 	_spec.Modifiers = kuo.modifiers

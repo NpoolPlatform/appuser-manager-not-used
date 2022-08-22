@@ -156,6 +156,13 @@ func EntityType(v string) predicate.Kyc {
 	})
 }
 
+// ReviewID applies equality check predicate on the "review_id" field. It's identical to ReviewIDEQ.
+func ReviewID(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReviewID), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
@@ -1179,6 +1186,84 @@ func EntityTypeEqualFold(v string) predicate.Kyc {
 func EntityTypeContainsFold(v string) predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldEntityType), v))
+	})
+}
+
+// ReviewIDEQ applies the EQ predicate on the "review_id" field.
+func ReviewIDEQ(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReviewID), v))
+	})
+}
+
+// ReviewIDNEQ applies the NEQ predicate on the "review_id" field.
+func ReviewIDNEQ(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldReviewID), v))
+	})
+}
+
+// ReviewIDIn applies the In predicate on the "review_id" field.
+func ReviewIDIn(vs ...uuid.UUID) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldReviewID), v...))
+	})
+}
+
+// ReviewIDNotIn applies the NotIn predicate on the "review_id" field.
+func ReviewIDNotIn(vs ...uuid.UUID) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldReviewID), v...))
+	})
+}
+
+// ReviewIDGT applies the GT predicate on the "review_id" field.
+func ReviewIDGT(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldReviewID), v))
+	})
+}
+
+// ReviewIDGTE applies the GTE predicate on the "review_id" field.
+func ReviewIDGTE(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldReviewID), v))
+	})
+}
+
+// ReviewIDLT applies the LT predicate on the "review_id" field.
+func ReviewIDLT(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldReviewID), v))
+	})
+}
+
+// ReviewIDLTE applies the LTE predicate on the "review_id" field.
+func ReviewIDLTE(v uuid.UUID) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldReviewID), v))
+	})
+}
+
+// ReviewIDIsNil applies the IsNil predicate on the "review_id" field.
+func ReviewIDIsNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldReviewID)))
+	})
+}
+
+// ReviewIDNotNil applies the NotNil predicate on the "review_id" field.
+func ReviewIDNotNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldReviewID)))
 	})
 }
 

@@ -177,6 +177,20 @@ func (kc *KycCreate) SetNillableEntityType(s *string) *KycCreate {
 	return kc
 }
 
+// SetReviewID sets the "review_id" field.
+func (kc *KycCreate) SetReviewID(u uuid.UUID) *KycCreate {
+	kc.mutation.SetReviewID(u)
+	return kc
+}
+
+// SetNillableReviewID sets the "review_id" field if the given value is not nil.
+func (kc *KycCreate) SetNillableReviewID(u *uuid.UUID) *KycCreate {
+	if u != nil {
+		kc.SetReviewID(*u)
+	}
+	return kc
+}
+
 // SetID sets the "id" field.
 func (kc *KycCreate) SetID(u uuid.UUID) *KycCreate {
 	kc.mutation.SetID(u)
@@ -329,6 +343,13 @@ func (kc *KycCreate) defaults() error {
 		v := kyc.DefaultEntityType
 		kc.mutation.SetEntityType(v)
 	}
+	if _, ok := kc.mutation.ReviewID(); !ok {
+		if kyc.DefaultReviewID == nil {
+			return fmt.Errorf("ent: uninitialized kyc.DefaultReviewID (forgotten import ent/runtime?)")
+		}
+		v := kyc.DefaultReviewID()
+		kc.mutation.SetReviewID(v)
+	}
 	if _, ok := kc.mutation.ID(); !ok {
 		if kyc.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized kyc.DefaultID (forgotten import ent/runtime?)")
@@ -474,6 +495,14 @@ func (kc *KycCreate) createSpec() (*Kyc, *sqlgraph.CreateSpec) {
 			Column: kyc.FieldEntityType,
 		})
 		_node.EntityType = value
+	}
+	if value, ok := kc.mutation.ReviewID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: kyc.FieldReviewID,
+		})
+		_node.ReviewID = value
 	}
 	return _node, _spec
 }
@@ -724,6 +753,24 @@ func (u *KycUpsert) UpdateEntityType() *KycUpsert {
 // ClearEntityType clears the value of the "entity_type" field.
 func (u *KycUpsert) ClearEntityType() *KycUpsert {
 	u.SetNull(kyc.FieldEntityType)
+	return u
+}
+
+// SetReviewID sets the "review_id" field.
+func (u *KycUpsert) SetReviewID(v uuid.UUID) *KycUpsert {
+	u.Set(kyc.FieldReviewID, v)
+	return u
+}
+
+// UpdateReviewID sets the "review_id" field to the value that was provided on create.
+func (u *KycUpsert) UpdateReviewID() *KycUpsert {
+	u.SetExcluded(kyc.FieldReviewID)
+	return u
+}
+
+// ClearReviewID clears the value of the "review_id" field.
+func (u *KycUpsert) ClearReviewID() *KycUpsert {
+	u.SetNull(kyc.FieldReviewID)
 	return u
 }
 
@@ -1005,6 +1052,27 @@ func (u *KycUpsertOne) UpdateEntityType() *KycUpsertOne {
 func (u *KycUpsertOne) ClearEntityType() *KycUpsertOne {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearEntityType()
+	})
+}
+
+// SetReviewID sets the "review_id" field.
+func (u *KycUpsertOne) SetReviewID(v uuid.UUID) *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.SetReviewID(v)
+	})
+}
+
+// UpdateReviewID sets the "review_id" field to the value that was provided on create.
+func (u *KycUpsertOne) UpdateReviewID() *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.UpdateReviewID()
+	})
+}
+
+// ClearReviewID clears the value of the "review_id" field.
+func (u *KycUpsertOne) ClearReviewID() *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.ClearReviewID()
 	})
 }
 
@@ -1452,6 +1520,27 @@ func (u *KycUpsertBulk) UpdateEntityType() *KycUpsertBulk {
 func (u *KycUpsertBulk) ClearEntityType() *KycUpsertBulk {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearEntityType()
+	})
+}
+
+// SetReviewID sets the "review_id" field.
+func (u *KycUpsertBulk) SetReviewID(v uuid.UUID) *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.SetReviewID(v)
+	})
+}
+
+// UpdateReviewID sets the "review_id" field to the value that was provided on create.
+func (u *KycUpsertBulk) UpdateReviewID() *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.UpdateReviewID()
+	})
+}
+
+// ClearReviewID clears the value of the "review_id" field.
+func (u *KycUpsertBulk) ClearReviewID() *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.ClearReviewID()
 	})
 }
 

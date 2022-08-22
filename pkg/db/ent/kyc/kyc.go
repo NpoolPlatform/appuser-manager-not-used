@@ -34,6 +34,8 @@ const (
 	FieldSelfieImg = "selfie_img"
 	// FieldEntityType holds the string denoting the entity_type field in the database.
 	FieldEntityType = "entity_type"
+	// FieldReviewID holds the string denoting the review_id field in the database.
+	FieldReviewID = "review_id"
 	// Table holds the table name of the kyc in the database.
 	Table = "kycs"
 )
@@ -52,6 +54,7 @@ var Columns = []string{
 	FieldBackImg,
 	FieldSelfieImg,
 	FieldEntityType,
+	FieldReviewID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -97,6 +100,8 @@ var (
 	DefaultSelfieImg string
 	// DefaultEntityType holds the default value on creation for the "entity_type" field.
 	DefaultEntityType string
+	// DefaultReviewID holds the default value on creation for the "review_id" field.
+	DefaultReviewID func() uuid.UUID
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
