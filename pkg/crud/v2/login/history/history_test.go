@@ -111,6 +111,8 @@ func update(t *testing.T) {
 	info, err = Update(context.Background(), &appInfo)
 	if assert.Nil(t, err) {
 		entHistory.DeletedAt = info.DeletedAt
+		entHistory.CreatedAt = info.CreatedAt
+		entHistory.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info.String(), entHistory.String())
 	}
 }
@@ -190,6 +192,8 @@ func deleteT(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		entHistory.DeletedAt = info.DeletedAt
+		entHistory.CreatedAt = info.CreatedAt
+		entHistory.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info.String(), entHistory.String())
 	}
 }

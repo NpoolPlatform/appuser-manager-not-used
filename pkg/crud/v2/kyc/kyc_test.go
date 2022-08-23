@@ -210,6 +210,7 @@ func deleteT(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		entKyc.DeletedAt = info.DeletedAt
+		entKyc.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info.String(), entKyc.String())
 	}
 }

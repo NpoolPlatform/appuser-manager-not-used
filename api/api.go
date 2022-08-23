@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 
+	v1 "github.com/NpoolPlatform/appuser-manager/api/v1"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/kyc"
 
 	"github.com/NpoolPlatform/appuser-manager/api/v2/app"
@@ -47,11 +48,12 @@ func Register(server grpc.ServiceRegistrar) {
 	authhis.Register(server)
 	loginhis.Register(server)
 	kyc.Register(server)
+	v1.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
 	if err := appusermgr.RegisterManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
 		return err
 	}
-	return nil
+	return v1.RegisterGateway(mux, endpoint, opts)
 }
