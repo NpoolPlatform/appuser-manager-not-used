@@ -122,6 +122,7 @@ func updateKyc(t *testing.T) {
 	var err error
 	info, err = UpdateKyc(context.Background(), &kycInfo)
 	if assert.Nil(t, err) {
+		kycData.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &kycData)
 	}
 }
@@ -200,6 +201,7 @@ func existKycConds(t *testing.T) {
 func deleteKyc(t *testing.T) {
 	info, err := DeleteKyc(context.Background(), info.ID)
 	if assert.Nil(t, err) {
+		kycData.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &kycData)
 	}
 }
