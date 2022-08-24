@@ -128,13 +128,6 @@ func Description(v string) predicate.App {
 	})
 }
 
-// SigninVerifyType applies equality check predicate on the "signin_verify_type" field. It's identical to SigninVerifyTypeEQ.
-func SigninVerifyType(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSigninVerifyType), v))
-	})
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
@@ -741,119 +734,6 @@ func DescriptionEqualFold(v string) predicate.App {
 func DescriptionContainsFold(v string) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldDescription), v))
-	})
-}
-
-// SigninVerifyTypeEQ applies the EQ predicate on the "signin_verify_type" field.
-func SigninVerifyTypeEQ(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeNEQ applies the NEQ predicate on the "signin_verify_type" field.
-func SigninVerifyTypeNEQ(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeIn applies the In predicate on the "signin_verify_type" field.
-func SigninVerifyTypeIn(vs ...string) predicate.App {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldSigninVerifyType), v...))
-	})
-}
-
-// SigninVerifyTypeNotIn applies the NotIn predicate on the "signin_verify_type" field.
-func SigninVerifyTypeNotIn(vs ...string) predicate.App {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldSigninVerifyType), v...))
-	})
-}
-
-// SigninVerifyTypeGT applies the GT predicate on the "signin_verify_type" field.
-func SigninVerifyTypeGT(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeGTE applies the GTE predicate on the "signin_verify_type" field.
-func SigninVerifyTypeGTE(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeLT applies the LT predicate on the "signin_verify_type" field.
-func SigninVerifyTypeLT(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeLTE applies the LTE predicate on the "signin_verify_type" field.
-func SigninVerifyTypeLTE(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeContains applies the Contains predicate on the "signin_verify_type" field.
-func SigninVerifyTypeContains(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeHasPrefix applies the HasPrefix predicate on the "signin_verify_type" field.
-func SigninVerifyTypeHasPrefix(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeHasSuffix applies the HasSuffix predicate on the "signin_verify_type" field.
-func SigninVerifyTypeHasSuffix(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeIsNil applies the IsNil predicate on the "signin_verify_type" field.
-func SigninVerifyTypeIsNil() predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldSigninVerifyType)))
-	})
-}
-
-// SigninVerifyTypeNotNil applies the NotNil predicate on the "signin_verify_type" field.
-func SigninVerifyTypeNotNil() predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldSigninVerifyType)))
-	})
-}
-
-// SigninVerifyTypeEqualFold applies the EqualFold predicate on the "signin_verify_type" field.
-func SigninVerifyTypeEqualFold(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldSigninVerifyType), v))
-	})
-}
-
-// SigninVerifyTypeContainsFold applies the ContainsFold predicate on the "signin_verify_type" field.
-func SigninVerifyTypeContainsFold(v string) predicate.App {
-	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldSigninVerifyType), v))
 	})
 }
 

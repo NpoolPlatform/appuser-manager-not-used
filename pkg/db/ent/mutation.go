@@ -58,24 +58,23 @@ const (
 // AppMutation represents an operation that mutates the App nodes in the graph.
 type AppMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *uuid.UUID
-	created_at         *uint32
-	addcreated_at      *int32
-	updated_at         *uint32
-	addupdated_at      *int32
-	deleted_at         *uint32
-	adddeleted_at      *int32
-	created_by         *uuid.UUID
-	name               *string
-	logo               *string
-	description        *string
-	signin_verify_type *string
-	clearedFields      map[string]struct{}
-	done               bool
-	oldValue           func(context.Context) (*App, error)
-	predicates         []predicate.App
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	created_by    *uuid.UUID
+	name          *string
+	logo          *string
+	description   *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*App, error)
+	predicates    []predicate.App
 }
 
 var _ ent.Mutation = (*AppMutation)(nil)
@@ -546,55 +545,6 @@ func (m *AppMutation) ResetDescription() {
 	delete(m.clearedFields, app.FieldDescription)
 }
 
-// SetSigninVerifyType sets the "signin_verify_type" field.
-func (m *AppMutation) SetSigninVerifyType(s string) {
-	m.signin_verify_type = &s
-}
-
-// SigninVerifyType returns the value of the "signin_verify_type" field in the mutation.
-func (m *AppMutation) SigninVerifyType() (r string, exists bool) {
-	v := m.signin_verify_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSigninVerifyType returns the old "signin_verify_type" field's value of the App entity.
-// If the App object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppMutation) OldSigninVerifyType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSigninVerifyType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSigninVerifyType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSigninVerifyType: %w", err)
-	}
-	return oldValue.SigninVerifyType, nil
-}
-
-// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
-func (m *AppMutation) ClearSigninVerifyType() {
-	m.signin_verify_type = nil
-	m.clearedFields[app.FieldSigninVerifyType] = struct{}{}
-}
-
-// SigninVerifyTypeCleared returns if the "signin_verify_type" field was cleared in this mutation.
-func (m *AppMutation) SigninVerifyTypeCleared() bool {
-	_, ok := m.clearedFields[app.FieldSigninVerifyType]
-	return ok
-}
-
-// ResetSigninVerifyType resets all changes to the "signin_verify_type" field.
-func (m *AppMutation) ResetSigninVerifyType() {
-	m.signin_verify_type = nil
-	delete(m.clearedFields, app.FieldSigninVerifyType)
-}
-
 // Where appends a list predicates to the AppMutation builder.
 func (m *AppMutation) Where(ps ...predicate.App) {
 	m.predicates = append(m.predicates, ps...)
@@ -614,7 +564,7 @@ func (m *AppMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 7)
 	if m.created_at != nil {
 		fields = append(fields, app.FieldCreatedAt)
 	}
@@ -635,9 +585,6 @@ func (m *AppMutation) Fields() []string {
 	}
 	if m.description != nil {
 		fields = append(fields, app.FieldDescription)
-	}
-	if m.signin_verify_type != nil {
-		fields = append(fields, app.FieldSigninVerifyType)
 	}
 	return fields
 }
@@ -661,8 +608,6 @@ func (m *AppMutation) Field(name string) (ent.Value, bool) {
 		return m.Logo()
 	case app.FieldDescription:
 		return m.Description()
-	case app.FieldSigninVerifyType:
-		return m.SigninVerifyType()
 	}
 	return nil, false
 }
@@ -686,8 +631,6 @@ func (m *AppMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldLogo(ctx)
 	case app.FieldDescription:
 		return m.OldDescription(ctx)
-	case app.FieldSigninVerifyType:
-		return m.OldSigninVerifyType(ctx)
 	}
 	return nil, fmt.Errorf("unknown App field %s", name)
 }
@@ -745,13 +688,6 @@ func (m *AppMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDescription(v)
-		return nil
-	case app.FieldSigninVerifyType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSigninVerifyType(v)
 		return nil
 	}
 	return fmt.Errorf("unknown App field %s", name)
@@ -834,9 +770,6 @@ func (m *AppMutation) ClearedFields() []string {
 	if m.FieldCleared(app.FieldDescription) {
 		fields = append(fields, app.FieldDescription)
 	}
-	if m.FieldCleared(app.FieldSigninVerifyType) {
-		fields = append(fields, app.FieldSigninVerifyType)
-	}
 	return fields
 }
 
@@ -862,9 +795,6 @@ func (m *AppMutation) ClearField(name string) error {
 		return nil
 	case app.FieldDescription:
 		m.ClearDescription()
-		return nil
-	case app.FieldSigninVerifyType:
-		m.ClearSigninVerifyType()
 		return nil
 	}
 	return fmt.Errorf("unknown App nullable field %s", name)
@@ -894,9 +824,6 @@ func (m *AppMutation) ResetField(name string) error {
 		return nil
 	case app.FieldDescription:
 		m.ResetDescription()
-		return nil
-	case app.FieldSigninVerifyType:
-		m.ResetSigninVerifyType()
 		return nil
 	}
 	return fmt.Errorf("unknown App field %s", name)

@@ -39,14 +39,13 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "App",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			app.FieldCreatedAt:        {Type: field.TypeUint32, Column: app.FieldCreatedAt},
-			app.FieldUpdatedAt:        {Type: field.TypeUint32, Column: app.FieldUpdatedAt},
-			app.FieldDeletedAt:        {Type: field.TypeUint32, Column: app.FieldDeletedAt},
-			app.FieldCreatedBy:        {Type: field.TypeUUID, Column: app.FieldCreatedBy},
-			app.FieldName:             {Type: field.TypeString, Column: app.FieldName},
-			app.FieldLogo:             {Type: field.TypeString, Column: app.FieldLogo},
-			app.FieldDescription:      {Type: field.TypeString, Column: app.FieldDescription},
-			app.FieldSigninVerifyType: {Type: field.TypeString, Column: app.FieldSigninVerifyType},
+			app.FieldCreatedAt:   {Type: field.TypeUint32, Column: app.FieldCreatedAt},
+			app.FieldUpdatedAt:   {Type: field.TypeUint32, Column: app.FieldUpdatedAt},
+			app.FieldDeletedAt:   {Type: field.TypeUint32, Column: app.FieldDeletedAt},
+			app.FieldCreatedBy:   {Type: field.TypeUUID, Column: app.FieldCreatedBy},
+			app.FieldName:        {Type: field.TypeString, Column: app.FieldName},
+			app.FieldLogo:        {Type: field.TypeString, Column: app.FieldLogo},
+			app.FieldDescription: {Type: field.TypeString, Column: app.FieldDescription},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -432,11 +431,6 @@ func (f *AppFilter) WhereLogo(p entql.StringP) {
 // WhereDescription applies the entql string predicate on the description field.
 func (f *AppFilter) WhereDescription(p entql.StringP) {
 	f.Where(p.Field(app.FieldDescription))
-}
-
-// WhereSigninVerifyType applies the entql string predicate on the signin_verify_type field.
-func (f *AppFilter) WhereSigninVerifyType(p entql.StringP) {
-	f.Where(p.Field(app.FieldSigninVerifyType))
 }
 
 // addPredicate implements the predicateAdder interface.

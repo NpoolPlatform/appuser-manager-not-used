@@ -18,7 +18,6 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "logo", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "signin_verify_type", Type: field.TypeString, Nullable: true, Default: "Email"},
 	}
 	// AppsTable holds the schema information for the "apps" table.
 	AppsTable = &schema.Table{

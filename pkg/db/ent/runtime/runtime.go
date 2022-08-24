@@ -71,10 +71,6 @@ func init() {
 	appDescDescription := appFields[4].Descriptor()
 	// app.DefaultDescription holds the default value on creation for the description field.
 	app.DefaultDescription = appDescDescription.Default.(string)
-	// appDescSigninVerifyType is the schema descriptor for signin_verify_type field.
-	appDescSigninVerifyType := appFields[5].Descriptor()
-	// app.DefaultSigninVerifyType holds the default value on creation for the signin_verify_type field.
-	app.DefaultSigninVerifyType = appDescSigninVerifyType.Default.(string)
 	// appDescID is the schema descriptor for id field.
 	appDescID := appFields[0].Descriptor()
 	// app.DefaultID holds the default value on creation for the id field.

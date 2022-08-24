@@ -26,8 +26,6 @@ const (
 	FieldLogo = "logo"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
-	// FieldSigninVerifyType holds the string denoting the signin_verify_type field in the database.
-	FieldSigninVerifyType = "signin_verify_type"
 	// Table holds the table name of the app in the database.
 	Table = "apps"
 )
@@ -42,7 +40,6 @@ var Columns = []string{
 	FieldName,
 	FieldLogo,
 	FieldDescription,
-	FieldSigninVerifyType,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -78,8 +75,6 @@ var (
 	DefaultLogo string
 	// DefaultDescription holds the default value on creation for the "description" field.
 	DefaultDescription string
-	// DefaultSigninVerifyType holds the default value on creation for the "signin_verify_type" field.
-	DefaultSigninVerifyType string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

@@ -30,8 +30,6 @@ type App struct {
 	Logo string `json:"logo,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
-	// SigninVerifyType holds the value of the "signin_verify_type" field.
-	SigninVerifyType string `json:"signin_verify_type,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -41,7 +39,7 @@ func (*App) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case app.FieldCreatedAt, app.FieldUpdatedAt, app.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case app.FieldName, app.FieldLogo, app.FieldDescription, app.FieldSigninVerifyType:
+		case app.FieldName, app.FieldLogo, app.FieldDescription:
 			values[i] = new(sql.NullString)
 		case app.FieldID, app.FieldCreatedBy:
 			values[i] = new(uuid.UUID)
@@ -108,12 +106,6 @@ func (a *App) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				a.Description = value.String
 			}
-		case app.FieldSigninVerifyType:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field signin_verify_type", values[i])
-			} else if value.Valid {
-				a.SigninVerifyType = value.String
-			}
 		}
 	}
 	return nil
@@ -162,9 +154,6 @@ func (a *App) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(a.Description)
-	builder.WriteString(", ")
-	builder.WriteString("signin_verify_type=")
-	builder.WriteString(a.SigninVerifyType)
 	builder.WriteByte(')')
 	return builder.String()
 }

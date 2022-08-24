@@ -164,26 +164,6 @@ func (au *AppUpdate) ClearDescription() *AppUpdate {
 	return au
 }
 
-// SetSigninVerifyType sets the "signin_verify_type" field.
-func (au *AppUpdate) SetSigninVerifyType(s string) *AppUpdate {
-	au.mutation.SetSigninVerifyType(s)
-	return au
-}
-
-// SetNillableSigninVerifyType sets the "signin_verify_type" field if the given value is not nil.
-func (au *AppUpdate) SetNillableSigninVerifyType(s *string) *AppUpdate {
-	if s != nil {
-		au.SetSigninVerifyType(*s)
-	}
-	return au
-}
-
-// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
-func (au *AppUpdate) ClearSigninVerifyType() *AppUpdate {
-	au.mutation.ClearSigninVerifyType()
-	return au
-}
-
 // Mutation returns the AppMutation object of the builder.
 func (au *AppUpdate) Mutation() *AppMutation {
 	return au.mutation
@@ -376,19 +356,6 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: app.FieldDescription,
 		})
 	}
-	if value, ok := au.mutation.SigninVerifyType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: app.FieldSigninVerifyType,
-		})
-	}
-	if au.mutation.SigninVerifyTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: app.FieldSigninVerifyType,
-		})
-	}
 	_spec.Modifiers = au.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -542,26 +509,6 @@ func (auo *AppUpdateOne) SetNillableDescription(s *string) *AppUpdateOne {
 // ClearDescription clears the value of the "description" field.
 func (auo *AppUpdateOne) ClearDescription() *AppUpdateOne {
 	auo.mutation.ClearDescription()
-	return auo
-}
-
-// SetSigninVerifyType sets the "signin_verify_type" field.
-func (auo *AppUpdateOne) SetSigninVerifyType(s string) *AppUpdateOne {
-	auo.mutation.SetSigninVerifyType(s)
-	return auo
-}
-
-// SetNillableSigninVerifyType sets the "signin_verify_type" field if the given value is not nil.
-func (auo *AppUpdateOne) SetNillableSigninVerifyType(s *string) *AppUpdateOne {
-	if s != nil {
-		auo.SetSigninVerifyType(*s)
-	}
-	return auo
-}
-
-// ClearSigninVerifyType clears the value of the "signin_verify_type" field.
-func (auo *AppUpdateOne) ClearSigninVerifyType() *AppUpdateOne {
-	auo.mutation.ClearSigninVerifyType()
 	return auo
 }
 
@@ -785,19 +732,6 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: app.FieldDescription,
-		})
-	}
-	if value, ok := auo.mutation.SigninVerifyType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: app.FieldSigninVerifyType,
-		})
-	}
-	if auo.mutation.SigninVerifyTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: app.FieldSigninVerifyType,
 		})
 	}
 	_spec.Modifiers = auo.modifiers
