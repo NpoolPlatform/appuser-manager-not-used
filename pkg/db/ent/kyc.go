@@ -42,8 +42,6 @@ type Kyc struct {
 	ReviewID uuid.UUID `json:"review_id,omitempty"`
 	// ReviewState holds the value of the "review_state" field.
 	ReviewState string `json:"review_state,omitempty"`
-	// ReviewMessage holds the value of the "review_message" field.
-	ReviewMessage string `json:"review_message,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -53,7 +51,7 @@ func (*Kyc) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case kyc.FieldCreatedAt, kyc.FieldUpdatedAt, kyc.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
-		case kyc.FieldDocumentType, kyc.FieldIDNumber, kyc.FieldFrontImg, kyc.FieldBackImg, kyc.FieldSelfieImg, kyc.FieldEntityType, kyc.FieldReviewState, kyc.FieldReviewMessage:
+		case kyc.FieldDocumentType, kyc.FieldIDNumber, kyc.FieldFrontImg, kyc.FieldBackImg, kyc.FieldSelfieImg, kyc.FieldEntityType, kyc.FieldReviewState:
 			values[i] = new(sql.NullString)
 		case kyc.FieldID, kyc.FieldAppID, kyc.FieldUserID, kyc.FieldReviewID:
 			values[i] = new(uuid.UUID)
@@ -156,12 +154,6 @@ func (k *Kyc) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				k.ReviewState = value.String
 			}
-		case kyc.FieldReviewMessage:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field review_message", values[i])
-			} else if value.Valid {
-				k.ReviewMessage = value.String
-			}
 		}
 	}
 	return nil
@@ -228,9 +220,6 @@ func (k *Kyc) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("review_state=")
 	builder.WriteString(k.ReviewState)
-	builder.WriteString(", ")
-	builder.WriteString("review_message=")
-	builder.WriteString(k.ReviewMessage)
 	builder.WriteByte(')')
 	return builder.String()
 }

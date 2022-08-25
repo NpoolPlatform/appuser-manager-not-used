@@ -38,8 +38,6 @@ const (
 	FieldReviewID = "review_id"
 	// FieldReviewState holds the string denoting the review_state field in the database.
 	FieldReviewState = "review_state"
-	// FieldReviewMessage holds the string denoting the review_message field in the database.
-	FieldReviewMessage = "review_message"
 	// Table holds the table name of the kyc in the database.
 	Table = "kycs"
 )
@@ -60,7 +58,6 @@ var Columns = []string{
 	FieldEntityType,
 	FieldReviewID,
 	FieldReviewState,
-	FieldReviewMessage,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -110,8 +107,6 @@ var (
 	DefaultReviewID func() uuid.UUID
 	// DefaultReviewState holds the default value on creation for the "review_state" field.
 	DefaultReviewState string
-	// DefaultReviewMessage holds the default value on creation for the "review_message" field.
-	DefaultReviewMessage string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

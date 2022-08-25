@@ -57,9 +57,6 @@ func CreateSet(c *ent.KycCreate, info *npool.KycReq) *ent.KycCreate {
 	if info.ReviewState != nil {
 		c.SetReviewState(info.GetReviewState().String())
 	}
-	if info.ReviewMessage != nil {
-		c.SetReviewMessage(info.GetReviewMessage())
-	}
 	return c
 }
 func Create(ctx context.Context, in *npool.KycReq) (*ent.Kyc, error) {
@@ -178,9 +175,6 @@ func UpdateSet(info *ent.Kyc, in *npool.KycReq) *ent.KycUpdateOne {
 	}
 	if in.ReviewState != nil {
 		u.SetReviewState(in.GetReviewState().String())
-	}
-	if in.ReviewMessage != nil {
-		u.SetReviewMessage(in.GetReviewMessage())
 	}
 	return u
 }

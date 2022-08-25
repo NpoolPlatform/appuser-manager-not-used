@@ -75,10 +75,6 @@ func (Kyc) Fields() []ent.Field {
 			String("review_state").
 			Optional().
 			Default(reviewpb.ReviewState_Wait.String()),
-		field.
-			String("review_message").
-			Optional().
-			Default(""),
 	}
 }
 

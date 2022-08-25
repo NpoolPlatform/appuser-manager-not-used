@@ -205,20 +205,6 @@ func (kc *KycCreate) SetNillableReviewState(s *string) *KycCreate {
 	return kc
 }
 
-// SetReviewMessage sets the "review_message" field.
-func (kc *KycCreate) SetReviewMessage(s string) *KycCreate {
-	kc.mutation.SetReviewMessage(s)
-	return kc
-}
-
-// SetNillableReviewMessage sets the "review_message" field if the given value is not nil.
-func (kc *KycCreate) SetNillableReviewMessage(s *string) *KycCreate {
-	if s != nil {
-		kc.SetReviewMessage(*s)
-	}
-	return kc
-}
-
 // SetID sets the "id" field.
 func (kc *KycCreate) SetID(u uuid.UUID) *KycCreate {
 	kc.mutation.SetID(u)
@@ -382,10 +368,6 @@ func (kc *KycCreate) defaults() error {
 		v := kyc.DefaultReviewState
 		kc.mutation.SetReviewState(v)
 	}
-	if _, ok := kc.mutation.ReviewMessage(); !ok {
-		v := kyc.DefaultReviewMessage
-		kc.mutation.SetReviewMessage(v)
-	}
 	if _, ok := kc.mutation.ID(); !ok {
 		if kyc.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized kyc.DefaultID (forgotten import ent/runtime?)")
@@ -547,14 +529,6 @@ func (kc *KycCreate) createSpec() (*Kyc, *sqlgraph.CreateSpec) {
 			Column: kyc.FieldReviewState,
 		})
 		_node.ReviewState = value
-	}
-	if value, ok := kc.mutation.ReviewMessage(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: kyc.FieldReviewMessage,
-		})
-		_node.ReviewMessage = value
 	}
 	return _node, _spec
 }
@@ -841,24 +815,6 @@ func (u *KycUpsert) UpdateReviewState() *KycUpsert {
 // ClearReviewState clears the value of the "review_state" field.
 func (u *KycUpsert) ClearReviewState() *KycUpsert {
 	u.SetNull(kyc.FieldReviewState)
-	return u
-}
-
-// SetReviewMessage sets the "review_message" field.
-func (u *KycUpsert) SetReviewMessage(v string) *KycUpsert {
-	u.Set(kyc.FieldReviewMessage, v)
-	return u
-}
-
-// UpdateReviewMessage sets the "review_message" field to the value that was provided on create.
-func (u *KycUpsert) UpdateReviewMessage() *KycUpsert {
-	u.SetExcluded(kyc.FieldReviewMessage)
-	return u
-}
-
-// ClearReviewMessage clears the value of the "review_message" field.
-func (u *KycUpsert) ClearReviewMessage() *KycUpsert {
-	u.SetNull(kyc.FieldReviewMessage)
 	return u
 }
 
@@ -1182,27 +1138,6 @@ func (u *KycUpsertOne) UpdateReviewState() *KycUpsertOne {
 func (u *KycUpsertOne) ClearReviewState() *KycUpsertOne {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearReviewState()
-	})
-}
-
-// SetReviewMessage sets the "review_message" field.
-func (u *KycUpsertOne) SetReviewMessage(v string) *KycUpsertOne {
-	return u.Update(func(s *KycUpsert) {
-		s.SetReviewMessage(v)
-	})
-}
-
-// UpdateReviewMessage sets the "review_message" field to the value that was provided on create.
-func (u *KycUpsertOne) UpdateReviewMessage() *KycUpsertOne {
-	return u.Update(func(s *KycUpsert) {
-		s.UpdateReviewMessage()
-	})
-}
-
-// ClearReviewMessage clears the value of the "review_message" field.
-func (u *KycUpsertOne) ClearReviewMessage() *KycUpsertOne {
-	return u.Update(func(s *KycUpsert) {
-		s.ClearReviewMessage()
 	})
 }
 
@@ -1692,27 +1627,6 @@ func (u *KycUpsertBulk) UpdateReviewState() *KycUpsertBulk {
 func (u *KycUpsertBulk) ClearReviewState() *KycUpsertBulk {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearReviewState()
-	})
-}
-
-// SetReviewMessage sets the "review_message" field.
-func (u *KycUpsertBulk) SetReviewMessage(v string) *KycUpsertBulk {
-	return u.Update(func(s *KycUpsert) {
-		s.SetReviewMessage(v)
-	})
-}
-
-// UpdateReviewMessage sets the "review_message" field to the value that was provided on create.
-func (u *KycUpsertBulk) UpdateReviewMessage() *KycUpsertBulk {
-	return u.Update(func(s *KycUpsert) {
-		s.UpdateReviewMessage()
-	})
-}
-
-// ClearReviewMessage clears the value of the "review_message" field.
-func (u *KycUpsertBulk) ClearReviewMessage() *KycUpsertBulk {
-	return u.Update(func(s *KycUpsert) {
-		s.ClearReviewMessage()
 	})
 }
 
