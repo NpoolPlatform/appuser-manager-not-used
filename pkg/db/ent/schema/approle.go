@@ -50,6 +50,10 @@ func (AppRole) Fields() []ent.Field {
 			Bool("default").
 			Optional().
 			Default(false),
+		field.
+			Bool("genesis").
+			Optional().
+			Default(false),
 	}
 }
 

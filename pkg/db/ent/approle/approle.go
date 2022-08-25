@@ -28,6 +28,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldDefault holds the string denoting the default field in the database.
 	FieldDefault = "default"
+	// FieldGenesis holds the string denoting the genesis field in the database.
+	FieldGenesis = "genesis"
 	// Table holds the table name of the approle in the database.
 	Table = "app_roles"
 )
@@ -43,6 +45,7 @@ var Columns = []string{
 	FieldDescription,
 	FieldAppID,
 	FieldDefault,
+	FieldGenesis,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -82,6 +85,8 @@ var (
 	DefaultAppID func() uuid.UUID
 	// DefaultDefault holds the default value on creation for the "default" field.
 	DefaultDefault bool
+	// DefaultGenesis holds the default value on creation for the "genesis" field.
+	DefaultGenesis bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

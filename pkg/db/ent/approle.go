@@ -32,6 +32,8 @@ type AppRole struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// Default holds the value of the "default" field.
 	Default bool `json:"default,omitempty"`
+	// Genesis holds the value of the "genesis" field.
+	Genesis bool `json:"genesis,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -39,7 +41,7 @@ func (*AppRole) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case approle.FieldDefault:
+		case approle.FieldDefault, approle.FieldGenesis:
 			values[i] = new(sql.NullBool)
 		case approle.FieldCreatedAt, approle.FieldUpdatedAt, approle.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -116,6 +118,12 @@ func (ar *AppRole) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				ar.Default = value.Bool
 			}
+		case approle.FieldGenesis:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field genesis", values[i])
+			} else if value.Valid {
+				ar.Genesis = value.Bool
+			}
 		}
 	}
 	return nil
@@ -167,6 +175,9 @@ func (ar *AppRole) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("default=")
 	builder.WriteString(fmt.Sprintf("%v", ar.Default))
+	builder.WriteString(", ")
+	builder.WriteString("genesis=")
+	builder.WriteString(fmt.Sprintf("%v", ar.Genesis))
 	builder.WriteByte(')')
 	return builder.String()
 }

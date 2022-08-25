@@ -135,6 +135,13 @@ func Default(v bool) predicate.AppRole {
 	})
 }
 
+// Genesis applies equality check predicate on the "genesis" field. It's identical to GenesisEQ.
+func Genesis(v bool) predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGenesis), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
@@ -734,6 +741,34 @@ func DefaultIsNil() predicate.AppRole {
 func DefaultNotNil() predicate.AppRole {
 	return predicate.AppRole(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldDefault)))
+	})
+}
+
+// GenesisEQ applies the EQ predicate on the "genesis" field.
+func GenesisEQ(v bool) predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGenesis), v))
+	})
+}
+
+// GenesisNEQ applies the NEQ predicate on the "genesis" field.
+func GenesisNEQ(v bool) predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGenesis), v))
+	})
+}
+
+// GenesisIsNil applies the IsNil predicate on the "genesis" field.
+func GenesisIsNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldGenesis)))
+	})
+}
+
+// GenesisNotNil applies the NotNil predicate on the "genesis" field.
+func GenesisNotNil() predicate.AppRole {
+	return predicate.AppRole(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldGenesis)))
 	})
 }
 

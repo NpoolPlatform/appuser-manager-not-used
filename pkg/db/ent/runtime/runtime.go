@@ -183,6 +183,10 @@ func init() {
 	approleDescDefault := approleFields[5].Descriptor()
 	// approle.DefaultDefault holds the default value on creation for the default field.
 	approle.DefaultDefault = approleDescDefault.Default.(bool)
+	// approleDescGenesis is the schema descriptor for genesis field.
+	approleDescGenesis := approleFields[6].Descriptor()
+	// approle.DefaultGenesis holds the default value on creation for the genesis field.
+	approle.DefaultGenesis = approleDescGenesis.Default.(bool)
 	// approleDescID is the schema descriptor for id field.
 	approleDescID := approleFields[0].Descriptor()
 	// approle.DefaultID holds the default value on creation for the id field.

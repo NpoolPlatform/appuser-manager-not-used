@@ -17,6 +17,7 @@ func Ent2Grpc(row *ent.AppRole) *npool.AppRole {
 		Role:        row.Role,
 		Description: row.Description,
 		Default:     row.Default,
+		Genesis:     row.Genesis,
 	}
 }
 

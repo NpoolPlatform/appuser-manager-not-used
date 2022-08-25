@@ -56,6 +56,9 @@ func Create(ctx context.Context, in *npool.AppRoleReq) (*ent.AppRole, error) {
 		if in.Default != nil {
 			c.SetDefault(in.GetDefault())
 		}
+		if in.Genesis != nil {
+			c.SetGenesis(in.GetGenesis())
+		}
 		info, err = c.Save(_ctx)
 		return err
 	})
@@ -104,6 +107,9 @@ func CreateBulk(ctx context.Context, in []*npool.AppRoleReq) ([]*ent.AppRole, er
 			}
 			if info.Default != nil {
 				bulk[i].SetDefault(info.GetDefault())
+			}
+			if info.Genesis != nil {
+				bulk[i].SetGenesis(info.GetGenesis())
 			}
 		}
 		rows, err = tx.AppRole.CreateBulk(bulk...).Save(_ctx)

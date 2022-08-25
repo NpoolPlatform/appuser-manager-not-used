@@ -1935,6 +1935,7 @@ type AppRoleMutation struct {
 	description   *string
 	app_id        *uuid.UUID
 	_default      *bool
+	genesis       *bool
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*AppRole, error)
@@ -2458,6 +2459,55 @@ func (m *AppRoleMutation) ResetDefault() {
 	delete(m.clearedFields, approle.FieldDefault)
 }
 
+// SetGenesis sets the "genesis" field.
+func (m *AppRoleMutation) SetGenesis(b bool) {
+	m.genesis = &b
+}
+
+// Genesis returns the value of the "genesis" field in the mutation.
+func (m *AppRoleMutation) Genesis() (r bool, exists bool) {
+	v := m.genesis
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGenesis returns the old "genesis" field's value of the AppRole entity.
+// If the AppRole object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppRoleMutation) OldGenesis(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGenesis is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGenesis requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGenesis: %w", err)
+	}
+	return oldValue.Genesis, nil
+}
+
+// ClearGenesis clears the value of the "genesis" field.
+func (m *AppRoleMutation) ClearGenesis() {
+	m.genesis = nil
+	m.clearedFields[approle.FieldGenesis] = struct{}{}
+}
+
+// GenesisCleared returns if the "genesis" field was cleared in this mutation.
+func (m *AppRoleMutation) GenesisCleared() bool {
+	_, ok := m.clearedFields[approle.FieldGenesis]
+	return ok
+}
+
+// ResetGenesis resets all changes to the "genesis" field.
+func (m *AppRoleMutation) ResetGenesis() {
+	m.genesis = nil
+	delete(m.clearedFields, approle.FieldGenesis)
+}
+
 // Where appends a list predicates to the AppRoleMutation builder.
 func (m *AppRoleMutation) Where(ps ...predicate.AppRole) {
 	m.predicates = append(m.predicates, ps...)
@@ -2477,7 +2527,7 @@ func (m *AppRoleMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppRoleMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, approle.FieldCreatedAt)
 	}
@@ -2501,6 +2551,9 @@ func (m *AppRoleMutation) Fields() []string {
 	}
 	if m._default != nil {
 		fields = append(fields, approle.FieldDefault)
+	}
+	if m.genesis != nil {
+		fields = append(fields, approle.FieldGenesis)
 	}
 	return fields
 }
@@ -2526,6 +2579,8 @@ func (m *AppRoleMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case approle.FieldDefault:
 		return m.Default()
+	case approle.FieldGenesis:
+		return m.Genesis()
 	}
 	return nil, false
 }
@@ -2551,6 +2606,8 @@ func (m *AppRoleMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldAppID(ctx)
 	case approle.FieldDefault:
 		return m.OldDefault(ctx)
+	case approle.FieldGenesis:
+		return m.OldGenesis(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppRole field %s", name)
 }
@@ -2615,6 +2672,13 @@ func (m *AppRoleMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDefault(v)
+		return nil
+	case approle.FieldGenesis:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGenesis(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppRole field %s", name)
@@ -2700,6 +2764,9 @@ func (m *AppRoleMutation) ClearedFields() []string {
 	if m.FieldCleared(approle.FieldDefault) {
 		fields = append(fields, approle.FieldDefault)
 	}
+	if m.FieldCleared(approle.FieldGenesis) {
+		fields = append(fields, approle.FieldGenesis)
+	}
 	return fields
 }
 
@@ -2728,6 +2795,9 @@ func (m *AppRoleMutation) ClearField(name string) error {
 		return nil
 	case approle.FieldDefault:
 		m.ClearDefault()
+		return nil
+	case approle.FieldGenesis:
+		m.ClearGenesis()
 		return nil
 	}
 	return fmt.Errorf("unknown AppRole nullable field %s", name)
@@ -2760,6 +2830,9 @@ func (m *AppRoleMutation) ResetField(name string) error {
 		return nil
 	case approle.FieldDefault:
 		m.ResetDefault()
+		return nil
+	case approle.FieldGenesis:
+		m.ResetGenesis()
 		return nil
 	}
 	return fmt.Errorf("unknown AppRole field %s", name)

@@ -135,6 +135,20 @@ func (arc *AppRoleCreate) SetNillableDefault(b *bool) *AppRoleCreate {
 	return arc
 }
 
+// SetGenesis sets the "genesis" field.
+func (arc *AppRoleCreate) SetGenesis(b bool) *AppRoleCreate {
+	arc.mutation.SetGenesis(b)
+	return arc
+}
+
+// SetNillableGenesis sets the "genesis" field if the given value is not nil.
+func (arc *AppRoleCreate) SetNillableGenesis(b *bool) *AppRoleCreate {
+	if b != nil {
+		arc.SetGenesis(*b)
+	}
+	return arc
+}
+
 // SetID sets the "id" field.
 func (arc *AppRoleCreate) SetID(u uuid.UUID) *AppRoleCreate {
 	arc.mutation.SetID(u)
@@ -275,6 +289,10 @@ func (arc *AppRoleCreate) defaults() error {
 		v := approle.DefaultDefault
 		arc.mutation.SetDefault(v)
 	}
+	if _, ok := arc.mutation.Genesis(); !ok {
+		v := approle.DefaultGenesis
+		arc.mutation.SetGenesis(v)
+	}
 	if _, ok := arc.mutation.ID(); !ok {
 		if approle.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized approle.DefaultID (forgotten import ent/runtime?)")
@@ -396,6 +414,14 @@ func (arc *AppRoleCreate) createSpec() (*AppRole, *sqlgraph.CreateSpec) {
 			Column: approle.FieldDefault,
 		})
 		_node.Default = value
+	}
+	if value, ok := arc.mutation.Genesis(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: approle.FieldGenesis,
+		})
+		_node.Genesis = value
 	}
 	return _node, _spec
 }
@@ -592,6 +618,24 @@ func (u *AppRoleUpsert) UpdateDefault() *AppRoleUpsert {
 // ClearDefault clears the value of the "default" field.
 func (u *AppRoleUpsert) ClearDefault() *AppRoleUpsert {
 	u.SetNull(approle.FieldDefault)
+	return u
+}
+
+// SetGenesis sets the "genesis" field.
+func (u *AppRoleUpsert) SetGenesis(v bool) *AppRoleUpsert {
+	u.Set(approle.FieldGenesis, v)
+	return u
+}
+
+// UpdateGenesis sets the "genesis" field to the value that was provided on create.
+func (u *AppRoleUpsert) UpdateGenesis() *AppRoleUpsert {
+	u.SetExcluded(approle.FieldGenesis)
+	return u
+}
+
+// ClearGenesis clears the value of the "genesis" field.
+func (u *AppRoleUpsert) ClearGenesis() *AppRoleUpsert {
+	u.SetNull(approle.FieldGenesis)
 	return u
 }
 
@@ -810,6 +854,27 @@ func (u *AppRoleUpsertOne) UpdateDefault() *AppRoleUpsertOne {
 func (u *AppRoleUpsertOne) ClearDefault() *AppRoleUpsertOne {
 	return u.Update(func(s *AppRoleUpsert) {
 		s.ClearDefault()
+	})
+}
+
+// SetGenesis sets the "genesis" field.
+func (u *AppRoleUpsertOne) SetGenesis(v bool) *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.SetGenesis(v)
+	})
+}
+
+// UpdateGenesis sets the "genesis" field to the value that was provided on create.
+func (u *AppRoleUpsertOne) UpdateGenesis() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.UpdateGenesis()
+	})
+}
+
+// ClearGenesis clears the value of the "genesis" field.
+func (u *AppRoleUpsertOne) ClearGenesis() *AppRoleUpsertOne {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearGenesis()
 	})
 }
 
@@ -1194,6 +1259,27 @@ func (u *AppRoleUpsertBulk) UpdateDefault() *AppRoleUpsertBulk {
 func (u *AppRoleUpsertBulk) ClearDefault() *AppRoleUpsertBulk {
 	return u.Update(func(s *AppRoleUpsert) {
 		s.ClearDefault()
+	})
+}
+
+// SetGenesis sets the "genesis" field.
+func (u *AppRoleUpsertBulk) SetGenesis(v bool) *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.SetGenesis(v)
+	})
+}
+
+// UpdateGenesis sets the "genesis" field to the value that was provided on create.
+func (u *AppRoleUpsertBulk) UpdateGenesis() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.UpdateGenesis()
+	})
+}
+
+// ClearGenesis clears the value of the "genesis" field.
+func (u *AppRoleUpsertBulk) ClearGenesis() *AppRoleUpsertBulk {
+	return u.Update(func(s *AppRoleUpsert) {
+		s.ClearGenesis()
 	})
 }
 

@@ -56,6 +56,7 @@ var (
 		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "default", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "genesis", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// AppRolesTable holds the schema information for the "app_roles" table.
 	AppRolesTable = &schema.Table{

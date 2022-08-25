@@ -90,6 +90,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			approle.FieldDescription: {Type: field.TypeString, Column: approle.FieldDescription},
 			approle.FieldAppID:       {Type: field.TypeUUID, Column: approle.FieldAppID},
 			approle.FieldDefault:     {Type: field.TypeBool, Column: approle.FieldDefault},
+			approle.FieldGenesis:     {Type: field.TypeBool, Column: approle.FieldGenesis},
 		},
 	}
 	graph.Nodes[3] = &sqlgraph.Node{
@@ -601,6 +602,11 @@ func (f *AppRoleFilter) WhereAppID(p entql.ValueP) {
 // WhereDefault applies the entql bool predicate on the default field.
 func (f *AppRoleFilter) WhereDefault(p entql.BoolP) {
 	f.Where(p.Field(approle.FieldDefault))
+}
+
+// WhereGenesis applies the entql bool predicate on the genesis field.
+func (f *AppRoleFilter) WhereGenesis(p entql.BoolP) {
+	f.Where(p.Field(approle.FieldGenesis))
 }
 
 // addPredicate implements the predicateAdder interface.

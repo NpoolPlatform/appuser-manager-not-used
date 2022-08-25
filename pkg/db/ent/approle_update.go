@@ -184,6 +184,26 @@ func (aru *AppRoleUpdate) ClearDefault() *AppRoleUpdate {
 	return aru
 }
 
+// SetGenesis sets the "genesis" field.
+func (aru *AppRoleUpdate) SetGenesis(b bool) *AppRoleUpdate {
+	aru.mutation.SetGenesis(b)
+	return aru
+}
+
+// SetNillableGenesis sets the "genesis" field if the given value is not nil.
+func (aru *AppRoleUpdate) SetNillableGenesis(b *bool) *AppRoleUpdate {
+	if b != nil {
+		aru.SetGenesis(*b)
+	}
+	return aru
+}
+
+// ClearGenesis clears the value of the "genesis" field.
+func (aru *AppRoleUpdate) ClearGenesis() *AppRoleUpdate {
+	aru.mutation.ClearGenesis()
+	return aru
+}
+
 // Mutation returns the AppRoleMutation object of the builder.
 func (aru *AppRoleUpdate) Mutation() *AppRoleMutation {
 	return aru.mutation
@@ -389,6 +409,19 @@ func (aru *AppRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: approle.FieldDefault,
 		})
 	}
+	if value, ok := aru.mutation.Genesis(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: approle.FieldGenesis,
+		})
+	}
+	if aru.mutation.GenesisCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: approle.FieldGenesis,
+		})
+	}
 	_spec.Modifiers = aru.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -562,6 +595,26 @@ func (aruo *AppRoleUpdateOne) SetNillableDefault(b *bool) *AppRoleUpdateOne {
 // ClearDefault clears the value of the "default" field.
 func (aruo *AppRoleUpdateOne) ClearDefault() *AppRoleUpdateOne {
 	aruo.mutation.ClearDefault()
+	return aruo
+}
+
+// SetGenesis sets the "genesis" field.
+func (aruo *AppRoleUpdateOne) SetGenesis(b bool) *AppRoleUpdateOne {
+	aruo.mutation.SetGenesis(b)
+	return aruo
+}
+
+// SetNillableGenesis sets the "genesis" field if the given value is not nil.
+func (aruo *AppRoleUpdateOne) SetNillableGenesis(b *bool) *AppRoleUpdateOne {
+	if b != nil {
+		aruo.SetGenesis(*b)
+	}
+	return aruo
+}
+
+// ClearGenesis clears the value of the "genesis" field.
+func (aruo *AppRoleUpdateOne) ClearGenesis() *AppRoleUpdateOne {
+	aruo.mutation.ClearGenesis()
 	return aruo
 }
 
@@ -798,6 +851,19 @@ func (aruo *AppRoleUpdateOne) sqlSave(ctx context.Context) (_node *AppRole, err 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: approle.FieldDefault,
+		})
+	}
+	if value, ok := aruo.mutation.Genesis(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: approle.FieldGenesis,
+		})
+	}
+	if aruo.mutation.GenesisCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: approle.FieldGenesis,
 		})
 	}
 	_spec.Modifiers = aruo.modifiers
