@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/kyc"
+	reviewpb "github.com/NpoolPlatform/message/npool/review/mgr/v2"
 )
 
 // Kyc holds the schema definition for the Kyc entity.
@@ -70,6 +71,14 @@ func (Kyc) Fields() []ent.Field {
 			Default(func() uuid.UUID {
 				return uuid.UUID{}
 			}),
+		field.
+			String("review_state").
+			Optional().
+			Default(reviewpb.ReviewState_Wait.String()),
+		field.
+			String("review_message").
+			Optional().
+			Default(""),
 	}
 }
 

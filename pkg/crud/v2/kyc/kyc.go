@@ -54,6 +54,12 @@ func CreateSet(c *ent.KycCreate, info *npool.KycReq) *ent.KycCreate {
 	if info.ReviewID != nil {
 		c.SetReviewID(uuid.MustParse(info.GetReviewID()))
 	}
+	if info.ReviewState != nil {
+		c.SetReviewState(info.GetReviewState().String())
+	}
+	if info.ReviewMessage != nil {
+		c.SetReviewMessage(info.GetReviewMessage())
+	}
 	return c
 }
 func Create(ctx context.Context, in *npool.KycReq) (*ent.Kyc, error) {
@@ -169,6 +175,12 @@ func UpdateSet(info *ent.Kyc, in *npool.KycReq) *ent.KycUpdateOne {
 	}
 	if in.ReviewID != nil {
 		u.SetReviewID(uuid.MustParse(in.GetReviewID()))
+	}
+	if in.ReviewState != nil {
+		u.SetReviewState(in.GetReviewState().String())
+	}
+	if in.ReviewMessage != nil {
+		u.SetReviewMessage(in.GetReviewMessage())
 	}
 	return u
 }

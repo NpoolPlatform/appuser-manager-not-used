@@ -315,18 +315,20 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Kyc",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			kyc.FieldCreatedAt:    {Type: field.TypeUint32, Column: kyc.FieldCreatedAt},
-			kyc.FieldUpdatedAt:    {Type: field.TypeUint32, Column: kyc.FieldUpdatedAt},
-			kyc.FieldDeletedAt:    {Type: field.TypeUint32, Column: kyc.FieldDeletedAt},
-			kyc.FieldAppID:        {Type: field.TypeUUID, Column: kyc.FieldAppID},
-			kyc.FieldUserID:       {Type: field.TypeUUID, Column: kyc.FieldUserID},
-			kyc.FieldDocumentType: {Type: field.TypeString, Column: kyc.FieldDocumentType},
-			kyc.FieldIDNumber:     {Type: field.TypeString, Column: kyc.FieldIDNumber},
-			kyc.FieldFrontImg:     {Type: field.TypeString, Column: kyc.FieldFrontImg},
-			kyc.FieldBackImg:      {Type: field.TypeString, Column: kyc.FieldBackImg},
-			kyc.FieldSelfieImg:    {Type: field.TypeString, Column: kyc.FieldSelfieImg},
-			kyc.FieldEntityType:   {Type: field.TypeString, Column: kyc.FieldEntityType},
-			kyc.FieldReviewID:     {Type: field.TypeUUID, Column: kyc.FieldReviewID},
+			kyc.FieldCreatedAt:     {Type: field.TypeUint32, Column: kyc.FieldCreatedAt},
+			kyc.FieldUpdatedAt:     {Type: field.TypeUint32, Column: kyc.FieldUpdatedAt},
+			kyc.FieldDeletedAt:     {Type: field.TypeUint32, Column: kyc.FieldDeletedAt},
+			kyc.FieldAppID:         {Type: field.TypeUUID, Column: kyc.FieldAppID},
+			kyc.FieldUserID:        {Type: field.TypeUUID, Column: kyc.FieldUserID},
+			kyc.FieldDocumentType:  {Type: field.TypeString, Column: kyc.FieldDocumentType},
+			kyc.FieldIDNumber:      {Type: field.TypeString, Column: kyc.FieldIDNumber},
+			kyc.FieldFrontImg:      {Type: field.TypeString, Column: kyc.FieldFrontImg},
+			kyc.FieldBackImg:       {Type: field.TypeString, Column: kyc.FieldBackImg},
+			kyc.FieldSelfieImg:     {Type: field.TypeString, Column: kyc.FieldSelfieImg},
+			kyc.FieldEntityType:    {Type: field.TypeString, Column: kyc.FieldEntityType},
+			kyc.FieldReviewID:      {Type: field.TypeUUID, Column: kyc.FieldReviewID},
+			kyc.FieldReviewState:   {Type: field.TypeString, Column: kyc.FieldReviewState},
+			kyc.FieldReviewMessage: {Type: field.TypeString, Column: kyc.FieldReviewMessage},
 		},
 	}
 	graph.Nodes[14] = &sqlgraph.Node{
@@ -1512,6 +1514,16 @@ func (f *KycFilter) WhereEntityType(p entql.StringP) {
 // WhereReviewID applies the entql [16]byte predicate on the review_id field.
 func (f *KycFilter) WhereReviewID(p entql.ValueP) {
 	f.Where(p.Field(kyc.FieldReviewID))
+}
+
+// WhereReviewState applies the entql string predicate on the review_state field.
+func (f *KycFilter) WhereReviewState(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldReviewState))
+}
+
+// WhereReviewMessage applies the entql string predicate on the review_message field.
+func (f *KycFilter) WhereReviewMessage(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldReviewMessage))
 }
 
 // addPredicate implements the predicateAdder interface.

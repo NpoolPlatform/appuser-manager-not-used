@@ -745,6 +745,14 @@ func init() {
 	kycDescReviewID := kycFields[9].Descriptor()
 	// kyc.DefaultReviewID holds the default value on creation for the review_id field.
 	kyc.DefaultReviewID = kycDescReviewID.Default.(func() uuid.UUID)
+	// kycDescReviewState is the schema descriptor for review_state field.
+	kycDescReviewState := kycFields[10].Descriptor()
+	// kyc.DefaultReviewState holds the default value on creation for the review_state field.
+	kyc.DefaultReviewState = kycDescReviewState.Default.(string)
+	// kycDescReviewMessage is the schema descriptor for review_message field.
+	kycDescReviewMessage := kycFields[11].Descriptor()
+	// kyc.DefaultReviewMessage holds the default value on creation for the review_message field.
+	kyc.DefaultReviewMessage = kycDescReviewMessage.Default.(string)
 	// kycDescID is the schema descriptor for id field.
 	kycDescID := kycFields[0].Descriptor()
 	// kyc.DefaultID holds the default value on creation for the id field.

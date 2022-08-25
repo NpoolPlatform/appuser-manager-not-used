@@ -264,6 +264,46 @@ func (ku *KycUpdate) ClearReviewID() *KycUpdate {
 	return ku
 }
 
+// SetReviewState sets the "review_state" field.
+func (ku *KycUpdate) SetReviewState(s string) *KycUpdate {
+	ku.mutation.SetReviewState(s)
+	return ku
+}
+
+// SetNillableReviewState sets the "review_state" field if the given value is not nil.
+func (ku *KycUpdate) SetNillableReviewState(s *string) *KycUpdate {
+	if s != nil {
+		ku.SetReviewState(*s)
+	}
+	return ku
+}
+
+// ClearReviewState clears the value of the "review_state" field.
+func (ku *KycUpdate) ClearReviewState() *KycUpdate {
+	ku.mutation.ClearReviewState()
+	return ku
+}
+
+// SetReviewMessage sets the "review_message" field.
+func (ku *KycUpdate) SetReviewMessage(s string) *KycUpdate {
+	ku.mutation.SetReviewMessage(s)
+	return ku
+}
+
+// SetNillableReviewMessage sets the "review_message" field if the given value is not nil.
+func (ku *KycUpdate) SetNillableReviewMessage(s *string) *KycUpdate {
+	if s != nil {
+		ku.SetReviewMessage(*s)
+	}
+	return ku
+}
+
+// ClearReviewMessage clears the value of the "review_message" field.
+func (ku *KycUpdate) ClearReviewMessage() *KycUpdate {
+	ku.mutation.ClearReviewMessage()
+	return ku
+}
+
 // Mutation returns the KycMutation object of the builder.
 func (ku *KycUpdate) Mutation() *KycMutation {
 	return ku.mutation
@@ -521,6 +561,32 @@ func (ku *KycUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: kyc.FieldReviewID,
 		})
 	}
+	if value, ok := ku.mutation.ReviewState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldReviewState,
+		})
+	}
+	if ku.mutation.ReviewStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldReviewState,
+		})
+	}
+	if value, ok := ku.mutation.ReviewMessage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldReviewMessage,
+		})
+	}
+	if ku.mutation.ReviewMessageCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldReviewMessage,
+		})
+	}
 	_spec.Modifiers = ku.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, ku.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -774,6 +840,46 @@ func (kuo *KycUpdateOne) SetNillableReviewID(u *uuid.UUID) *KycUpdateOne {
 // ClearReviewID clears the value of the "review_id" field.
 func (kuo *KycUpdateOne) ClearReviewID() *KycUpdateOne {
 	kuo.mutation.ClearReviewID()
+	return kuo
+}
+
+// SetReviewState sets the "review_state" field.
+func (kuo *KycUpdateOne) SetReviewState(s string) *KycUpdateOne {
+	kuo.mutation.SetReviewState(s)
+	return kuo
+}
+
+// SetNillableReviewState sets the "review_state" field if the given value is not nil.
+func (kuo *KycUpdateOne) SetNillableReviewState(s *string) *KycUpdateOne {
+	if s != nil {
+		kuo.SetReviewState(*s)
+	}
+	return kuo
+}
+
+// ClearReviewState clears the value of the "review_state" field.
+func (kuo *KycUpdateOne) ClearReviewState() *KycUpdateOne {
+	kuo.mutation.ClearReviewState()
+	return kuo
+}
+
+// SetReviewMessage sets the "review_message" field.
+func (kuo *KycUpdateOne) SetReviewMessage(s string) *KycUpdateOne {
+	kuo.mutation.SetReviewMessage(s)
+	return kuo
+}
+
+// SetNillableReviewMessage sets the "review_message" field if the given value is not nil.
+func (kuo *KycUpdateOne) SetNillableReviewMessage(s *string) *KycUpdateOne {
+	if s != nil {
+		kuo.SetReviewMessage(*s)
+	}
+	return kuo
+}
+
+// ClearReviewMessage clears the value of the "review_message" field.
+func (kuo *KycUpdateOne) ClearReviewMessage() *KycUpdateOne {
+	kuo.mutation.ClearReviewMessage()
 	return kuo
 }
 
@@ -1062,6 +1168,32 @@ func (kuo *KycUpdateOne) sqlSave(ctx context.Context) (_node *Kyc, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: kyc.FieldReviewID,
+		})
+	}
+	if value, ok := kuo.mutation.ReviewState(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldReviewState,
+		})
+	}
+	if kuo.mutation.ReviewStateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldReviewState,
+		})
+	}
+	if value, ok := kuo.mutation.ReviewMessage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldReviewMessage,
+		})
+	}
+	if kuo.mutation.ReviewMessageCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldReviewMessage,
 		})
 	}
 	_spec.Modifiers = kuo.modifiers

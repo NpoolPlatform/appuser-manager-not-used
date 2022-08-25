@@ -163,6 +163,20 @@ func ReviewID(v uuid.UUID) predicate.Kyc {
 	})
 }
 
+// ReviewState applies equality check predicate on the "review_state" field. It's identical to ReviewStateEQ.
+func ReviewState(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewMessage applies equality check predicate on the "review_message" field. It's identical to ReviewMessageEQ.
+func ReviewMessage(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReviewMessage), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
@@ -1264,6 +1278,232 @@ func ReviewIDIsNil() predicate.Kyc {
 func ReviewIDNotNil() predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldReviewID)))
+	})
+}
+
+// ReviewStateEQ applies the EQ predicate on the "review_state" field.
+func ReviewStateEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateNEQ applies the NEQ predicate on the "review_state" field.
+func ReviewStateNEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateIn applies the In predicate on the "review_state" field.
+func ReviewStateIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldReviewState), v...))
+	})
+}
+
+// ReviewStateNotIn applies the NotIn predicate on the "review_state" field.
+func ReviewStateNotIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldReviewState), v...))
+	})
+}
+
+// ReviewStateGT applies the GT predicate on the "review_state" field.
+func ReviewStateGT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateGTE applies the GTE predicate on the "review_state" field.
+func ReviewStateGTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateLT applies the LT predicate on the "review_state" field.
+func ReviewStateLT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateLTE applies the LTE predicate on the "review_state" field.
+func ReviewStateLTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateContains applies the Contains predicate on the "review_state" field.
+func ReviewStateContains(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateHasPrefix applies the HasPrefix predicate on the "review_state" field.
+func ReviewStateHasPrefix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateHasSuffix applies the HasSuffix predicate on the "review_state" field.
+func ReviewStateHasSuffix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateIsNil applies the IsNil predicate on the "review_state" field.
+func ReviewStateIsNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldReviewState)))
+	})
+}
+
+// ReviewStateNotNil applies the NotNil predicate on the "review_state" field.
+func ReviewStateNotNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldReviewState)))
+	})
+}
+
+// ReviewStateEqualFold applies the EqualFold predicate on the "review_state" field.
+func ReviewStateEqualFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewStateContainsFold applies the ContainsFold predicate on the "review_state" field.
+func ReviewStateContainsFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldReviewState), v))
+	})
+}
+
+// ReviewMessageEQ applies the EQ predicate on the "review_message" field.
+func ReviewMessageEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageNEQ applies the NEQ predicate on the "review_message" field.
+func ReviewMessageNEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageIn applies the In predicate on the "review_message" field.
+func ReviewMessageIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldReviewMessage), v...))
+	})
+}
+
+// ReviewMessageNotIn applies the NotIn predicate on the "review_message" field.
+func ReviewMessageNotIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldReviewMessage), v...))
+	})
+}
+
+// ReviewMessageGT applies the GT predicate on the "review_message" field.
+func ReviewMessageGT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageGTE applies the GTE predicate on the "review_message" field.
+func ReviewMessageGTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageLT applies the LT predicate on the "review_message" field.
+func ReviewMessageLT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageLTE applies the LTE predicate on the "review_message" field.
+func ReviewMessageLTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageContains applies the Contains predicate on the "review_message" field.
+func ReviewMessageContains(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageHasPrefix applies the HasPrefix predicate on the "review_message" field.
+func ReviewMessageHasPrefix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageHasSuffix applies the HasSuffix predicate on the "review_message" field.
+func ReviewMessageHasSuffix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageIsNil applies the IsNil predicate on the "review_message" field.
+func ReviewMessageIsNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldReviewMessage)))
+	})
+}
+
+// ReviewMessageNotNil applies the NotNil predicate on the "review_message" field.
+func ReviewMessageNotNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldReviewMessage)))
+	})
+}
+
+// ReviewMessageEqualFold applies the EqualFold predicate on the "review_message" field.
+func ReviewMessageEqualFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldReviewMessage), v))
+	})
+}
+
+// ReviewMessageContainsFold applies the ContainsFold predicate on the "review_message" field.
+func ReviewMessageContainsFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldReviewMessage), v))
 	})
 }
 
