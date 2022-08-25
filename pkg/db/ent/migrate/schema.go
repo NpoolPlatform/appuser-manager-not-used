@@ -281,7 +281,7 @@ var (
 		{Name: "selfie_img", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "entity_type", Type: field.TypeString, Nullable: true, Default: "Individual"},
 		{Name: "review_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "review_state", Type: field.TypeString, Nullable: true, Default: "DefaultReviewState"},
+		{Name: "state", Type: field.TypeString, Nullable: true, Default: "DefaultState"},
 	}
 	// KycsTable holds the schema information for the "kycs" table.
 	KycsTable = &schema.Table{

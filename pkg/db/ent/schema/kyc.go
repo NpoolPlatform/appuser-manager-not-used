@@ -71,9 +71,9 @@ func (Kyc) Fields() []ent.Field {
 				return uuid.UUID{}
 			}),
 		field.
-			String("review_state").
+			String("state").
 			Optional().
-			Default(npool.KycReviewState_DefaultReviewState.String()),
+			Default(npool.KycState_DefaultState.String()),
 	}
 }
 

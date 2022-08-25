@@ -264,23 +264,23 @@ func (ku *KycUpdate) ClearReviewID() *KycUpdate {
 	return ku
 }
 
-// SetReviewState sets the "review_state" field.
-func (ku *KycUpdate) SetReviewState(s string) *KycUpdate {
-	ku.mutation.SetReviewState(s)
+// SetState sets the "state" field.
+func (ku *KycUpdate) SetState(s string) *KycUpdate {
+	ku.mutation.SetState(s)
 	return ku
 }
 
-// SetNillableReviewState sets the "review_state" field if the given value is not nil.
-func (ku *KycUpdate) SetNillableReviewState(s *string) *KycUpdate {
+// SetNillableState sets the "state" field if the given value is not nil.
+func (ku *KycUpdate) SetNillableState(s *string) *KycUpdate {
 	if s != nil {
-		ku.SetReviewState(*s)
+		ku.SetState(*s)
 	}
 	return ku
 }
 
-// ClearReviewState clears the value of the "review_state" field.
-func (ku *KycUpdate) ClearReviewState() *KycUpdate {
-	ku.mutation.ClearReviewState()
+// ClearState clears the value of the "state" field.
+func (ku *KycUpdate) ClearState() *KycUpdate {
+	ku.mutation.ClearState()
 	return ku
 }
 
@@ -541,17 +541,17 @@ func (ku *KycUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: kyc.FieldReviewID,
 		})
 	}
-	if value, ok := ku.mutation.ReviewState(); ok {
+	if value, ok := ku.mutation.State(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: kyc.FieldReviewState,
+			Column: kyc.FieldState,
 		})
 	}
-	if ku.mutation.ReviewStateCleared() {
+	if ku.mutation.StateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: kyc.FieldReviewState,
+			Column: kyc.FieldState,
 		})
 	}
 	_spec.Modifiers = ku.modifiers
@@ -810,23 +810,23 @@ func (kuo *KycUpdateOne) ClearReviewID() *KycUpdateOne {
 	return kuo
 }
 
-// SetReviewState sets the "review_state" field.
-func (kuo *KycUpdateOne) SetReviewState(s string) *KycUpdateOne {
-	kuo.mutation.SetReviewState(s)
+// SetState sets the "state" field.
+func (kuo *KycUpdateOne) SetState(s string) *KycUpdateOne {
+	kuo.mutation.SetState(s)
 	return kuo
 }
 
-// SetNillableReviewState sets the "review_state" field if the given value is not nil.
-func (kuo *KycUpdateOne) SetNillableReviewState(s *string) *KycUpdateOne {
+// SetNillableState sets the "state" field if the given value is not nil.
+func (kuo *KycUpdateOne) SetNillableState(s *string) *KycUpdateOne {
 	if s != nil {
-		kuo.SetReviewState(*s)
+		kuo.SetState(*s)
 	}
 	return kuo
 }
 
-// ClearReviewState clears the value of the "review_state" field.
-func (kuo *KycUpdateOne) ClearReviewState() *KycUpdateOne {
-	kuo.mutation.ClearReviewState()
+// ClearState clears the value of the "state" field.
+func (kuo *KycUpdateOne) ClearState() *KycUpdateOne {
+	kuo.mutation.ClearState()
 	return kuo
 }
 
@@ -1117,17 +1117,17 @@ func (kuo *KycUpdateOne) sqlSave(ctx context.Context) (_node *Kyc, err error) {
 			Column: kyc.FieldReviewID,
 		})
 	}
-	if value, ok := kuo.mutation.ReviewState(); ok {
+	if value, ok := kuo.mutation.State(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: kyc.FieldReviewState,
+			Column: kyc.FieldState,
 		})
 	}
-	if kuo.mutation.ReviewStateCleared() {
+	if kuo.mutation.StateCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: kyc.FieldReviewState,
+			Column: kyc.FieldState,
 		})
 	}
 	_spec.Modifiers = kuo.modifiers

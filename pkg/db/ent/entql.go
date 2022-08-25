@@ -327,7 +327,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			kyc.FieldSelfieImg:    {Type: field.TypeString, Column: kyc.FieldSelfieImg},
 			kyc.FieldEntityType:   {Type: field.TypeString, Column: kyc.FieldEntityType},
 			kyc.FieldReviewID:     {Type: field.TypeUUID, Column: kyc.FieldReviewID},
-			kyc.FieldReviewState:  {Type: field.TypeString, Column: kyc.FieldReviewState},
+			kyc.FieldState:        {Type: field.TypeString, Column: kyc.FieldState},
 		},
 	}
 	graph.Nodes[14] = &sqlgraph.Node{
@@ -1515,9 +1515,9 @@ func (f *KycFilter) WhereReviewID(p entql.ValueP) {
 	f.Where(p.Field(kyc.FieldReviewID))
 }
 
-// WhereReviewState applies the entql string predicate on the review_state field.
-func (f *KycFilter) WhereReviewState(p entql.StringP) {
-	f.Where(p.Field(kyc.FieldReviewState))
+// WhereState applies the entql string predicate on the state field.
+func (f *KycFilter) WhereState(p entql.StringP) {
+	f.Where(p.Field(kyc.FieldState))
 }
 
 // addPredicate implements the predicateAdder interface.
