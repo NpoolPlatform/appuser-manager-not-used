@@ -19,14 +19,11 @@ func validate(info *npool.HistoryReq) error {
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
 
-	if info.UserID == nil {
-		logger.Sugar().Errorw("validate", "UserID", info.UserID)
-		return status.Error(codes.InvalidArgument, "UserID is empty")
-	}
-
-	if _, err := uuid.Parse(info.GetUserID()); err != nil {
-		logger.Sugar().Errorw("validate", "UserID", info.GetUserID(), "error", err)
-		return status.Error(codes.InvalidArgument, "UserID is invalid")
+	if info.UserID != nil {
+		if _, err := uuid.Parse(info.GetUserID()); err != nil {
+			logger.Sugar().Errorw("validate", "UserID", info.GetUserID(), "error", err)
+			return status.Error(codes.InvalidArgument, "UserID is invalid")
+		}
 	}
 
 	if info.Resource == nil || info.GetResource() == "" {
