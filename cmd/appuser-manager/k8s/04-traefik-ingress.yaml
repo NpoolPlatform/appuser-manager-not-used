@@ -48,6 +48,8 @@ spec:
       http: *http_rules
     - host: api.singapore-testing.npool.top
       http: *http_rules
+    - host: api.development.npool.top
+      http: *http_rules
 
 ---
 
@@ -148,4 +150,6 @@ spec:
     - host: api.jh-development.npool.top
       http: *http_rules
     - host: api.singapore-testing.npool.top
+      http: *http_rules
+    - host: api.development.npool.top
       http: *http_rules
