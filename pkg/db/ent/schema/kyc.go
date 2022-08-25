@@ -8,7 +8,6 @@ import (
 	"github.com/google/uuid"
 
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/kyc"
-	reviewpb "github.com/NpoolPlatform/message/npool/review/mgr/v2"
 )
 
 // Kyc holds the schema definition for the Kyc entity.
@@ -74,7 +73,7 @@ func (Kyc) Fields() []ent.Field {
 		field.
 			String("review_state").
 			Optional().
-			Default(reviewpb.ReviewState_DefaultReviewState.String()),
+			Default(npool.KycReviewState_DefaultReviewState.String()),
 	}
 }
 

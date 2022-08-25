@@ -14,7 +14,6 @@ import (
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	val "github.com/NpoolPlatform/message/npool"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/kyc"
-	reviewpb "github.com/NpoolPlatform/message/npool/review/mgr/v2"
 
 	"github.com/google/uuid"
 
@@ -40,7 +39,7 @@ var entKyc = ent.Kyc{
 	BackImg:      uuid.NewString(),
 	SelfieImg:    uuid.NewString(),
 	EntityType:   npool.KycEntityType_Individual.String(),
-	ReviewState:  reviewpb.ReviewState_Wait.String(),
+	ReviewState:  npool.KycReviewState_Wait.String(),
 }
 
 var (
@@ -49,7 +48,7 @@ var (
 	userID       = entKyc.UserID.String()
 	documentType = npool.KycDocumentType_IDCard
 	entityType   = npool.KycEntityType_Individual
-	reviewState  = reviewpb.ReviewState_Wait
+	reviewState  = npool.KycReviewState_Wait
 	kycInfo      = npool.KycReq{
 		ID:           &id,
 		AppID:        &appID,
