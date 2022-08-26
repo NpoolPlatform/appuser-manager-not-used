@@ -53,11 +53,14 @@ func CreateSet(c *ent.AppUserExtraCreate, in *npool.AppUserExtraReq) *ent.AppUse
 	if in.ID != nil {
 		c.SetID(uuid.MustParse(in.GetID()))
 	}
-	if in.FirstName != nil {
-		c.SetFirstName(in.GetFirstName())
-	}
 	if in.AppID != nil {
 		c.SetAppID(uuid.MustParse(in.GetAppID()))
+	}
+	if in.UserID != nil {
+		c.SetUserID(uuid.MustParse(in.GetUserID()))
+	}
+	if in.FirstName != nil {
+		c.SetFirstName(in.GetFirstName())
 	}
 	if in.Organization != nil {
 		c.SetOrganization(in.GetOrganization())
@@ -85,9 +88,6 @@ func CreateSet(c *ent.AppUserExtraCreate, in *npool.AppUserExtraReq) *ent.AppUse
 	}
 	if in.Gender != nil {
 		c.SetGender(in.GetGender())
-	}
-	if in.UserID != nil {
-		c.SetUserID(uuid.MustParse(in.GetUserID()))
 	}
 	if in.AddressFields != nil {
 		c.SetAddressFields(in.GetAddressFields())
@@ -141,6 +141,30 @@ func UpdateSet(info *ent.AppUserExtra, in *npool.AppUserExtraReq) *ent.AppUserEx
 	}
 	if in.AddressFields != nil {
 		u.SetAddressFields(in.GetAddressFields())
+	}
+	if in.Gender != nil {
+		u.SetGender(in.GetGender())
+	}
+	if in.PostalCode != nil {
+		u.SetPostalCode(in.GetPostalCode())
+	}
+	if in.IDNumber != nil {
+		u.SetIDNumber(in.GetIDNumber())
+	}
+	if in.Organization != nil {
+		u.SetOrganization(in.GetOrganization())
+	}
+	if in.Age != nil {
+		u.SetAge(in.GetAge())
+	}
+	if in.Birthday != nil {
+		u.SetBirthday(in.GetBirthday())
+	}
+	if in.Avatar != nil {
+		u.SetAvatar(in.GetAvatar())
+	}
+	if in.LastName != nil {
+		u.SetLastName(in.GetLastName())
 	}
 
 	return u
