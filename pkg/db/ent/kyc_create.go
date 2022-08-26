@@ -191,6 +191,20 @@ func (kc *KycCreate) SetNillableReviewID(u *uuid.UUID) *KycCreate {
 	return kc
 }
 
+// SetState sets the "state" field.
+func (kc *KycCreate) SetState(s string) *KycCreate {
+	kc.mutation.SetState(s)
+	return kc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (kc *KycCreate) SetNillableState(s *string) *KycCreate {
+	if s != nil {
+		kc.SetState(*s)
+	}
+	return kc
+}
+
 // SetID sets the "id" field.
 func (kc *KycCreate) SetID(u uuid.UUID) *KycCreate {
 	kc.mutation.SetID(u)
@@ -350,6 +364,10 @@ func (kc *KycCreate) defaults() error {
 		v := kyc.DefaultReviewID()
 		kc.mutation.SetReviewID(v)
 	}
+	if _, ok := kc.mutation.State(); !ok {
+		v := kyc.DefaultState
+		kc.mutation.SetState(v)
+	}
 	if _, ok := kc.mutation.ID(); !ok {
 		if kyc.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized kyc.DefaultID (forgotten import ent/runtime?)")
@@ -503,6 +521,14 @@ func (kc *KycCreate) createSpec() (*Kyc, *sqlgraph.CreateSpec) {
 			Column: kyc.FieldReviewID,
 		})
 		_node.ReviewID = value
+	}
+	if value, ok := kc.mutation.State(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldState,
+		})
+		_node.State = value
 	}
 	return _node, _spec
 }
@@ -771,6 +797,24 @@ func (u *KycUpsert) UpdateReviewID() *KycUpsert {
 // ClearReviewID clears the value of the "review_id" field.
 func (u *KycUpsert) ClearReviewID() *KycUpsert {
 	u.SetNull(kyc.FieldReviewID)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *KycUpsert) SetState(v string) *KycUpsert {
+	u.Set(kyc.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *KycUpsert) UpdateState() *KycUpsert {
+	u.SetExcluded(kyc.FieldState)
+	return u
+}
+
+// ClearState clears the value of the "state" field.
+func (u *KycUpsert) ClearState() *KycUpsert {
+	u.SetNull(kyc.FieldState)
 	return u
 }
 
@@ -1073,6 +1117,27 @@ func (u *KycUpsertOne) UpdateReviewID() *KycUpsertOne {
 func (u *KycUpsertOne) ClearReviewID() *KycUpsertOne {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearReviewID()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *KycUpsertOne) SetState(v string) *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *KycUpsertOne) UpdateState() *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.UpdateState()
+	})
+}
+
+// ClearState clears the value of the "state" field.
+func (u *KycUpsertOne) ClearState() *KycUpsertOne {
+	return u.Update(func(s *KycUpsert) {
+		s.ClearState()
 	})
 }
 
@@ -1541,6 +1606,27 @@ func (u *KycUpsertBulk) UpdateReviewID() *KycUpsertBulk {
 func (u *KycUpsertBulk) ClearReviewID() *KycUpsertBulk {
 	return u.Update(func(s *KycUpsert) {
 		s.ClearReviewID()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *KycUpsertBulk) SetState(v string) *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *KycUpsertBulk) UpdateState() *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.UpdateState()
+	})
+}
+
+// ClearState clears the value of the "state" field.
+func (u *KycUpsertBulk) ClearState() *KycUpsertBulk {
+	return u.Update(func(s *KycUpsert) {
+		s.ClearState()
 	})
 }
 

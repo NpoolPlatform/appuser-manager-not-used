@@ -163,6 +163,13 @@ func ReviewID(v uuid.UUID) predicate.Kyc {
 	})
 }
 
+// State applies equality check predicate on the "state" field. It's identical to StateEQ.
+func State(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldState), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
@@ -1264,6 +1271,119 @@ func ReviewIDIsNil() predicate.Kyc {
 func ReviewIDNotNil() predicate.Kyc {
 	return predicate.Kyc(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldReviewID)))
+	})
+}
+
+// StateEQ applies the EQ predicate on the "state" field.
+func StateEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldState), v))
+	})
+}
+
+// StateNEQ applies the NEQ predicate on the "state" field.
+func StateNEQ(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldState), v))
+	})
+}
+
+// StateIn applies the In predicate on the "state" field.
+func StateIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldState), v...))
+	})
+}
+
+// StateNotIn applies the NotIn predicate on the "state" field.
+func StateNotIn(vs ...string) predicate.Kyc {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldState), v...))
+	})
+}
+
+// StateGT applies the GT predicate on the "state" field.
+func StateGT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldState), v))
+	})
+}
+
+// StateGTE applies the GTE predicate on the "state" field.
+func StateGTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldState), v))
+	})
+}
+
+// StateLT applies the LT predicate on the "state" field.
+func StateLT(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldState), v))
+	})
+}
+
+// StateLTE applies the LTE predicate on the "state" field.
+func StateLTE(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldState), v))
+	})
+}
+
+// StateContains applies the Contains predicate on the "state" field.
+func StateContains(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldState), v))
+	})
+}
+
+// StateHasPrefix applies the HasPrefix predicate on the "state" field.
+func StateHasPrefix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldState), v))
+	})
+}
+
+// StateHasSuffix applies the HasSuffix predicate on the "state" field.
+func StateHasSuffix(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldState), v))
+	})
+}
+
+// StateIsNil applies the IsNil predicate on the "state" field.
+func StateIsNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldState)))
+	})
+}
+
+// StateNotNil applies the NotNil predicate on the "state" field.
+func StateNotNil() predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldState)))
+	})
+}
+
+// StateEqualFold applies the EqualFold predicate on the "state" field.
+func StateEqualFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldState), v))
+	})
+}
+
+// StateContainsFold applies the ContainsFold predicate on the "state" field.
+func StateContainsFold(v string) predicate.Kyc {
+	return predicate.Kyc(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldState), v))
 	})
 }
 

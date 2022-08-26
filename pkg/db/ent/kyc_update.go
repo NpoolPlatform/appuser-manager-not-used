@@ -264,6 +264,26 @@ func (ku *KycUpdate) ClearReviewID() *KycUpdate {
 	return ku
 }
 
+// SetState sets the "state" field.
+func (ku *KycUpdate) SetState(s string) *KycUpdate {
+	ku.mutation.SetState(s)
+	return ku
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (ku *KycUpdate) SetNillableState(s *string) *KycUpdate {
+	if s != nil {
+		ku.SetState(*s)
+	}
+	return ku
+}
+
+// ClearState clears the value of the "state" field.
+func (ku *KycUpdate) ClearState() *KycUpdate {
+	ku.mutation.ClearState()
+	return ku
+}
+
 // Mutation returns the KycMutation object of the builder.
 func (ku *KycUpdate) Mutation() *KycMutation {
 	return ku.mutation
@@ -521,6 +541,19 @@ func (ku *KycUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: kyc.FieldReviewID,
 		})
 	}
+	if value, ok := ku.mutation.State(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldState,
+		})
+	}
+	if ku.mutation.StateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldState,
+		})
+	}
 	_spec.Modifiers = ku.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, ku.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -774,6 +807,26 @@ func (kuo *KycUpdateOne) SetNillableReviewID(u *uuid.UUID) *KycUpdateOne {
 // ClearReviewID clears the value of the "review_id" field.
 func (kuo *KycUpdateOne) ClearReviewID() *KycUpdateOne {
 	kuo.mutation.ClearReviewID()
+	return kuo
+}
+
+// SetState sets the "state" field.
+func (kuo *KycUpdateOne) SetState(s string) *KycUpdateOne {
+	kuo.mutation.SetState(s)
+	return kuo
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (kuo *KycUpdateOne) SetNillableState(s *string) *KycUpdateOne {
+	if s != nil {
+		kuo.SetState(*s)
+	}
+	return kuo
+}
+
+// ClearState clears the value of the "state" field.
+func (kuo *KycUpdateOne) ClearState() *KycUpdateOne {
+	kuo.mutation.ClearState()
 	return kuo
 }
 
@@ -1062,6 +1115,19 @@ func (kuo *KycUpdateOne) sqlSave(ctx context.Context) (_node *Kyc, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Column: kyc.FieldReviewID,
+		})
+	}
+	if value, ok := kuo.mutation.State(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: kyc.FieldState,
+		})
+	}
+	if kuo.mutation.StateCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: kyc.FieldState,
 		})
 	}
 	_spec.Modifiers = kuo.modifiers

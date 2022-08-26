@@ -11547,6 +11547,7 @@ type KycMutation struct {
 	selfie_img    *string
 	entity_type   *string
 	review_id     *uuid.UUID
+	state         *string
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Kyc, error)
@@ -12266,6 +12267,55 @@ func (m *KycMutation) ResetReviewID() {
 	delete(m.clearedFields, kyc.FieldReviewID)
 }
 
+// SetState sets the "state" field.
+func (m *KycMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *KycMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the Kyc entity.
+// If the Kyc object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *KycMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ClearState clears the value of the "state" field.
+func (m *KycMutation) ClearState() {
+	m.state = nil
+	m.clearedFields[kyc.FieldState] = struct{}{}
+}
+
+// StateCleared returns if the "state" field was cleared in this mutation.
+func (m *KycMutation) StateCleared() bool {
+	_, ok := m.clearedFields[kyc.FieldState]
+	return ok
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *KycMutation) ResetState() {
+	m.state = nil
+	delete(m.clearedFields, kyc.FieldState)
+}
+
 // Where appends a list predicates to the KycMutation builder.
 func (m *KycMutation) Where(ps ...predicate.Kyc) {
 	m.predicates = append(m.predicates, ps...)
@@ -12285,7 +12335,7 @@ func (m *KycMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *KycMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 13)
 	if m.created_at != nil {
 		fields = append(fields, kyc.FieldCreatedAt)
 	}
@@ -12322,6 +12372,9 @@ func (m *KycMutation) Fields() []string {
 	if m.review_id != nil {
 		fields = append(fields, kyc.FieldReviewID)
 	}
+	if m.state != nil {
+		fields = append(fields, kyc.FieldState)
+	}
 	return fields
 }
 
@@ -12354,6 +12407,8 @@ func (m *KycMutation) Field(name string) (ent.Value, bool) {
 		return m.EntityType()
 	case kyc.FieldReviewID:
 		return m.ReviewID()
+	case kyc.FieldState:
+		return m.State()
 	}
 	return nil, false
 }
@@ -12387,6 +12442,8 @@ func (m *KycMutation) OldField(ctx context.Context, name string) (ent.Value, err
 		return m.OldEntityType(ctx)
 	case kyc.FieldReviewID:
 		return m.OldReviewID(ctx)
+	case kyc.FieldState:
+		return m.OldState(ctx)
 	}
 	return nil, fmt.Errorf("unknown Kyc field %s", name)
 }
@@ -12479,6 +12536,13 @@ func (m *KycMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetReviewID(v)
+		return nil
+	case kyc.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Kyc field %s", name)
@@ -12576,6 +12640,9 @@ func (m *KycMutation) ClearedFields() []string {
 	if m.FieldCleared(kyc.FieldReviewID) {
 		fields = append(fields, kyc.FieldReviewID)
 	}
+	if m.FieldCleared(kyc.FieldState) {
+		fields = append(fields, kyc.FieldState)
+	}
 	return fields
 }
 
@@ -12616,6 +12683,9 @@ func (m *KycMutation) ClearField(name string) error {
 		return nil
 	case kyc.FieldReviewID:
 		m.ClearReviewID()
+		return nil
+	case kyc.FieldState:
+		m.ClearState()
 		return nil
 	}
 	return fmt.Errorf("unknown Kyc nullable field %s", name)
@@ -12660,6 +12730,9 @@ func (m *KycMutation) ResetField(name string) error {
 		return nil
 	case kyc.FieldReviewID:
 		m.ResetReviewID()
+		return nil
+	case kyc.FieldState:
+		m.ResetState()
 		return nil
 	}
 	return fmt.Errorf("unknown Kyc field %s", name)

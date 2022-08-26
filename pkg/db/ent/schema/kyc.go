@@ -70,6 +70,10 @@ func (Kyc) Fields() []ent.Field {
 			Default(func() uuid.UUID {
 				return uuid.UUID{}
 			}),
+		field.
+			String("state").
+			Optional().
+			Default(npool.KycState_DefaultState.String()),
 	}
 }
 
