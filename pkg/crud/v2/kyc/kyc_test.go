@@ -39,7 +39,7 @@ var entKyc = ent.Kyc{
 	BackImg:      uuid.NewString(),
 	SelfieImg:    uuid.NewString(),
 	EntityType:   npool.KycEntityType_Individual.String(),
-	State:        npool.KycState_Wait.String(),
+	State:        npool.KycState_Reviewing.String(),
 }
 
 var (
@@ -48,7 +48,7 @@ var (
 	userID       = entKyc.UserID.String()
 	documentType = npool.KycDocumentType_IDCard
 	entityType   = npool.KycEntityType_Individual
-	state        = npool.KycState_Wait
+	state        = npool.KycState_Reviewing
 	kycInfo      = npool.KycReq{
 		ID:           &id,
 		AppID:        &appID,
