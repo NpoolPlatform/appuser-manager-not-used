@@ -210,17 +210,29 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.Kyc, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 	stm := cli.Kyc.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(kyc.ID(uuid.MustParse(conds.GetID().GetValue())))
+			stm.Where(kyc.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid kyc field")
 		}
 	}
 
 	if conds.AppID != nil {
-		appID := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(kyc.AppID(appID))
@@ -230,7 +242,11 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 	}
 
 	if conds.UserID != nil {
-		userID := uuid.MustParse(conds.GetUserID().GetValue())
+		userID, err := uuid.Parse(conds.GetUserID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(kyc.UserID(userID))
@@ -240,7 +256,10 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.KycQuery, error) {
 	}
 
 	if conds.ReviewID != nil {
-		reviewID := uuid.MustParse(conds.GetReviewID().GetValue())
+		reviewID, err := uuid.Parse(conds.GetReviewID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetReviewID().GetOp() {
 		case cruder.EQ:
 			stm.Where(kyc.ReviewID(reviewID))

@@ -173,8 +173,16 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserControl, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserControlQuery, error) {
 	stm := cli.AppUserControl.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
-		id := uuid.MustParse(conds.GetID().GetValue())
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusercontrol.ID(id))

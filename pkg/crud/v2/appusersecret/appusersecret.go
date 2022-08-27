@@ -180,8 +180,15 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserSecret, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery, error) {
 	stm := cli.AppUserSecret.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
-		id := uuid.MustParse(conds.GetID().GetValue())
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusersecret.ID(id))
@@ -191,7 +198,10 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery
 	}
 
 	if conds.AppID != nil {
-		appID := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusersecret.AppID(appID))
@@ -201,7 +211,11 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserSecretQuery
 	}
 
 	if conds.UserID != nil {
-		userID := uuid.MustParse(conds.GetUserID().GetValue())
+		userID, err := uuid.Parse(conds.GetUserID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appusersecret.UserID(userID))

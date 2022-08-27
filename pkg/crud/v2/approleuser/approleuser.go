@@ -159,8 +159,16 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppRoleUser, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, error) {
 	stm := cli.AppRoleUser.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
-		id := uuid.MustParse(conds.GetID().GetValue())
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.ID(id))
@@ -170,7 +178,11 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 	}
 
 	if conds.AppID != nil {
-		appID := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.AppID(appID))
@@ -193,7 +205,10 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 		}
 	}
 	if conds.UserID != nil {
-		userID := uuid.MustParse(conds.GetUserID().GetValue())
+		userID, err := uuid.Parse(conds.GetUserID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(approleuser.UserID(userID))
@@ -203,10 +218,14 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleUserQuery, 
 	}
 
 	if conds.RoleID != nil {
-		userID := uuid.MustParse(conds.GetRoleID().GetValue())
+		roleID, err := uuid.Parse(conds.GetRoleID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetRoleID().GetOp() {
 		case cruder.EQ:
-			stm.Where(approleuser.RoleID(userID))
+			stm.Where(approleuser.RoleID(roleID))
 		default:
 			return nil, fmt.Errorf("invalid approleuser field")
 		}
