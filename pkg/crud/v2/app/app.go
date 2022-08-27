@@ -169,10 +169,19 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.App, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 	stm := cli.App.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(app.ID(uuid.MustParse(conds.GetID().GetValue())))
+			stm.Where(app.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
@@ -192,7 +201,11 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppQuery, error) {
 		}
 	}
 	if conds.CreatedBy != nil {
-		createdBy := uuid.MustParse(conds.GetCreatedBy().GetValue())
+		createdBy, err := uuid.Parse(conds.GetCreatedBy().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetCreatedBy().GetOp() {
 		case cruder.EQ:
 			stm.Where(app.CreatedBy(createdBy))

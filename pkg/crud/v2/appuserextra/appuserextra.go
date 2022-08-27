@@ -232,8 +232,16 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppUserExtra, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery, error) {
 	stm := cli.AppUserExtra.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
-		id := uuid.MustParse(conds.GetID().GetValue())
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserextra.ID(id))
@@ -243,7 +251,11 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 	}
 
 	if conds.AppID != nil {
-		appID := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
+
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserextra.AppID(appID))
@@ -253,7 +265,10 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 	}
 
 	if conds.UserID != nil {
-		userID := uuid.MustParse(conds.GetUserID().GetValue())
+		userID, err := uuid.Parse(conds.GetUserID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appuserextra.UserID(userID))

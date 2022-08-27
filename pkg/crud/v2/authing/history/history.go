@@ -164,30 +164,44 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AuthHistory, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AuthHistoryQuery, error) {
 	stm := cli.AuthHistory.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(authhistory.ID(uuid.MustParse(conds.GetID().GetValue())))
+			stm.Where(authhistory.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
 	}
 
 	if conds.AppID != nil {
-		createdBy := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(authhistory.AppID(createdBy))
+			stm.Where(authhistory.AppID(appID))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}
 	}
 
 	if conds.UserID != nil {
-		createdBy := uuid.MustParse(conds.GetUserID().GetValue())
+		userID, err := uuid.Parse(conds.GetUserID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
-			stm.Where(authhistory.UserID(createdBy))
+			stm.Where(authhistory.UserID(userID))
 		default:
 			return nil, fmt.Errorf("invalid app field")
 		}

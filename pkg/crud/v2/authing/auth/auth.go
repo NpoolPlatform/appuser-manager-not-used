@@ -165,40 +165,57 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.Auth, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AuthQuery, error) {
 	stm := cli.Auth.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(auth.ID(uuid.MustParse(conds.GetID().GetValue())))
+			stm.Where(auth.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid auth field")
 		}
 	}
 
 	if conds.AppID != nil {
-		createdBy := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
-			stm.Where(auth.AppID(createdBy))
+			stm.Where(auth.AppID(appID))
 		default:
 			return nil, fmt.Errorf("invalid auth field")
 		}
 	}
 
 	if conds.RoleID != nil {
-		createdBy := uuid.MustParse(conds.GetRoleID().GetValue())
+		roleID, err := uuid.Parse(conds.GetRoleID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetRoleID().GetOp() {
 		case cruder.EQ:
-			stm.Where(auth.RoleID(createdBy))
+			stm.Where(auth.RoleID(roleID))
 		default:
 			return nil, fmt.Errorf("invalid auth field")
 		}
 	}
 
 	if conds.UserID != nil {
-		createdBy := uuid.MustParse(conds.GetUserID().GetValue())
+		userID, err := uuid.Parse(conds.GetUserID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
-			stm.Where(auth.UserID(createdBy))
+			stm.Where(auth.UserID(userID))
 		default:
 			return nil, fmt.Errorf("invalid auth field")
 		}

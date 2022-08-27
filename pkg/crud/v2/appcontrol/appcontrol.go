@@ -210,8 +210,15 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.AppControl, error) {
 func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppControlQuery, error) {
 	stm := cli.AppControl.Query()
 
+	if conds == nil {
+		return stm, nil
+	}
+
 	if conds.ID != nil {
-		id := uuid.MustParse(conds.GetID().GetValue())
+		id, err := uuid.Parse(conds.GetID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appcontrol.ID(id))
@@ -221,7 +228,10 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppControlQuery, e
 	}
 
 	if conds.AppID != nil {
-		appID := uuid.MustParse(conds.GetAppID().GetValue())
+		appID, err := uuid.Parse(conds.GetAppID().GetValue())
+		if err != nil {
+			return nil, err
+		}
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
 			stm.Where(appcontrol.AppID(appID))
@@ -230,15 +240,6 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppControlQuery, e
 		}
 	}
 
-	if conds.ID != nil {
-		ID := uuid.MustParse(conds.GetID().GetValue())
-		switch conds.GetID().GetOp() {
-		case cruder.EQ:
-			stm.Where(appcontrol.ID(ID))
-		default:
-			return nil, fmt.Errorf("invalid appcontrol field")
-		}
-	}
 	return stm, nil
 }
 
