@@ -88,9 +88,37 @@ func CreateBulk(ctx context.Context, in []*npool.AuthReq) ([]*ent.Auth, error) {
 	span = tracer.TraceMany(span, in)
 
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		bulk := make([]*ent.AuthCreate, len(in))
-		for i, info := range in {
-			bulk[i] = CreateSet(tx.Auth.Create(), info)
+		bulk := []*ent.AuthCreate{}
+		for _, info := range in {
+			stm := tx.
+				Auth.
+				Query().
+				Where(
+					auth.AppID(uuid.MustParse(info.GetAppID())),
+					auth.Resource(info.GetResource()),
+					auth.Method(info.GetMethod()),
+				)
+
+			if info.UserID != nil {
+				stm.Where(
+					auth.UserID(uuid.MustParse(info.GetUserID())),
+				)
+			}
+			if info.RoleID != nil {
+				stm.Where(
+					auth.RoleID(uuid.MustParse(info.GetRoleID())),
+				)
+			}
+
+			exist, err := stm.Exist(_ctx)
+			if err != nil {
+				return err
+			}
+			if exist {
+				continue
+			}
+
+			bulk = append(bulk, CreateSet(tx.Auth.Create(), info))
 		}
 		rows, err = tx.Auth.CreateBulk(bulk...).Save(_ctx)
 		return err
