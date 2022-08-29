@@ -229,6 +229,24 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppRoleQuery, erro
 		}
 	}
 
+	if conds.Default != nil {
+		switch conds.GetDefault().GetOp() {
+		case cruder.EQ:
+			stm.Where(approle.Default(conds.GetDefault().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid approle field")
+		}
+	}
+
+	if conds.Genesis != nil {
+		switch conds.GetGenesis().GetOp() {
+		case cruder.EQ:
+			stm.Where(approle.Genesis(conds.GetGenesis().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid approle field")
+		}
+	}
+
 	if conds.Roles != nil {
 		if conds.GetRoles().GetOp() == cruder.IN {
 			var roles []string
