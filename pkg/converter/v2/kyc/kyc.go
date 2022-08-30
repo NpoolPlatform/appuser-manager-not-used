@@ -22,6 +22,8 @@ func Ent2Grpc(row *ent.Kyc) *npool.Kyc {
 		EntityType:   npool.KycEntityType(npool.KycEntityType_value[row.EntityType]),
 		CreatedAt:    row.CreatedAt,
 		UpdatedAt:    row.UpdatedAt,
+		ReviewID:     row.ReviewID.String(),
+		State:        npool.KycState(npool.KycState_value[row.State]),
 	}
 }
 
