@@ -43,6 +43,8 @@ var kycData = npool.Kyc{
 	BackImg:      uuid.NewString(),
 	SelfieImg:    uuid.NewString(),
 	EntityType:   npool.KycEntityType_Individual,
+	State:        npool.KycState_Reviewing,
+	ReviewID:     uuid.NewString(),
 }
 
 var (
@@ -56,6 +58,8 @@ var (
 		BackImg:      &kycData.BackImg,
 		SelfieImg:    &kycData.SelfieImg,
 		EntityType:   &kycData.EntityType,
+		State:        &kycData.State,
+		ReviewID:     &kycData.ReviewID,
 	}
 )
 
@@ -83,6 +87,8 @@ func createKycs(t *testing.T) {
 			BackImg:      uuid.NewString(),
 			SelfieImg:    uuid.NewString(),
 			EntityType:   npool.KycEntityType_Individual,
+			State:        npool.KycState_Reviewing,
+			ReviewID:     uuid.NewString(),
 		},
 		{
 			ID:           uuid.NewString(),
@@ -94,6 +100,8 @@ func createKycs(t *testing.T) {
 			BackImg:      uuid.NewString(),
 			SelfieImg:    uuid.NewString(),
 			EntityType:   npool.KycEntityType_Individual,
+			State:        npool.KycState_Reviewing,
+			ReviewID:     uuid.NewString(),
 		},
 	}
 
@@ -109,6 +117,8 @@ func createKycs(t *testing.T) {
 			BackImg:      &kycDatas[key].BackImg,
 			SelfieImg:    &kycDatas[key].SelfieImg,
 			EntityType:   &kycDatas[key].EntityType,
+			State:        &kycDatas[key].State,
+			ReviewID:     &kycDatas[key].ReviewID,
 		})
 	}
 
