@@ -277,7 +277,7 @@ pipeline {
       steps {
         sh(returnStdout: false, script: '''
           set +e
-          docker images | grep staker-manager | grep feature
+          docker images | grep appuser-manager | grep feature
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
