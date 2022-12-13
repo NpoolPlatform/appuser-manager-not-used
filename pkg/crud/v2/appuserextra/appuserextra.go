@@ -276,6 +276,15 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserExtraQuery,
 			return nil, fmt.Errorf("invalid appuserextra field")
 		}
 	}
+
+	if conds.IDNumber != nil {
+		switch conds.GetIDNumber().GetOp() {
+		case cruder.EQ:
+			stm.Where(appuserextra.IDNumber(conds.GetIDNumber().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid appuserextra field")
+		}
+	}
 	return stm, nil
 }
 
