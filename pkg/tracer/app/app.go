@@ -13,9 +13,9 @@ func trace(span trace1.Span, in *npool.AppReq, index int) trace1.Span {
 	span.SetAttributes(
 		attribute.String(fmt.Sprintf("ID.%v", index), in.GetID()),
 		attribute.String(fmt.Sprintf("Description.%v", index), in.GetDescription()),
-		attribute.String(fmt.Sprintf("CreatedBy.%v", index), in.GetID()),
-		attribute.String(fmt.Sprintf("Name.%v", index), in.GetCreatedBy()),
-		attribute.String(fmt.Sprintf("Logo.%v", index), in.GetName()),
+		attribute.String(fmt.Sprintf("CreatedBy.%v", index), in.GetCreatedBy()),
+		attribute.String(fmt.Sprintf("Name.%v", index), in.GetName()),
+		attribute.String(fmt.Sprintf("Logo.%v", index), in.GetLogo()),
 	)
 	return span
 }
@@ -30,12 +30,12 @@ func TraceConds(span trace1.Span, in *npool.Conds) trace1.Span {
 		attribute.String("ID.Val", in.GetID().GetValue()),
 		attribute.String("Description.Op", in.GetDescription().GetOp()),
 		attribute.String("Description.Val", in.GetDescription().GetValue()),
-		attribute.String("CreatedBy.Op", in.GetID().GetOp()),
-		attribute.String("CreatedBy.Val", in.GetID().GetValue()),
-		attribute.String("Name.Op", in.GetCreatedBy().GetOp()),
-		attribute.String("Name.Val", in.GetCreatedBy().GetValue()),
-		attribute.String("Logo.Op", in.GetName().GetOp()),
-		attribute.String("Logo.Val", in.GetName().GetValue()),
+		attribute.String("CreatedBy.Op", in.GetCreatedBy().GetOp()),
+		attribute.String("CreatedBy.Val", in.GetCreatedBy().GetValue()),
+		attribute.String("Name.Op", in.GetName().GetOp()),
+		attribute.String("Name.Val", in.GetName().GetValue()),
+		attribute.String("Logo.Op", in.GetLogo().GetOp()),
+		attribute.String("Logo.Val", in.GetLogo().GetValue()),
 	)
 	return span
 }

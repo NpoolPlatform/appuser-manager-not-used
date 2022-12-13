@@ -93,6 +93,20 @@ func (sc *SubscriberCreate) SetNillableEmailAddress(s *string) *SubscriberCreate
 	return sc
 }
 
+// SetRegistered sets the "registered" field.
+func (sc *SubscriberCreate) SetRegistered(b bool) *SubscriberCreate {
+	sc.mutation.SetRegistered(b)
+	return sc
+}
+
+// SetNillableRegistered sets the "registered" field if the given value is not nil.
+func (sc *SubscriberCreate) SetNillableRegistered(b *bool) *SubscriberCreate {
+	if b != nil {
+		sc.SetRegistered(*b)
+	}
+	return sc
+}
+
 // SetID sets the "id" field.
 func (sc *SubscriberCreate) SetID(u uuid.UUID) *SubscriberCreate {
 	sc.mutation.SetID(u)
@@ -218,6 +232,10 @@ func (sc *SubscriberCreate) defaults() error {
 		v := subscriber.DefaultEmailAddress
 		sc.mutation.SetEmailAddress(v)
 	}
+	if _, ok := sc.mutation.Registered(); !ok {
+		v := subscriber.DefaultRegistered
+		sc.mutation.SetRegistered(v)
+	}
 	if _, ok := sc.mutation.ID(); !ok {
 		if subscriber.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized subscriber.DefaultID (forgotten import ent/runtime?)")
@@ -315,6 +333,14 @@ func (sc *SubscriberCreate) createSpec() (*Subscriber, *sqlgraph.CreateSpec) {
 			Column: subscriber.FieldEmailAddress,
 		})
 		_node.EmailAddress = value
+	}
+	if value, ok := sc.mutation.Registered(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: subscriber.FieldRegistered,
+		})
+		_node.Registered = value
 	}
 	return _node, _spec
 }
@@ -457,6 +483,24 @@ func (u *SubscriberUpsert) UpdateEmailAddress() *SubscriberUpsert {
 // ClearEmailAddress clears the value of the "email_address" field.
 func (u *SubscriberUpsert) ClearEmailAddress() *SubscriberUpsert {
 	u.SetNull(subscriber.FieldEmailAddress)
+	return u
+}
+
+// SetRegistered sets the "registered" field.
+func (u *SubscriberUpsert) SetRegistered(v bool) *SubscriberUpsert {
+	u.Set(subscriber.FieldRegistered, v)
+	return u
+}
+
+// UpdateRegistered sets the "registered" field to the value that was provided on create.
+func (u *SubscriberUpsert) UpdateRegistered() *SubscriberUpsert {
+	u.SetExcluded(subscriber.FieldRegistered)
+	return u
+}
+
+// ClearRegistered clears the value of the "registered" field.
+func (u *SubscriberUpsert) ClearRegistered() *SubscriberUpsert {
+	u.SetNull(subscriber.FieldRegistered)
 	return u
 }
 
@@ -612,6 +656,27 @@ func (u *SubscriberUpsertOne) UpdateEmailAddress() *SubscriberUpsertOne {
 func (u *SubscriberUpsertOne) ClearEmailAddress() *SubscriberUpsertOne {
 	return u.Update(func(s *SubscriberUpsert) {
 		s.ClearEmailAddress()
+	})
+}
+
+// SetRegistered sets the "registered" field.
+func (u *SubscriberUpsertOne) SetRegistered(v bool) *SubscriberUpsertOne {
+	return u.Update(func(s *SubscriberUpsert) {
+		s.SetRegistered(v)
+	})
+}
+
+// UpdateRegistered sets the "registered" field to the value that was provided on create.
+func (u *SubscriberUpsertOne) UpdateRegistered() *SubscriberUpsertOne {
+	return u.Update(func(s *SubscriberUpsert) {
+		s.UpdateRegistered()
+	})
+}
+
+// ClearRegistered clears the value of the "registered" field.
+func (u *SubscriberUpsertOne) ClearRegistered() *SubscriberUpsertOne {
+	return u.Update(func(s *SubscriberUpsert) {
+		s.ClearRegistered()
 	})
 }
 
@@ -933,6 +998,27 @@ func (u *SubscriberUpsertBulk) UpdateEmailAddress() *SubscriberUpsertBulk {
 func (u *SubscriberUpsertBulk) ClearEmailAddress() *SubscriberUpsertBulk {
 	return u.Update(func(s *SubscriberUpsert) {
 		s.ClearEmailAddress()
+	})
+}
+
+// SetRegistered sets the "registered" field.
+func (u *SubscriberUpsertBulk) SetRegistered(v bool) *SubscriberUpsertBulk {
+	return u.Update(func(s *SubscriberUpsert) {
+		s.SetRegistered(v)
+	})
+}
+
+// UpdateRegistered sets the "registered" field to the value that was provided on create.
+func (u *SubscriberUpsertBulk) UpdateRegistered() *SubscriberUpsertBulk {
+	return u.Update(func(s *SubscriberUpsert) {
+		s.UpdateRegistered()
+	})
+}
+
+// ClearRegistered clears the value of the "registered" field.
+func (u *SubscriberUpsertBulk) ClearRegistered() *SubscriberUpsertBulk {
+	return u.Update(func(s *SubscriberUpsert) {
+		s.ClearRegistered()
 	})
 }
 

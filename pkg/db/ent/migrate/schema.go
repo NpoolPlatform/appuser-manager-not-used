@@ -315,6 +315,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeUint32},
 		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "email_address", Type: field.TypeString, Nullable: true, Default: ""},
+		{Name: "registered", Type: field.TypeBool, Nullable: true, Default: false},
 	}
 	// SubscribersTable holds the schema information for the "subscribers" table.
 	SubscribersTable = &schema.Table{
