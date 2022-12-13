@@ -19,6 +19,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/api/v2/banapp"
 	"github.com/NpoolPlatform/appuser-manager/api/v2/banappuser"
 	loginhis "github.com/NpoolPlatform/appuser-manager/api/v2/login/history"
+	"github.com/NpoolPlatform/appuser-manager/api/v2/subscriber"
 
 	appusermgr "github.com/NpoolPlatform/message/npool/appuser/mgr/v2"
 
@@ -33,6 +34,7 @@ type Server struct {
 func Register(server grpc.ServiceRegistrar) {
 	appusermgr.RegisterManagerServer(server, &Server{})
 	app.Register(server)
+	subscriber.Register(server)
 	appcontrol.Register(server)
 	approle.Register(server)
 	approleuser.Register(server)
