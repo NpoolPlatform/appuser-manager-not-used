@@ -18,11 +18,11 @@ init:
 
 go.mod:
 	go mod init ${GITREPO}
-	go mod tidy
+	go mod tidy -compat=1.17
 
 deps:
 	go get -d ./...
-	go mod tidy
+	go mod tidy -compat=1.17
 
 ##@ Verify
 
@@ -53,7 +53,7 @@ verify-spelling: ## Verifies spelling.
 	${REPO_ROOT}/hack/verify-spelling.sh
 
 gen-ent:
-	go get entgo.io/ent/cmd/ent
+	go install entgo.io/ent/cmd/ent@v0.11.2
 	go run -mod=mod entgo.io/ent/cmd/ent generate --feature entql,sql/lock,sql/execquery,sql/upsert,privacy,schema/snapshot,sql/modifier ./pkg/db/ent/schema
 
 all: verify-build

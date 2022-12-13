@@ -307,6 +307,21 @@ var (
 		Columns:    LoginHistoriesColumns,
 		PrimaryKey: []*schema.Column{LoginHistoriesColumns[0]},
 	}
+	// SubscribersColumns holds the columns for the "subscribers" table.
+	SubscribersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "email_address", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// SubscribersTable holds the schema information for the "subscribers" table.
+	SubscribersTable = &schema.Table{
+		Name:       "subscribers",
+		Columns:    SubscribersColumns,
+		PrimaryKey: []*schema.Column{SubscribersColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
@@ -324,6 +339,7 @@ var (
 		BanAppUsersTable,
 		KycsTable,
 		LoginHistoriesTable,
+		SubscribersTable,
 	}
 )
 

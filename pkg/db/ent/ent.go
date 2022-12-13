@@ -25,6 +25,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -60,6 +61,7 @@ func columnChecker(table string) func(string) error {
 		banappuser.Table:        banappuser.ValidColumn,
 		kyc.Table:               kyc.ValidColumn,
 		loginhistory.Table:      loginhistory.ValidColumn,
+		subscriber.Table:        subscriber.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

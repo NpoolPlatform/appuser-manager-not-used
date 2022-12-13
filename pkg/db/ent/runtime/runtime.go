@@ -21,6 +21,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 	"github.com/google/uuid"
 
 	"entgo.io/ent"
@@ -805,9 +806,48 @@ func init() {
 	loginhistoryDescID := loginhistoryFields[0].Descriptor()
 	// loginhistory.DefaultID holds the default value on creation for the id field.
 	loginhistory.DefaultID = loginhistoryDescID.Default.(func() uuid.UUID)
+	subscriberMixin := schema.Subscriber{}.Mixin()
+	subscriber.Policy = privacy.NewPolicies(subscriberMixin[0], schema.Subscriber{})
+	subscriber.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := subscriber.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	subscriberMixinFields0 := subscriberMixin[0].Fields()
+	_ = subscriberMixinFields0
+	subscriberFields := schema.Subscriber{}.Fields()
+	_ = subscriberFields
+	// subscriberDescCreatedAt is the schema descriptor for created_at field.
+	subscriberDescCreatedAt := subscriberMixinFields0[0].Descriptor()
+	// subscriber.DefaultCreatedAt holds the default value on creation for the created_at field.
+	subscriber.DefaultCreatedAt = subscriberDescCreatedAt.Default.(func() uint32)
+	// subscriberDescUpdatedAt is the schema descriptor for updated_at field.
+	subscriberDescUpdatedAt := subscriberMixinFields0[1].Descriptor()
+	// subscriber.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	subscriber.DefaultUpdatedAt = subscriberDescUpdatedAt.Default.(func() uint32)
+	// subscriber.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	subscriber.UpdateDefaultUpdatedAt = subscriberDescUpdatedAt.UpdateDefault.(func() uint32)
+	// subscriberDescDeletedAt is the schema descriptor for deleted_at field.
+	subscriberDescDeletedAt := subscriberMixinFields0[2].Descriptor()
+	// subscriber.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	subscriber.DefaultDeletedAt = subscriberDescDeletedAt.Default.(func() uint32)
+	// subscriberDescAppID is the schema descriptor for app_id field.
+	subscriberDescAppID := subscriberFields[1].Descriptor()
+	// subscriber.DefaultAppID holds the default value on creation for the app_id field.
+	subscriber.DefaultAppID = subscriberDescAppID.Default.(func() uuid.UUID)
+	// subscriberDescEmailAddress is the schema descriptor for email_address field.
+	subscriberDescEmailAddress := subscriberFields[2].Descriptor()
+	// subscriber.DefaultEmailAddress holds the default value on creation for the email_address field.
+	subscriber.DefaultEmailAddress = subscriberDescEmailAddress.Default.(string)
+	// subscriberDescID is the schema descriptor for id field.
+	subscriberDescID := subscriberFields[0].Descriptor()
+	// subscriber.DefaultID holds the default value on creation for the id field.
+	subscriber.DefaultID = subscriberDescID.Default.(func() uuid.UUID)
 }
 
 const (
-	Version = "v0.11.2"                                         // Version of ent codegen.
-	Sum     = "h1:UM2/BUhF2FfsxPHRxLjQbhqJNaDdVlOwNIAMLs2jyto=" // Sum of ent codegen.
+	Version = "v0.11.2" // Version of ent codegen.
 )

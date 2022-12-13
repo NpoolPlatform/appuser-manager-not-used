@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -27,7 +28,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 15)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 16)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   app.Table,
@@ -349,6 +350,24 @@ var schemaGraph = func() *sqlgraph.Schema {
 			loginhistory.FieldClientIP:  {Type: field.TypeString, Column: loginhistory.FieldClientIP},
 			loginhistory.FieldUserAgent: {Type: field.TypeString, Column: loginhistory.FieldUserAgent},
 			loginhistory.FieldLocation:  {Type: field.TypeString, Column: loginhistory.FieldLocation},
+		},
+	}
+	graph.Nodes[15] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   subscriber.Table,
+			Columns: subscriber.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: subscriber.FieldID,
+			},
+		},
+		Type: "Subscriber",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			subscriber.FieldCreatedAt:    {Type: field.TypeUint32, Column: subscriber.FieldCreatedAt},
+			subscriber.FieldUpdatedAt:    {Type: field.TypeUint32, Column: subscriber.FieldUpdatedAt},
+			subscriber.FieldDeletedAt:    {Type: field.TypeUint32, Column: subscriber.FieldDeletedAt},
+			subscriber.FieldAppID:        {Type: field.TypeUUID, Column: subscriber.FieldAppID},
+			subscriber.FieldEmailAddress: {Type: field.TypeString, Column: subscriber.FieldEmailAddress},
 		},
 	}
 	return graph
@@ -1598,4 +1617,69 @@ func (f *LoginHistoryFilter) WhereUserAgent(p entql.StringP) {
 // WhereLocation applies the entql string predicate on the location field.
 func (f *LoginHistoryFilter) WhereLocation(p entql.StringP) {
 	f.Where(p.Field(loginhistory.FieldLocation))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (sq *SubscriberQuery) addPredicate(pred func(s *sql.Selector)) {
+	sq.predicates = append(sq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the SubscriberQuery builder.
+func (sq *SubscriberQuery) Filter() *SubscriberFilter {
+	return &SubscriberFilter{config: sq.config, predicateAdder: sq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *SubscriberMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the SubscriberMutation builder.
+func (m *SubscriberMutation) Filter() *SubscriberFilter {
+	return &SubscriberFilter{config: m.config, predicateAdder: m}
+}
+
+// SubscriberFilter provides a generic filtering capability at runtime for SubscriberQuery.
+type SubscriberFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *SubscriberFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *SubscriberFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(subscriber.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *SubscriberFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(subscriber.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *SubscriberFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(subscriber.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *SubscriberFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(subscriber.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *SubscriberFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(subscriber.FieldAppID))
+}
+
+// WhereEmailAddress applies the entql string predicate on the email_address field.
+func (f *SubscriberFilter) WhereEmailAddress(p entql.StringP) {
+	f.Where(p.Field(subscriber.FieldEmailAddress))
 }

@@ -204,6 +204,19 @@ func (f LoginHistoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	return f(ctx, mv)
 }
 
+// The SubscriberFunc type is an adapter to allow the use of ordinary
+// function as Subscriber mutator.
+type SubscriberFunc func(context.Context, *ent.SubscriberMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SubscriberFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SubscriberMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SubscriberMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

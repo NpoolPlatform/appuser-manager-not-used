@@ -50,3 +50,6 @@ type Kyc func(*sql.Selector)
 
 // LoginHistory is the predicate function for loginhistory builders.
 type LoginHistory func(*sql.Selector)
+
+// Subscriber is the predicate function for subscriber builders.
+type Subscriber func(*sql.Selector)
