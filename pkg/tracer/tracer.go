@@ -3,7 +3,7 @@ package tracer
 import (
 	"fmt"
 
-	servicename "github.com/NpoolPlatform/ledger-manager/pkg/servicename"
+	servicename "github.com/NpoolPlatform/appuser-manager/pkg/servicename"
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
