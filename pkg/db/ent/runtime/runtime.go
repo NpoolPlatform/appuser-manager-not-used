@@ -842,6 +842,10 @@ func init() {
 	subscriberDescEmailAddress := subscriberFields[2].Descriptor()
 	// subscriber.DefaultEmailAddress holds the default value on creation for the email_address field.
 	subscriber.DefaultEmailAddress = subscriberDescEmailAddress.Default.(string)
+	// subscriberDescRegistered is the schema descriptor for registered field.
+	subscriberDescRegistered := subscriberFields[3].Descriptor()
+	// subscriber.DefaultRegistered holds the default value on creation for the registered field.
+	subscriber.DefaultRegistered = subscriberDescRegistered.Default.(bool)
 	// subscriberDescID is the schema descriptor for id field.
 	subscriberDescID := subscriberFields[0].Descriptor()
 	// subscriber.DefaultID holds the default value on creation for the id field.

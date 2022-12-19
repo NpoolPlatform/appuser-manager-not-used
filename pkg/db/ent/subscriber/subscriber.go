@@ -22,6 +22,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldEmailAddress holds the string denoting the email_address field in the database.
 	FieldEmailAddress = "email_address"
+	// FieldRegistered holds the string denoting the registered field in the database.
+	FieldRegistered = "registered"
 	// Table holds the table name of the subscriber in the database.
 	Table = "subscribers"
 )
@@ -34,6 +36,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldAppID,
 	FieldEmailAddress,
+	FieldRegistered,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -67,6 +70,8 @@ var (
 	DefaultAppID func() uuid.UUID
 	// DefaultEmailAddress holds the default value on creation for the "email_address" field.
 	DefaultEmailAddress string
+	// DefaultRegistered holds the default value on creation for the "registered" field.
+	DefaultRegistered bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

@@ -36,5 +36,9 @@ func (Subscriber) Fields() []ent.Field {
 			String("email_address").
 			Optional().
 			Default(""),
+		field.
+			Bool("registered").
+			Optional().
+			Default(false),
 	}
 }

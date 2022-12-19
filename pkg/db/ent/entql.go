@@ -368,6 +368,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			subscriber.FieldDeletedAt:    {Type: field.TypeUint32, Column: subscriber.FieldDeletedAt},
 			subscriber.FieldAppID:        {Type: field.TypeUUID, Column: subscriber.FieldAppID},
 			subscriber.FieldEmailAddress: {Type: field.TypeString, Column: subscriber.FieldEmailAddress},
+			subscriber.FieldRegistered:   {Type: field.TypeBool, Column: subscriber.FieldRegistered},
 		},
 	}
 	return graph
@@ -1682,4 +1683,9 @@ func (f *SubscriberFilter) WhereAppID(p entql.ValueP) {
 // WhereEmailAddress applies the entql string predicate on the email_address field.
 func (f *SubscriberFilter) WhereEmailAddress(p entql.StringP) {
 	f.Where(p.Field(subscriber.FieldEmailAddress))
+}
+
+// WhereRegistered applies the entql bool predicate on the registered field.
+func (f *SubscriberFilter) WhereRegistered(p entql.BoolP) {
+	f.Where(p.Field(subscriber.FieldRegistered))
 }

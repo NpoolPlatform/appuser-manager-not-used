@@ -26,6 +26,8 @@ type Subscriber struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// EmailAddress holds the value of the "email_address" field.
 	EmailAddress string `json:"email_address,omitempty"`
+	// Registered holds the value of the "registered" field.
+	Registered bool `json:"registered,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -33,6 +35,8 @@ func (*Subscriber) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case subscriber.FieldRegistered:
+			values[i] = new(sql.NullBool)
 		case subscriber.FieldCreatedAt, subscriber.FieldUpdatedAt, subscriber.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case subscriber.FieldEmailAddress:
@@ -90,6 +94,12 @@ func (s *Subscriber) assignValues(columns []string, values []interface{}) error 
 			} else if value.Valid {
 				s.EmailAddress = value.String
 			}
+		case subscriber.FieldRegistered:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field registered", values[i])
+			} else if value.Valid {
+				s.Registered = value.Bool
+			}
 		}
 	}
 	return nil
@@ -132,6 +142,9 @@ func (s *Subscriber) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("email_address=")
 	builder.WriteString(s.EmailAddress)
+	builder.WriteString(", ")
+	builder.WriteString("registered=")
+	builder.WriteString(fmt.Sprintf("%v", s.Registered))
 	builder.WriteByte(')')
 	return builder.String()
 }

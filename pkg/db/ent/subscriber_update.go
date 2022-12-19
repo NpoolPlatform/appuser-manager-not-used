@@ -124,6 +124,26 @@ func (su *SubscriberUpdate) ClearEmailAddress() *SubscriberUpdate {
 	return su
 }
 
+// SetRegistered sets the "registered" field.
+func (su *SubscriberUpdate) SetRegistered(b bool) *SubscriberUpdate {
+	su.mutation.SetRegistered(b)
+	return su
+}
+
+// SetNillableRegistered sets the "registered" field if the given value is not nil.
+func (su *SubscriberUpdate) SetNillableRegistered(b *bool) *SubscriberUpdate {
+	if b != nil {
+		su.SetRegistered(*b)
+	}
+	return su
+}
+
+// ClearRegistered clears the value of the "registered" field.
+func (su *SubscriberUpdate) ClearRegistered() *SubscriberUpdate {
+	su.mutation.ClearRegistered()
+	return su
+}
+
 // Mutation returns the SubscriberMutation object of the builder.
 func (su *SubscriberUpdate) Mutation() *SubscriberMutation {
 	return su.mutation
@@ -290,6 +310,19 @@ func (su *SubscriberUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: subscriber.FieldEmailAddress,
 		})
 	}
+	if value, ok := su.mutation.Registered(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: subscriber.FieldRegistered,
+		})
+	}
+	if su.mutation.RegisteredCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: subscriber.FieldRegistered,
+		})
+	}
 	_spec.Modifiers = su.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -403,6 +436,26 @@ func (suo *SubscriberUpdateOne) SetNillableEmailAddress(s *string) *SubscriberUp
 // ClearEmailAddress clears the value of the "email_address" field.
 func (suo *SubscriberUpdateOne) ClearEmailAddress() *SubscriberUpdateOne {
 	suo.mutation.ClearEmailAddress()
+	return suo
+}
+
+// SetRegistered sets the "registered" field.
+func (suo *SubscriberUpdateOne) SetRegistered(b bool) *SubscriberUpdateOne {
+	suo.mutation.SetRegistered(b)
+	return suo
+}
+
+// SetNillableRegistered sets the "registered" field if the given value is not nil.
+func (suo *SubscriberUpdateOne) SetNillableRegistered(b *bool) *SubscriberUpdateOne {
+	if b != nil {
+		suo.SetRegistered(*b)
+	}
+	return suo
+}
+
+// ClearRegistered clears the value of the "registered" field.
+func (suo *SubscriberUpdateOne) ClearRegistered() *SubscriberUpdateOne {
+	suo.mutation.ClearRegistered()
 	return suo
 }
 
@@ -600,6 +653,19 @@ func (suo *SubscriberUpdateOne) sqlSave(ctx context.Context) (_node *Subscriber,
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: subscriber.FieldEmailAddress,
+		})
+	}
+	if value, ok := suo.mutation.Registered(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: subscriber.FieldRegistered,
+		})
+	}
+	if suo.mutation.RegisteredCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: subscriber.FieldRegistered,
 		})
 	}
 	_spec.Modifiers = suo.modifiers

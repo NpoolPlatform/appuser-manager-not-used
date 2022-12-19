@@ -13697,6 +13697,7 @@ type SubscriberMutation struct {
 	adddeleted_at *int32
 	app_id        *uuid.UUID
 	email_address *string
+	registered    *bool
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Subscriber, error)
@@ -14073,6 +14074,55 @@ func (m *SubscriberMutation) ResetEmailAddress() {
 	delete(m.clearedFields, subscriber.FieldEmailAddress)
 }
 
+// SetRegistered sets the "registered" field.
+func (m *SubscriberMutation) SetRegistered(b bool) {
+	m.registered = &b
+}
+
+// Registered returns the value of the "registered" field in the mutation.
+func (m *SubscriberMutation) Registered() (r bool, exists bool) {
+	v := m.registered
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRegistered returns the old "registered" field's value of the Subscriber entity.
+// If the Subscriber object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SubscriberMutation) OldRegistered(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRegistered is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRegistered requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRegistered: %w", err)
+	}
+	return oldValue.Registered, nil
+}
+
+// ClearRegistered clears the value of the "registered" field.
+func (m *SubscriberMutation) ClearRegistered() {
+	m.registered = nil
+	m.clearedFields[subscriber.FieldRegistered] = struct{}{}
+}
+
+// RegisteredCleared returns if the "registered" field was cleared in this mutation.
+func (m *SubscriberMutation) RegisteredCleared() bool {
+	_, ok := m.clearedFields[subscriber.FieldRegistered]
+	return ok
+}
+
+// ResetRegistered resets all changes to the "registered" field.
+func (m *SubscriberMutation) ResetRegistered() {
+	m.registered = nil
+	delete(m.clearedFields, subscriber.FieldRegistered)
+}
+
 // Where appends a list predicates to the SubscriberMutation builder.
 func (m *SubscriberMutation) Where(ps ...predicate.Subscriber) {
 	m.predicates = append(m.predicates, ps...)
@@ -14092,7 +14142,7 @@ func (m *SubscriberMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SubscriberMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.created_at != nil {
 		fields = append(fields, subscriber.FieldCreatedAt)
 	}
@@ -14107,6 +14157,9 @@ func (m *SubscriberMutation) Fields() []string {
 	}
 	if m.email_address != nil {
 		fields = append(fields, subscriber.FieldEmailAddress)
+	}
+	if m.registered != nil {
+		fields = append(fields, subscriber.FieldRegistered)
 	}
 	return fields
 }
@@ -14126,6 +14179,8 @@ func (m *SubscriberMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case subscriber.FieldEmailAddress:
 		return m.EmailAddress()
+	case subscriber.FieldRegistered:
+		return m.Registered()
 	}
 	return nil, false
 }
@@ -14145,6 +14200,8 @@ func (m *SubscriberMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldAppID(ctx)
 	case subscriber.FieldEmailAddress:
 		return m.OldEmailAddress(ctx)
+	case subscriber.FieldRegistered:
+		return m.OldRegistered(ctx)
 	}
 	return nil, fmt.Errorf("unknown Subscriber field %s", name)
 }
@@ -14188,6 +14245,13 @@ func (m *SubscriberMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEmailAddress(v)
+		return nil
+	case subscriber.FieldRegistered:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRegistered(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Subscriber field %s", name)
@@ -14264,6 +14328,9 @@ func (m *SubscriberMutation) ClearedFields() []string {
 	if m.FieldCleared(subscriber.FieldEmailAddress) {
 		fields = append(fields, subscriber.FieldEmailAddress)
 	}
+	if m.FieldCleared(subscriber.FieldRegistered) {
+		fields = append(fields, subscriber.FieldRegistered)
+	}
 	return fields
 }
 
@@ -14283,6 +14350,9 @@ func (m *SubscriberMutation) ClearField(name string) error {
 		return nil
 	case subscriber.FieldEmailAddress:
 		m.ClearEmailAddress()
+		return nil
+	case subscriber.FieldRegistered:
+		m.ClearRegistered()
 		return nil
 	}
 	return fmt.Errorf("unknown Subscriber nullable field %s", name)
@@ -14306,6 +14376,9 @@ func (m *SubscriberMutation) ResetField(name string) error {
 		return nil
 	case subscriber.FieldEmailAddress:
 		m.ResetEmailAddress()
+		return nil
+	case subscriber.FieldRegistered:
+		m.ResetRegistered()
 		return nil
 	}
 	return fmt.Errorf("unknown Subscriber field %s", name)

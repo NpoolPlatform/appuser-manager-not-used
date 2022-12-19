@@ -114,6 +114,13 @@ func EmailAddress(v string) predicate.Subscriber {
 	})
 }
 
+// Registered applies equality check predicate on the "registered" field. It's identical to RegisteredEQ.
+func Registered(v bool) predicate.Subscriber {
+	return predicate.Subscriber(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRegistered), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Subscriber {
 	return predicate.Subscriber(func(s *sql.Selector) {
@@ -494,6 +501,34 @@ func EmailAddressEqualFold(v string) predicate.Subscriber {
 func EmailAddressContainsFold(v string) predicate.Subscriber {
 	return predicate.Subscriber(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldEmailAddress), v))
+	})
+}
+
+// RegisteredEQ applies the EQ predicate on the "registered" field.
+func RegisteredEQ(v bool) predicate.Subscriber {
+	return predicate.Subscriber(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRegistered), v))
+	})
+}
+
+// RegisteredNEQ applies the NEQ predicate on the "registered" field.
+func RegisteredNEQ(v bool) predicate.Subscriber {
+	return predicate.Subscriber(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRegistered), v))
+	})
+}
+
+// RegisteredIsNil applies the IsNil predicate on the "registered" field.
+func RegisteredIsNil() predicate.Subscriber {
+	return predicate.Subscriber(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldRegistered)))
+	})
+}
+
+// RegisteredNotNil applies the NotNil predicate on the "registered" field.
+func RegisteredNotNil() predicate.Subscriber {
+	return predicate.Subscriber(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldRegistered)))
 	})
 }
 
