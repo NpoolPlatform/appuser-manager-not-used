@@ -21,14 +21,14 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e
 	bou.ke/monkey v1.0.2
-	github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15
+	github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb
 	go.opentelemetry.io/otel v1.8.0
 	go.opentelemetry.io/otel/trace v1.8.0
 )
 
 require (
+	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/Shonminh/apollo-client v0.4.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
