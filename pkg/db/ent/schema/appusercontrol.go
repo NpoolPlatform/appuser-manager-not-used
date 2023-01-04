@@ -50,6 +50,8 @@ func (AppUserControl) Fields() []ent.Field {
 		field.String("signin_verify_type").
 			Optional().
 			Default(sm.SignMethodType_Email.String()),
+		field.Bool("kol").
+			Default(false),
 	}
 }
 

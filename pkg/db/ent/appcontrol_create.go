@@ -147,6 +147,34 @@ func (acc *AppControlCreate) SetNillableInvitationCodeMust(b *bool) *AppControlC
 	return acc
 }
 
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (acc *AppControlCreate) SetCreateInvitationCodeWhen(s string) *AppControlCreate {
+	acc.mutation.SetCreateInvitationCodeWhen(s)
+	return acc
+}
+
+// SetNillableCreateInvitationCodeWhen sets the "create_invitation_code_when" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableCreateInvitationCodeWhen(s *string) *AppControlCreate {
+	if s != nil {
+		acc.SetCreateInvitationCodeWhen(*s)
+	}
+	return acc
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (acc *AppControlCreate) SetMaxTypedCouponsPerOrder(u uint32) *AppControlCreate {
+	acc.mutation.SetMaxTypedCouponsPerOrder(u)
+	return acc
+}
+
+// SetNillableMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableMaxTypedCouponsPerOrder(u *uint32) *AppControlCreate {
+	if u != nil {
+		acc.SetMaxTypedCouponsPerOrder(*u)
+	}
+	return acc
+}
+
 // SetID sets the "id" field.
 func (acc *AppControlCreate) SetID(u uuid.UUID) *AppControlCreate {
 	acc.mutation.SetID(u)
@@ -298,6 +326,14 @@ func (acc *AppControlCreate) defaults() error {
 		v := appcontrol.DefaultInvitationCodeMust
 		acc.mutation.SetInvitationCodeMust(v)
 	}
+	if _, ok := acc.mutation.CreateInvitationCodeWhen(); !ok {
+		v := appcontrol.DefaultCreateInvitationCodeWhen
+		acc.mutation.SetCreateInvitationCodeWhen(v)
+	}
+	if _, ok := acc.mutation.MaxTypedCouponsPerOrder(); !ok {
+		v := appcontrol.DefaultMaxTypedCouponsPerOrder
+		acc.mutation.SetMaxTypedCouponsPerOrder(v)
+	}
 	if _, ok := acc.mutation.ID(); !ok {
 		if appcontrol.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appcontrol.DefaultID (forgotten import ent/runtime?)")
@@ -435,6 +471,22 @@ func (acc *AppControlCreate) createSpec() (*AppControl, *sqlgraph.CreateSpec) {
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 		_node.InvitationCodeMust = value
+	}
+	if value, ok := acc.mutation.CreateInvitationCodeWhen(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appcontrol.FieldCreateInvitationCodeWhen,
+		})
+		_node.CreateInvitationCodeWhen = value
+	}
+	if value, ok := acc.mutation.MaxTypedCouponsPerOrder(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+		_node.MaxTypedCouponsPerOrder = value
 	}
 	return _node, _spec
 }
@@ -667,6 +719,48 @@ func (u *AppControlUpsert) UpdateInvitationCodeMust() *AppControlUpsert {
 // ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
 func (u *AppControlUpsert) ClearInvitationCodeMust() *AppControlUpsert {
 	u.SetNull(appcontrol.FieldInvitationCodeMust)
+	return u
+}
+
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (u *AppControlUpsert) SetCreateInvitationCodeWhen(v string) *AppControlUpsert {
+	u.Set(appcontrol.FieldCreateInvitationCodeWhen, v)
+	return u
+}
+
+// UpdateCreateInvitationCodeWhen sets the "create_invitation_code_when" field to the value that was provided on create.
+func (u *AppControlUpsert) UpdateCreateInvitationCodeWhen() *AppControlUpsert {
+	u.SetExcluded(appcontrol.FieldCreateInvitationCodeWhen)
+	return u
+}
+
+// ClearCreateInvitationCodeWhen clears the value of the "create_invitation_code_when" field.
+func (u *AppControlUpsert) ClearCreateInvitationCodeWhen() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldCreateInvitationCodeWhen)
+	return u
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsert) SetMaxTypedCouponsPerOrder(v uint32) *AppControlUpsert {
+	u.Set(appcontrol.FieldMaxTypedCouponsPerOrder, v)
+	return u
+}
+
+// UpdateMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field to the value that was provided on create.
+func (u *AppControlUpsert) UpdateMaxTypedCouponsPerOrder() *AppControlUpsert {
+	u.SetExcluded(appcontrol.FieldMaxTypedCouponsPerOrder)
+	return u
+}
+
+// AddMaxTypedCouponsPerOrder adds v to the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsert) AddMaxTypedCouponsPerOrder(v uint32) *AppControlUpsert {
+	u.Add(appcontrol.FieldMaxTypedCouponsPerOrder, v)
+	return u
+}
+
+// ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsert) ClearMaxTypedCouponsPerOrder() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldMaxTypedCouponsPerOrder)
 	return u
 }
 
@@ -927,6 +1021,55 @@ func (u *AppControlUpsertOne) UpdateInvitationCodeMust() *AppControlUpsertOne {
 func (u *AppControlUpsertOne) ClearInvitationCodeMust() *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
 		s.ClearInvitationCodeMust()
+	})
+}
+
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (u *AppControlUpsertOne) SetCreateInvitationCodeWhen(v string) *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetCreateInvitationCodeWhen(v)
+	})
+}
+
+// UpdateCreateInvitationCodeWhen sets the "create_invitation_code_when" field to the value that was provided on create.
+func (u *AppControlUpsertOne) UpdateCreateInvitationCodeWhen() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateCreateInvitationCodeWhen()
+	})
+}
+
+// ClearCreateInvitationCodeWhen clears the value of the "create_invitation_code_when" field.
+func (u *AppControlUpsertOne) ClearCreateInvitationCodeWhen() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearCreateInvitationCodeWhen()
+	})
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsertOne) SetMaxTypedCouponsPerOrder(v uint32) *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetMaxTypedCouponsPerOrder(v)
+	})
+}
+
+// AddMaxTypedCouponsPerOrder adds v to the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsertOne) AddMaxTypedCouponsPerOrder(v uint32) *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.AddMaxTypedCouponsPerOrder(v)
+	})
+}
+
+// UpdateMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field to the value that was provided on create.
+func (u *AppControlUpsertOne) UpdateMaxTypedCouponsPerOrder() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateMaxTypedCouponsPerOrder()
+	})
+}
+
+// ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsertOne) ClearMaxTypedCouponsPerOrder() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearMaxTypedCouponsPerOrder()
 	})
 }
 
@@ -1353,6 +1496,55 @@ func (u *AppControlUpsertBulk) UpdateInvitationCodeMust() *AppControlUpsertBulk 
 func (u *AppControlUpsertBulk) ClearInvitationCodeMust() *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
 		s.ClearInvitationCodeMust()
+	})
+}
+
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (u *AppControlUpsertBulk) SetCreateInvitationCodeWhen(v string) *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetCreateInvitationCodeWhen(v)
+	})
+}
+
+// UpdateCreateInvitationCodeWhen sets the "create_invitation_code_when" field to the value that was provided on create.
+func (u *AppControlUpsertBulk) UpdateCreateInvitationCodeWhen() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateCreateInvitationCodeWhen()
+	})
+}
+
+// ClearCreateInvitationCodeWhen clears the value of the "create_invitation_code_when" field.
+func (u *AppControlUpsertBulk) ClearCreateInvitationCodeWhen() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearCreateInvitationCodeWhen()
+	})
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsertBulk) SetMaxTypedCouponsPerOrder(v uint32) *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetMaxTypedCouponsPerOrder(v)
+	})
+}
+
+// AddMaxTypedCouponsPerOrder adds v to the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsertBulk) AddMaxTypedCouponsPerOrder(v uint32) *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.AddMaxTypedCouponsPerOrder(v)
+	})
+}
+
+// UpdateMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field to the value that was provided on create.
+func (u *AppControlUpsertBulk) UpdateMaxTypedCouponsPerOrder() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateMaxTypedCouponsPerOrder()
+	})
+}
+
+// ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
+func (u *AppControlUpsertBulk) ClearMaxTypedCouponsPerOrder() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearMaxTypedCouponsPerOrder()
 	})
 }
 

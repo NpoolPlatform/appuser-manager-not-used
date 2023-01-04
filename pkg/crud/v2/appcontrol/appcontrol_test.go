@@ -34,14 +34,16 @@ func init() {
 }
 
 var entAppControl = ent.AppControl{
-	ID:                  uuid.New(),
-	AppID:               uuid.New(),
-	RecaptchaMethod:     rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
-	SignupMethods:       []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
-	ExternSigninMethods: []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
-	KycEnable:           false,
-	SigninVerifyEnable:  false,
-	InvitationCodeMust:  false,
+	ID:                       uuid.New(),
+	AppID:                    uuid.New(),
+	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
+	SignupMethods:            []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
+	ExternSigninMethods:      []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
+	KycEnable:                false,
+	SigninVerifyEnable:       false,
+	InvitationCodeMust:       false,
+	CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
+	MaxTypedCouponsPerOrder:  1,
 }
 
 var (
@@ -67,14 +69,16 @@ var info *ent.AppControl
 
 func rowToObject(row *ent.AppControl) *ent.AppControl {
 	return &ent.AppControl{
-		ID:                  row.ID,
-		AppID:               row.AppID,
-		SignupMethods:       row.SignupMethods,
-		ExternSigninMethods: row.ExternSigninMethods,
-		RecaptchaMethod:     row.RecaptchaMethod,
-		KycEnable:           row.KycEnable,
-		SigninVerifyEnable:  row.SigninVerifyEnable,
-		InvitationCodeMust:  row.InvitationCodeMust,
+		ID:                       row.ID,
+		AppID:                    row.AppID,
+		SignupMethods:            row.SignupMethods,
+		ExternSigninMethods:      row.ExternSigninMethods,
+		RecaptchaMethod:          row.RecaptchaMethod,
+		KycEnable:                row.KycEnable,
+		SigninVerifyEnable:       row.SigninVerifyEnable,
+		InvitationCodeMust:       row.InvitationCodeMust,
+		CreateInvitationCodeWhen: row.CreateInvitationCodeWhen,
+		MaxTypedCouponsPerOrder:  row.MaxTypedCouponsPerOrder,
 	}
 }
 
@@ -92,24 +96,28 @@ func create(t *testing.T) {
 func createBulk(t *testing.T) {
 	entAppControl := []ent.AppControl{
 		{
-			ID:                  uuid.New(),
-			AppID:               uuid.New(),
-			RecaptchaMethod:     rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
-			SignupMethods:       []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
-			ExternSigninMethods: []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
-			KycEnable:           false,
-			SigninVerifyEnable:  false,
-			InvitationCodeMust:  false,
+			ID:                       uuid.New(),
+			AppID:                    uuid.New(),
+			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
+			SignupMethods:            []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
+			ExternSigninMethods:      []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
+			KycEnable:                false,
+			SigninVerifyEnable:       false,
+			InvitationCodeMust:       false,
+			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
+			MaxTypedCouponsPerOrder:  1,
 		},
 		{
-			ID:                  uuid.New(),
-			AppID:               uuid.New(),
-			RecaptchaMethod:     rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
-			SignupMethods:       []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
-			ExternSigninMethods: []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
-			KycEnable:           false,
-			SigninVerifyEnable:  false,
-			InvitationCodeMust:  false,
+			ID:                       uuid.New(),
+			AppID:                    uuid.New(),
+			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
+			SignupMethods:            []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
+			ExternSigninMethods:      []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
+			KycEnable:                false,
+			SigninVerifyEnable:       false,
+			InvitationCodeMust:       false,
+			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
+			MaxTypedCouponsPerOrder:  1,
 		},
 	}
 	appcontrols := []*npool.AppControlReq{}

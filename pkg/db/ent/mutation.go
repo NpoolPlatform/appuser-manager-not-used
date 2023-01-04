@@ -882,26 +882,29 @@ func (m *AppMutation) ResetEdge(name string) error {
 // AppControlMutation represents an operation that mutates the AppControl nodes in the graph.
 type AppControlMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *uuid.UUID
-	created_at            *uint32
-	addcreated_at         *int32
-	updated_at            *uint32
-	addupdated_at         *int32
-	deleted_at            *uint32
-	adddeleted_at         *int32
-	app_id                *uuid.UUID
-	signup_methods        *[]string
-	extern_signin_methods *[]string
-	recaptcha_method      *string
-	kyc_enable            *bool
-	signin_verify_enable  *bool
-	invitation_code_must  *bool
-	clearedFields         map[string]struct{}
-	done                  bool
-	oldValue              func(context.Context) (*AppControl, error)
-	predicates            []predicate.AppControl
+	op                             Op
+	typ                            string
+	id                             *uuid.UUID
+	created_at                     *uint32
+	addcreated_at                  *int32
+	updated_at                     *uint32
+	addupdated_at                  *int32
+	deleted_at                     *uint32
+	adddeleted_at                  *int32
+	app_id                         *uuid.UUID
+	signup_methods                 *[]string
+	extern_signin_methods          *[]string
+	recaptcha_method               *string
+	kyc_enable                     *bool
+	signin_verify_enable           *bool
+	invitation_code_must           *bool
+	create_invitation_code_when    *string
+	max_typed_coupons_per_order    *uint32
+	addmax_typed_coupons_per_order *int32
+	clearedFields                  map[string]struct{}
+	done                           bool
+	oldValue                       func(context.Context) (*AppControl, error)
+	predicates                     []predicate.AppControl
 }
 
 var _ ent.Mutation = (*AppControlMutation)(nil)
@@ -1519,6 +1522,125 @@ func (m *AppControlMutation) ResetInvitationCodeMust() {
 	delete(m.clearedFields, appcontrol.FieldInvitationCodeMust)
 }
 
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (m *AppControlMutation) SetCreateInvitationCodeWhen(s string) {
+	m.create_invitation_code_when = &s
+}
+
+// CreateInvitationCodeWhen returns the value of the "create_invitation_code_when" field in the mutation.
+func (m *AppControlMutation) CreateInvitationCodeWhen() (r string, exists bool) {
+	v := m.create_invitation_code_when
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateInvitationCodeWhen returns the old "create_invitation_code_when" field's value of the AppControl entity.
+// If the AppControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppControlMutation) OldCreateInvitationCodeWhen(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateInvitationCodeWhen is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateInvitationCodeWhen requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateInvitationCodeWhen: %w", err)
+	}
+	return oldValue.CreateInvitationCodeWhen, nil
+}
+
+// ClearCreateInvitationCodeWhen clears the value of the "create_invitation_code_when" field.
+func (m *AppControlMutation) ClearCreateInvitationCodeWhen() {
+	m.create_invitation_code_when = nil
+	m.clearedFields[appcontrol.FieldCreateInvitationCodeWhen] = struct{}{}
+}
+
+// CreateInvitationCodeWhenCleared returns if the "create_invitation_code_when" field was cleared in this mutation.
+func (m *AppControlMutation) CreateInvitationCodeWhenCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldCreateInvitationCodeWhen]
+	return ok
+}
+
+// ResetCreateInvitationCodeWhen resets all changes to the "create_invitation_code_when" field.
+func (m *AppControlMutation) ResetCreateInvitationCodeWhen() {
+	m.create_invitation_code_when = nil
+	delete(m.clearedFields, appcontrol.FieldCreateInvitationCodeWhen)
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (m *AppControlMutation) SetMaxTypedCouponsPerOrder(u uint32) {
+	m.max_typed_coupons_per_order = &u
+	m.addmax_typed_coupons_per_order = nil
+}
+
+// MaxTypedCouponsPerOrder returns the value of the "max_typed_coupons_per_order" field in the mutation.
+func (m *AppControlMutation) MaxTypedCouponsPerOrder() (r uint32, exists bool) {
+	v := m.max_typed_coupons_per_order
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaxTypedCouponsPerOrder returns the old "max_typed_coupons_per_order" field's value of the AppControl entity.
+// If the AppControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppControlMutation) OldMaxTypedCouponsPerOrder(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaxTypedCouponsPerOrder is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaxTypedCouponsPerOrder requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaxTypedCouponsPerOrder: %w", err)
+	}
+	return oldValue.MaxTypedCouponsPerOrder, nil
+}
+
+// AddMaxTypedCouponsPerOrder adds u to the "max_typed_coupons_per_order" field.
+func (m *AppControlMutation) AddMaxTypedCouponsPerOrder(u int32) {
+	if m.addmax_typed_coupons_per_order != nil {
+		*m.addmax_typed_coupons_per_order += u
+	} else {
+		m.addmax_typed_coupons_per_order = &u
+	}
+}
+
+// AddedMaxTypedCouponsPerOrder returns the value that was added to the "max_typed_coupons_per_order" field in this mutation.
+func (m *AppControlMutation) AddedMaxTypedCouponsPerOrder() (r int32, exists bool) {
+	v := m.addmax_typed_coupons_per_order
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
+func (m *AppControlMutation) ClearMaxTypedCouponsPerOrder() {
+	m.max_typed_coupons_per_order = nil
+	m.addmax_typed_coupons_per_order = nil
+	m.clearedFields[appcontrol.FieldMaxTypedCouponsPerOrder] = struct{}{}
+}
+
+// MaxTypedCouponsPerOrderCleared returns if the "max_typed_coupons_per_order" field was cleared in this mutation.
+func (m *AppControlMutation) MaxTypedCouponsPerOrderCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldMaxTypedCouponsPerOrder]
+	return ok
+}
+
+// ResetMaxTypedCouponsPerOrder resets all changes to the "max_typed_coupons_per_order" field.
+func (m *AppControlMutation) ResetMaxTypedCouponsPerOrder() {
+	m.max_typed_coupons_per_order = nil
+	m.addmax_typed_coupons_per_order = nil
+	delete(m.clearedFields, appcontrol.FieldMaxTypedCouponsPerOrder)
+}
+
 // Where appends a list predicates to the AppControlMutation builder.
 func (m *AppControlMutation) Where(ps ...predicate.AppControl) {
 	m.predicates = append(m.predicates, ps...)
@@ -1538,7 +1660,7 @@ func (m *AppControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppControlMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 12)
 	if m.created_at != nil {
 		fields = append(fields, appcontrol.FieldCreatedAt)
 	}
@@ -1569,6 +1691,12 @@ func (m *AppControlMutation) Fields() []string {
 	if m.invitation_code_must != nil {
 		fields = append(fields, appcontrol.FieldInvitationCodeMust)
 	}
+	if m.create_invitation_code_when != nil {
+		fields = append(fields, appcontrol.FieldCreateInvitationCodeWhen)
+	}
+	if m.max_typed_coupons_per_order != nil {
+		fields = append(fields, appcontrol.FieldMaxTypedCouponsPerOrder)
+	}
 	return fields
 }
 
@@ -1597,6 +1725,10 @@ func (m *AppControlMutation) Field(name string) (ent.Value, bool) {
 		return m.SigninVerifyEnable()
 	case appcontrol.FieldInvitationCodeMust:
 		return m.InvitationCodeMust()
+	case appcontrol.FieldCreateInvitationCodeWhen:
+		return m.CreateInvitationCodeWhen()
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		return m.MaxTypedCouponsPerOrder()
 	}
 	return nil, false
 }
@@ -1626,6 +1758,10 @@ func (m *AppControlMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldSigninVerifyEnable(ctx)
 	case appcontrol.FieldInvitationCodeMust:
 		return m.OldInvitationCodeMust(ctx)
+	case appcontrol.FieldCreateInvitationCodeWhen:
+		return m.OldCreateInvitationCodeWhen(ctx)
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		return m.OldMaxTypedCouponsPerOrder(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppControl field %s", name)
 }
@@ -1705,6 +1841,20 @@ func (m *AppControlMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetInvitationCodeMust(v)
 		return nil
+	case appcontrol.FieldCreateInvitationCodeWhen:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateInvitationCodeWhen(v)
+		return nil
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaxTypedCouponsPerOrder(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppControl field %s", name)
 }
@@ -1722,6 +1872,9 @@ func (m *AppControlMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, appcontrol.FieldDeletedAt)
 	}
+	if m.addmax_typed_coupons_per_order != nil {
+		fields = append(fields, appcontrol.FieldMaxTypedCouponsPerOrder)
+	}
 	return fields
 }
 
@@ -1736,6 +1889,8 @@ func (m *AppControlMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case appcontrol.FieldDeletedAt:
 		return m.AddedDeletedAt()
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		return m.AddedMaxTypedCouponsPerOrder()
 	}
 	return nil, false
 }
@@ -1766,6 +1921,13 @@ func (m *AppControlMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMaxTypedCouponsPerOrder(v)
+		return nil
 	}
 	return fmt.Errorf("unknown AppControl numeric field %s", name)
 }
@@ -1794,6 +1956,12 @@ func (m *AppControlMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(appcontrol.FieldInvitationCodeMust) {
 		fields = append(fields, appcontrol.FieldInvitationCodeMust)
+	}
+	if m.FieldCleared(appcontrol.FieldCreateInvitationCodeWhen) {
+		fields = append(fields, appcontrol.FieldCreateInvitationCodeWhen)
+	}
+	if m.FieldCleared(appcontrol.FieldMaxTypedCouponsPerOrder) {
+		fields = append(fields, appcontrol.FieldMaxTypedCouponsPerOrder)
 	}
 	return fields
 }
@@ -1829,6 +1997,12 @@ func (m *AppControlMutation) ClearField(name string) error {
 		return nil
 	case appcontrol.FieldInvitationCodeMust:
 		m.ClearInvitationCodeMust()
+		return nil
+	case appcontrol.FieldCreateInvitationCodeWhen:
+		m.ClearCreateInvitationCodeWhen()
+		return nil
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		m.ClearMaxTypedCouponsPerOrder()
 		return nil
 	}
 	return fmt.Errorf("unknown AppControl nullable field %s", name)
@@ -1867,6 +2041,12 @@ func (m *AppControlMutation) ResetField(name string) error {
 		return nil
 	case appcontrol.FieldInvitationCodeMust:
 		m.ResetInvitationCodeMust()
+		return nil
+	case appcontrol.FieldCreateInvitationCodeWhen:
+		m.ResetCreateInvitationCodeWhen()
+		return nil
+	case appcontrol.FieldMaxTypedCouponsPerOrder:
+		m.ResetMaxTypedCouponsPerOrder()
 		return nil
 	}
 	return fmt.Errorf("unknown AppControl field %s", name)
@@ -4476,6 +4656,7 @@ type AppUserControlMutation struct {
 	signin_verify_by_google_authentication *bool
 	google_authentication_verified         *bool
 	signin_verify_type                     *string
+	kol                                    *bool
 	clearedFields                          map[string]struct{}
 	done                                   bool
 	oldValue                               func(context.Context) (*AppUserControl, error)
@@ -4999,6 +5180,42 @@ func (m *AppUserControlMutation) ResetSigninVerifyType() {
 	delete(m.clearedFields, appusercontrol.FieldSigninVerifyType)
 }
 
+// SetKol sets the "kol" field.
+func (m *AppUserControlMutation) SetKol(b bool) {
+	m.kol = &b
+}
+
+// Kol returns the value of the "kol" field in the mutation.
+func (m *AppUserControlMutation) Kol() (r bool, exists bool) {
+	v := m.kol
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKol returns the old "kol" field's value of the AppUserControl entity.
+// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserControlMutation) OldKol(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKol is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKol requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKol: %w", err)
+	}
+	return oldValue.Kol, nil
+}
+
+// ResetKol resets all changes to the "kol" field.
+func (m *AppUserControlMutation) ResetKol() {
+	m.kol = nil
+}
+
 // Where appends a list predicates to the AppUserControlMutation builder.
 func (m *AppUserControlMutation) Where(ps ...predicate.AppUserControl) {
 	m.predicates = append(m.predicates, ps...)
@@ -5018,7 +5235,7 @@ func (m *AppUserControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserControlMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, appusercontrol.FieldCreatedAt)
 	}
@@ -5042,6 +5259,9 @@ func (m *AppUserControlMutation) Fields() []string {
 	}
 	if m.signin_verify_type != nil {
 		fields = append(fields, appusercontrol.FieldSigninVerifyType)
+	}
+	if m.kol != nil {
+		fields = append(fields, appusercontrol.FieldKol)
 	}
 	return fields
 }
@@ -5067,6 +5287,8 @@ func (m *AppUserControlMutation) Field(name string) (ent.Value, bool) {
 		return m.GoogleAuthenticationVerified()
 	case appusercontrol.FieldSigninVerifyType:
 		return m.SigninVerifyType()
+	case appusercontrol.FieldKol:
+		return m.Kol()
 	}
 	return nil, false
 }
@@ -5092,6 +5314,8 @@ func (m *AppUserControlMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldGoogleAuthenticationVerified(ctx)
 	case appusercontrol.FieldSigninVerifyType:
 		return m.OldSigninVerifyType(ctx)
+	case appusercontrol.FieldKol:
+		return m.OldKol(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppUserControl field %s", name)
 }
@@ -5156,6 +5380,13 @@ func (m *AppUserControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSigninVerifyType(v)
+		return nil
+	case appusercontrol.FieldKol:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKol(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)
@@ -5301,6 +5532,9 @@ func (m *AppUserControlMutation) ResetField(name string) error {
 		return nil
 	case appusercontrol.FieldSigninVerifyType:
 		m.ResetSigninVerifyType()
+		return nil
+	case appusercontrol.FieldKol:
+		m.ResetKol()
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)

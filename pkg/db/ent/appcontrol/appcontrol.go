@@ -32,6 +32,10 @@ const (
 	FieldSigninVerifyEnable = "signin_verify_enable"
 	// FieldInvitationCodeMust holds the string denoting the invitation_code_must field in the database.
 	FieldInvitationCodeMust = "invitation_code_must"
+	// FieldCreateInvitationCodeWhen holds the string denoting the create_invitation_code_when field in the database.
+	FieldCreateInvitationCodeWhen = "create_invitation_code_when"
+	// FieldMaxTypedCouponsPerOrder holds the string denoting the max_typed_coupons_per_order field in the database.
+	FieldMaxTypedCouponsPerOrder = "max_typed_coupons_per_order"
 	// Table holds the table name of the appcontrol in the database.
 	Table = "app_controls"
 )
@@ -49,6 +53,8 @@ var Columns = []string{
 	FieldKycEnable,
 	FieldSigninVerifyEnable,
 	FieldInvitationCodeMust,
+	FieldCreateInvitationCodeWhen,
+	FieldMaxTypedCouponsPerOrder,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -92,6 +98,10 @@ var (
 	DefaultSigninVerifyEnable bool
 	// DefaultInvitationCodeMust holds the default value on creation for the "invitation_code_must" field.
 	DefaultInvitationCodeMust bool
+	// DefaultCreateInvitationCodeWhen holds the default value on creation for the "create_invitation_code_when" field.
+	DefaultCreateInvitationCodeWhen string
+	// DefaultMaxTypedCouponsPerOrder holds the default value on creation for the "max_typed_coupons_per_order" field.
+	DefaultMaxTypedCouponsPerOrder uint32
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

@@ -38,6 +38,8 @@ var (
 		{Name: "kyc_enable", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "signin_verify_enable", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "invitation_code_must", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "create_invitation_code_when", Type: field.TypeString, Nullable: true, Default: "DefaultWhen"},
+		{Name: "max_typed_coupons_per_order", Type: field.TypeUint32, Nullable: true, Default: 1},
 	}
 	// AppControlsTable holds the schema information for the "app_controls" table.
 	AppControlsTable = &schema.Table{
@@ -108,6 +110,7 @@ var (
 		{Name: "signin_verify_by_google_authentication", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "google_authentication_verified", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "signin_verify_type", Type: field.TypeString, Nullable: true, Default: "Email"},
+		{Name: "kol", Type: field.TypeBool, Default: false},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{

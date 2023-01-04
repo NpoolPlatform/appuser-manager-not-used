@@ -17,6 +17,7 @@ func Ent2Grpc(row *ent.AppUserControl) *npool.AppUserControl {
 		UserID:             row.UserID.String(),
 		GoogleAuthVerified: row.GoogleAuthenticationVerified,
 		SigninVerifyType:   sm.SignMethodType(sm.SignMethodType_value[row.SigninVerifyType]),
+		Kol:                row.Kol,
 	}
 }
 

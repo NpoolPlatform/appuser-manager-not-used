@@ -135,6 +135,20 @@ func (aucc *AppUserControlCreate) SetNillableSigninVerifyType(s *string) *AppUse
 	return aucc
 }
 
+// SetKol sets the "kol" field.
+func (aucc *AppUserControlCreate) SetKol(b bool) *AppUserControlCreate {
+	aucc.mutation.SetKol(b)
+	return aucc
+}
+
+// SetNillableKol sets the "kol" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableKol(b *bool) *AppUserControlCreate {
+	if b != nil {
+		aucc.SetKol(*b)
+	}
+	return aucc
+}
+
 // SetID sets the "id" field.
 func (aucc *AppUserControlCreate) SetID(u uuid.UUID) *AppUserControlCreate {
 	aucc.mutation.SetID(u)
@@ -275,6 +289,10 @@ func (aucc *AppUserControlCreate) defaults() error {
 		v := appusercontrol.DefaultSigninVerifyType
 		aucc.mutation.SetSigninVerifyType(v)
 	}
+	if _, ok := aucc.mutation.Kol(); !ok {
+		v := appusercontrol.DefaultKol
+		aucc.mutation.SetKol(v)
+	}
 	if _, ok := aucc.mutation.ID(); !ok {
 		if appusercontrol.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appusercontrol.DefaultID (forgotten import ent/runtime?)")
@@ -295,6 +313,9 @@ func (aucc *AppUserControlCreate) check() error {
 	}
 	if _, ok := aucc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "AppUserControl.deleted_at"`)}
+	}
+	if _, ok := aucc.mutation.Kol(); !ok {
+		return &ValidationError{Name: "kol", err: errors.New(`ent: missing required field "AppUserControl.kol"`)}
 	}
 	return nil
 }
@@ -396,6 +417,14 @@ func (aucc *AppUserControlCreate) createSpec() (*AppUserControl, *sqlgraph.Creat
 			Column: appusercontrol.FieldSigninVerifyType,
 		})
 		_node.SigninVerifyType = value
+	}
+	if value, ok := aucc.mutation.Kol(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldKol,
+		})
+		_node.Kol = value
 	}
 	return _node, _spec
 }
@@ -592,6 +621,18 @@ func (u *AppUserControlUpsert) UpdateSigninVerifyType() *AppUserControlUpsert {
 // ClearSigninVerifyType clears the value of the "signin_verify_type" field.
 func (u *AppUserControlUpsert) ClearSigninVerifyType() *AppUserControlUpsert {
 	u.SetNull(appusercontrol.FieldSigninVerifyType)
+	return u
+}
+
+// SetKol sets the "kol" field.
+func (u *AppUserControlUpsert) SetKol(v bool) *AppUserControlUpsert {
+	u.Set(appusercontrol.FieldKol, v)
+	return u
+}
+
+// UpdateKol sets the "kol" field to the value that was provided on create.
+func (u *AppUserControlUpsert) UpdateKol() *AppUserControlUpsert {
+	u.SetExcluded(appusercontrol.FieldKol)
 	return u
 }
 
@@ -810,6 +851,20 @@ func (u *AppUserControlUpsertOne) UpdateSigninVerifyType() *AppUserControlUpsert
 func (u *AppUserControlUpsertOne) ClearSigninVerifyType() *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.ClearSigninVerifyType()
+	})
+}
+
+// SetKol sets the "kol" field.
+func (u *AppUserControlUpsertOne) SetKol(v bool) *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetKol(v)
+	})
+}
+
+// UpdateKol sets the "kol" field to the value that was provided on create.
+func (u *AppUserControlUpsertOne) UpdateKol() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateKol()
 	})
 }
 
@@ -1194,6 +1249,20 @@ func (u *AppUserControlUpsertBulk) UpdateSigninVerifyType() *AppUserControlUpser
 func (u *AppUserControlUpsertBulk) ClearSigninVerifyType() *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.ClearSigninVerifyType()
+	})
+}
+
+// SetKol sets the "kol" field.
+func (u *AppUserControlUpsertBulk) SetKol(v bool) *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetKol(v)
+	})
+}
+
+// UpdateKol sets the "kol" field to the value that was provided on create.
+func (u *AppUserControlUpsertBulk) UpdateKol() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateKol()
 	})
 }
 

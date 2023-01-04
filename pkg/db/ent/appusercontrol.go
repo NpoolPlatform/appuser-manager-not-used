@@ -32,6 +32,8 @@ type AppUserControl struct {
 	GoogleAuthenticationVerified bool `json:"google_authentication_verified,omitempty"`
 	// SigninVerifyType holds the value of the "signin_verify_type" field.
 	SigninVerifyType string `json:"signin_verify_type,omitempty"`
+	// Kol holds the value of the "kol" field.
+	Kol bool `json:"kol,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -39,7 +41,7 @@ func (*AppUserControl) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appusercontrol.FieldSigninVerifyByGoogleAuthentication, appusercontrol.FieldGoogleAuthenticationVerified:
+		case appusercontrol.FieldSigninVerifyByGoogleAuthentication, appusercontrol.FieldGoogleAuthenticationVerified, appusercontrol.FieldKol:
 			values[i] = new(sql.NullBool)
 		case appusercontrol.FieldCreatedAt, appusercontrol.FieldUpdatedAt, appusercontrol.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
@@ -116,6 +118,12 @@ func (auc *AppUserControl) assignValues(columns []string, values []interface{}) 
 			} else if value.Valid {
 				auc.SigninVerifyType = value.String
 			}
+		case appusercontrol.FieldKol:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field kol", values[i])
+			} else if value.Valid {
+				auc.Kol = value.Bool
+			}
 		}
 	}
 	return nil
@@ -167,6 +175,9 @@ func (auc *AppUserControl) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("signin_verify_type=")
 	builder.WriteString(auc.SigninVerifyType)
+	builder.WriteString(", ")
+	builder.WriteString("kol=")
+	builder.WriteString(fmt.Sprintf("%v", auc.Kol))
 	builder.WriteByte(')')
 	return builder.String()
 }

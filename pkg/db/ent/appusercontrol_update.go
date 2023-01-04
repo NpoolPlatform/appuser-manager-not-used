@@ -184,6 +184,20 @@ func (aucu *AppUserControlUpdate) ClearSigninVerifyType() *AppUserControlUpdate 
 	return aucu
 }
 
+// SetKol sets the "kol" field.
+func (aucu *AppUserControlUpdate) SetKol(b bool) *AppUserControlUpdate {
+	aucu.mutation.SetKol(b)
+	return aucu
+}
+
+// SetNillableKol sets the "kol" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableKol(b *bool) *AppUserControlUpdate {
+	if b != nil {
+		aucu.SetKol(*b)
+	}
+	return aucu
+}
+
 // Mutation returns the AppUserControlMutation object of the builder.
 func (aucu *AppUserControlUpdate) Mutation() *AppUserControlMutation {
 	return aucu.mutation
@@ -389,6 +403,13 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldSigninVerifyType,
 		})
 	}
+	if value, ok := aucu.mutation.Kol(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldKol,
+		})
+	}
 	_spec.Modifiers = aucu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aucu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -562,6 +583,20 @@ func (aucuo *AppUserControlUpdateOne) SetNillableSigninVerifyType(s *string) *Ap
 // ClearSigninVerifyType clears the value of the "signin_verify_type" field.
 func (aucuo *AppUserControlUpdateOne) ClearSigninVerifyType() *AppUserControlUpdateOne {
 	aucuo.mutation.ClearSigninVerifyType()
+	return aucuo
+}
+
+// SetKol sets the "kol" field.
+func (aucuo *AppUserControlUpdateOne) SetKol(b bool) *AppUserControlUpdateOne {
+	aucuo.mutation.SetKol(b)
+	return aucuo
+}
+
+// SetNillableKol sets the "kol" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableKol(b *bool) *AppUserControlUpdateOne {
+	if b != nil {
+		aucuo.SetKol(*b)
+	}
 	return aucuo
 }
 
@@ -798,6 +833,13 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: appusercontrol.FieldSigninVerifyType,
+		})
+	}
+	if value, ok := aucuo.mutation.Kol(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldKol,
 		})
 	}
 	_spec.Modifiers = aucuo.modifiers
