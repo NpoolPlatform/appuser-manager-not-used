@@ -111,6 +111,7 @@ var (
 		{Name: "google_authentication_verified", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "signin_verify_type", Type: field.TypeString, Nullable: true, Default: "Email"},
 		{Name: "kol", Type: field.TypeBool, Default: false},
+		{Name: "kol_confirmed", Type: field.TypeBool, Default: false},
 	}
 	// AppUserControlsTable holds the schema information for the "app_user_controls" table.
 	AppUserControlsTable = &schema.Table{

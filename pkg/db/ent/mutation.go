@@ -4657,6 +4657,7 @@ type AppUserControlMutation struct {
 	google_authentication_verified         *bool
 	signin_verify_type                     *string
 	kol                                    *bool
+	kol_confirmed                          *bool
 	clearedFields                          map[string]struct{}
 	done                                   bool
 	oldValue                               func(context.Context) (*AppUserControl, error)
@@ -5216,6 +5217,42 @@ func (m *AppUserControlMutation) ResetKol() {
 	m.kol = nil
 }
 
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (m *AppUserControlMutation) SetKolConfirmed(b bool) {
+	m.kol_confirmed = &b
+}
+
+// KolConfirmed returns the value of the "kol_confirmed" field in the mutation.
+func (m *AppUserControlMutation) KolConfirmed() (r bool, exists bool) {
+	v := m.kol_confirmed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKolConfirmed returns the old "kol_confirmed" field's value of the AppUserControl entity.
+// If the AppUserControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppUserControlMutation) OldKolConfirmed(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKolConfirmed is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKolConfirmed requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKolConfirmed: %w", err)
+	}
+	return oldValue.KolConfirmed, nil
+}
+
+// ResetKolConfirmed resets all changes to the "kol_confirmed" field.
+func (m *AppUserControlMutation) ResetKolConfirmed() {
+	m.kol_confirmed = nil
+}
+
 // Where appends a list predicates to the AppUserControlMutation builder.
 func (m *AppUserControlMutation) Where(ps ...predicate.AppUserControl) {
 	m.predicates = append(m.predicates, ps...)
@@ -5235,7 +5272,7 @@ func (m *AppUserControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppUserControlMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, appusercontrol.FieldCreatedAt)
 	}
@@ -5263,6 +5300,9 @@ func (m *AppUserControlMutation) Fields() []string {
 	if m.kol != nil {
 		fields = append(fields, appusercontrol.FieldKol)
 	}
+	if m.kol_confirmed != nil {
+		fields = append(fields, appusercontrol.FieldKolConfirmed)
+	}
 	return fields
 }
 
@@ -5289,6 +5329,8 @@ func (m *AppUserControlMutation) Field(name string) (ent.Value, bool) {
 		return m.SigninVerifyType()
 	case appusercontrol.FieldKol:
 		return m.Kol()
+	case appusercontrol.FieldKolConfirmed:
+		return m.KolConfirmed()
 	}
 	return nil, false
 }
@@ -5316,6 +5358,8 @@ func (m *AppUserControlMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldSigninVerifyType(ctx)
 	case appusercontrol.FieldKol:
 		return m.OldKol(ctx)
+	case appusercontrol.FieldKolConfirmed:
+		return m.OldKolConfirmed(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppUserControl field %s", name)
 }
@@ -5387,6 +5431,13 @@ func (m *AppUserControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetKol(v)
+		return nil
+	case appusercontrol.FieldKolConfirmed:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKolConfirmed(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)
@@ -5535,6 +5586,9 @@ func (m *AppUserControlMutation) ResetField(name string) error {
 		return nil
 	case appusercontrol.FieldKol:
 		m.ResetKol()
+		return nil
+	case appusercontrol.FieldKolConfirmed:
+		m.ResetKolConfirmed()
 		return nil
 	}
 	return fmt.Errorf("unknown AppUserControl field %s", name)

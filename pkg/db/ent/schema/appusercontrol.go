@@ -52,6 +52,8 @@ func (AppUserControl) Fields() []ent.Field {
 			Default(sm.SignMethodType_Email.String()),
 		field.Bool("kol").
 			Default(false),
+		field.Bool("kol_confirmed").
+			Default(false),
 	}
 }
 

@@ -142,6 +142,13 @@ func Kol(v bool) predicate.AppUserControl {
 	})
 }
 
+// KolConfirmed applies equality check predicate on the "kol_confirmed" field. It's identical to KolConfirmedEQ.
+func KolConfirmed(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldKolConfirmed), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
@@ -670,6 +677,20 @@ func KolEQ(v bool) predicate.AppUserControl {
 func KolNEQ(v bool) predicate.AppUserControl {
 	return predicate.AppUserControl(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldKol), v))
+	})
+}
+
+// KolConfirmedEQ applies the EQ predicate on the "kol_confirmed" field.
+func KolConfirmedEQ(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldKolConfirmed), v))
+	})
+}
+
+// KolConfirmedNEQ applies the NEQ predicate on the "kol_confirmed" field.
+func KolConfirmedNEQ(v bool) predicate.AppUserControl {
+	return predicate.AppUserControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldKolConfirmed), v))
 	})
 }
 

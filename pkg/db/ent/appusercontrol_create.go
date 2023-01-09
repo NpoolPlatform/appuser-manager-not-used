@@ -149,6 +149,20 @@ func (aucc *AppUserControlCreate) SetNillableKol(b *bool) *AppUserControlCreate 
 	return aucc
 }
 
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (aucc *AppUserControlCreate) SetKolConfirmed(b bool) *AppUserControlCreate {
+	aucc.mutation.SetKolConfirmed(b)
+	return aucc
+}
+
+// SetNillableKolConfirmed sets the "kol_confirmed" field if the given value is not nil.
+func (aucc *AppUserControlCreate) SetNillableKolConfirmed(b *bool) *AppUserControlCreate {
+	if b != nil {
+		aucc.SetKolConfirmed(*b)
+	}
+	return aucc
+}
+
 // SetID sets the "id" field.
 func (aucc *AppUserControlCreate) SetID(u uuid.UUID) *AppUserControlCreate {
 	aucc.mutation.SetID(u)
@@ -293,6 +307,10 @@ func (aucc *AppUserControlCreate) defaults() error {
 		v := appusercontrol.DefaultKol
 		aucc.mutation.SetKol(v)
 	}
+	if _, ok := aucc.mutation.KolConfirmed(); !ok {
+		v := appusercontrol.DefaultKolConfirmed
+		aucc.mutation.SetKolConfirmed(v)
+	}
 	if _, ok := aucc.mutation.ID(); !ok {
 		if appusercontrol.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appusercontrol.DefaultID (forgotten import ent/runtime?)")
@@ -316,6 +334,9 @@ func (aucc *AppUserControlCreate) check() error {
 	}
 	if _, ok := aucc.mutation.Kol(); !ok {
 		return &ValidationError{Name: "kol", err: errors.New(`ent: missing required field "AppUserControl.kol"`)}
+	}
+	if _, ok := aucc.mutation.KolConfirmed(); !ok {
+		return &ValidationError{Name: "kol_confirmed", err: errors.New(`ent: missing required field "AppUserControl.kol_confirmed"`)}
 	}
 	return nil
 }
@@ -425,6 +446,14 @@ func (aucc *AppUserControlCreate) createSpec() (*AppUserControl, *sqlgraph.Creat
 			Column: appusercontrol.FieldKol,
 		})
 		_node.Kol = value
+	}
+	if value, ok := aucc.mutation.KolConfirmed(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldKolConfirmed,
+		})
+		_node.KolConfirmed = value
 	}
 	return _node, _spec
 }
@@ -633,6 +662,18 @@ func (u *AppUserControlUpsert) SetKol(v bool) *AppUserControlUpsert {
 // UpdateKol sets the "kol" field to the value that was provided on create.
 func (u *AppUserControlUpsert) UpdateKol() *AppUserControlUpsert {
 	u.SetExcluded(appusercontrol.FieldKol)
+	return u
+}
+
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (u *AppUserControlUpsert) SetKolConfirmed(v bool) *AppUserControlUpsert {
+	u.Set(appusercontrol.FieldKolConfirmed, v)
+	return u
+}
+
+// UpdateKolConfirmed sets the "kol_confirmed" field to the value that was provided on create.
+func (u *AppUserControlUpsert) UpdateKolConfirmed() *AppUserControlUpsert {
+	u.SetExcluded(appusercontrol.FieldKolConfirmed)
 	return u
 }
 
@@ -865,6 +906,20 @@ func (u *AppUserControlUpsertOne) SetKol(v bool) *AppUserControlUpsertOne {
 func (u *AppUserControlUpsertOne) UpdateKol() *AppUserControlUpsertOne {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateKol()
+	})
+}
+
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (u *AppUserControlUpsertOne) SetKolConfirmed(v bool) *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetKolConfirmed(v)
+	})
+}
+
+// UpdateKolConfirmed sets the "kol_confirmed" field to the value that was provided on create.
+func (u *AppUserControlUpsertOne) UpdateKolConfirmed() *AppUserControlUpsertOne {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateKolConfirmed()
 	})
 }
 
@@ -1263,6 +1318,20 @@ func (u *AppUserControlUpsertBulk) SetKol(v bool) *AppUserControlUpsertBulk {
 func (u *AppUserControlUpsertBulk) UpdateKol() *AppUserControlUpsertBulk {
 	return u.Update(func(s *AppUserControlUpsert) {
 		s.UpdateKol()
+	})
+}
+
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (u *AppUserControlUpsertBulk) SetKolConfirmed(v bool) *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.SetKolConfirmed(v)
+	})
+}
+
+// UpdateKolConfirmed sets the "kol_confirmed" field to the value that was provided on create.
+func (u *AppUserControlUpsertBulk) UpdateKolConfirmed() *AppUserControlUpsertBulk {
+	return u.Update(func(s *AppUserControlUpsert) {
+		s.UpdateKolConfirmed()
 	})
 }
 

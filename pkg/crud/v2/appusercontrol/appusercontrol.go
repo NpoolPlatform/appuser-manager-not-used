@@ -67,6 +67,9 @@ func CreateSet(c *ent.AppUserControlCreate, in *npool.AppUserControlReq) *ent.Ap
 	if in.Kol != nil {
 		c.SetKol(in.GetKol())
 	}
+	if in.KolConfirmed != nil {
+		c.SetKolConfirmed(in.GetKolConfirmed())
+	}
 
 	return c
 }
@@ -113,6 +116,9 @@ func UpdateSet(info *ent.AppUserControl, in *npool.AppUserControlReq) *ent.AppUs
 	}
 	if in.Kol != nil {
 		u.SetKol(in.GetKol())
+	}
+	if in.KolConfirmed != nil {
+		u.SetKolConfirmed(in.GetKolConfirmed())
 	}
 	return u
 }
@@ -216,6 +222,29 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.AppUserControlQuer
 			return nil, fmt.Errorf("invalid appusercontrol field")
 		}
 	}
+
+	if conds.Kol != nil {
+		switch conds.GetKol().GetOp() {
+		case cruder.EQ:
+			stm.Where(appusercontrol.Kol(conds.GetKol().GetValue()))
+		case cruder.NEQ:
+			stm.Where(appusercontrol.KolNEQ(conds.GetKol().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid appusercontrol field")
+		}
+	}
+
+	if conds.KolConfirmed != nil {
+		switch conds.GetKolConfirmed().GetOp() {
+		case cruder.EQ:
+			stm.Where(appusercontrol.KolConfirmed(conds.GetKolConfirmed().GetValue()))
+		case cruder.NEQ:
+			stm.Where(appusercontrol.KolConfirmedNEQ(conds.GetKolConfirmed().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid appusercontrol field")
+		}
+	}
+
 	return stm, nil
 }
 

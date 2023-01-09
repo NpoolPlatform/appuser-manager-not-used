@@ -198,6 +198,20 @@ func (aucu *AppUserControlUpdate) SetNillableKol(b *bool) *AppUserControlUpdate 
 	return aucu
 }
 
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (aucu *AppUserControlUpdate) SetKolConfirmed(b bool) *AppUserControlUpdate {
+	aucu.mutation.SetKolConfirmed(b)
+	return aucu
+}
+
+// SetNillableKolConfirmed sets the "kol_confirmed" field if the given value is not nil.
+func (aucu *AppUserControlUpdate) SetNillableKolConfirmed(b *bool) *AppUserControlUpdate {
+	if b != nil {
+		aucu.SetKolConfirmed(*b)
+	}
+	return aucu
+}
+
 // Mutation returns the AppUserControlMutation object of the builder.
 func (aucu *AppUserControlUpdate) Mutation() *AppUserControlMutation {
 	return aucu.mutation
@@ -410,6 +424,13 @@ func (aucu *AppUserControlUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appusercontrol.FieldKol,
 		})
 	}
+	if value, ok := aucu.mutation.KolConfirmed(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldKolConfirmed,
+		})
+	}
 	_spec.Modifiers = aucu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aucu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -596,6 +617,20 @@ func (aucuo *AppUserControlUpdateOne) SetKol(b bool) *AppUserControlUpdateOne {
 func (aucuo *AppUserControlUpdateOne) SetNillableKol(b *bool) *AppUserControlUpdateOne {
 	if b != nil {
 		aucuo.SetKol(*b)
+	}
+	return aucuo
+}
+
+// SetKolConfirmed sets the "kol_confirmed" field.
+func (aucuo *AppUserControlUpdateOne) SetKolConfirmed(b bool) *AppUserControlUpdateOne {
+	aucuo.mutation.SetKolConfirmed(b)
+	return aucuo
+}
+
+// SetNillableKolConfirmed sets the "kol_confirmed" field if the given value is not nil.
+func (aucuo *AppUserControlUpdateOne) SetNillableKolConfirmed(b *bool) *AppUserControlUpdateOne {
+	if b != nil {
+		aucuo.SetKolConfirmed(*b)
 	}
 	return aucuo
 }
@@ -840,6 +875,13 @@ func (aucuo *AppUserControlUpdateOne) sqlSave(ctx context.Context) (_node *AppUs
 			Type:   field.TypeBool,
 			Value:  value,
 			Column: appusercontrol.FieldKol,
+		})
+	}
+	if value, ok := aucuo.mutation.KolConfirmed(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appusercontrol.FieldKolConfirmed,
 		})
 	}
 	_spec.Modifiers = aucuo.modifiers
