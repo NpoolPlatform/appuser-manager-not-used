@@ -60,16 +60,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "AppControl",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			appcontrol.FieldCreatedAt:           {Type: field.TypeUint32, Column: appcontrol.FieldCreatedAt},
-			appcontrol.FieldUpdatedAt:           {Type: field.TypeUint32, Column: appcontrol.FieldUpdatedAt},
-			appcontrol.FieldDeletedAt:           {Type: field.TypeUint32, Column: appcontrol.FieldDeletedAt},
-			appcontrol.FieldAppID:               {Type: field.TypeUUID, Column: appcontrol.FieldAppID},
-			appcontrol.FieldSignupMethods:       {Type: field.TypeJSON, Column: appcontrol.FieldSignupMethods},
-			appcontrol.FieldExternSigninMethods: {Type: field.TypeJSON, Column: appcontrol.FieldExternSigninMethods},
-			appcontrol.FieldRecaptchaMethod:     {Type: field.TypeString, Column: appcontrol.FieldRecaptchaMethod},
-			appcontrol.FieldKycEnable:           {Type: field.TypeBool, Column: appcontrol.FieldKycEnable},
-			appcontrol.FieldSigninVerifyEnable:  {Type: field.TypeBool, Column: appcontrol.FieldSigninVerifyEnable},
-			appcontrol.FieldInvitationCodeMust:  {Type: field.TypeBool, Column: appcontrol.FieldInvitationCodeMust},
+			appcontrol.FieldCreatedAt:                {Type: field.TypeUint32, Column: appcontrol.FieldCreatedAt},
+			appcontrol.FieldUpdatedAt:                {Type: field.TypeUint32, Column: appcontrol.FieldUpdatedAt},
+			appcontrol.FieldDeletedAt:                {Type: field.TypeUint32, Column: appcontrol.FieldDeletedAt},
+			appcontrol.FieldAppID:                    {Type: field.TypeUUID, Column: appcontrol.FieldAppID},
+			appcontrol.FieldSignupMethods:            {Type: field.TypeJSON, Column: appcontrol.FieldSignupMethods},
+			appcontrol.FieldExternSigninMethods:      {Type: field.TypeJSON, Column: appcontrol.FieldExternSigninMethods},
+			appcontrol.FieldRecaptchaMethod:          {Type: field.TypeString, Column: appcontrol.FieldRecaptchaMethod},
+			appcontrol.FieldKycEnable:                {Type: field.TypeBool, Column: appcontrol.FieldKycEnable},
+			appcontrol.FieldSigninVerifyEnable:       {Type: field.TypeBool, Column: appcontrol.FieldSigninVerifyEnable},
+			appcontrol.FieldInvitationCodeMust:       {Type: field.TypeBool, Column: appcontrol.FieldInvitationCodeMust},
+			appcontrol.FieldCreateInvitationCodeWhen: {Type: field.TypeString, Column: appcontrol.FieldCreateInvitationCodeWhen},
+			appcontrol.FieldMaxTypedCouponsPerOrder:  {Type: field.TypeUint32, Column: appcontrol.FieldMaxTypedCouponsPerOrder},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -152,6 +154,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appusercontrol.FieldSigninVerifyByGoogleAuthentication: {Type: field.TypeBool, Column: appusercontrol.FieldSigninVerifyByGoogleAuthentication},
 			appusercontrol.FieldGoogleAuthenticationVerified:       {Type: field.TypeBool, Column: appusercontrol.FieldGoogleAuthenticationVerified},
 			appusercontrol.FieldSigninVerifyType:                   {Type: field.TypeString, Column: appusercontrol.FieldSigninVerifyType},
+			appusercontrol.FieldKol:                                {Type: field.TypeBool, Column: appusercontrol.FieldKol},
+			appusercontrol.FieldKolConfirmed:                       {Type: field.TypeBool, Column: appusercontrol.FieldKolConfirmed},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -545,6 +549,16 @@ func (f *AppControlFilter) WhereInvitationCodeMust(p entql.BoolP) {
 	f.Where(p.Field(appcontrol.FieldInvitationCodeMust))
 }
 
+// WhereCreateInvitationCodeWhen applies the entql string predicate on the create_invitation_code_when field.
+func (f *AppControlFilter) WhereCreateInvitationCodeWhen(p entql.StringP) {
+	f.Where(p.Field(appcontrol.FieldCreateInvitationCodeWhen))
+}
+
+// WhereMaxTypedCouponsPerOrder applies the entql uint32 predicate on the max_typed_coupons_per_order field.
+func (f *AppControlFilter) WhereMaxTypedCouponsPerOrder(p entql.Uint32P) {
+	f.Where(p.Field(appcontrol.FieldMaxTypedCouponsPerOrder))
+}
+
 // addPredicate implements the predicateAdder interface.
 func (arq *AppRoleQuery) addPredicate(pred func(s *sql.Selector)) {
 	arq.predicates = append(arq.predicates, pred)
@@ -853,6 +867,16 @@ func (f *AppUserControlFilter) WhereGoogleAuthenticationVerified(p entql.BoolP) 
 // WhereSigninVerifyType applies the entql string predicate on the signin_verify_type field.
 func (f *AppUserControlFilter) WhereSigninVerifyType(p entql.StringP) {
 	f.Where(p.Field(appusercontrol.FieldSigninVerifyType))
+}
+
+// WhereKol applies the entql bool predicate on the kol field.
+func (f *AppUserControlFilter) WhereKol(p entql.BoolP) {
+	f.Where(p.Field(appusercontrol.FieldKol))
+}
+
+// WhereKolConfirmed applies the entql bool predicate on the kol_confirmed field.
+func (f *AppUserControlFilter) WhereKolConfirmed(p entql.BoolP) {
+	f.Where(p.Field(appusercontrol.FieldKolConfirmed))
 }
 
 // addPredicate implements the predicateAdder interface.

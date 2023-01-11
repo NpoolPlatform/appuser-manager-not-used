@@ -135,6 +135,20 @@ func InvitationCodeMust(v bool) predicate.AppControl {
 	})
 }
 
+// CreateInvitationCodeWhen applies equality check predicate on the "create_invitation_code_when" field. It's identical to CreateInvitationCodeWhenEQ.
+func CreateInvitationCodeWhen(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// MaxTypedCouponsPerOrder applies equality check predicate on the "max_typed_coupons_per_order" field. It's identical to MaxTypedCouponsPerOrderEQ.
+func MaxTypedCouponsPerOrder(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
@@ -627,6 +641,197 @@ func InvitationCodeMustIsNil() predicate.AppControl {
 func InvitationCodeMustNotNil() predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldInvitationCodeMust)))
+	})
+}
+
+// CreateInvitationCodeWhenEQ applies the EQ predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenEQ(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenNEQ applies the NEQ predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenNEQ(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenIn applies the In predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenIn(vs ...string) predicate.AppControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCreateInvitationCodeWhen), v...))
+	})
+}
+
+// CreateInvitationCodeWhenNotIn applies the NotIn predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenNotIn(vs ...string) predicate.AppControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCreateInvitationCodeWhen), v...))
+	})
+}
+
+// CreateInvitationCodeWhenGT applies the GT predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenGT(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenGTE applies the GTE predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenGTE(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenLT applies the LT predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenLT(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenLTE applies the LTE predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenLTE(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenContains applies the Contains predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenContains(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenHasPrefix applies the HasPrefix predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenHasPrefix(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenHasSuffix applies the HasSuffix predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenHasSuffix(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenIsNil applies the IsNil predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCreateInvitationCodeWhen)))
+	})
+}
+
+// CreateInvitationCodeWhenNotNil applies the NotNil predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCreateInvitationCodeWhen)))
+	})
+}
+
+// CreateInvitationCodeWhenEqualFold applies the EqualFold predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenEqualFold(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// CreateInvitationCodeWhenContainsFold applies the ContainsFold predicate on the "create_invitation_code_when" field.
+func CreateInvitationCodeWhenContainsFold(v string) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCreateInvitationCodeWhen), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderEQ applies the EQ predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderEQ(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderNEQ applies the NEQ predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderNEQ(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderIn applies the In predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderIn(vs ...uint32) predicate.AppControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldMaxTypedCouponsPerOrder), v...))
+	})
+}
+
+// MaxTypedCouponsPerOrderNotIn applies the NotIn predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderNotIn(vs ...uint32) predicate.AppControl {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldMaxTypedCouponsPerOrder), v...))
+	})
+}
+
+// MaxTypedCouponsPerOrderGT applies the GT predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderGT(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderGTE applies the GTE predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderGTE(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderLT applies the LT predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderLT(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderLTE applies the LTE predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderLTE(v uint32) predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldMaxTypedCouponsPerOrder), v))
+	})
+}
+
+// MaxTypedCouponsPerOrderIsNil applies the IsNil predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderIsNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldMaxTypedCouponsPerOrder)))
+	})
+}
+
+// MaxTypedCouponsPerOrderNotNil applies the NotNil predicate on the "max_typed_coupons_per_order" field.
+func MaxTypedCouponsPerOrderNotNil() predicate.AppControl {
+	return predicate.AppControl(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldMaxTypedCouponsPerOrder)))
 	})
 }
 

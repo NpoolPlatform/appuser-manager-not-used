@@ -37,6 +37,10 @@ type AppControl struct {
 	SigninVerifyEnable bool `json:"signin_verify_enable,omitempty"`
 	// InvitationCodeMust holds the value of the "invitation_code_must" field.
 	InvitationCodeMust bool `json:"invitation_code_must,omitempty"`
+	// CreateInvitationCodeWhen holds the value of the "create_invitation_code_when" field.
+	CreateInvitationCodeWhen string `json:"create_invitation_code_when,omitempty"`
+	// MaxTypedCouponsPerOrder holds the value of the "max_typed_coupons_per_order" field.
+	MaxTypedCouponsPerOrder uint32 `json:"max_typed_coupons_per_order,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,9 +52,9 @@ func (*AppControl) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case appcontrol.FieldKycEnable, appcontrol.FieldSigninVerifyEnable, appcontrol.FieldInvitationCodeMust:
 			values[i] = new(sql.NullBool)
-		case appcontrol.FieldCreatedAt, appcontrol.FieldUpdatedAt, appcontrol.FieldDeletedAt:
+		case appcontrol.FieldCreatedAt, appcontrol.FieldUpdatedAt, appcontrol.FieldDeletedAt, appcontrol.FieldMaxTypedCouponsPerOrder:
 			values[i] = new(sql.NullInt64)
-		case appcontrol.FieldRecaptchaMethod:
+		case appcontrol.FieldRecaptchaMethod, appcontrol.FieldCreateInvitationCodeWhen:
 			values[i] = new(sql.NullString)
 		case appcontrol.FieldID, appcontrol.FieldAppID:
 			values[i] = new(uuid.UUID)
@@ -139,6 +143,18 @@ func (ac *AppControl) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				ac.InvitationCodeMust = value.Bool
 			}
+		case appcontrol.FieldCreateInvitationCodeWhen:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field create_invitation_code_when", values[i])
+			} else if value.Valid {
+				ac.CreateInvitationCodeWhen = value.String
+			}
+		case appcontrol.FieldMaxTypedCouponsPerOrder:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field max_typed_coupons_per_order", values[i])
+			} else if value.Valid {
+				ac.MaxTypedCouponsPerOrder = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -196,6 +212,12 @@ func (ac *AppControl) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("invitation_code_must=")
 	builder.WriteString(fmt.Sprintf("%v", ac.InvitationCodeMust))
+	builder.WriteString(", ")
+	builder.WriteString("create_invitation_code_when=")
+	builder.WriteString(ac.CreateInvitationCodeWhen)
+	builder.WriteString(", ")
+	builder.WriteString("max_typed_coupons_per_order=")
+	builder.WriteString(fmt.Sprintf("%v", ac.MaxTypedCouponsPerOrder))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -28,6 +28,10 @@ const (
 	FieldGoogleAuthenticationVerified = "google_authentication_verified"
 	// FieldSigninVerifyType holds the string denoting the signin_verify_type field in the database.
 	FieldSigninVerifyType = "signin_verify_type"
+	// FieldKol holds the string denoting the kol field in the database.
+	FieldKol = "kol"
+	// FieldKolConfirmed holds the string denoting the kol_confirmed field in the database.
+	FieldKolConfirmed = "kol_confirmed"
 	// Table holds the table name of the appusercontrol in the database.
 	Table = "app_user_controls"
 )
@@ -43,6 +47,8 @@ var Columns = []string{
 	FieldSigninVerifyByGoogleAuthentication,
 	FieldGoogleAuthenticationVerified,
 	FieldSigninVerifyType,
+	FieldKol,
+	FieldKolConfirmed,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -82,6 +88,10 @@ var (
 	DefaultGoogleAuthenticationVerified bool
 	// DefaultSigninVerifyType holds the default value on creation for the "signin_verify_type" field.
 	DefaultSigninVerifyType string
+	// DefaultKol holds the default value on creation for the "kol" field.
+	DefaultKol bool
+	// DefaultKolConfirmed holds the default value on creation for the "kol_confirmed" field.
+	DefaultKolConfirmed bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

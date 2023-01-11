@@ -208,6 +208,53 @@ func (acu *AppControlUpdate) ClearInvitationCodeMust() *AppControlUpdate {
 	return acu
 }
 
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (acu *AppControlUpdate) SetCreateInvitationCodeWhen(s string) *AppControlUpdate {
+	acu.mutation.SetCreateInvitationCodeWhen(s)
+	return acu
+}
+
+// SetNillableCreateInvitationCodeWhen sets the "create_invitation_code_when" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableCreateInvitationCodeWhen(s *string) *AppControlUpdate {
+	if s != nil {
+		acu.SetCreateInvitationCodeWhen(*s)
+	}
+	return acu
+}
+
+// ClearCreateInvitationCodeWhen clears the value of the "create_invitation_code_when" field.
+func (acu *AppControlUpdate) ClearCreateInvitationCodeWhen() *AppControlUpdate {
+	acu.mutation.ClearCreateInvitationCodeWhen()
+	return acu
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (acu *AppControlUpdate) SetMaxTypedCouponsPerOrder(u uint32) *AppControlUpdate {
+	acu.mutation.ResetMaxTypedCouponsPerOrder()
+	acu.mutation.SetMaxTypedCouponsPerOrder(u)
+	return acu
+}
+
+// SetNillableMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableMaxTypedCouponsPerOrder(u *uint32) *AppControlUpdate {
+	if u != nil {
+		acu.SetMaxTypedCouponsPerOrder(*u)
+	}
+	return acu
+}
+
+// AddMaxTypedCouponsPerOrder adds u to the "max_typed_coupons_per_order" field.
+func (acu *AppControlUpdate) AddMaxTypedCouponsPerOrder(u int32) *AppControlUpdate {
+	acu.mutation.AddMaxTypedCouponsPerOrder(u)
+	return acu
+}
+
+// ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
+func (acu *AppControlUpdate) ClearMaxTypedCouponsPerOrder() *AppControlUpdate {
+	acu.mutation.ClearMaxTypedCouponsPerOrder()
+	return acu
+}
+
 // Mutation returns the AppControlMutation object of the builder.
 func (acu *AppControlUpdate) Mutation() *AppControlMutation {
 	return acu.mutation
@@ -439,6 +486,39 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldInvitationCodeMust,
 		})
 	}
+	if value, ok := acu.mutation.CreateInvitationCodeWhen(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appcontrol.FieldCreateInvitationCodeWhen,
+		})
+	}
+	if acu.mutation.CreateInvitationCodeWhenCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appcontrol.FieldCreateInvitationCodeWhen,
+		})
+	}
+	if value, ok := acu.mutation.MaxTypedCouponsPerOrder(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
+	if value, ok := acu.mutation.AddedMaxTypedCouponsPerOrder(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
+	if acu.mutation.MaxTypedCouponsPerOrderCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
 	_spec.Modifiers = acu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, acu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -636,6 +716,53 @@ func (acuo *AppControlUpdateOne) SetNillableInvitationCodeMust(b *bool) *AppCont
 // ClearInvitationCodeMust clears the value of the "invitation_code_must" field.
 func (acuo *AppControlUpdateOne) ClearInvitationCodeMust() *AppControlUpdateOne {
 	acuo.mutation.ClearInvitationCodeMust()
+	return acuo
+}
+
+// SetCreateInvitationCodeWhen sets the "create_invitation_code_when" field.
+func (acuo *AppControlUpdateOne) SetCreateInvitationCodeWhen(s string) *AppControlUpdateOne {
+	acuo.mutation.SetCreateInvitationCodeWhen(s)
+	return acuo
+}
+
+// SetNillableCreateInvitationCodeWhen sets the "create_invitation_code_when" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableCreateInvitationCodeWhen(s *string) *AppControlUpdateOne {
+	if s != nil {
+		acuo.SetCreateInvitationCodeWhen(*s)
+	}
+	return acuo
+}
+
+// ClearCreateInvitationCodeWhen clears the value of the "create_invitation_code_when" field.
+func (acuo *AppControlUpdateOne) ClearCreateInvitationCodeWhen() *AppControlUpdateOne {
+	acuo.mutation.ClearCreateInvitationCodeWhen()
+	return acuo
+}
+
+// SetMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field.
+func (acuo *AppControlUpdateOne) SetMaxTypedCouponsPerOrder(u uint32) *AppControlUpdateOne {
+	acuo.mutation.ResetMaxTypedCouponsPerOrder()
+	acuo.mutation.SetMaxTypedCouponsPerOrder(u)
+	return acuo
+}
+
+// SetNillableMaxTypedCouponsPerOrder sets the "max_typed_coupons_per_order" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableMaxTypedCouponsPerOrder(u *uint32) *AppControlUpdateOne {
+	if u != nil {
+		acuo.SetMaxTypedCouponsPerOrder(*u)
+	}
+	return acuo
+}
+
+// AddMaxTypedCouponsPerOrder adds u to the "max_typed_coupons_per_order" field.
+func (acuo *AppControlUpdateOne) AddMaxTypedCouponsPerOrder(u int32) *AppControlUpdateOne {
+	acuo.mutation.AddMaxTypedCouponsPerOrder(u)
+	return acuo
+}
+
+// ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
+func (acuo *AppControlUpdateOne) ClearMaxTypedCouponsPerOrder() *AppControlUpdateOne {
+	acuo.mutation.ClearMaxTypedCouponsPerOrder()
 	return acuo
 }
 
@@ -898,6 +1025,39 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Column: appcontrol.FieldInvitationCodeMust,
+		})
+	}
+	if value, ok := acuo.mutation.CreateInvitationCodeWhen(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appcontrol.FieldCreateInvitationCodeWhen,
+		})
+	}
+	if acuo.mutation.CreateInvitationCodeWhenCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: appcontrol.FieldCreateInvitationCodeWhen,
+		})
+	}
+	if value, ok := acuo.mutation.MaxTypedCouponsPerOrder(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
+	if value, ok := acuo.mutation.AddedMaxTypedCouponsPerOrder(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
+	if acuo.mutation.MaxTypedCouponsPerOrderCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
 		})
 	}
 	_spec.Modifiers = acuo.modifiers

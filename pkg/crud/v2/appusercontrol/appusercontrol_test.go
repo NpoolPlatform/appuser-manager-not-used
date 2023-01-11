@@ -66,6 +66,7 @@ func convert(row *ent.AppUserControl) *ent.AppUserControl {
 		SigninVerifyByGoogleAuthentication: row.SigninVerifyByGoogleAuthentication,
 		GoogleAuthenticationVerified:       row.GoogleAuthenticationVerified,
 		SigninVerifyType:                   row.SigninVerifyType,
+		Kol:                                row.Kol,
 	}
 }
 

@@ -37,14 +37,16 @@ func init() {
 }
 
 var appControlDate = npool.AppControl{
-	ID:                 uuid.NewString(),
-	AppID:              uuid.NewString(),
-	RecaptchaMethod:    rcpt.RecaptchaType_GoogleRecaptchaV3,
-	SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-	ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
-	KycEnable:          false,
-	SigninVerifyEnable: false,
-	InvitationCodeMust: false,
+	ID:                       uuid.NewString(),
+	AppID:                    uuid.NewString(),
+	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
+	SignupMethods:            []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
+	ExtSigninMethods:         []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+	KycEnable:                false,
+	SigninVerifyEnable:       false,
+	InvitationCodeMust:       false,
+	CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen,
+	MaxTypedCouponsPerOrder:  1,
 }
 
 var (
@@ -73,24 +75,28 @@ func createAppControl(t *testing.T) {
 func createAppControls(t *testing.T) {
 	appControlDates := []npool.AppControl{
 		{
-			ID:                 uuid.NewString(),
-			AppID:              uuid.NewString(),
-			RecaptchaMethod:    rcpt.RecaptchaType_GoogleRecaptchaV3,
-			SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-			ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
-			KycEnable:          false,
-			SigninVerifyEnable: false,
-			InvitationCodeMust: false,
+			ID:                       uuid.NewString(),
+			AppID:                    uuid.NewString(),
+			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
+			SignupMethods:            []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
+			ExtSigninMethods:         []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+			KycEnable:                false,
+			SigninVerifyEnable:       false,
+			InvitationCodeMust:       false,
+			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen,
+			MaxTypedCouponsPerOrder:  1,
 		},
 		{
-			ID:                 uuid.NewString(),
-			AppID:              uuid.NewString(),
-			RecaptchaMethod:    rcpt.RecaptchaType_GoogleRecaptchaV3,
-			SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-			ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
-			KycEnable:          false,
-			SigninVerifyEnable: false,
-			InvitationCodeMust: false,
+			ID:                       uuid.NewString(),
+			AppID:                    uuid.NewString(),
+			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
+			SignupMethods:            []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
+			ExtSigninMethods:         []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+			KycEnable:                false,
+			SigninVerifyEnable:       false,
+			InvitationCodeMust:       false,
+			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen,
+			MaxTypedCouponsPerOrder:  1,
 		},
 	}
 

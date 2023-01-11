@@ -132,6 +132,14 @@ func init() {
 	appcontrolDescInvitationCodeMust := appcontrolFields[7].Descriptor()
 	// appcontrol.DefaultInvitationCodeMust holds the default value on creation for the invitation_code_must field.
 	appcontrol.DefaultInvitationCodeMust = appcontrolDescInvitationCodeMust.Default.(bool)
+	// appcontrolDescCreateInvitationCodeWhen is the schema descriptor for create_invitation_code_when field.
+	appcontrolDescCreateInvitationCodeWhen := appcontrolFields[8].Descriptor()
+	// appcontrol.DefaultCreateInvitationCodeWhen holds the default value on creation for the create_invitation_code_when field.
+	appcontrol.DefaultCreateInvitationCodeWhen = appcontrolDescCreateInvitationCodeWhen.Default.(string)
+	// appcontrolDescMaxTypedCouponsPerOrder is the schema descriptor for max_typed_coupons_per_order field.
+	appcontrolDescMaxTypedCouponsPerOrder := appcontrolFields[9].Descriptor()
+	// appcontrol.DefaultMaxTypedCouponsPerOrder holds the default value on creation for the max_typed_coupons_per_order field.
+	appcontrol.DefaultMaxTypedCouponsPerOrder = appcontrolDescMaxTypedCouponsPerOrder.Default.(uint32)
 	// appcontrolDescID is the schema descriptor for id field.
 	appcontrolDescID := appcontrolFields[0].Descriptor()
 	// appcontrol.DefaultID holds the default value on creation for the id field.
@@ -332,6 +340,14 @@ func init() {
 	appusercontrolDescSigninVerifyType := appusercontrolFields[5].Descriptor()
 	// appusercontrol.DefaultSigninVerifyType holds the default value on creation for the signin_verify_type field.
 	appusercontrol.DefaultSigninVerifyType = appusercontrolDescSigninVerifyType.Default.(string)
+	// appusercontrolDescKol is the schema descriptor for kol field.
+	appusercontrolDescKol := appusercontrolFields[6].Descriptor()
+	// appusercontrol.DefaultKol holds the default value on creation for the kol field.
+	appusercontrol.DefaultKol = appusercontrolDescKol.Default.(bool)
+	// appusercontrolDescKolConfirmed is the schema descriptor for kol_confirmed field.
+	appusercontrolDescKolConfirmed := appusercontrolFields[7].Descriptor()
+	// appusercontrol.DefaultKolConfirmed holds the default value on creation for the kol_confirmed field.
+	appusercontrol.DefaultKolConfirmed = appusercontrolDescKolConfirmed.Default.(bool)
 	// appusercontrolDescID is the schema descriptor for id field.
 	appusercontrolDescID := appusercontrolFields[0].Descriptor()
 	// appusercontrol.DefaultID holds the default value on creation for the id field.

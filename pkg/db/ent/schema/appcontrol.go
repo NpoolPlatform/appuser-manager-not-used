@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appcontrol"
 	rcpt "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/recaptcha"
 	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
@@ -66,6 +67,14 @@ func (AppControl) Fields() []ent.Field {
 			Bool("invitation_code_must").
 			Optional().
 			Default(false),
+		field.
+			String("create_invitation_code_when").
+			Optional().
+			Default(npool.CreateInvitationCodeWhen_DefaultWhen.String()),
+		field.
+			Uint32("max_typed_coupons_per_order").
+			Optional().
+			Default(1),
 	}
 }
 

@@ -23,14 +23,16 @@ func Ent2Grpc(row *ent.AppControl) *npool.AppControl {
 	}
 
 	return &npool.AppControl{
-		ID:                 row.ID.String(),
-		AppID:              row.AppID.String(),
-		SignupMethods:      methods,
-		ExtSigninMethods:   emethods,
-		RecaptchaMethod:    rcpt.RecaptchaType(rcpt.RecaptchaType_value[row.RecaptchaMethod]),
-		KycEnable:          row.KycEnable,
-		SigninVerifyEnable: row.SigninVerifyEnable,
-		InvitationCodeMust: row.InvitationCodeMust,
+		ID:                       row.ID.String(),
+		AppID:                    row.AppID.String(),
+		SignupMethods:            methods,
+		ExtSigninMethods:         emethods,
+		RecaptchaMethod:          rcpt.RecaptchaType(rcpt.RecaptchaType_value[row.RecaptchaMethod]),
+		KycEnable:                row.KycEnable,
+		SigninVerifyEnable:       row.SigninVerifyEnable,
+		InvitationCodeMust:       row.InvitationCodeMust,
+		CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen(npool.CreateInvitationCodeWhen_value[row.CreateInvitationCodeWhen]),
+		MaxTypedCouponsPerOrder:  row.MaxTypedCouponsPerOrder,
 	}
 }
 

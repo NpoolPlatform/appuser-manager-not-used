@@ -81,6 +81,12 @@ func CreateSet(c *ent.AppControlCreate, info *npool.AppControlReq) *ent.AppContr
 	if info.InvitationCodeMust != nil {
 		c.SetInvitationCodeMust(info.GetInvitationCodeMust())
 	}
+	if info.CreateInvitationCodeWhen != nil {
+		c.SetCreateInvitationCodeWhen(info.GetCreateInvitationCodeWhen().String())
+	}
+	if info.MaxTypedCouponsPerOrder != nil {
+		c.SetMaxTypedCouponsPerOrder(info.GetMaxTypedCouponsPerOrder())
+	}
 	return c
 }
 
@@ -144,6 +150,12 @@ func UpdateSet(info *ent.AppControl, in *npool.AppControlReq) *ent.AppControlUpd
 	}
 	if in.InvitationCodeMust != nil {
 		u.SetInvitationCodeMust(in.GetInvitationCodeMust())
+	}
+	if in.CreateInvitationCodeWhen != nil {
+		u.SetCreateInvitationCodeWhen(in.GetCreateInvitationCodeWhen().String())
+	}
+	if in.MaxTypedCouponsPerOrder != nil {
+		u.SetMaxTypedCouponsPerOrder(in.GetMaxTypedCouponsPerOrder())
 	}
 	return u
 }
