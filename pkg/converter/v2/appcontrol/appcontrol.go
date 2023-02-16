@@ -4,7 +4,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appcontrol"
 	rcpt "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/recaptcha"
-	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 func Ent2Grpc(row *ent.AppControl) *npool.AppControl {
@@ -12,14 +12,14 @@ func Ent2Grpc(row *ent.AppControl) *npool.AppControl {
 		return nil
 	}
 
-	methods := []sm.SignMethodType{}
+	methods := []basetypes.SignMethod{}
 	for _, m := range row.SignupMethods {
-		methods = append(methods, sm.SignMethodType(sm.SignMethodType_value[m]))
+		methods = append(methods, basetypes.SignMethod(basetypes.SignMethod_value[m]))
 	}
 
-	emethods := []sm.SignMethodType{}
+	emethods := []basetypes.SignMethod{}
 	for _, m := range row.ExternSigninMethods {
-		emethods = append(emethods, sm.SignMethodType(sm.SignMethodType_value[m]))
+		emethods = append(emethods, basetypes.SignMethod(basetypes.SignMethod_value[m]))
 	}
 
 	return &npool.AppControl{

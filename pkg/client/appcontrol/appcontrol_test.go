@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	rcpt "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/recaptcha"
-	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 func init() {
@@ -40,8 +40,8 @@ var appControlDate = npool.AppControl{
 	ID:                       uuid.NewString(),
 	AppID:                    uuid.NewString(),
 	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
-	SignupMethods:            []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-	ExtSigninMethods:         []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+	SignupMethods:            []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
+	ExtSigninMethods:         []basetypes.SignMethod{basetypes.SignMethod_Google, basetypes.SignMethod_Github},
 	KycEnable:                false,
 	SigninVerifyEnable:       false,
 	InvitationCodeMust:       false,
@@ -78,8 +78,8 @@ func createAppControls(t *testing.T) {
 			ID:                       uuid.NewString(),
 			AppID:                    uuid.NewString(),
 			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
-			SignupMethods:            []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-			ExtSigninMethods:         []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+			SignupMethods:            []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
+			ExtSigninMethods:         []basetypes.SignMethod{basetypes.SignMethod_Google, basetypes.SignMethod_Github},
 			KycEnable:                false,
 			SigninVerifyEnable:       false,
 			InvitationCodeMust:       false,
@@ -90,8 +90,8 @@ func createAppControls(t *testing.T) {
 			ID:                       uuid.NewString(),
 			AppID:                    uuid.NewString(),
 			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
-			SignupMethods:            []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-			ExtSigninMethods:         []sm.SignMethodType{sm.SignMethodType_Google, sm.SignMethodType_Github},
+			SignupMethods:            []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
+			ExtSigninMethods:         []basetypes.SignMethod{basetypes.SignMethod_Google, basetypes.SignMethod_Github},
 			KycEnable:                false,
 			SigninVerifyEnable:       false,
 			InvitationCodeMust:       false,

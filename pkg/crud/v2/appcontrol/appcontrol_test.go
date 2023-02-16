@@ -21,7 +21,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	rcpt "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/recaptcha"
-	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 func init() {
@@ -37,8 +37,8 @@ var entAppControl = ent.AppControl{
 	ID:                       uuid.New(),
 	AppID:                    uuid.New(),
 	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
-	SignupMethods:            []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
-	ExternSigninMethods:      []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
+	SignupMethods:            []string{basetypes.SignMethod_Email.String(), basetypes.SignMethod_Mobile.String()},
+	ExternSigninMethods:      []string{basetypes.SignMethod_Github.String(), basetypes.SignMethod_Google.String()},
 	KycEnable:                false,
 	SigninVerifyEnable:       false,
 	InvitationCodeMust:       false,
@@ -50,8 +50,8 @@ var (
 	id               = entAppControl.ID.String()
 	appID            = entAppControl.AppID.String()
 	recaptcha        = rcpt.RecaptchaType(rcpt.RecaptchaType_value[entAppControl.RecaptchaMethod])
-	signupMethods    = []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile}
-	extSigninMethods = []sm.SignMethodType{sm.SignMethodType_Github, sm.SignMethodType_Google}
+	signupMethods    = []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile}
+	extSigninMethods = []basetypes.SignMethod{basetypes.SignMethod_Github, basetypes.SignMethod_Google}
 
 	appcontrolInfo = npool.AppControlReq{
 		ID:                 &id,
@@ -99,8 +99,8 @@ func createBulk(t *testing.T) {
 			ID:                       uuid.New(),
 			AppID:                    uuid.New(),
 			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
-			SignupMethods:            []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
-			ExternSigninMethods:      []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
+			SignupMethods:            []string{basetypes.SignMethod_Email.String(), basetypes.SignMethod_Mobile.String()},
+			ExternSigninMethods:      []string{basetypes.SignMethod_Github.String(), basetypes.SignMethod_Google.String()},
 			KycEnable:                false,
 			SigninVerifyEnable:       false,
 			InvitationCodeMust:       false,
@@ -111,8 +111,8 @@ func createBulk(t *testing.T) {
 			ID:                       uuid.New(),
 			AppID:                    uuid.New(),
 			RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
-			SignupMethods:            []string{sm.SignMethodType_Email.String(), sm.SignMethodType_Mobile.String()},
-			ExternSigninMethods:      []string{sm.SignMethodType_Github.String(), sm.SignMethodType_Google.String()},
+			SignupMethods:            []string{basetypes.SignMethod_Email.String(), basetypes.SignMethod_Mobile.String()},
+			ExternSigninMethods:      []string{basetypes.SignMethod_Github.String(), basetypes.SignMethod_Google.String()},
 			KycEnable:                false,
 			SigninVerifyEnable:       false,
 			InvitationCodeMust:       false,
@@ -130,8 +130,8 @@ func createBulk(t *testing.T) {
 			ID:                 &id,
 			AppID:              &appID,
 			RecaptchaMethod:    &recaptcha,
-			SignupMethods:      []sm.SignMethodType{sm.SignMethodType_Email, sm.SignMethodType_Mobile},
-			ExtSigninMethods:   []sm.SignMethodType{sm.SignMethodType_Github, sm.SignMethodType_Google},
+			SignupMethods:      []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
+			ExtSigninMethods:   []basetypes.SignMethod{basetypes.SignMethod_Github, basetypes.SignMethod_Google},
 			KycEnable:          &entAppControl[key].KycEnable,
 			SigninVerifyEnable: &entAppControl[key].SigninVerifyEnable,
 			InvitationCodeMust: &entAppControl[key].InvitationCodeMust,
