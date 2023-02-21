@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
-	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 // AppUserControl holds the schema definition for the AppUserControl entity.
@@ -49,7 +49,7 @@ func (AppUserControl) Fields() []ent.Field {
 			Default(false),
 		field.String("signin_verify_type").
 			Optional().
-			Default(sm.SignMethodType_Email.String()),
+			Default(basetypes.SignMethod_Email.String()),
 		field.Bool("kol").
 			Default(false),
 		field.Bool("kol_confirmed").

@@ -20,7 +20,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 func init() {
@@ -38,14 +38,14 @@ var entAppUserControl = ent.AppUserControl{
 	UserID:                             uuid.New(),
 	SigninVerifyByGoogleAuthentication: false,
 	GoogleAuthenticationVerified:       true,
-	SigninVerifyType:                   sm.SignMethodType_Email.String(),
+	SigninVerifyType:                   basetypes.SignMethod_Email.String(),
 }
 
 var (
 	appID  = entAppUserControl.AppID.String()
 	userID = entAppUserControl.UserID.String()
 	id     = entAppUserControl.ID.String()
-	method = sm.SignMethodType_Email
+	method = basetypes.SignMethod_Email
 
 	appusercontrolInfo = npool.AppUserControlReq{
 		ID:                 &id,

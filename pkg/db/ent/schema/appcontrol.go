@@ -9,7 +9,7 @@ import (
 
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appcontrol"
 	rcpt "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/recaptcha"
-	sm "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
 // AppControl holds the schema definition for the AppControl entity.
@@ -41,8 +41,8 @@ func (AppControl) Fields() []ent.Field {
 			Optional().
 			Default(func() []string {
 				return []string{
-					sm.SignMethodType_Mobile.String(),
-					sm.SignMethodType_Email.String(),
+					basetypes.SignMethod_Mobile.String(),
+					basetypes.SignMethod_Email.String(),
 				}
 			}),
 		field.
