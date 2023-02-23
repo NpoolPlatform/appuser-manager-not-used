@@ -18,7 +18,9 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appuserextra"
+
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 //nolint:nolintlint,gocyclo
@@ -49,7 +51,7 @@ func Create(ctx context.Context, in *npool.AppUserExtraReq) (*ent.AppUserExtra, 
 	return info, nil
 }
 
-func CreateSet(c *ent.AppUserExtraCreate, in *npool.AppUserExtraReq) *ent.AppUserExtraCreate {
+func CreateSet(c *ent.AppUserExtraCreate, in *npool.AppUserExtraReq) *ent.AppUserExtraCreate { //nolint
 	if in.ID != nil {
 		c.SetID(uuid.MustParse(in.GetID()))
 	}
@@ -91,6 +93,9 @@ func CreateSet(c *ent.AppUserExtraCreate, in *npool.AppUserExtraReq) *ent.AppUse
 	}
 	if in.AddressFields != nil {
 		c.SetAddressFields(in.GetAddressFields())
+	}
+	if in.ActionCredits != nil {
+		c.SetActionCredits(decimal.RequireFromString(in.GetActionCredits()))
 	}
 	return c
 }
@@ -165,6 +170,11 @@ func UpdateSet(info *ent.AppUserExtra, in *npool.AppUserExtraReq) *ent.AppUserEx
 	}
 	if in.LastName != nil {
 		u.SetLastName(in.GetLastName())
+	}
+	if in.ActionCredits != nil {
+		credits := info.ActionCredits.
+			Add(decimal.RequireFromString(in.GetActionCredits()))
+		u.SetActionCredits(credits)
 	}
 
 	return u

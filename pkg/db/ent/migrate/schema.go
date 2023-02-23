@@ -145,6 +145,7 @@ var (
 		{Name: "avatar", Type: field.TypeString, Default: ""},
 		{Name: "organization", Type: field.TypeString, Default: ""},
 		{Name: "id_number", Type: field.TypeString, Default: ""},
+		{Name: "action_credits", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"mysql": "decimal(37,18)"}},
 	}
 	// AppUserExtrasTable holds the schema information for the "app_user_extras" table.
 	AppUserExtrasTable = &schema.Table{

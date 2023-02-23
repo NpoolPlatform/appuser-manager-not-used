@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppUserExtraCreate is the builder for creating a AppUserExtra entity.
@@ -223,6 +224,20 @@ func (auec *AppUserExtraCreate) SetNillableIDNumber(s *string) *AppUserExtraCrea
 	return auec
 }
 
+// SetActionCredits sets the "action_credits" field.
+func (auec *AppUserExtraCreate) SetActionCredits(d decimal.Decimal) *AppUserExtraCreate {
+	auec.mutation.SetActionCredits(d)
+	return auec
+}
+
+// SetNillableActionCredits sets the "action_credits" field if the given value is not nil.
+func (auec *AppUserExtraCreate) SetNillableActionCredits(d *decimal.Decimal) *AppUserExtraCreate {
+	if d != nil {
+		auec.SetActionCredits(*d)
+	}
+	return auec
+}
+
 // SetID sets the "id" field.
 func (auec *AppUserExtraCreate) SetID(u uuid.UUID) *AppUserExtraCreate {
 	auec.mutation.SetID(u)
@@ -380,6 +395,10 @@ func (auec *AppUserExtraCreate) defaults() error {
 	if _, ok := auec.mutation.IDNumber(); !ok {
 		v := appuserextra.DefaultIDNumber
 		auec.mutation.SetIDNumber(v)
+	}
+	if _, ok := auec.mutation.ActionCredits(); !ok {
+		v := appuserextra.DefaultActionCredits
+		auec.mutation.SetActionCredits(v)
 	}
 	if _, ok := auec.mutation.ID(); !ok {
 		if appuserextra.DefaultID == nil {
@@ -605,6 +624,14 @@ func (auec *AppUserExtraCreate) createSpec() (*AppUserExtra, *sqlgraph.CreateSpe
 			Column: appuserextra.FieldIDNumber,
 		})
 		_node.IDNumber = value
+	}
+	if value, ok := auec.mutation.ActionCredits(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appuserextra.FieldActionCredits,
+		})
+		_node.ActionCredits = value
 	}
 	return _node, _spec
 }
@@ -879,6 +906,24 @@ func (u *AppUserExtraUpsert) SetIDNumber(v string) *AppUserExtraUpsert {
 // UpdateIDNumber sets the "id_number" field to the value that was provided on create.
 func (u *AppUserExtraUpsert) UpdateIDNumber() *AppUserExtraUpsert {
 	u.SetExcluded(appuserextra.FieldIDNumber)
+	return u
+}
+
+// SetActionCredits sets the "action_credits" field.
+func (u *AppUserExtraUpsert) SetActionCredits(v decimal.Decimal) *AppUserExtraUpsert {
+	u.Set(appuserextra.FieldActionCredits, v)
+	return u
+}
+
+// UpdateActionCredits sets the "action_credits" field to the value that was provided on create.
+func (u *AppUserExtraUpsert) UpdateActionCredits() *AppUserExtraUpsert {
+	u.SetExcluded(appuserextra.FieldActionCredits)
+	return u
+}
+
+// ClearActionCredits clears the value of the "action_credits" field.
+func (u *AppUserExtraUpsert) ClearActionCredits() *AppUserExtraUpsert {
+	u.SetNull(appuserextra.FieldActionCredits)
 	return u
 }
 
@@ -1188,6 +1233,27 @@ func (u *AppUserExtraUpsertOne) SetIDNumber(v string) *AppUserExtraUpsertOne {
 func (u *AppUserExtraUpsertOne) UpdateIDNumber() *AppUserExtraUpsertOne {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateIDNumber()
+	})
+}
+
+// SetActionCredits sets the "action_credits" field.
+func (u *AppUserExtraUpsertOne) SetActionCredits(v decimal.Decimal) *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetActionCredits(v)
+	})
+}
+
+// UpdateActionCredits sets the "action_credits" field to the value that was provided on create.
+func (u *AppUserExtraUpsertOne) UpdateActionCredits() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateActionCredits()
+	})
+}
+
+// ClearActionCredits clears the value of the "action_credits" field.
+func (u *AppUserExtraUpsertOne) ClearActionCredits() *AppUserExtraUpsertOne {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.ClearActionCredits()
 	})
 }
 
@@ -1663,6 +1729,27 @@ func (u *AppUserExtraUpsertBulk) SetIDNumber(v string) *AppUserExtraUpsertBulk {
 func (u *AppUserExtraUpsertBulk) UpdateIDNumber() *AppUserExtraUpsertBulk {
 	return u.Update(func(s *AppUserExtraUpsert) {
 		s.UpdateIDNumber()
+	})
+}
+
+// SetActionCredits sets the "action_credits" field.
+func (u *AppUserExtraUpsertBulk) SetActionCredits(v decimal.Decimal) *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.SetActionCredits(v)
+	})
+}
+
+// UpdateActionCredits sets the "action_credits" field to the value that was provided on create.
+func (u *AppUserExtraUpsertBulk) UpdateActionCredits() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.UpdateActionCredits()
+	})
+}
+
+// ClearActionCredits clears the value of the "action_credits" field.
+func (u *AppUserExtraUpsertBulk) ClearActionCredits() *AppUserExtraUpsertBulk {
+	return u.Update(func(s *AppUserExtraUpsert) {
+		s.ClearActionCredits()
 	})
 }
 

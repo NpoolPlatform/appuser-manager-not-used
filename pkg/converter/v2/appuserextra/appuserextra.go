@@ -25,6 +25,7 @@ func Ent2Grpc(row *ent.AppUserExtra) *npool.AppUserExtra {
 		FirstName:     row.FirstName,
 		IDNumber:      row.IDNumber,
 		AddressFields: row.AddressFields,
+		ActionCredits: row.ActionCredits.String(),
 	}
 }
 

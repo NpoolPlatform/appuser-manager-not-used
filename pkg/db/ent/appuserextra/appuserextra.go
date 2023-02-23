@@ -5,6 +5,7 @@ package appuserextra
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -44,6 +45,8 @@ const (
 	FieldOrganization = "organization"
 	// FieldIDNumber holds the string denoting the id_number field in the database.
 	FieldIDNumber = "id_number"
+	// FieldActionCredits holds the string denoting the action_credits field in the database.
+	FieldActionCredits = "action_credits"
 	// Table holds the table name of the appuserextra in the database.
 	Table = "app_user_extras"
 )
@@ -67,6 +70,7 @@ var Columns = []string{
 	FieldAvatar,
 	FieldOrganization,
 	FieldIDNumber,
+	FieldActionCredits,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -118,6 +122,8 @@ var (
 	DefaultOrganization string
 	// DefaultIDNumber holds the default value on creation for the "id_number" field.
 	DefaultIDNumber string
+	// DefaultActionCredits holds the default value on creation for the "action_credits" field.
+	DefaultActionCredits decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

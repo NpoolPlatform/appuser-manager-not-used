@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -181,6 +182,13 @@ func Organization(v string) predicate.AppUserExtra {
 func IDNumber(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldIDNumber), v))
+	})
+}
+
+// ActionCredits applies equality check predicate on the "action_credits" field. It's identical to ActionCreditsEQ.
+func ActionCredits(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldActionCredits), v))
 	})
 }
 
@@ -1421,6 +1429,84 @@ func IDNumberEqualFold(v string) predicate.AppUserExtra {
 func IDNumberContainsFold(v string) predicate.AppUserExtra {
 	return predicate.AppUserExtra(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldIDNumber), v))
+	})
+}
+
+// ActionCreditsEQ applies the EQ predicate on the "action_credits" field.
+func ActionCreditsEQ(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldActionCredits), v))
+	})
+}
+
+// ActionCreditsNEQ applies the NEQ predicate on the "action_credits" field.
+func ActionCreditsNEQ(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldActionCredits), v))
+	})
+}
+
+// ActionCreditsIn applies the In predicate on the "action_credits" field.
+func ActionCreditsIn(vs ...decimal.Decimal) predicate.AppUserExtra {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldActionCredits), v...))
+	})
+}
+
+// ActionCreditsNotIn applies the NotIn predicate on the "action_credits" field.
+func ActionCreditsNotIn(vs ...decimal.Decimal) predicate.AppUserExtra {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldActionCredits), v...))
+	})
+}
+
+// ActionCreditsGT applies the GT predicate on the "action_credits" field.
+func ActionCreditsGT(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldActionCredits), v))
+	})
+}
+
+// ActionCreditsGTE applies the GTE predicate on the "action_credits" field.
+func ActionCreditsGTE(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldActionCredits), v))
+	})
+}
+
+// ActionCreditsLT applies the LT predicate on the "action_credits" field.
+func ActionCreditsLT(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldActionCredits), v))
+	})
+}
+
+// ActionCreditsLTE applies the LTE predicate on the "action_credits" field.
+func ActionCreditsLTE(v decimal.Decimal) predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldActionCredits), v))
+	})
+}
+
+// ActionCreditsIsNil applies the IsNil predicate on the "action_credits" field.
+func ActionCreditsIsNil() predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldActionCredits)))
+	})
+}
+
+// ActionCreditsNotNil applies the NotNil predicate on the "action_credits" field.
+func ActionCreditsNotNil() predicate.AppUserExtra {
+	return predicate.AppUserExtra(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldActionCredits)))
 	})
 }
 
