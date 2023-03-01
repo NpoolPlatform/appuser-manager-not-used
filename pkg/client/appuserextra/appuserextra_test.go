@@ -19,7 +19,9 @@ import (
 
 	testinit "github.com/NpoolPlatform/appuser-manager/pkg/testinit"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appuserextra"
+
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +35,7 @@ func init() {
 	}
 }
 
-var appUserExtraDate = npool.AppUserExtra{
+var ret = npool.AppUserExtra{
 	ID:            uuid.NewString(),
 	AppID:         uuid.NewString(),
 	UserID:        uuid.NewString(),
@@ -48,24 +50,25 @@ var appUserExtraDate = npool.AppUserExtra{
 	Organization:  uuid.NewString(),
 	IDNumber:      uuid.NewString(),
 	AddressFields: []string{uuid.NewString()},
+	ActionCredits: decimal.NewFromInt(0).String(),
 }
 
 var (
-	appUserExtraInfo = npool.AppUserExtraReq{
-		ID:            &appUserExtraDate.ID,
-		AppID:         &appUserExtraDate.AppID,
-		UserID:        &appUserExtraDate.UserID,
-		FirstName:     &appUserExtraDate.FirstName,
-		Birthday:      &appUserExtraDate.Birthday,
-		LastName:      &appUserExtraDate.LastName,
-		Gender:        &appUserExtraDate.Gender,
-		Avatar:        &appUserExtraDate.Avatar,
-		Username:      &appUserExtraDate.Username,
-		PostalCode:    &appUserExtraDate.PostalCode,
-		Age:           &appUserExtraDate.Age,
-		Organization:  &appUserExtraDate.Organization,
-		IDNumber:      &appUserExtraDate.IDNumber,
-		AddressFields: appUserExtraDate.AddressFields,
+	req = npool.AppUserExtraReq{
+		ID:            &ret.ID,
+		AppID:         &ret.AppID,
+		UserID:        &ret.UserID,
+		FirstName:     &ret.FirstName,
+		Birthday:      &ret.Birthday,
+		LastName:      &ret.LastName,
+		Gender:        &ret.Gender,
+		Avatar:        &ret.Avatar,
+		Username:      &ret.Username,
+		PostalCode:    &ret.PostalCode,
+		Age:           &ret.Age,
+		Organization:  &ret.Organization,
+		IDNumber:      &ret.IDNumber,
+		AddressFields: ret.AddressFields,
 	}
 )
 
@@ -73,14 +76,14 @@ var info *npool.AppUserExtra
 
 func createAppUserExtra(t *testing.T) {
 	var err error
-	info, err = CreateAppUserExtra(context.Background(), &appUserExtraInfo)
+	info, err = CreateAppUserExtra(context.Background(), &req)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appUserExtraDate)
+		assert.Equal(t, info, &ret)
 	}
 }
 
 func createAppUserExtras(t *testing.T) {
-	appUserExtraDates := []npool.AppUserExtra{
+	rets := []npool.AppUserExtra{
 		{
 			ID:            uuid.NewString(),
 			AppID:         uuid.NewString(),
@@ -96,6 +99,7 @@ func createAppUserExtras(t *testing.T) {
 			Organization:  uuid.NewString(),
 			IDNumber:      uuid.NewString(),
 			AddressFields: []string{uuid.NewString()},
+			ActionCredits: decimal.NewFromInt(0).String(),
 		},
 		{
 			ID:            uuid.NewString(),
@@ -112,26 +116,27 @@ func createAppUserExtras(t *testing.T) {
 			Organization:  uuid.NewString(),
 			IDNumber:      uuid.NewString(),
 			AddressFields: []string{uuid.NewString()},
+			ActionCredits: decimal.NewFromInt(0).String(),
 		},
 	}
 
 	appUserExtras := []*npool.AppUserExtraReq{}
-	for key := range appUserExtraDates {
+	for key := range rets {
 		appUserExtras = append(appUserExtras, &npool.AppUserExtraReq{
-			ID:            &appUserExtraDates[key].ID,
-			AppID:         &appUserExtraDates[key].AppID,
-			UserID:        &appUserExtraDates[key].UserID,
-			FirstName:     &appUserExtraDates[key].FirstName,
-			Birthday:      &appUserExtraDates[key].Birthday,
-			LastName:      &appUserExtraDates[key].LastName,
-			Gender:        &appUserExtraDates[key].Gender,
-			Avatar:        &appUserExtraDates[key].Avatar,
-			Username:      &appUserExtraDates[key].Username,
-			PostalCode:    &appUserExtraDates[key].PostalCode,
-			Age:           &appUserExtraDates[key].Age,
-			Organization:  &appUserExtraDates[key].Organization,
-			IDNumber:      &appUserExtraDates[key].IDNumber,
-			AddressFields: appUserExtraDates[key].AddressFields,
+			ID:            &rets[key].ID,
+			AppID:         &rets[key].AppID,
+			UserID:        &rets[key].UserID,
+			FirstName:     &rets[key].FirstName,
+			Birthday:      &rets[key].Birthday,
+			LastName:      &rets[key].LastName,
+			Gender:        &rets[key].Gender,
+			Avatar:        &rets[key].Avatar,
+			Username:      &rets[key].Username,
+			PostalCode:    &rets[key].PostalCode,
+			Age:           &rets[key].Age,
+			Organization:  &rets[key].Organization,
+			IDNumber:      &rets[key].IDNumber,
+			AddressFields: rets[key].AddressFields,
 		})
 	}
 
@@ -143,9 +148,22 @@ func createAppUserExtras(t *testing.T) {
 
 func updateAppUserExtra(t *testing.T) {
 	var err error
-	info, err = UpdateAppUserExtra(context.Background(), &appUserExtraInfo)
+
+	credits := "123.1"
+
+	ret.ActionCredits = credits
+	req.ActionCredits = &credits
+
+	info, err = UpdateAppUserExtra(context.Background(), &req)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appUserExtraDate)
+		assert.Equal(t, info, &ret)
+	}
+
+	ret.ActionCredits = "246.2"
+
+	info, err = UpdateAppUserExtra(context.Background(), &req)
+	if assert.Nil(t, err) {
+		assert.Equal(t, info, &ret)
 	}
 }
 
@@ -153,7 +171,7 @@ func getAppUserExtra(t *testing.T) {
 	var err error
 	info, err = GetAppUserExtra(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appUserExtraDate)
+		assert.Equal(t, info, &ret)
 	}
 }
 
@@ -167,7 +185,7 @@ func getAppUserExtras(t *testing.T) {
 		}, 0, 1)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, uint32(1))
-		assert.Equal(t, infos[0], &appUserExtraDate)
+		assert.Equal(t, infos[0], &ret)
 	}
 }
 
@@ -181,7 +199,7 @@ func getAppUserExtraOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appUserExtraDate)
+		assert.Equal(t, info, &ret)
 	}
 }
 
@@ -223,7 +241,7 @@ func existAppUserExtraConds(t *testing.T) {
 func deleteAppUserExtra(t *testing.T) {
 	info, err := DeleteAppUserExtra(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info, &appUserExtraDate)
+		assert.Equal(t, info, &ret)
 	}
 }
 

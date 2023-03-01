@@ -18,6 +18,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appuserextra"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +32,7 @@ func init() {
 	}
 }
 
-var entAppUserExtra = ent.AppUserExtra{
+var ret = ent.AppUserExtra{
 	UserID:        uuid.New(),
 	Age:           uint32(10),
 	Birthday:      uint32(10),
@@ -46,28 +47,29 @@ var entAppUserExtra = ent.AppUserExtra{
 	FirstName:     uuid.New().String(),
 	IDNumber:      uuid.New().String(),
 	AddressFields: []string{uuid.New().String(), uuid.New().String()},
+	ActionCredits: decimal.NewFromInt(0),
 }
 
 var (
-	id     = entAppUserExtra.ID.String()
-	userID = entAppUserExtra.UserID.String()
-	appID  = entAppUserExtra.AppID.String()
+	id     = ret.ID.String()
+	userID = ret.UserID.String()
+	appID  = ret.AppID.String()
 
-	appuserextraInfo = npool.AppUserExtraReq{
-		FirstName:     &entAppUserExtra.FirstName,
-		IDNumber:      &entAppUserExtra.IDNumber,
+	req = npool.AppUserExtraReq{
+		FirstName:     &ret.FirstName,
+		IDNumber:      &ret.IDNumber,
 		ID:            &id,
-		LastName:      &entAppUserExtra.LastName,
-		PostalCode:    &entAppUserExtra.PostalCode,
-		Age:           &entAppUserExtra.Age,
-		Organization:  &entAppUserExtra.Organization,
+		LastName:      &ret.LastName,
+		PostalCode:    &ret.PostalCode,
+		Age:           &ret.Age,
+		Organization:  &ret.Organization,
 		UserID:        &userID,
-		Birthday:      &entAppUserExtra.Birthday,
+		Birthday:      &ret.Birthday,
 		AppID:         &appID,
-		Username:      &entAppUserExtra.Username,
-		Gender:        &entAppUserExtra.Gender,
-		Avatar:        &entAppUserExtra.Avatar,
-		AddressFields: entAppUserExtra.AddressFields,
+		Username:      &ret.Username,
+		Gender:        &ret.Gender,
+		Avatar:        &ret.Avatar,
+		AddressFields: ret.AddressFields,
 	}
 )
 
@@ -89,22 +91,23 @@ func rowToObject(row *ent.AppUserExtra) *ent.AppUserExtra {
 		Gender:        row.Gender,
 		Avatar:        row.Avatar,
 		AddressFields: row.AddressFields,
+		ActionCredits: row.ActionCredits,
 	}
 }
 
 func create(t *testing.T) {
 	var err error
-	info, err = Create(context.Background(), &appuserextraInfo)
+	info, err = Create(context.Background(), &req)
 	if assert.Nil(t, err) {
 		if assert.NotEqual(t, info.ID, uuid.UUID{}.String()) {
-			entAppUserExtra.ID = info.ID
+			ret.ID = info.ID
 		}
-		assert.Equal(t, rowToObject(info), &entAppUserExtra)
+		assert.Equal(t, rowToObject(info).String(), ret.String())
 	}
 }
 
 func createBulk(t *testing.T) {
-	entAppUserExtra := []ent.AppUserExtra{
+	ret := []ent.AppUserExtra{
 		{
 			UserID:        uuid.New(),
 			Age:           uint32(10),
@@ -120,6 +123,7 @@ func createBulk(t *testing.T) {
 			FirstName:     uuid.New().String(),
 			IDNumber:      uuid.New().String(),
 			AddressFields: []string{uuid.New().String(), uuid.New().String()},
+			ActionCredits: decimal.NewFromInt(0),
 		},
 		{
 			UserID:        uuid.New(),
@@ -136,30 +140,31 @@ func createBulk(t *testing.T) {
 			FirstName:     uuid.New().String(),
 			IDNumber:      uuid.New().String(),
 			AddressFields: []string{uuid.New().String(), uuid.New().String()},
+			ActionCredits: decimal.NewFromInt(0),
 		},
 	}
 
 	appuserextras := []*npool.AppUserExtraReq{}
-	for key := range entAppUserExtra {
-		id := entAppUserExtra[key].ID.String()
-		userID := entAppUserExtra[key].UserID.String()
-		appID := entAppUserExtra[key].AppID.String()
+	for key := range ret {
+		id := ret[key].ID.String()
+		userID := ret[key].UserID.String()
+		appID := ret[key].AppID.String()
 
 		appuserextras = append(appuserextras, &npool.AppUserExtraReq{
-			FirstName:     &entAppUserExtra[key].FirstName,
-			IDNumber:      &entAppUserExtra[key].IDNumber,
+			FirstName:     &ret[key].FirstName,
+			IDNumber:      &ret[key].IDNumber,
 			ID:            &id,
-			LastName:      &entAppUserExtra[key].LastName,
-			PostalCode:    &entAppUserExtra[key].PostalCode,
-			Age:           &entAppUserExtra[key].Age,
-			Organization:  &entAppUserExtra[key].Organization,
+			LastName:      &ret[key].LastName,
+			PostalCode:    &ret[key].PostalCode,
+			Age:           &ret[key].Age,
+			Organization:  &ret[key].Organization,
 			UserID:        &userID,
-			Birthday:      &entAppUserExtra[key].Birthday,
+			Birthday:      &ret[key].Birthday,
 			AppID:         &appID,
-			Username:      &entAppUserExtra[key].Username,
-			Gender:        &entAppUserExtra[key].Gender,
-			Avatar:        &entAppUserExtra[key].Avatar,
-			AddressFields: entAppUserExtra[key].AddressFields,
+			Username:      &ret[key].Username,
+			Gender:        &ret[key].Gender,
+			Avatar:        &ret[key].Avatar,
+			AddressFields: ret[key].AddressFields,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), appuserextras)
@@ -172,9 +177,22 @@ func createBulk(t *testing.T) {
 
 func update(t *testing.T) {
 	var err error
-	info, err = Update(context.Background(), &appuserextraInfo)
+
+	credits := "123.1"
+
+	ret.ActionCredits = decimal.RequireFromString(credits)
+	req.ActionCredits = &credits
+
+	info, err = Update(context.Background(), &req)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserExtra)
+		assert.Equal(t, rowToObject(info).String(), ret.String())
+	}
+
+	ret.ActionCredits = ret.ActionCredits.Add(ret.ActionCredits)
+
+	info, err = Update(context.Background(), &req)
+	if assert.Nil(t, err) {
+		assert.Equal(t, rowToObject(info).String(), ret.String())
 	}
 }
 
@@ -182,7 +200,7 @@ func row(t *testing.T) {
 	var err error
 	info, err = Row(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserExtra)
+		assert.Equal(t, rowToObject(info).String(), ret.String())
 	}
 }
 
@@ -196,7 +214,7 @@ func rows(t *testing.T) {
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		assert.Equal(t, total, 1)
-		assert.Equal(t, rowToObject(infos[0]), &entAppUserExtra)
+		assert.Equal(t, rowToObject(infos[0]).String(), ret.String())
 	}
 }
 
@@ -210,7 +228,7 @@ func rowOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserExtra)
+		assert.Equal(t, rowToObject(info).String(), ret.String())
 	}
 }
 
@@ -252,7 +270,7 @@ func existConds(t *testing.T) {
 func deleteT(t *testing.T) {
 	info, err := Delete(context.Background(), info.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, rowToObject(info), &entAppUserExtra)
+		assert.Equal(t, rowToObject(info).String(), ret.String())
 	}
 }
 

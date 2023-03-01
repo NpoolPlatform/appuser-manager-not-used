@@ -23,6 +23,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 
 	"entgo.io/ent"
 	"entgo.io/ent/privacy"
@@ -424,6 +425,10 @@ func init() {
 	appuserextraDescIDNumber := appuserextraFields[13].Descriptor()
 	// appuserextra.DefaultIDNumber holds the default value on creation for the id_number field.
 	appuserextra.DefaultIDNumber = appuserextraDescIDNumber.Default.(string)
+	// appuserextraDescActionCredits is the schema descriptor for action_credits field.
+	appuserextraDescActionCredits := appuserextraFields[14].Descriptor()
+	// appuserextra.DefaultActionCredits holds the default value on creation for the action_credits field.
+	appuserextra.DefaultActionCredits = appuserextraDescActionCredits.Default.(decimal.Decimal)
 	// appuserextraDescID is the schema descriptor for id field.
 	appuserextraDescID := appuserextraFields[0].Descriptor()
 	// appuserextra.DefaultID holds the default value on creation for the id field.

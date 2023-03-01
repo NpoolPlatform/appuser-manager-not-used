@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppUserExtraUpdate is the builder for updating AppUserExtra entities.
@@ -253,6 +254,26 @@ func (aueu *AppUserExtraUpdate) SetNillableIDNumber(s *string) *AppUserExtraUpda
 	if s != nil {
 		aueu.SetIDNumber(*s)
 	}
+	return aueu
+}
+
+// SetActionCredits sets the "action_credits" field.
+func (aueu *AppUserExtraUpdate) SetActionCredits(d decimal.Decimal) *AppUserExtraUpdate {
+	aueu.mutation.SetActionCredits(d)
+	return aueu
+}
+
+// SetNillableActionCredits sets the "action_credits" field if the given value is not nil.
+func (aueu *AppUserExtraUpdate) SetNillableActionCredits(d *decimal.Decimal) *AppUserExtraUpdate {
+	if d != nil {
+		aueu.SetActionCredits(*d)
+	}
+	return aueu
+}
+
+// ClearActionCredits clears the value of the "action_credits" field.
+func (aueu *AppUserExtraUpdate) ClearActionCredits() *AppUserExtraUpdate {
+	aueu.mutation.ClearActionCredits()
 	return aueu
 }
 
@@ -501,6 +522,19 @@ func (aueu *AppUserExtraUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: appuserextra.FieldIDNumber,
 		})
 	}
+	if value, ok := aueu.mutation.ActionCredits(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appuserextra.FieldActionCredits,
+		})
+	}
+	if aueu.mutation.ActionCreditsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appuserextra.FieldActionCredits,
+		})
+	}
 	_spec.Modifiers = aueu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, aueu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -746,6 +780,26 @@ func (aueuo *AppUserExtraUpdateOne) SetNillableIDNumber(s *string) *AppUserExtra
 	if s != nil {
 		aueuo.SetIDNumber(*s)
 	}
+	return aueuo
+}
+
+// SetActionCredits sets the "action_credits" field.
+func (aueuo *AppUserExtraUpdateOne) SetActionCredits(d decimal.Decimal) *AppUserExtraUpdateOne {
+	aueuo.mutation.SetActionCredits(d)
+	return aueuo
+}
+
+// SetNillableActionCredits sets the "action_credits" field if the given value is not nil.
+func (aueuo *AppUserExtraUpdateOne) SetNillableActionCredits(d *decimal.Decimal) *AppUserExtraUpdateOne {
+	if d != nil {
+		aueuo.SetActionCredits(*d)
+	}
+	return aueuo
+}
+
+// ClearActionCredits clears the value of the "action_credits" field.
+func (aueuo *AppUserExtraUpdateOne) ClearActionCredits() *AppUserExtraUpdateOne {
+	aueuo.mutation.ClearActionCredits()
 	return aueuo
 }
 
@@ -1022,6 +1076,19 @@ func (aueuo *AppUserExtraUpdateOne) sqlSave(ctx context.Context) (_node *AppUser
 			Type:   field.TypeString,
 			Value:  value,
 			Column: appuserextra.FieldIDNumber,
+		})
+	}
+	if value, ok := aueuo.mutation.ActionCredits(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: appuserextra.FieldActionCredits,
+		})
+	}
+	if aueuo.mutation.ActionCreditsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: appuserextra.FieldActionCredits,
 		})
 	}
 	_spec.Modifiers = aueuo.modifiers

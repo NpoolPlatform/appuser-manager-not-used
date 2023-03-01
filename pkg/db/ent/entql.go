@@ -185,6 +185,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appuserextra.FieldAvatar:        {Type: field.TypeString, Column: appuserextra.FieldAvatar},
 			appuserextra.FieldOrganization:  {Type: field.TypeString, Column: appuserextra.FieldOrganization},
 			appuserextra.FieldIDNumber:      {Type: field.TypeString, Column: appuserextra.FieldIDNumber},
+			appuserextra.FieldActionCredits: {Type: field.TypeOther, Column: appuserextra.FieldActionCredits},
 		},
 	}
 	graph.Nodes[7] = &sqlgraph.Node{
@@ -997,6 +998,11 @@ func (f *AppUserExtraFilter) WhereOrganization(p entql.StringP) {
 // WhereIDNumber applies the entql string predicate on the id_number field.
 func (f *AppUserExtraFilter) WhereIDNumber(p entql.StringP) {
 	f.Where(p.Field(appuserextra.FieldIDNumber))
+}
+
+// WhereActionCredits applies the entql other predicate on the action_credits field.
+func (f *AppUserExtraFilter) WhereActionCredits(p entql.OtherP) {
+	f.Where(p.Field(appuserextra.FieldActionCredits))
 }
 
 // addPredicate implements the predicateAdder interface.

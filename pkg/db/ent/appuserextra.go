@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuserextra"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // AppUserExtra is the model entity for the AppUserExtra schema.
@@ -49,6 +50,8 @@ type AppUserExtra struct {
 	Organization string `json:"organization,omitempty"`
 	// IDNumber holds the value of the "id_number" field.
 	IDNumber string `json:"id_number,omitempty"`
+	// ActionCredits holds the value of the "action_credits" field.
+	ActionCredits decimal.Decimal `json:"action_credits,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -58,6 +61,8 @@ func (*AppUserExtra) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appuserextra.FieldAddressFields:
 			values[i] = new([]byte)
+		case appuserextra.FieldActionCredits:
+			values[i] = new(decimal.Decimal)
 		case appuserextra.FieldCreatedAt, appuserextra.FieldUpdatedAt, appuserextra.FieldDeletedAt, appuserextra.FieldAge, appuserextra.FieldBirthday:
 			values[i] = new(sql.NullInt64)
 		case appuserextra.FieldUsername, appuserextra.FieldFirstName, appuserextra.FieldLastName, appuserextra.FieldGender, appuserextra.FieldPostalCode, appuserextra.FieldAvatar, appuserextra.FieldOrganization, appuserextra.FieldIDNumber:
@@ -183,6 +188,12 @@ func (aue *AppUserExtra) assignValues(columns []string, values []interface{}) er
 			} else if value.Valid {
 				aue.IDNumber = value.String
 			}
+		case appuserextra.FieldActionCredits:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field action_credits", values[i])
+			} else if value != nil {
+				aue.ActionCredits = *value
+			}
 		}
 	}
 	return nil
@@ -258,6 +269,9 @@ func (aue *AppUserExtra) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("id_number=")
 	builder.WriteString(aue.IDNumber)
+	builder.WriteString(", ")
+	builder.WriteString("action_credits=")
+	builder.WriteString(fmt.Sprintf("%v", aue.ActionCredits))
 	builder.WriteByte(')')
 	return builder.String()
 }
