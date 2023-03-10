@@ -40,8 +40,8 @@ var (
 		{Name: "invitation_code_must", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "create_invitation_code_when", Type: field.TypeString, Nullable: true, Default: "DefaultWhen"},
 		{Name: "max_typed_coupons_per_order", Type: field.TypeUint32, Nullable: true, Default: 1},
-		{Name: "under_maintenance", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "commit_buttons", Type: field.TypeJSON, Nullable: true},
+		{Name: "maintaining", Type: field.TypeBool, Nullable: true, Default: false},
+		{Name: "commit_button_targets", Type: field.TypeJSON, Nullable: true},
 	}
 	// AppControlsTable holds the schema information for the "app_controls" table.
 	AppControlsTable = &schema.Table{

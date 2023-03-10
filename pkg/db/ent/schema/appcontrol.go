@@ -76,11 +76,11 @@ func (AppControl) Fields() []ent.Field {
 			Optional().
 			Default(1),
 		field.
-			Bool("under_maintenance").
+			Bool("maintaining").
 			Optional().
 			Default(false),
 		field.
-			JSON("commit_buttons", []string{}).
+			JSON("commit_button_targets", []string{}).
 			Optional().
 			Default(func() []string {
 				return []string{}

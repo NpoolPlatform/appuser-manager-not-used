@@ -141,14 +141,14 @@ func init() {
 	appcontrolDescMaxTypedCouponsPerOrder := appcontrolFields[9].Descriptor()
 	// appcontrol.DefaultMaxTypedCouponsPerOrder holds the default value on creation for the max_typed_coupons_per_order field.
 	appcontrol.DefaultMaxTypedCouponsPerOrder = appcontrolDescMaxTypedCouponsPerOrder.Default.(uint32)
-	// appcontrolDescUnderMaintenance is the schema descriptor for under_maintenance field.
-	appcontrolDescUnderMaintenance := appcontrolFields[10].Descriptor()
-	// appcontrol.DefaultUnderMaintenance holds the default value on creation for the under_maintenance field.
-	appcontrol.DefaultUnderMaintenance = appcontrolDescUnderMaintenance.Default.(bool)
-	// appcontrolDescCommitButtons is the schema descriptor for commit_buttons field.
-	appcontrolDescCommitButtons := appcontrolFields[11].Descriptor()
-	// appcontrol.DefaultCommitButtons holds the default value on creation for the commit_buttons field.
-	appcontrol.DefaultCommitButtons = appcontrolDescCommitButtons.Default.(func() []string)
+	// appcontrolDescMaintaining is the schema descriptor for maintaining field.
+	appcontrolDescMaintaining := appcontrolFields[10].Descriptor()
+	// appcontrol.DefaultMaintaining holds the default value on creation for the maintaining field.
+	appcontrol.DefaultMaintaining = appcontrolDescMaintaining.Default.(bool)
+	// appcontrolDescCommitButtonTargets is the schema descriptor for commit_button_targets field.
+	appcontrolDescCommitButtonTargets := appcontrolFields[11].Descriptor()
+	// appcontrol.DefaultCommitButtonTargets holds the default value on creation for the commit_button_targets field.
+	appcontrol.DefaultCommitButtonTargets = appcontrolDescCommitButtonTargets.Default.(func() []string)
 	// appcontrolDescID is the schema descriptor for id field.
 	appcontrolDescID := appcontrolFields[0].Descriptor()
 	// appcontrol.DefaultID holds the default value on creation for the id field.

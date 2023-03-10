@@ -36,10 +36,10 @@ const (
 	FieldCreateInvitationCodeWhen = "create_invitation_code_when"
 	// FieldMaxTypedCouponsPerOrder holds the string denoting the max_typed_coupons_per_order field in the database.
 	FieldMaxTypedCouponsPerOrder = "max_typed_coupons_per_order"
-	// FieldUnderMaintenance holds the string denoting the under_maintenance field in the database.
-	FieldUnderMaintenance = "under_maintenance"
-	// FieldCommitButtons holds the string denoting the commit_buttons field in the database.
-	FieldCommitButtons = "commit_buttons"
+	// FieldMaintaining holds the string denoting the maintaining field in the database.
+	FieldMaintaining = "maintaining"
+	// FieldCommitButtonTargets holds the string denoting the commit_button_targets field in the database.
+	FieldCommitButtonTargets = "commit_button_targets"
 	// Table holds the table name of the appcontrol in the database.
 	Table = "app_controls"
 )
@@ -59,8 +59,8 @@ var Columns = []string{
 	FieldInvitationCodeMust,
 	FieldCreateInvitationCodeWhen,
 	FieldMaxTypedCouponsPerOrder,
-	FieldUnderMaintenance,
-	FieldCommitButtons,
+	FieldMaintaining,
+	FieldCommitButtonTargets,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -108,10 +108,10 @@ var (
 	DefaultCreateInvitationCodeWhen string
 	// DefaultMaxTypedCouponsPerOrder holds the default value on creation for the "max_typed_coupons_per_order" field.
 	DefaultMaxTypedCouponsPerOrder uint32
-	// DefaultUnderMaintenance holds the default value on creation for the "under_maintenance" field.
-	DefaultUnderMaintenance bool
-	// DefaultCommitButtons holds the default value on creation for the "commit_buttons" field.
-	DefaultCommitButtons func() []string
+	// DefaultMaintaining holds the default value on creation for the "maintaining" field.
+	DefaultMaintaining bool
+	// DefaultCommitButtonTargets holds the default value on creation for the "commit_button_targets" field.
+	DefaultCommitButtonTargets func() []string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

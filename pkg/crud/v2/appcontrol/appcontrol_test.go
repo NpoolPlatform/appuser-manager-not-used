@@ -44,8 +44,8 @@ var entAppControl = ent.AppControl{
 	InvitationCodeMust:       false,
 	CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
 	MaxTypedCouponsPerOrder:  1,
-	UnderMaintenance:         true,
-	CommitButtons:            []string{uuid.NewString()},
+	Maintaining:              true,
+	CommitButtonTargets:      []string{uuid.NewString()},
 }
 
 var (
@@ -56,16 +56,16 @@ var (
 	extSigninMethods = []basetypes.SignMethod{basetypes.SignMethod_Github, basetypes.SignMethod_Google}
 
 	appcontrolInfo = npool.AppControlReq{
-		ID:                 &id,
-		AppID:              &appID,
-		SignupMethods:      signupMethods,
-		ExtSigninMethods:   extSigninMethods,
-		RecaptchaMethod:    &recaptcha,
-		KycEnable:          &entAppControl.KycEnable,
-		SigninVerifyEnable: &entAppControl.SigninVerifyEnable,
-		InvitationCodeMust: &entAppControl.InvitationCodeMust,
-		UnderMaintenance:   &entAppControl.UnderMaintenance,
-		CommitButtons:      entAppControl.CommitButtons,
+		ID:                  &id,
+		AppID:               &appID,
+		SignupMethods:       signupMethods,
+		ExtSigninMethods:    extSigninMethods,
+		RecaptchaMethod:     &recaptcha,
+		KycEnable:           &entAppControl.KycEnable,
+		SigninVerifyEnable:  &entAppControl.SigninVerifyEnable,
+		InvitationCodeMust:  &entAppControl.InvitationCodeMust,
+		Maintaining:         &entAppControl.Maintaining,
+		CommitButtonTargets: entAppControl.CommitButtonTargets,
 	}
 )
 
@@ -83,8 +83,8 @@ func rowToObject(row *ent.AppControl) *ent.AppControl {
 		InvitationCodeMust:       row.InvitationCodeMust,
 		CreateInvitationCodeWhen: row.CreateInvitationCodeWhen,
 		MaxTypedCouponsPerOrder:  row.MaxTypedCouponsPerOrder,
-		UnderMaintenance:         row.UnderMaintenance,
-		CommitButtons:            row.CommitButtons,
+		Maintaining:              row.Maintaining,
+		CommitButtonTargets:      row.CommitButtonTargets,
 	}
 }
 
@@ -112,8 +112,8 @@ func createBulk(t *testing.T) {
 			InvitationCodeMust:       false,
 			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
 			MaxTypedCouponsPerOrder:  1,
-			UnderMaintenance:         true,
-			CommitButtons:            []string{uuid.NewString()},
+			Maintaining:              true,
+			CommitButtonTargets:      []string{uuid.NewString()},
 		},
 		{
 			ID:                       uuid.New(),
@@ -126,8 +126,8 @@ func createBulk(t *testing.T) {
 			InvitationCodeMust:       false,
 			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
 			MaxTypedCouponsPerOrder:  1,
-			UnderMaintenance:         true,
-			CommitButtons:            []string{uuid.NewString()},
+			Maintaining:              true,
+			CommitButtonTargets:      []string{uuid.NewString()},
 		},
 	}
 	appcontrols := []*npool.AppControlReq{}
@@ -137,16 +137,16 @@ func createBulk(t *testing.T) {
 		recaptcha := rcpt.RecaptchaType(rcpt.RecaptchaType_value[entAppControl[key].RecaptchaMethod])
 
 		appcontrols = append(appcontrols, &npool.AppControlReq{
-			ID:                 &id,
-			AppID:              &appID,
-			SignupMethods:      []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
-			ExtSigninMethods:   []basetypes.SignMethod{basetypes.SignMethod_Github, basetypes.SignMethod_Google},
-			RecaptchaMethod:    &recaptcha,
-			KycEnable:          &entAppControl[key].KycEnable,
-			SigninVerifyEnable: &entAppControl[key].SigninVerifyEnable,
-			InvitationCodeMust: &entAppControl[key].InvitationCodeMust,
-			UnderMaintenance:   &entAppControl[key].UnderMaintenance,
-			CommitButtons:      entAppControl[key].CommitButtons,
+			ID:                  &id,
+			AppID:               &appID,
+			SignupMethods:       []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
+			ExtSigninMethods:    []basetypes.SignMethod{basetypes.SignMethod_Github, basetypes.SignMethod_Google},
+			RecaptchaMethod:     &recaptcha,
+			KycEnable:           &entAppControl[key].KycEnable,
+			SigninVerifyEnable:  &entAppControl[key].SigninVerifyEnable,
+			InvitationCodeMust:  &entAppControl[key].InvitationCodeMust,
+			Maintaining:         &entAppControl[key].Maintaining,
+			CommitButtonTargets: entAppControl[key].CommitButtonTargets,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), appcontrols)

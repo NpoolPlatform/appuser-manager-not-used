@@ -149,10 +149,10 @@ func MaxTypedCouponsPerOrder(v uint32) predicate.AppControl {
 	})
 }
 
-// UnderMaintenance applies equality check predicate on the "under_maintenance" field. It's identical to UnderMaintenanceEQ.
-func UnderMaintenance(v bool) predicate.AppControl {
+// Maintaining applies equality check predicate on the "maintaining" field. It's identical to MaintainingEQ.
+func Maintaining(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUnderMaintenance), v))
+		s.Where(sql.EQ(s.C(FieldMaintaining), v))
 	})
 }
 
@@ -842,45 +842,45 @@ func MaxTypedCouponsPerOrderNotNil() predicate.AppControl {
 	})
 }
 
-// UnderMaintenanceEQ applies the EQ predicate on the "under_maintenance" field.
-func UnderMaintenanceEQ(v bool) predicate.AppControl {
+// MaintainingEQ applies the EQ predicate on the "maintaining" field.
+func MaintainingEQ(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUnderMaintenance), v))
+		s.Where(sql.EQ(s.C(FieldMaintaining), v))
 	})
 }
 
-// UnderMaintenanceNEQ applies the NEQ predicate on the "under_maintenance" field.
-func UnderMaintenanceNEQ(v bool) predicate.AppControl {
+// MaintainingNEQ applies the NEQ predicate on the "maintaining" field.
+func MaintainingNEQ(v bool) predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUnderMaintenance), v))
+		s.Where(sql.NEQ(s.C(FieldMaintaining), v))
 	})
 }
 
-// UnderMaintenanceIsNil applies the IsNil predicate on the "under_maintenance" field.
-func UnderMaintenanceIsNil() predicate.AppControl {
+// MaintainingIsNil applies the IsNil predicate on the "maintaining" field.
+func MaintainingIsNil() predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldUnderMaintenance)))
+		s.Where(sql.IsNull(s.C(FieldMaintaining)))
 	})
 }
 
-// UnderMaintenanceNotNil applies the NotNil predicate on the "under_maintenance" field.
-func UnderMaintenanceNotNil() predicate.AppControl {
+// MaintainingNotNil applies the NotNil predicate on the "maintaining" field.
+func MaintainingNotNil() predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldUnderMaintenance)))
+		s.Where(sql.NotNull(s.C(FieldMaintaining)))
 	})
 }
 
-// CommitButtonsIsNil applies the IsNil predicate on the "commit_buttons" field.
-func CommitButtonsIsNil() predicate.AppControl {
+// CommitButtonTargetsIsNil applies the IsNil predicate on the "commit_button_targets" field.
+func CommitButtonTargetsIsNil() predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCommitButtons)))
+		s.Where(sql.IsNull(s.C(FieldCommitButtonTargets)))
 	})
 }
 
-// CommitButtonsNotNil applies the NotNil predicate on the "commit_buttons" field.
-func CommitButtonsNotNil() predicate.AppControl {
+// CommitButtonTargetsNotNil applies the NotNil predicate on the "commit_button_targets" field.
+func CommitButtonTargetsNotNil() predicate.AppControl {
 	return predicate.AppControl(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCommitButtons)))
+		s.Where(sql.NotNull(s.C(FieldCommitButtonTargets)))
 	})
 }
 

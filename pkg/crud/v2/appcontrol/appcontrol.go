@@ -87,14 +87,14 @@ func CreateSet(c *ent.AppControlCreate, info *npool.AppControlReq) *ent.AppContr
 	if info.MaxTypedCouponsPerOrder != nil {
 		c.SetMaxTypedCouponsPerOrder(info.GetMaxTypedCouponsPerOrder())
 	}
-	if info.UnderMaintenance != nil {
-		c.SetUnderMaintenance(info.GetUnderMaintenance())
+	if info.Maintaining != nil {
+		c.SetMaintaining(info.GetMaintaining())
 	}
-	commitButtons := []string{}
-	if len(info.CommitButtons) > 0 {
-		commitButtons = info.GetCommitButtons()
+	CommitButtonTargets := []string{}
+	if len(info.CommitButtonTargets) > 0 {
+		CommitButtonTargets = info.GetCommitButtonTargets()
 	}
-	c.SetCommitButtons(commitButtons)
+	c.SetCommitButtonTargets(CommitButtonTargets)
 	return c
 }
 
@@ -165,11 +165,11 @@ func UpdateSet(info *ent.AppControl, in *npool.AppControlReq) *ent.AppControlUpd
 	if in.MaxTypedCouponsPerOrder != nil {
 		u.SetMaxTypedCouponsPerOrder(in.GetMaxTypedCouponsPerOrder())
 	}
-	if in.UnderMaintenance != nil {
-		u.SetUnderMaintenance(in.GetUnderMaintenance())
+	if in.Maintaining != nil {
+		u.SetMaintaining(in.GetMaintaining())
 	}
-	if len(in.GetCommitButtons()) > 0 {
-		u.SetCommitButtons(in.GetCommitButtons())
+	if len(in.GetCommitButtonTargets()) > 0 {
+		u.SetCommitButtonTargets(in.GetCommitButtonTargets())
 	}
 	return u
 }
