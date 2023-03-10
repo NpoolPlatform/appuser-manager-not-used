@@ -87,6 +87,14 @@ func CreateSet(c *ent.AppControlCreate, info *npool.AppControlReq) *ent.AppContr
 	if info.MaxTypedCouponsPerOrder != nil {
 		c.SetMaxTypedCouponsPerOrder(info.GetMaxTypedCouponsPerOrder())
 	}
+	if info.UnderMaintenance != nil {
+		c.SetUnderMaintenance(info.GetUnderMaintenance())
+	}
+	commitButtons := []string{}
+	if len(info.CommitButtons) > 0 {
+		commitButtons = info.GetCommitButtons()
+	}
+	c.SetCommitButtons(commitButtons)
 	return c
 }
 
@@ -156,6 +164,12 @@ func UpdateSet(info *ent.AppControl, in *npool.AppControlReq) *ent.AppControlUpd
 	}
 	if in.MaxTypedCouponsPerOrder != nil {
 		u.SetMaxTypedCouponsPerOrder(in.GetMaxTypedCouponsPerOrder())
+	}
+	if in.UnderMaintenance != nil {
+		u.SetUnderMaintenance(in.GetUnderMaintenance())
+	}
+	if len(in.GetCommitButtons()) > 0 {
+		u.SetCommitButtons(in.GetCommitButtons())
 	}
 	return u
 }

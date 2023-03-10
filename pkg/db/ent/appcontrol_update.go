@@ -255,6 +255,38 @@ func (acu *AppControlUpdate) ClearMaxTypedCouponsPerOrder() *AppControlUpdate {
 	return acu
 }
 
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (acu *AppControlUpdate) SetUnderMaintenance(b bool) *AppControlUpdate {
+	acu.mutation.SetUnderMaintenance(b)
+	return acu
+}
+
+// SetNillableUnderMaintenance sets the "under_maintenance" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableUnderMaintenance(b *bool) *AppControlUpdate {
+	if b != nil {
+		acu.SetUnderMaintenance(*b)
+	}
+	return acu
+}
+
+// ClearUnderMaintenance clears the value of the "under_maintenance" field.
+func (acu *AppControlUpdate) ClearUnderMaintenance() *AppControlUpdate {
+	acu.mutation.ClearUnderMaintenance()
+	return acu
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (acu *AppControlUpdate) SetCommitButtons(s []string) *AppControlUpdate {
+	acu.mutation.SetCommitButtons(s)
+	return acu
+}
+
+// ClearCommitButtons clears the value of the "commit_buttons" field.
+func (acu *AppControlUpdate) ClearCommitButtons() *AppControlUpdate {
+	acu.mutation.ClearCommitButtons()
+	return acu
+}
+
 // Mutation returns the AppControlMutation object of the builder.
 func (acu *AppControlUpdate) Mutation() *AppControlMutation {
 	return acu.mutation
@@ -519,6 +551,32 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
 		})
 	}
+	if value, ok := acu.mutation.UnderMaintenance(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldUnderMaintenance,
+		})
+	}
+	if acu.mutation.UnderMaintenanceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldUnderMaintenance,
+		})
+	}
+	if value, ok := acu.mutation.CommitButtons(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appcontrol.FieldCommitButtons,
+		})
+	}
+	if acu.mutation.CommitButtonsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appcontrol.FieldCommitButtons,
+		})
+	}
 	_spec.Modifiers = acu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, acu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -763,6 +821,38 @@ func (acuo *AppControlUpdateOne) AddMaxTypedCouponsPerOrder(u int32) *AppControl
 // ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
 func (acuo *AppControlUpdateOne) ClearMaxTypedCouponsPerOrder() *AppControlUpdateOne {
 	acuo.mutation.ClearMaxTypedCouponsPerOrder()
+	return acuo
+}
+
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (acuo *AppControlUpdateOne) SetUnderMaintenance(b bool) *AppControlUpdateOne {
+	acuo.mutation.SetUnderMaintenance(b)
+	return acuo
+}
+
+// SetNillableUnderMaintenance sets the "under_maintenance" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableUnderMaintenance(b *bool) *AppControlUpdateOne {
+	if b != nil {
+		acuo.SetUnderMaintenance(*b)
+	}
+	return acuo
+}
+
+// ClearUnderMaintenance clears the value of the "under_maintenance" field.
+func (acuo *AppControlUpdateOne) ClearUnderMaintenance() *AppControlUpdateOne {
+	acuo.mutation.ClearUnderMaintenance()
+	return acuo
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (acuo *AppControlUpdateOne) SetCommitButtons(s []string) *AppControlUpdateOne {
+	acuo.mutation.SetCommitButtons(s)
+	return acuo
+}
+
+// ClearCommitButtons clears the value of the "commit_buttons" field.
+func (acuo *AppControlUpdateOne) ClearCommitButtons() *AppControlUpdateOne {
+	acuo.mutation.ClearCommitButtons()
 	return acuo
 }
 
@@ -1058,6 +1148,32 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
+	if value, ok := acuo.mutation.UnderMaintenance(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldUnderMaintenance,
+		})
+	}
+	if acuo.mutation.UnderMaintenanceCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldUnderMaintenance,
+		})
+	}
+	if value, ok := acuo.mutation.CommitButtons(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appcontrol.FieldCommitButtons,
+		})
+	}
+	if acuo.mutation.CommitButtonsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appcontrol.FieldCommitButtons,
 		})
 	}
 	_spec.Modifiers = acuo.modifiers

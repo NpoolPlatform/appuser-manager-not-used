@@ -902,6 +902,8 @@ type AppControlMutation struct {
 	create_invitation_code_when    *string
 	max_typed_coupons_per_order    *uint32
 	addmax_typed_coupons_per_order *int32
+	under_maintenance              *bool
+	commit_buttons                 *[]string
 	clearedFields                  map[string]struct{}
 	done                           bool
 	oldValue                       func(context.Context) (*AppControl, error)
@@ -1642,6 +1644,104 @@ func (m *AppControlMutation) ResetMaxTypedCouponsPerOrder() {
 	delete(m.clearedFields, appcontrol.FieldMaxTypedCouponsPerOrder)
 }
 
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (m *AppControlMutation) SetUnderMaintenance(b bool) {
+	m.under_maintenance = &b
+}
+
+// UnderMaintenance returns the value of the "under_maintenance" field in the mutation.
+func (m *AppControlMutation) UnderMaintenance() (r bool, exists bool) {
+	v := m.under_maintenance
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnderMaintenance returns the old "under_maintenance" field's value of the AppControl entity.
+// If the AppControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppControlMutation) OldUnderMaintenance(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnderMaintenance is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnderMaintenance requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnderMaintenance: %w", err)
+	}
+	return oldValue.UnderMaintenance, nil
+}
+
+// ClearUnderMaintenance clears the value of the "under_maintenance" field.
+func (m *AppControlMutation) ClearUnderMaintenance() {
+	m.under_maintenance = nil
+	m.clearedFields[appcontrol.FieldUnderMaintenance] = struct{}{}
+}
+
+// UnderMaintenanceCleared returns if the "under_maintenance" field was cleared in this mutation.
+func (m *AppControlMutation) UnderMaintenanceCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldUnderMaintenance]
+	return ok
+}
+
+// ResetUnderMaintenance resets all changes to the "under_maintenance" field.
+func (m *AppControlMutation) ResetUnderMaintenance() {
+	m.under_maintenance = nil
+	delete(m.clearedFields, appcontrol.FieldUnderMaintenance)
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (m *AppControlMutation) SetCommitButtons(s []string) {
+	m.commit_buttons = &s
+}
+
+// CommitButtons returns the value of the "commit_buttons" field in the mutation.
+func (m *AppControlMutation) CommitButtons() (r []string, exists bool) {
+	v := m.commit_buttons
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCommitButtons returns the old "commit_buttons" field's value of the AppControl entity.
+// If the AppControl object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppControlMutation) OldCommitButtons(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCommitButtons is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCommitButtons requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCommitButtons: %w", err)
+	}
+	return oldValue.CommitButtons, nil
+}
+
+// ClearCommitButtons clears the value of the "commit_buttons" field.
+func (m *AppControlMutation) ClearCommitButtons() {
+	m.commit_buttons = nil
+	m.clearedFields[appcontrol.FieldCommitButtons] = struct{}{}
+}
+
+// CommitButtonsCleared returns if the "commit_buttons" field was cleared in this mutation.
+func (m *AppControlMutation) CommitButtonsCleared() bool {
+	_, ok := m.clearedFields[appcontrol.FieldCommitButtons]
+	return ok
+}
+
+// ResetCommitButtons resets all changes to the "commit_buttons" field.
+func (m *AppControlMutation) ResetCommitButtons() {
+	m.commit_buttons = nil
+	delete(m.clearedFields, appcontrol.FieldCommitButtons)
+}
+
 // Where appends a list predicates to the AppControlMutation builder.
 func (m *AppControlMutation) Where(ps ...predicate.AppControl) {
 	m.predicates = append(m.predicates, ps...)
@@ -1661,7 +1761,7 @@ func (m *AppControlMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppControlMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, appcontrol.FieldCreatedAt)
 	}
@@ -1698,6 +1798,12 @@ func (m *AppControlMutation) Fields() []string {
 	if m.max_typed_coupons_per_order != nil {
 		fields = append(fields, appcontrol.FieldMaxTypedCouponsPerOrder)
 	}
+	if m.under_maintenance != nil {
+		fields = append(fields, appcontrol.FieldUnderMaintenance)
+	}
+	if m.commit_buttons != nil {
+		fields = append(fields, appcontrol.FieldCommitButtons)
+	}
 	return fields
 }
 
@@ -1730,6 +1836,10 @@ func (m *AppControlMutation) Field(name string) (ent.Value, bool) {
 		return m.CreateInvitationCodeWhen()
 	case appcontrol.FieldMaxTypedCouponsPerOrder:
 		return m.MaxTypedCouponsPerOrder()
+	case appcontrol.FieldUnderMaintenance:
+		return m.UnderMaintenance()
+	case appcontrol.FieldCommitButtons:
+		return m.CommitButtons()
 	}
 	return nil, false
 }
@@ -1763,6 +1873,10 @@ func (m *AppControlMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldCreateInvitationCodeWhen(ctx)
 	case appcontrol.FieldMaxTypedCouponsPerOrder:
 		return m.OldMaxTypedCouponsPerOrder(ctx)
+	case appcontrol.FieldUnderMaintenance:
+		return m.OldUnderMaintenance(ctx)
+	case appcontrol.FieldCommitButtons:
+		return m.OldCommitButtons(ctx)
 	}
 	return nil, fmt.Errorf("unknown AppControl field %s", name)
 }
@@ -1855,6 +1969,20 @@ func (m *AppControlMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMaxTypedCouponsPerOrder(v)
+		return nil
+	case appcontrol.FieldUnderMaintenance:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnderMaintenance(v)
+		return nil
+	case appcontrol.FieldCommitButtons:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCommitButtons(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AppControl field %s", name)
@@ -1964,6 +2092,12 @@ func (m *AppControlMutation) ClearedFields() []string {
 	if m.FieldCleared(appcontrol.FieldMaxTypedCouponsPerOrder) {
 		fields = append(fields, appcontrol.FieldMaxTypedCouponsPerOrder)
 	}
+	if m.FieldCleared(appcontrol.FieldUnderMaintenance) {
+		fields = append(fields, appcontrol.FieldUnderMaintenance)
+	}
+	if m.FieldCleared(appcontrol.FieldCommitButtons) {
+		fields = append(fields, appcontrol.FieldCommitButtons)
+	}
 	return fields
 }
 
@@ -2004,6 +2138,12 @@ func (m *AppControlMutation) ClearField(name string) error {
 		return nil
 	case appcontrol.FieldMaxTypedCouponsPerOrder:
 		m.ClearMaxTypedCouponsPerOrder()
+		return nil
+	case appcontrol.FieldUnderMaintenance:
+		m.ClearUnderMaintenance()
+		return nil
+	case appcontrol.FieldCommitButtons:
+		m.ClearCommitButtons()
 		return nil
 	}
 	return fmt.Errorf("unknown AppControl nullable field %s", name)
@@ -2048,6 +2188,12 @@ func (m *AppControlMutation) ResetField(name string) error {
 		return nil
 	case appcontrol.FieldMaxTypedCouponsPerOrder:
 		m.ResetMaxTypedCouponsPerOrder()
+		return nil
+	case appcontrol.FieldUnderMaintenance:
+		m.ResetUnderMaintenance()
+		return nil
+	case appcontrol.FieldCommitButtons:
+		m.ResetCommitButtons()
 		return nil
 	}
 	return fmt.Errorf("unknown AppControl field %s", name)

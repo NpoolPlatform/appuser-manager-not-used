@@ -175,6 +175,26 @@ func (acc *AppControlCreate) SetNillableMaxTypedCouponsPerOrder(u *uint32) *AppC
 	return acc
 }
 
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (acc *AppControlCreate) SetUnderMaintenance(b bool) *AppControlCreate {
+	acc.mutation.SetUnderMaintenance(b)
+	return acc
+}
+
+// SetNillableUnderMaintenance sets the "under_maintenance" field if the given value is not nil.
+func (acc *AppControlCreate) SetNillableUnderMaintenance(b *bool) *AppControlCreate {
+	if b != nil {
+		acc.SetUnderMaintenance(*b)
+	}
+	return acc
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (acc *AppControlCreate) SetCommitButtons(s []string) *AppControlCreate {
+	acc.mutation.SetCommitButtons(s)
+	return acc
+}
+
 // SetID sets the "id" field.
 func (acc *AppControlCreate) SetID(u uuid.UUID) *AppControlCreate {
 	acc.mutation.SetID(u)
@@ -334,6 +354,17 @@ func (acc *AppControlCreate) defaults() error {
 		v := appcontrol.DefaultMaxTypedCouponsPerOrder
 		acc.mutation.SetMaxTypedCouponsPerOrder(v)
 	}
+	if _, ok := acc.mutation.UnderMaintenance(); !ok {
+		v := appcontrol.DefaultUnderMaintenance
+		acc.mutation.SetUnderMaintenance(v)
+	}
+	if _, ok := acc.mutation.CommitButtons(); !ok {
+		if appcontrol.DefaultCommitButtons == nil {
+			return fmt.Errorf("ent: uninitialized appcontrol.DefaultCommitButtons (forgotten import ent/runtime?)")
+		}
+		v := appcontrol.DefaultCommitButtons()
+		acc.mutation.SetCommitButtons(v)
+	}
 	if _, ok := acc.mutation.ID(); !ok {
 		if appcontrol.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized appcontrol.DefaultID (forgotten import ent/runtime?)")
@@ -487,6 +518,22 @@ func (acc *AppControlCreate) createSpec() (*AppControl, *sqlgraph.CreateSpec) {
 			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
 		})
 		_node.MaxTypedCouponsPerOrder = value
+	}
+	if value, ok := acc.mutation.UnderMaintenance(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldUnderMaintenance,
+		})
+		_node.UnderMaintenance = value
+	}
+	if value, ok := acc.mutation.CommitButtons(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appcontrol.FieldCommitButtons,
+		})
+		_node.CommitButtons = value
 	}
 	return _node, _spec
 }
@@ -761,6 +808,42 @@ func (u *AppControlUpsert) AddMaxTypedCouponsPerOrder(v uint32) *AppControlUpser
 // ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
 func (u *AppControlUpsert) ClearMaxTypedCouponsPerOrder() *AppControlUpsert {
 	u.SetNull(appcontrol.FieldMaxTypedCouponsPerOrder)
+	return u
+}
+
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (u *AppControlUpsert) SetUnderMaintenance(v bool) *AppControlUpsert {
+	u.Set(appcontrol.FieldUnderMaintenance, v)
+	return u
+}
+
+// UpdateUnderMaintenance sets the "under_maintenance" field to the value that was provided on create.
+func (u *AppControlUpsert) UpdateUnderMaintenance() *AppControlUpsert {
+	u.SetExcluded(appcontrol.FieldUnderMaintenance)
+	return u
+}
+
+// ClearUnderMaintenance clears the value of the "under_maintenance" field.
+func (u *AppControlUpsert) ClearUnderMaintenance() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldUnderMaintenance)
+	return u
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (u *AppControlUpsert) SetCommitButtons(v []string) *AppControlUpsert {
+	u.Set(appcontrol.FieldCommitButtons, v)
+	return u
+}
+
+// UpdateCommitButtons sets the "commit_buttons" field to the value that was provided on create.
+func (u *AppControlUpsert) UpdateCommitButtons() *AppControlUpsert {
+	u.SetExcluded(appcontrol.FieldCommitButtons)
+	return u
+}
+
+// ClearCommitButtons clears the value of the "commit_buttons" field.
+func (u *AppControlUpsert) ClearCommitButtons() *AppControlUpsert {
+	u.SetNull(appcontrol.FieldCommitButtons)
 	return u
 }
 
@@ -1070,6 +1153,48 @@ func (u *AppControlUpsertOne) UpdateMaxTypedCouponsPerOrder() *AppControlUpsertO
 func (u *AppControlUpsertOne) ClearMaxTypedCouponsPerOrder() *AppControlUpsertOne {
 	return u.Update(func(s *AppControlUpsert) {
 		s.ClearMaxTypedCouponsPerOrder()
+	})
+}
+
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (u *AppControlUpsertOne) SetUnderMaintenance(v bool) *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetUnderMaintenance(v)
+	})
+}
+
+// UpdateUnderMaintenance sets the "under_maintenance" field to the value that was provided on create.
+func (u *AppControlUpsertOne) UpdateUnderMaintenance() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateUnderMaintenance()
+	})
+}
+
+// ClearUnderMaintenance clears the value of the "under_maintenance" field.
+func (u *AppControlUpsertOne) ClearUnderMaintenance() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearUnderMaintenance()
+	})
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (u *AppControlUpsertOne) SetCommitButtons(v []string) *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetCommitButtons(v)
+	})
+}
+
+// UpdateCommitButtons sets the "commit_buttons" field to the value that was provided on create.
+func (u *AppControlUpsertOne) UpdateCommitButtons() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateCommitButtons()
+	})
+}
+
+// ClearCommitButtons clears the value of the "commit_buttons" field.
+func (u *AppControlUpsertOne) ClearCommitButtons() *AppControlUpsertOne {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearCommitButtons()
 	})
 }
 
@@ -1545,6 +1670,48 @@ func (u *AppControlUpsertBulk) UpdateMaxTypedCouponsPerOrder() *AppControlUpsert
 func (u *AppControlUpsertBulk) ClearMaxTypedCouponsPerOrder() *AppControlUpsertBulk {
 	return u.Update(func(s *AppControlUpsert) {
 		s.ClearMaxTypedCouponsPerOrder()
+	})
+}
+
+// SetUnderMaintenance sets the "under_maintenance" field.
+func (u *AppControlUpsertBulk) SetUnderMaintenance(v bool) *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetUnderMaintenance(v)
+	})
+}
+
+// UpdateUnderMaintenance sets the "under_maintenance" field to the value that was provided on create.
+func (u *AppControlUpsertBulk) UpdateUnderMaintenance() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateUnderMaintenance()
+	})
+}
+
+// ClearUnderMaintenance clears the value of the "under_maintenance" field.
+func (u *AppControlUpsertBulk) ClearUnderMaintenance() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearUnderMaintenance()
+	})
+}
+
+// SetCommitButtons sets the "commit_buttons" field.
+func (u *AppControlUpsertBulk) SetCommitButtons(v []string) *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.SetCommitButtons(v)
+	})
+}
+
+// UpdateCommitButtons sets the "commit_buttons" field to the value that was provided on create.
+func (u *AppControlUpsertBulk) UpdateCommitButtons() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.UpdateCommitButtons()
+	})
+}
+
+// ClearCommitButtons clears the value of the "commit_buttons" field.
+func (u *AppControlUpsertBulk) ClearCommitButtons() *AppControlUpsertBulk {
+	return u.Update(func(s *AppControlUpsert) {
+		s.ClearCommitButtons()
 	})
 }
 

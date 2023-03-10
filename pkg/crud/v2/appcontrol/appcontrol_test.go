@@ -36,14 +36,16 @@ func init() {
 var entAppControl = ent.AppControl{
 	ID:                       uuid.New(),
 	AppID:                    uuid.New(),
-	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
 	SignupMethods:            []string{basetypes.SignMethod_Email.String(), basetypes.SignMethod_Mobile.String()},
 	ExternSigninMethods:      []string{basetypes.SignMethod_Github.String(), basetypes.SignMethod_Google.String()},
+	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3.String(),
 	KycEnable:                false,
 	SigninVerifyEnable:       false,
 	InvitationCodeMust:       false,
 	CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
 	MaxTypedCouponsPerOrder:  1,
+	UnderMaintenance:         true,
+	CommitButtons:            []string{uuid.NewString()},
 }
 
 var (
@@ -56,12 +58,14 @@ var (
 	appcontrolInfo = npool.AppControlReq{
 		ID:                 &id,
 		AppID:              &appID,
-		RecaptchaMethod:    &recaptcha,
-		KycEnable:          &entAppControl.KycEnable,
 		SignupMethods:      signupMethods,
 		ExtSigninMethods:   extSigninMethods,
+		RecaptchaMethod:    &recaptcha,
+		KycEnable:          &entAppControl.KycEnable,
 		SigninVerifyEnable: &entAppControl.SigninVerifyEnable,
 		InvitationCodeMust: &entAppControl.InvitationCodeMust,
+		UnderMaintenance:   &entAppControl.UnderMaintenance,
+		CommitButtons:      entAppControl.CommitButtons,
 	}
 )
 
@@ -79,6 +83,8 @@ func rowToObject(row *ent.AppControl) *ent.AppControl {
 		InvitationCodeMust:       row.InvitationCodeMust,
 		CreateInvitationCodeWhen: row.CreateInvitationCodeWhen,
 		MaxTypedCouponsPerOrder:  row.MaxTypedCouponsPerOrder,
+		UnderMaintenance:         row.UnderMaintenance,
+		CommitButtons:            row.CommitButtons,
 	}
 }
 
@@ -106,6 +112,8 @@ func createBulk(t *testing.T) {
 			InvitationCodeMust:       false,
 			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
 			MaxTypedCouponsPerOrder:  1,
+			UnderMaintenance:         true,
+			CommitButtons:            []string{uuid.NewString()},
 		},
 		{
 			ID:                       uuid.New(),
@@ -118,6 +126,8 @@ func createBulk(t *testing.T) {
 			InvitationCodeMust:       false,
 			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen.String(),
 			MaxTypedCouponsPerOrder:  1,
+			UnderMaintenance:         true,
+			CommitButtons:            []string{uuid.NewString()},
 		},
 	}
 	appcontrols := []*npool.AppControlReq{}
@@ -129,12 +139,14 @@ func createBulk(t *testing.T) {
 		appcontrols = append(appcontrols, &npool.AppControlReq{
 			ID:                 &id,
 			AppID:              &appID,
-			RecaptchaMethod:    &recaptcha,
 			SignupMethods:      []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
 			ExtSigninMethods:   []basetypes.SignMethod{basetypes.SignMethod_Github, basetypes.SignMethod_Google},
+			RecaptchaMethod:    &recaptcha,
 			KycEnable:          &entAppControl[key].KycEnable,
 			SigninVerifyEnable: &entAppControl[key].SigninVerifyEnable,
 			InvitationCodeMust: &entAppControl[key].InvitationCodeMust,
+			UnderMaintenance:   &entAppControl[key].UnderMaintenance,
+			CommitButtons:      entAppControl[key].CommitButtons,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), appcontrols)

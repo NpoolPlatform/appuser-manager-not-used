@@ -41,6 +41,10 @@ type AppControl struct {
 	CreateInvitationCodeWhen string `json:"create_invitation_code_when,omitempty"`
 	// MaxTypedCouponsPerOrder holds the value of the "max_typed_coupons_per_order" field.
 	MaxTypedCouponsPerOrder uint32 `json:"max_typed_coupons_per_order,omitempty"`
+	// UnderMaintenance holds the value of the "under_maintenance" field.
+	UnderMaintenance bool `json:"under_maintenance,omitempty"`
+	// CommitButtons holds the value of the "commit_buttons" field.
+	CommitButtons []string `json:"commit_buttons,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,9 +52,9 @@ func (*AppControl) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appcontrol.FieldSignupMethods, appcontrol.FieldExternSigninMethods:
+		case appcontrol.FieldSignupMethods, appcontrol.FieldExternSigninMethods, appcontrol.FieldCommitButtons:
 			values[i] = new([]byte)
-		case appcontrol.FieldKycEnable, appcontrol.FieldSigninVerifyEnable, appcontrol.FieldInvitationCodeMust:
+		case appcontrol.FieldKycEnable, appcontrol.FieldSigninVerifyEnable, appcontrol.FieldInvitationCodeMust, appcontrol.FieldUnderMaintenance:
 			values[i] = new(sql.NullBool)
 		case appcontrol.FieldCreatedAt, appcontrol.FieldUpdatedAt, appcontrol.FieldDeletedAt, appcontrol.FieldMaxTypedCouponsPerOrder:
 			values[i] = new(sql.NullInt64)
@@ -155,6 +159,20 @@ func (ac *AppControl) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				ac.MaxTypedCouponsPerOrder = uint32(value.Int64)
 			}
+		case appcontrol.FieldUnderMaintenance:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field under_maintenance", values[i])
+			} else if value.Valid {
+				ac.UnderMaintenance = value.Bool
+			}
+		case appcontrol.FieldCommitButtons:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field commit_buttons", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &ac.CommitButtons); err != nil {
+					return fmt.Errorf("unmarshal field commit_buttons: %w", err)
+				}
+			}
 		}
 	}
 	return nil
@@ -218,6 +236,12 @@ func (ac *AppControl) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("max_typed_coupons_per_order=")
 	builder.WriteString(fmt.Sprintf("%v", ac.MaxTypedCouponsPerOrder))
+	builder.WriteString(", ")
+	builder.WriteString("under_maintenance=")
+	builder.WriteString(fmt.Sprintf("%v", ac.UnderMaintenance))
+	builder.WriteString(", ")
+	builder.WriteString("commit_buttons=")
+	builder.WriteString(fmt.Sprintf("%v", ac.CommitButtons))
 	builder.WriteByte(')')
 	return builder.String()
 }
