@@ -9,6 +9,10 @@ import (
 )
 
 func validate(info *npool.AppControlReq) error {
+	if info == nil {
+		logger.Sugar().Errorw("validate", "info", info)
+		return status.Error(codes.InvalidArgument, "params is empty")
+	}
 	if info.AppID == nil {
 		logger.Sugar().Errorw("validate", "AppID", info.AppID)
 		return status.Error(codes.InvalidArgument, "AppID is empty")
