@@ -39,26 +39,30 @@ func init() {
 var appControlDate = npool.AppControl{
 	ID:                       uuid.NewString(),
 	AppID:                    uuid.NewString(),
-	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
 	SignupMethods:            []basetypes.SignMethod{basetypes.SignMethod_Email, basetypes.SignMethod_Mobile},
 	ExtSigninMethods:         []basetypes.SignMethod{basetypes.SignMethod_Google, basetypes.SignMethod_Github},
+	RecaptchaMethod:          rcpt.RecaptchaType_GoogleRecaptchaV3,
 	KycEnable:                false,
 	SigninVerifyEnable:       false,
 	InvitationCodeMust:       false,
 	CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen,
 	MaxTypedCouponsPerOrder:  1,
+	Maintaining:              true,
+	CommitButtonTargets:      []string{uuid.NewString()},
 }
 
 var (
 	appControlInfo = npool.AppControlReq{
-		ID:                 &appControlDate.ID,
-		AppID:              &appControlDate.AppID,
-		RecaptchaMethod:    &appControlDate.RecaptchaMethod,
-		KycEnable:          &appControlDate.KycEnable,
-		SignupMethods:      appControlDate.SignupMethods,
-		ExtSigninMethods:   appControlDate.ExtSigninMethods,
-		SigninVerifyEnable: &appControlDate.SigninVerifyEnable,
-		InvitationCodeMust: &appControlDate.InvitationCodeMust,
+		ID:                  &appControlDate.ID,
+		AppID:               &appControlDate.AppID,
+		SignupMethods:       appControlDate.SignupMethods,
+		ExtSigninMethods:    appControlDate.ExtSigninMethods,
+		RecaptchaMethod:     &appControlDate.RecaptchaMethod,
+		KycEnable:           &appControlDate.KycEnable,
+		SigninVerifyEnable:  &appControlDate.SigninVerifyEnable,
+		InvitationCodeMust:  &appControlDate.InvitationCodeMust,
+		Maintaining:         &appControlDate.Maintaining,
+		CommitButtonTargets: appControlDate.CommitButtonTargets,
 	}
 )
 
@@ -85,6 +89,8 @@ func createAppControls(t *testing.T) {
 			InvitationCodeMust:       false,
 			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen,
 			MaxTypedCouponsPerOrder:  1,
+			Maintaining:              true,
+			CommitButtonTargets:      []string{uuid.NewString()},
 		},
 		{
 			ID:                       uuid.NewString(),
@@ -97,20 +103,24 @@ func createAppControls(t *testing.T) {
 			InvitationCodeMust:       false,
 			CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen_DefaultWhen,
 			MaxTypedCouponsPerOrder:  1,
+			Maintaining:              true,
+			CommitButtonTargets:      []string{uuid.NewString()},
 		},
 	}
 
 	appControls := []*npool.AppControlReq{}
 	for key := range appControlDates {
 		appControls = append(appControls, &npool.AppControlReq{
-			ID:                 &appControlDates[key].ID,
-			AppID:              &appControlDates[key].AppID,
-			RecaptchaMethod:    &appControlDates[key].RecaptchaMethod,
-			SignupMethods:      appControlDates[key].SignupMethods,
-			ExtSigninMethods:   appControlDates[key].ExtSigninMethods,
-			KycEnable:          &appControlDates[key].KycEnable,
-			SigninVerifyEnable: &appControlDates[key].SigninVerifyEnable,
-			InvitationCodeMust: &appControlDates[key].InvitationCodeMust,
+			ID:                  &appControlDates[key].ID,
+			AppID:               &appControlDates[key].AppID,
+			SignupMethods:       appControlDates[key].SignupMethods,
+			ExtSigninMethods:    appControlDates[key].ExtSigninMethods,
+			RecaptchaMethod:     &appControlDates[key].RecaptchaMethod,
+			KycEnable:           &appControlDates[key].KycEnable,
+			SigninVerifyEnable:  &appControlDates[key].SigninVerifyEnable,
+			InvitationCodeMust:  &appControlDates[key].InvitationCodeMust,
+			Maintaining:         &appControlDates[key].Maintaining,
+			CommitButtonTargets: appControlDates[key].CommitButtonTargets,
 		})
 	}
 

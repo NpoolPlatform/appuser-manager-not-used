@@ -33,6 +33,8 @@ func Ent2Grpc(row *ent.AppControl) *npool.AppControl {
 		InvitationCodeMust:       row.InvitationCodeMust,
 		CreateInvitationCodeWhen: npool.CreateInvitationCodeWhen(npool.CreateInvitationCodeWhen_value[row.CreateInvitationCodeWhen]),
 		MaxTypedCouponsPerOrder:  row.MaxTypedCouponsPerOrder,
+		Maintaining:              row.Maintaining,
+		CommitButtonTargets:      row.CommitButtonTargets,
 	}
 }
 

@@ -75,6 +75,16 @@ func (AppControl) Fields() []ent.Field {
 			Uint32("max_typed_coupons_per_order").
 			Optional().
 			Default(1),
+		field.
+			Bool("maintaining").
+			Optional().
+			Default(false),
+		field.
+			JSON("commit_button_targets", []string{}).
+			Optional().
+			Default(func() []string {
+				return []string{}
+			}),
 	}
 }
 

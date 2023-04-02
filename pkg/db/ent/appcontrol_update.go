@@ -255,6 +255,38 @@ func (acu *AppControlUpdate) ClearMaxTypedCouponsPerOrder() *AppControlUpdate {
 	return acu
 }
 
+// SetMaintaining sets the "maintaining" field.
+func (acu *AppControlUpdate) SetMaintaining(b bool) *AppControlUpdate {
+	acu.mutation.SetMaintaining(b)
+	return acu
+}
+
+// SetNillableMaintaining sets the "maintaining" field if the given value is not nil.
+func (acu *AppControlUpdate) SetNillableMaintaining(b *bool) *AppControlUpdate {
+	if b != nil {
+		acu.SetMaintaining(*b)
+	}
+	return acu
+}
+
+// ClearMaintaining clears the value of the "maintaining" field.
+func (acu *AppControlUpdate) ClearMaintaining() *AppControlUpdate {
+	acu.mutation.ClearMaintaining()
+	return acu
+}
+
+// SetCommitButtonTargets sets the "commit_button_targets" field.
+func (acu *AppControlUpdate) SetCommitButtonTargets(s []string) *AppControlUpdate {
+	acu.mutation.SetCommitButtonTargets(s)
+	return acu
+}
+
+// ClearCommitButtonTargets clears the value of the "commit_button_targets" field.
+func (acu *AppControlUpdate) ClearCommitButtonTargets() *AppControlUpdate {
+	acu.mutation.ClearCommitButtonTargets()
+	return acu
+}
+
 // Mutation returns the AppControlMutation object of the builder.
 func (acu *AppControlUpdate) Mutation() *AppControlMutation {
 	return acu.mutation
@@ -519,6 +551,32 @@ func (acu *AppControlUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
 		})
 	}
+	if value, ok := acu.mutation.Maintaining(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldMaintaining,
+		})
+	}
+	if acu.mutation.MaintainingCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldMaintaining,
+		})
+	}
+	if value, ok := acu.mutation.CommitButtonTargets(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appcontrol.FieldCommitButtonTargets,
+		})
+	}
+	if acu.mutation.CommitButtonTargetsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appcontrol.FieldCommitButtonTargets,
+		})
+	}
 	_spec.Modifiers = acu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, acu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -763,6 +821,38 @@ func (acuo *AppControlUpdateOne) AddMaxTypedCouponsPerOrder(u int32) *AppControl
 // ClearMaxTypedCouponsPerOrder clears the value of the "max_typed_coupons_per_order" field.
 func (acuo *AppControlUpdateOne) ClearMaxTypedCouponsPerOrder() *AppControlUpdateOne {
 	acuo.mutation.ClearMaxTypedCouponsPerOrder()
+	return acuo
+}
+
+// SetMaintaining sets the "maintaining" field.
+func (acuo *AppControlUpdateOne) SetMaintaining(b bool) *AppControlUpdateOne {
+	acuo.mutation.SetMaintaining(b)
+	return acuo
+}
+
+// SetNillableMaintaining sets the "maintaining" field if the given value is not nil.
+func (acuo *AppControlUpdateOne) SetNillableMaintaining(b *bool) *AppControlUpdateOne {
+	if b != nil {
+		acuo.SetMaintaining(*b)
+	}
+	return acuo
+}
+
+// ClearMaintaining clears the value of the "maintaining" field.
+func (acuo *AppControlUpdateOne) ClearMaintaining() *AppControlUpdateOne {
+	acuo.mutation.ClearMaintaining()
+	return acuo
+}
+
+// SetCommitButtonTargets sets the "commit_button_targets" field.
+func (acuo *AppControlUpdateOne) SetCommitButtonTargets(s []string) *AppControlUpdateOne {
+	acuo.mutation.SetCommitButtonTargets(s)
+	return acuo
+}
+
+// ClearCommitButtonTargets clears the value of the "commit_button_targets" field.
+func (acuo *AppControlUpdateOne) ClearCommitButtonTargets() *AppControlUpdateOne {
+	acuo.mutation.ClearCommitButtonTargets()
 	return acuo
 }
 
@@ -1058,6 +1148,32 @@ func (acuo *AppControlUpdateOne) sqlSave(ctx context.Context) (_node *AppControl
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUint32,
 			Column: appcontrol.FieldMaxTypedCouponsPerOrder,
+		})
+	}
+	if value, ok := acuo.mutation.Maintaining(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: appcontrol.FieldMaintaining,
+		})
+	}
+	if acuo.mutation.MaintainingCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Column: appcontrol.FieldMaintaining,
+		})
+	}
+	if value, ok := acuo.mutation.CommitButtonTargets(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: appcontrol.FieldCommitButtonTargets,
+		})
+	}
+	if acuo.mutation.CommitButtonTargetsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: appcontrol.FieldCommitButtonTargets,
 		})
 	}
 	_spec.Modifiers = acuo.modifiers

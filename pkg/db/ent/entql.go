@@ -72,6 +72,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			appcontrol.FieldInvitationCodeMust:       {Type: field.TypeBool, Column: appcontrol.FieldInvitationCodeMust},
 			appcontrol.FieldCreateInvitationCodeWhen: {Type: field.TypeString, Column: appcontrol.FieldCreateInvitationCodeWhen},
 			appcontrol.FieldMaxTypedCouponsPerOrder:  {Type: field.TypeUint32, Column: appcontrol.FieldMaxTypedCouponsPerOrder},
+			appcontrol.FieldMaintaining:              {Type: field.TypeBool, Column: appcontrol.FieldMaintaining},
+			appcontrol.FieldCommitButtonTargets:      {Type: field.TypeJSON, Column: appcontrol.FieldCommitButtonTargets},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -558,6 +560,16 @@ func (f *AppControlFilter) WhereCreateInvitationCodeWhen(p entql.StringP) {
 // WhereMaxTypedCouponsPerOrder applies the entql uint32 predicate on the max_typed_coupons_per_order field.
 func (f *AppControlFilter) WhereMaxTypedCouponsPerOrder(p entql.Uint32P) {
 	f.Where(p.Field(appcontrol.FieldMaxTypedCouponsPerOrder))
+}
+
+// WhereMaintaining applies the entql bool predicate on the maintaining field.
+func (f *AppControlFilter) WhereMaintaining(p entql.BoolP) {
+	f.Where(p.Field(appcontrol.FieldMaintaining))
+}
+
+// WhereCommitButtonTargets applies the entql json.RawMessage predicate on the commit_button_targets field.
+func (f *AppControlFilter) WhereCommitButtonTargets(p entql.BytesP) {
+	f.Where(p.Field(appcontrol.FieldCommitButtonTargets))
 }
 
 // addPredicate implements the predicateAdder interface.
