@@ -44,6 +44,8 @@ type Tx struct {
 	Kyc *KycClient
 	// LoginHistory is the client for interacting with the LoginHistory builders.
 	LoginHistory *LoginHistoryClient
+	// PubsubMessage is the client for interacting with the PubsubMessage builders.
+	PubsubMessage *PubsubMessageClient
 	// Subscriber is the client for interacting with the Subscriber builders.
 	Subscriber *SubscriberClient
 
@@ -196,6 +198,7 @@ func (tx *Tx) init() {
 	tx.BanAppUser = NewBanAppUserClient(tx.config)
 	tx.Kyc = NewKycClient(tx.config)
 	tx.LoginHistory = NewLoginHistoryClient(tx.config)
+	tx.PubsubMessage = NewPubsubMessageClient(tx.config)
 	tx.Subscriber = NewSubscriberClient(tx.config)
 }
 

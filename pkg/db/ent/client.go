@@ -26,6 +26,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/pubsubmessage"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 
 	"entgo.io/ent/dialect"
@@ -67,6 +68,8 @@ type Client struct {
 	Kyc *KycClient
 	// LoginHistory is the client for interacting with the LoginHistory builders.
 	LoginHistory *LoginHistoryClient
+	// PubsubMessage is the client for interacting with the PubsubMessage builders.
+	PubsubMessage *PubsubMessageClient
 	// Subscriber is the client for interacting with the Subscriber builders.
 	Subscriber *SubscriberClient
 }
@@ -97,6 +100,7 @@ func (c *Client) init() {
 	c.BanAppUser = NewBanAppUserClient(c.config)
 	c.Kyc = NewKycClient(c.config)
 	c.LoginHistory = NewLoginHistoryClient(c.config)
+	c.PubsubMessage = NewPubsubMessageClient(c.config)
 	c.Subscriber = NewSubscriberClient(c.config)
 }
 
@@ -146,6 +150,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		BanAppUser:        NewBanAppUserClient(cfg),
 		Kyc:               NewKycClient(cfg),
 		LoginHistory:      NewLoginHistoryClient(cfg),
+		PubsubMessage:     NewPubsubMessageClient(cfg),
 		Subscriber:        NewSubscriberClient(cfg),
 	}, nil
 }
@@ -181,6 +186,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		BanAppUser:        NewBanAppUserClient(cfg),
 		Kyc:               NewKycClient(cfg),
 		LoginHistory:      NewLoginHistoryClient(cfg),
+		PubsubMessage:     NewPubsubMessageClient(cfg),
 		Subscriber:        NewSubscriberClient(cfg),
 	}, nil
 }
@@ -226,6 +232,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.BanAppUser.Use(hooks...)
 	c.Kyc.Use(hooks...)
 	c.LoginHistory.Use(hooks...)
+	c.PubsubMessage.Use(hooks...)
 	c.Subscriber.Use(hooks...)
 }
 
@@ -1592,6 +1599,97 @@ func (c *LoginHistoryClient) GetX(ctx context.Context, id uuid.UUID) *LoginHisto
 func (c *LoginHistoryClient) Hooks() []Hook {
 	hooks := c.hooks.LoginHistory
 	return append(hooks[:len(hooks):len(hooks)], loginhistory.Hooks[:]...)
+}
+
+// PubsubMessageClient is a client for the PubsubMessage schema.
+type PubsubMessageClient struct {
+	config
+}
+
+// NewPubsubMessageClient returns a client for the PubsubMessage from the given config.
+func NewPubsubMessageClient(c config) *PubsubMessageClient {
+	return &PubsubMessageClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `pubsubmessage.Hooks(f(g(h())))`.
+func (c *PubsubMessageClient) Use(hooks ...Hook) {
+	c.hooks.PubsubMessage = append(c.hooks.PubsubMessage, hooks...)
+}
+
+// Create returns a builder for creating a PubsubMessage entity.
+func (c *PubsubMessageClient) Create() *PubsubMessageCreate {
+	mutation := newPubsubMessageMutation(c.config, OpCreate)
+	return &PubsubMessageCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PubsubMessage entities.
+func (c *PubsubMessageClient) CreateBulk(builders ...*PubsubMessageCreate) *PubsubMessageCreateBulk {
+	return &PubsubMessageCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PubsubMessage.
+func (c *PubsubMessageClient) Update() *PubsubMessageUpdate {
+	mutation := newPubsubMessageMutation(c.config, OpUpdate)
+	return &PubsubMessageUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PubsubMessageClient) UpdateOne(pm *PubsubMessage) *PubsubMessageUpdateOne {
+	mutation := newPubsubMessageMutation(c.config, OpUpdateOne, withPubsubMessage(pm))
+	return &PubsubMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PubsubMessageClient) UpdateOneID(id uuid.UUID) *PubsubMessageUpdateOne {
+	mutation := newPubsubMessageMutation(c.config, OpUpdateOne, withPubsubMessageID(id))
+	return &PubsubMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PubsubMessage.
+func (c *PubsubMessageClient) Delete() *PubsubMessageDelete {
+	mutation := newPubsubMessageMutation(c.config, OpDelete)
+	return &PubsubMessageDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PubsubMessageClient) DeleteOne(pm *PubsubMessage) *PubsubMessageDeleteOne {
+	return c.DeleteOneID(pm.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *PubsubMessageClient) DeleteOneID(id uuid.UUID) *PubsubMessageDeleteOne {
+	builder := c.Delete().Where(pubsubmessage.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PubsubMessageDeleteOne{builder}
+}
+
+// Query returns a query builder for PubsubMessage.
+func (c *PubsubMessageClient) Query() *PubsubMessageQuery {
+	return &PubsubMessageQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a PubsubMessage entity by its id.
+func (c *PubsubMessageClient) Get(ctx context.Context, id uuid.UUID) (*PubsubMessage, error) {
+	return c.Query().Where(pubsubmessage.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PubsubMessageClient) GetX(ctx context.Context, id uuid.UUID) *PubsubMessage {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PubsubMessageClient) Hooks() []Hook {
+	hooks := c.hooks.PubsubMessage
+	return append(hooks[:len(hooks):len(hooks)], pubsubmessage.Hooks[:]...)
 }
 
 // SubscriberClient is a client for the Subscriber schema.

@@ -18,6 +18,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/pubsubmessage"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 
 	"entgo.io/ent/dialect/sql"
@@ -28,7 +29,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 16)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 17)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   app.Table,
@@ -360,6 +361,27 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 	}
 	graph.Nodes[15] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   pubsubmessage.Table,
+			Columns: pubsubmessage.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: pubsubmessage.FieldID,
+			},
+		},
+		Type: "PubsubMessage",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			pubsubmessage.FieldCreatedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldCreatedAt},
+			pubsubmessage.FieldUpdatedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldUpdatedAt},
+			pubsubmessage.FieldDeletedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldDeletedAt},
+			pubsubmessage.FieldMessageID: {Type: field.TypeString, Column: pubsubmessage.FieldMessageID},
+			pubsubmessage.FieldState:     {Type: field.TypeString, Column: pubsubmessage.FieldState},
+			pubsubmessage.FieldRespToID:  {Type: field.TypeUUID, Column: pubsubmessage.FieldRespToID},
+			pubsubmessage.FieldUndoID:    {Type: field.TypeUUID, Column: pubsubmessage.FieldUndoID},
+			pubsubmessage.FieldArguments: {Type: field.TypeString, Column: pubsubmessage.FieldArguments},
+		},
+	}
+	graph.Nodes[16] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   subscriber.Table,
 			Columns: subscriber.Columns,
@@ -1663,6 +1685,86 @@ func (f *LoginHistoryFilter) WhereLocation(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (pmq *PubsubMessageQuery) addPredicate(pred func(s *sql.Selector)) {
+	pmq.predicates = append(pmq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the PubsubMessageQuery builder.
+func (pmq *PubsubMessageQuery) Filter() *PubsubMessageFilter {
+	return &PubsubMessageFilter{config: pmq.config, predicateAdder: pmq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *PubsubMessageMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the PubsubMessageMutation builder.
+func (m *PubsubMessageMutation) Filter() *PubsubMessageFilter {
+	return &PubsubMessageFilter{config: m.config, predicateAdder: m}
+}
+
+// PubsubMessageFilter provides a generic filtering capability at runtime for PubsubMessageQuery.
+type PubsubMessageFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *PubsubMessageFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *PubsubMessageFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(pubsubmessage.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *PubsubMessageFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(pubsubmessage.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *PubsubMessageFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(pubsubmessage.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *PubsubMessageFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(pubsubmessage.FieldDeletedAt))
+}
+
+// WhereMessageID applies the entql string predicate on the message_id field.
+func (f *PubsubMessageFilter) WhereMessageID(p entql.StringP) {
+	f.Where(p.Field(pubsubmessage.FieldMessageID))
+}
+
+// WhereState applies the entql string predicate on the state field.
+func (f *PubsubMessageFilter) WhereState(p entql.StringP) {
+	f.Where(p.Field(pubsubmessage.FieldState))
+}
+
+// WhereRespToID applies the entql [16]byte predicate on the resp_to_id field.
+func (f *PubsubMessageFilter) WhereRespToID(p entql.ValueP) {
+	f.Where(p.Field(pubsubmessage.FieldRespToID))
+}
+
+// WhereUndoID applies the entql [16]byte predicate on the undo_id field.
+func (f *PubsubMessageFilter) WhereUndoID(p entql.ValueP) {
+	f.Where(p.Field(pubsubmessage.FieldUndoID))
+}
+
+// WhereArguments applies the entql string predicate on the arguments field.
+func (f *PubsubMessageFilter) WhereArguments(p entql.StringP) {
+	f.Where(p.Field(pubsubmessage.FieldArguments))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (sq *SubscriberQuery) addPredicate(pred func(s *sql.Selector)) {
 	sq.predicates = append(sq.predicates, pred)
 }
@@ -1691,7 +1793,7 @@ type SubscriberFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *SubscriberFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[15].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[16].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
