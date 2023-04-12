@@ -43,6 +43,7 @@ type hooks struct {
 	BanAppUser        []ent.Hook
 	Kyc               []ent.Hook
 	LoginHistory      []ent.Hook
+	PubsubMessage     []ent.Hook
 	Subscriber        []ent.Hook
 }
 

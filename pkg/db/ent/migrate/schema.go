@@ -314,6 +314,36 @@ var (
 		Columns:    LoginHistoriesColumns,
 		PrimaryKey: []*schema.Column{LoginHistoriesColumns[0]},
 	}
+	// PubsubMessagesColumns holds the columns for the "pubsub_messages" table.
+	PubsubMessagesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "message_id", Type: field.TypeString, Nullable: true, Default: "DefaultMsgID"},
+		{Name: "state", Type: field.TypeString, Nullable: true, Default: "DefaultMsgState"},
+		{Name: "resp_to_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "undo_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "arguments", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// PubsubMessagesTable holds the schema information for the "pubsub_messages" table.
+	PubsubMessagesTable = &schema.Table{
+		Name:       "pubsub_messages",
+		Columns:    PubsubMessagesColumns,
+		PrimaryKey: []*schema.Column{PubsubMessagesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "pubsubmessage_state_resp_to_id",
+				Unique:  false,
+				Columns: []*schema.Column{PubsubMessagesColumns[5], PubsubMessagesColumns[6]},
+			},
+			{
+				Name:    "pubsubmessage_state_undo_id",
+				Unique:  false,
+				Columns: []*schema.Column{PubsubMessagesColumns[5], PubsubMessagesColumns[7]},
+			},
+		},
+	}
 	// SubscribersColumns holds the columns for the "subscribers" table.
 	SubscribersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -347,6 +377,7 @@ var (
 		BanAppUsersTable,
 		KycsTable,
 		LoginHistoriesTable,
+		PubsubMessagesTable,
 		SubscribersTable,
 	}
 )

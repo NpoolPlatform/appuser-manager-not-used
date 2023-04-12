@@ -20,6 +20,7 @@ import (
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/banappuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/kyc"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/loginhistory"
+	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/pubsubmessage"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/schema"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/subscriber"
 	"github.com/google/uuid"
@@ -835,6 +836,54 @@ func init() {
 	loginhistoryDescID := loginhistoryFields[0].Descriptor()
 	// loginhistory.DefaultID holds the default value on creation for the id field.
 	loginhistory.DefaultID = loginhistoryDescID.Default.(func() uuid.UUID)
+	pubsubmessageMixin := schema.PubsubMessage{}.Mixin()
+	pubsubmessage.Policy = privacy.NewPolicies(pubsubmessageMixin[0], schema.PubsubMessage{})
+	pubsubmessage.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := pubsubmessage.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	pubsubmessageMixinFields0 := pubsubmessageMixin[0].Fields()
+	_ = pubsubmessageMixinFields0
+	pubsubmessageFields := schema.PubsubMessage{}.Fields()
+	_ = pubsubmessageFields
+	// pubsubmessageDescCreatedAt is the schema descriptor for created_at field.
+	pubsubmessageDescCreatedAt := pubsubmessageMixinFields0[0].Descriptor()
+	// pubsubmessage.DefaultCreatedAt holds the default value on creation for the created_at field.
+	pubsubmessage.DefaultCreatedAt = pubsubmessageDescCreatedAt.Default.(func() uint32)
+	// pubsubmessageDescUpdatedAt is the schema descriptor for updated_at field.
+	pubsubmessageDescUpdatedAt := pubsubmessageMixinFields0[1].Descriptor()
+	// pubsubmessage.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	pubsubmessage.DefaultUpdatedAt = pubsubmessageDescUpdatedAt.Default.(func() uint32)
+	// pubsubmessage.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	pubsubmessage.UpdateDefaultUpdatedAt = pubsubmessageDescUpdatedAt.UpdateDefault.(func() uint32)
+	// pubsubmessageDescDeletedAt is the schema descriptor for deleted_at field.
+	pubsubmessageDescDeletedAt := pubsubmessageMixinFields0[2].Descriptor()
+	// pubsubmessage.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	pubsubmessage.DefaultDeletedAt = pubsubmessageDescDeletedAt.Default.(func() uint32)
+	// pubsubmessageDescMessageID is the schema descriptor for message_id field.
+	pubsubmessageDescMessageID := pubsubmessageFields[1].Descriptor()
+	// pubsubmessage.DefaultMessageID holds the default value on creation for the message_id field.
+	pubsubmessage.DefaultMessageID = pubsubmessageDescMessageID.Default.(string)
+	// pubsubmessageDescState is the schema descriptor for state field.
+	pubsubmessageDescState := pubsubmessageFields[2].Descriptor()
+	// pubsubmessage.DefaultState holds the default value on creation for the state field.
+	pubsubmessage.DefaultState = pubsubmessageDescState.Default.(string)
+	// pubsubmessageDescRespToID is the schema descriptor for resp_to_id field.
+	pubsubmessageDescRespToID := pubsubmessageFields[3].Descriptor()
+	// pubsubmessage.DefaultRespToID holds the default value on creation for the resp_to_id field.
+	pubsubmessage.DefaultRespToID = pubsubmessageDescRespToID.Default.(func() uuid.UUID)
+	// pubsubmessageDescUndoID is the schema descriptor for undo_id field.
+	pubsubmessageDescUndoID := pubsubmessageFields[4].Descriptor()
+	// pubsubmessage.DefaultUndoID holds the default value on creation for the undo_id field.
+	pubsubmessage.DefaultUndoID = pubsubmessageDescUndoID.Default.(func() uuid.UUID)
+	// pubsubmessageDescArguments is the schema descriptor for arguments field.
+	pubsubmessageDescArguments := pubsubmessageFields[5].Descriptor()
+	// pubsubmessage.DefaultArguments holds the default value on creation for the arguments field.
+	pubsubmessage.DefaultArguments = pubsubmessageDescArguments.Default.(string)
 	subscriberMixin := schema.Subscriber{}.Mixin()
 	subscriber.Policy = privacy.NewPolicies(subscriberMixin[0], schema.Subscriber{})
 	subscriber.Hooks[0] = func(next ent.Mutator) ent.Mutator {

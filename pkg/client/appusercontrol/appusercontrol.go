@@ -10,7 +10,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/appusercontrol"
 
-	constant "github.com/NpoolPlatform/appuser-manager/pkg/message/const"
+	servicename "github.com/NpoolPlatform/appuser-manager/pkg/servicename"
 )
 
 var timeout = 10 * time.Second
@@ -21,7 +21,7 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
+	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
 	if err != nil {
 		return nil, err
 	}
