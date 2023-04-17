@@ -14,10 +14,6 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
-	// App is the client for interacting with the App builders.
-	App *AppClient
-	// AppControl is the client for interacting with the AppControl builders.
-	AppControl *AppControlClient
 	// AppRole is the client for interacting with the AppRole builders.
 	AppRole *AppRoleClient
 	// AppRoleUser is the client for interacting with the AppRoleUser builders.
@@ -183,8 +179,6 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
-	tx.App = NewAppClient(tx.config)
-	tx.AppControl = NewAppControlClient(tx.config)
 	tx.AppRole = NewAppRoleClient(tx.config)
 	tx.AppRoleUser = NewAppRoleUserClient(tx.config)
 	tx.AppUser = NewAppUserClient(tx.config)
@@ -209,7 +203,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: App.QueryXXX(), the query will be executed
+// applies a query, for example: AppRole.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

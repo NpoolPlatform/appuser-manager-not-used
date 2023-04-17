@@ -10,8 +10,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
@@ -47,8 +45,6 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		app.Table:               app.ValidColumn,
-		appcontrol.Table:        appcontrol.ValidColumn,
 		approle.Table:           approle.ValidColumn,
 		approleuser.Table:       approleuser.ValidColumn,
 		appuser.Table:           appuser.ValidColumn,

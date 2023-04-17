@@ -8,47 +8,6 @@ import (
 )
 
 var (
-	// AppsColumns holds the columns for the "apps" table.
-	AppsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "created_at", Type: field.TypeUint32},
-		{Name: "updated_at", Type: field.TypeUint32},
-		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
-		{Name: "name", Type: field.TypeString, Unique: true, Nullable: true},
-		{Name: "logo", Type: field.TypeString, Nullable: true, Default: ""},
-		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
-	}
-	// AppsTable holds the schema information for the "apps" table.
-	AppsTable = &schema.Table{
-		Name:       "apps",
-		Columns:    AppsColumns,
-		PrimaryKey: []*schema.Column{AppsColumns[0]},
-	}
-	// AppControlsColumns holds the columns for the "app_controls" table.
-	AppControlsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "created_at", Type: field.TypeUint32},
-		{Name: "updated_at", Type: field.TypeUint32},
-		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "app_id", Type: field.TypeUUID, Nullable: true},
-		{Name: "signup_methods", Type: field.TypeJSON, Nullable: true},
-		{Name: "extern_signin_methods", Type: field.TypeJSON, Nullable: true},
-		{Name: "recaptcha_method", Type: field.TypeString, Nullable: true, Default: "GoogleRecaptchaV3"},
-		{Name: "kyc_enable", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "signin_verify_enable", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "invitation_code_must", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "create_invitation_code_when", Type: field.TypeString, Nullable: true, Default: "DefaultWhen"},
-		{Name: "max_typed_coupons_per_order", Type: field.TypeUint32, Nullable: true, Default: 1},
-		{Name: "maintaining", Type: field.TypeBool, Nullable: true, Default: false},
-		{Name: "commit_button_targets", Type: field.TypeJSON, Nullable: true},
-	}
-	// AppControlsTable holds the schema information for the "app_controls" table.
-	AppControlsTable = &schema.Table{
-		Name:       "app_controls",
-		Columns:    AppControlsColumns,
-		PrimaryKey: []*schema.Column{AppControlsColumns[0]},
-	}
 	// AppRolesColumns holds the columns for the "app_roles" table.
 	AppRolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -362,8 +321,6 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		AppsTable,
-		AppControlsTable,
 		AppRolesTable,
 		AppRoleUsersTable,
 		AppUsersTable,

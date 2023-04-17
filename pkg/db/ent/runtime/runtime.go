@@ -5,8 +5,6 @@ package runtime
 import (
 	"context"
 
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/app"
-	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approle"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/approleuser"
 	"github.com/NpoolPlatform/appuser-manager/pkg/db/ent/appuser"
@@ -34,126 +32,6 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	appMixin := schema.App{}.Mixin()
-	app.Policy = privacy.NewPolicies(appMixin[0], schema.App{})
-	app.Hooks[0] = func(next ent.Mutator) ent.Mutator {
-		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := app.Policy.EvalMutation(ctx, m); err != nil {
-				return nil, err
-			}
-			return next.Mutate(ctx, m)
-		})
-	}
-	appMixinFields0 := appMixin[0].Fields()
-	_ = appMixinFields0
-	appFields := schema.App{}.Fields()
-	_ = appFields
-	// appDescCreatedAt is the schema descriptor for created_at field.
-	appDescCreatedAt := appMixinFields0[0].Descriptor()
-	// app.DefaultCreatedAt holds the default value on creation for the created_at field.
-	app.DefaultCreatedAt = appDescCreatedAt.Default.(func() uint32)
-	// appDescUpdatedAt is the schema descriptor for updated_at field.
-	appDescUpdatedAt := appMixinFields0[1].Descriptor()
-	// app.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	app.DefaultUpdatedAt = appDescUpdatedAt.Default.(func() uint32)
-	// app.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	app.UpdateDefaultUpdatedAt = appDescUpdatedAt.UpdateDefault.(func() uint32)
-	// appDescDeletedAt is the schema descriptor for deleted_at field.
-	appDescDeletedAt := appMixinFields0[2].Descriptor()
-	// app.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	app.DefaultDeletedAt = appDescDeletedAt.Default.(func() uint32)
-	// appDescCreatedBy is the schema descriptor for created_by field.
-	appDescCreatedBy := appFields[1].Descriptor()
-	// app.DefaultCreatedBy holds the default value on creation for the created_by field.
-	app.DefaultCreatedBy = appDescCreatedBy.Default.(func() uuid.UUID)
-	// appDescLogo is the schema descriptor for logo field.
-	appDescLogo := appFields[3].Descriptor()
-	// app.DefaultLogo holds the default value on creation for the logo field.
-	app.DefaultLogo = appDescLogo.Default.(string)
-	// appDescDescription is the schema descriptor for description field.
-	appDescDescription := appFields[4].Descriptor()
-	// app.DefaultDescription holds the default value on creation for the description field.
-	app.DefaultDescription = appDescDescription.Default.(string)
-	// appDescID is the schema descriptor for id field.
-	appDescID := appFields[0].Descriptor()
-	// app.DefaultID holds the default value on creation for the id field.
-	app.DefaultID = appDescID.Default.(func() uuid.UUID)
-	appcontrolMixin := schema.AppControl{}.Mixin()
-	appcontrol.Policy = privacy.NewPolicies(appcontrolMixin[0], schema.AppControl{})
-	appcontrol.Hooks[0] = func(next ent.Mutator) ent.Mutator {
-		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			if err := appcontrol.Policy.EvalMutation(ctx, m); err != nil {
-				return nil, err
-			}
-			return next.Mutate(ctx, m)
-		})
-	}
-	appcontrolMixinFields0 := appcontrolMixin[0].Fields()
-	_ = appcontrolMixinFields0
-	appcontrolFields := schema.AppControl{}.Fields()
-	_ = appcontrolFields
-	// appcontrolDescCreatedAt is the schema descriptor for created_at field.
-	appcontrolDescCreatedAt := appcontrolMixinFields0[0].Descriptor()
-	// appcontrol.DefaultCreatedAt holds the default value on creation for the created_at field.
-	appcontrol.DefaultCreatedAt = appcontrolDescCreatedAt.Default.(func() uint32)
-	// appcontrolDescUpdatedAt is the schema descriptor for updated_at field.
-	appcontrolDescUpdatedAt := appcontrolMixinFields0[1].Descriptor()
-	// appcontrol.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	appcontrol.DefaultUpdatedAt = appcontrolDescUpdatedAt.Default.(func() uint32)
-	// appcontrol.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	appcontrol.UpdateDefaultUpdatedAt = appcontrolDescUpdatedAt.UpdateDefault.(func() uint32)
-	// appcontrolDescDeletedAt is the schema descriptor for deleted_at field.
-	appcontrolDescDeletedAt := appcontrolMixinFields0[2].Descriptor()
-	// appcontrol.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	appcontrol.DefaultDeletedAt = appcontrolDescDeletedAt.Default.(func() uint32)
-	// appcontrolDescAppID is the schema descriptor for app_id field.
-	appcontrolDescAppID := appcontrolFields[1].Descriptor()
-	// appcontrol.DefaultAppID holds the default value on creation for the app_id field.
-	appcontrol.DefaultAppID = appcontrolDescAppID.Default.(func() uuid.UUID)
-	// appcontrolDescSignupMethods is the schema descriptor for signup_methods field.
-	appcontrolDescSignupMethods := appcontrolFields[2].Descriptor()
-	// appcontrol.DefaultSignupMethods holds the default value on creation for the signup_methods field.
-	appcontrol.DefaultSignupMethods = appcontrolDescSignupMethods.Default.(func() []string)
-	// appcontrolDescExternSigninMethods is the schema descriptor for extern_signin_methods field.
-	appcontrolDescExternSigninMethods := appcontrolFields[3].Descriptor()
-	// appcontrol.DefaultExternSigninMethods holds the default value on creation for the extern_signin_methods field.
-	appcontrol.DefaultExternSigninMethods = appcontrolDescExternSigninMethods.Default.(func() []string)
-	// appcontrolDescRecaptchaMethod is the schema descriptor for recaptcha_method field.
-	appcontrolDescRecaptchaMethod := appcontrolFields[4].Descriptor()
-	// appcontrol.DefaultRecaptchaMethod holds the default value on creation for the recaptcha_method field.
-	appcontrol.DefaultRecaptchaMethod = appcontrolDescRecaptchaMethod.Default.(string)
-	// appcontrolDescKycEnable is the schema descriptor for kyc_enable field.
-	appcontrolDescKycEnable := appcontrolFields[5].Descriptor()
-	// appcontrol.DefaultKycEnable holds the default value on creation for the kyc_enable field.
-	appcontrol.DefaultKycEnable = appcontrolDescKycEnable.Default.(bool)
-	// appcontrolDescSigninVerifyEnable is the schema descriptor for signin_verify_enable field.
-	appcontrolDescSigninVerifyEnable := appcontrolFields[6].Descriptor()
-	// appcontrol.DefaultSigninVerifyEnable holds the default value on creation for the signin_verify_enable field.
-	appcontrol.DefaultSigninVerifyEnable = appcontrolDescSigninVerifyEnable.Default.(bool)
-	// appcontrolDescInvitationCodeMust is the schema descriptor for invitation_code_must field.
-	appcontrolDescInvitationCodeMust := appcontrolFields[7].Descriptor()
-	// appcontrol.DefaultInvitationCodeMust holds the default value on creation for the invitation_code_must field.
-	appcontrol.DefaultInvitationCodeMust = appcontrolDescInvitationCodeMust.Default.(bool)
-	// appcontrolDescCreateInvitationCodeWhen is the schema descriptor for create_invitation_code_when field.
-	appcontrolDescCreateInvitationCodeWhen := appcontrolFields[8].Descriptor()
-	// appcontrol.DefaultCreateInvitationCodeWhen holds the default value on creation for the create_invitation_code_when field.
-	appcontrol.DefaultCreateInvitationCodeWhen = appcontrolDescCreateInvitationCodeWhen.Default.(string)
-	// appcontrolDescMaxTypedCouponsPerOrder is the schema descriptor for max_typed_coupons_per_order field.
-	appcontrolDescMaxTypedCouponsPerOrder := appcontrolFields[9].Descriptor()
-	// appcontrol.DefaultMaxTypedCouponsPerOrder holds the default value on creation for the max_typed_coupons_per_order field.
-	appcontrol.DefaultMaxTypedCouponsPerOrder = appcontrolDescMaxTypedCouponsPerOrder.Default.(uint32)
-	// appcontrolDescMaintaining is the schema descriptor for maintaining field.
-	appcontrolDescMaintaining := appcontrolFields[10].Descriptor()
-	// appcontrol.DefaultMaintaining holds the default value on creation for the maintaining field.
-	appcontrol.DefaultMaintaining = appcontrolDescMaintaining.Default.(bool)
-	// appcontrolDescCommitButtonTargets is the schema descriptor for commit_button_targets field.
-	appcontrolDescCommitButtonTargets := appcontrolFields[11].Descriptor()
-	// appcontrol.DefaultCommitButtonTargets holds the default value on creation for the commit_button_targets field.
-	appcontrol.DefaultCommitButtonTargets = appcontrolDescCommitButtonTargets.Default.(func() []string)
-	// appcontrolDescID is the schema descriptor for id field.
-	appcontrolDescID := appcontrolFields[0].Descriptor()
-	// appcontrol.DefaultID holds the default value on creation for the id field.
-	appcontrol.DefaultID = appcontrolDescID.Default.(func() uuid.UUID)
 	approleMixin := schema.AppRole{}.Mixin()
 	approle.Policy = privacy.NewPolicies(approleMixin[0], schema.AppRole{})
 	approle.Hooks[0] = func(next ent.Mutator) ent.Mutator {

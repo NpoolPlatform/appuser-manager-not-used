@@ -3,8 +3,6 @@ package api
 import (
 	"context"
 
-	"github.com/NpoolPlatform/appuser-manager/api/app"
-	"github.com/NpoolPlatform/appuser-manager/api/appcontrol"
 	"github.com/NpoolPlatform/appuser-manager/api/approle"
 	"github.com/NpoolPlatform/appuser-manager/api/approleuser"
 	"github.com/NpoolPlatform/appuser-manager/api/appuser"
@@ -32,9 +30,7 @@ type Server struct {
 
 func Register(server grpc.ServiceRegistrar) {
 	appusermgr.RegisterManagerServer(server, &Server{})
-	app.Register(server)
 	subscriber.Register(server)
-	appcontrol.Register(server)
 	approle.Register(server)
 	approleuser.Register(server)
 	appuser.Register(server)

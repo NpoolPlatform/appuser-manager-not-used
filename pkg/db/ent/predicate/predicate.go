@@ -6,12 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// App is the predicate function for app builders.
-type App func(*sql.Selector)
-
-// AppControl is the predicate function for appcontrol builders.
-type AppControl func(*sql.Selector)
-
 // AppRole is the predicate function for approle builders.
 type AppRole func(*sql.Selector)
 

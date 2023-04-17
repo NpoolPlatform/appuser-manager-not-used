@@ -150,54 +150,6 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
-// The AppQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type AppQueryRuleFunc func(context.Context, *ent.AppQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f AppQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.AppQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppQuery", q)
-}
-
-// The AppMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type AppMutationRuleFunc func(context.Context, *ent.AppMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f AppMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.AppMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppMutation", m)
-}
-
-// The AppControlQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type AppControlQueryRuleFunc func(context.Context, *ent.AppControlQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f AppControlQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.AppControlQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.AppControlQuery", q)
-}
-
-// The AppControlMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type AppControlMutationRuleFunc func(context.Context, *ent.AppControlMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f AppControlMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.AppControlMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AppControlMutation", m)
-}
-
 // The AppRoleQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type AppRoleQueryRuleFunc func(context.Context, *ent.AppRoleQuery) error
@@ -593,10 +545,6 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
-	case *ent.AppQuery:
-		return q.Filter(), nil
-	case *ent.AppControlQuery:
-		return q.Filter(), nil
 	case *ent.AppRoleQuery:
 		return q.Filter(), nil
 	case *ent.AppRoleUserQuery:
@@ -634,10 +582,6 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
-	case *ent.AppMutation:
-		return m.Filter(), nil
-	case *ent.AppControlMutation:
-		return m.Filter(), nil
 	case *ent.AppRoleMutation:
 		return m.Filter(), nil
 	case *ent.AppRoleUserMutation:

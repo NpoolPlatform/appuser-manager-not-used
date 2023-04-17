@@ -28,8 +28,6 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	App               []ent.Hook
-	AppControl        []ent.Hook
 	AppRole           []ent.Hook
 	AppRoleUser       []ent.Hook
 	AppUser           []ent.Hook
